@@ -464,6 +464,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           .attr('x', isMobile ? 16 : 20)
           .attr('y', 0)
           .attr('dy', '0.35em')
+          .style('font-family', "'Lexend', sans-serif")
           .style('font-size', isMobile ? '9px' : '11px')
           .style('fill', '#374151')
           .text(pathogen);
@@ -568,6 +569,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .call(xAxis)
         .selectAll('text')
         .style('text-anchor', 'end')
+        .style('font-family', "'Lexend', sans-serif")
         .style('font-size', isMobile ? '10px' : '12px')
         .attr('dx', '-.8em')
         .attr('dy', '.15em')
@@ -577,6 +579,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .attr('class', 'y-axis')
         .call(yAxis)
         .selectAll('text')
+        .style('font-family', "'Lexend', sans-serif")
         .style('font-size', isMobile ? '10px' : '12px');
 
       // Group data by pathogen and metric
@@ -619,9 +622,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           .attr('fill', color)
           .attr('opacity', 0.7)
           .on('mouseover', function(event: any, d: any) {
+            event.target.setAttribute('r', '5');
+            event.target.setAttribute('opacity', '1');
             showTooltip(event, d, color);
           })
-          .on('mouseout', hideTooltip);
+          .on('mouseout', function(event: any) {
+            event.target.setAttribute('r', '3');
+            event.target.setAttribute('opacity', '0.7');
+            hideTooltip();
+          })
+          .on('touchstart', function(event: any, d: any) {
+            event.preventDefault();
+            document.querySelectorAll('circle.dot').forEach(function(el: any) {
+              el.setAttribute('r', '3');
+              el.setAttribute('opacity', '0.7');
+            });
+            hideTooltip();
+            event.target.setAttribute('r', '5');
+            event.target.setAttribute('opacity', '1');
+            showTooltip(event.touches[0], d, color);
+          });
       });
 
       // Add legend only if there's space (not on mobile)
@@ -637,6 +657,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .attr('x', 0 - (height / 2))
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
+        .style('font-family', "'Lexend', sans-serif")
         .style('font-size', isMobile ? '10px' : '12px')
         .style('fill', '#6B7280')
         .text(yAxisLabel);
@@ -645,6 +666,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         .attr('class', 'axis-label')
         .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 5})`)
         .style('text-anchor', 'middle')
+        .style('font-family', "'Lexend', sans-serif")
         .style('font-size', isMobile ? '10px' : '12px')
         .style('fill', '#6B7280')
         .text('Date');
