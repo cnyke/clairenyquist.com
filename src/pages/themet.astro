@@ -286,16 +286,17 @@ const description = "Every pixel is an artwork. 10,000 objects from the Metropol
 
       if (N === 0) return;
 
-      const aspect = canvasW / canvasH;
-      // Size pixels to fill width and fit all rows in viewport height
-      // Start with a pixel size that fills the width, then shrink if rows overflow
-      pixelSize = Math.max(1, Math.floor(Math.sqrt((canvasW * canvasH) / N)));
-      cols = Math.floor(canvasW / pixelSize);
+      // Calculate cols so that squares fill the full viewport
+      cols = Math.ceil(Math.sqrt(N * canvasW / canvasH));
+      pixelSize = canvasW / cols;
       rows = Math.ceil(N / cols);
-      // If rows overflow the viewport, recalculate from height
+
+      // If rows overflow the viewport, add more columns to shrink squares
       if (rows * pixelSize > canvasH) {
-        pixelSize = Math.max(1, Math.floor(canvasH / rows));
-        cols = Math.floor(canvasW / pixelSize);
+        rows = Math.floor(canvasH / pixelSize);
+        if (rows < 1) rows = 1;
+        cols = Math.ceil(N / rows);
+        pixelSize = canvasW / cols;
         rows = Math.ceil(N / cols);
       }
 
