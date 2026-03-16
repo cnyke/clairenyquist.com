@@ -1,50 +1,100 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="About & Contact - Claire Nyquist" description="Minneapolis-based data visualization designer, developer, and public health analyst. Specializing in interactive data visualizations using R, Python, JavaScript, and D3. Contact for collaboration opportunities.">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Hero Section -->
-    <div class="text-center mb-16">
-      <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-        About & Contact
-      </h1>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-Designer, Developer, Analyst, Writer, and Data Visualizer
-      </p>
-    </div>
-
-    <div class="max-w-6xl mx-auto mb-16">
-      <!-- About Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-        <!-- Headshot Image -->
-        <div class="lg:col-span-1">
-          <div class="relative">
-            <img 
-              src="/images/headshot.jpeg" 
-              alt="Professional headshot"
-              class="w-full h-auto object-contain rounded-lg shadow-lg"
-            />
-          </div>
+<BaseLayout
+    title="About & Contact - Claire Nyquist"
+    description="Minneapolis-based data visualization designer, developer, and public health analyst. Specializing in interactive data visualizations using R, Python, JavaScript, and D3. Contact for collaboration opportunities."
+>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                About & Contact
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Where Epidemiology Meets Design
+            </p>
         </div>
-        
-        <!-- About Content -->
-        <div class="lg:col-span-2">          
-          <div class="prose prose-lg max-w-none text-gray-700 space-y-6">
-            <p>
-              I am a data visualization designer, developer, and public health analyst based in Minneapolis. I studied science communication through graphic design in London, UK, before diving into a master's in public health at the University of Minnesota.
-            </p>
-            <p>
-              I explore biology, human health, epidemiology, and evolution through data visualization. I use R, ggplot2, Python, JavaScript's D3 library, the Adobe Creative Suite, and other tools to bring datasets to life. I also love writing, design, and illustration.
-            </p>
-            <p>
-              Interested in collaborating? I'd love to hear from you! Get in touch at clairenyquist@gmail.com.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
 
-  </div>
+        <div class="max-w-6xl mx-auto mb-16">
+            <!-- About Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                <!-- Headshot Image -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <img
+                            src="/images/headshot.jpeg"
+                            alt="Professional headshot"
+                            class="w-full h-auto object-contain rounded-lg shadow-lg"
+                        />
+                    </div>
+                </div>
+
+                <!-- About Content -->
+                <div class="lg:col-span-2">
+                    <div
+                        class="prose prose-lg max-w-none text-gray-700 space-y-6"
+                    >
+                        <p>Hi, I'm Claire.</p>
+                        <p>
+                            I live at the intersection of <em
+                                >How does this virus work?</em
+                            > and <em
+                                >How can I make this spreadsheet moderately
+                                intelligible&mdash;maybe even beautiful?
+                            </em>
+                            <p></p> With a Master of Public Health from the University
+                            of Minnesota and First Class Honors in Graphic Communication
+                            Design from the University of Westminster in London, I've
+                            spent my career translating complex (and sometimes scary)
+                            science into actionable insights.
+                        </p>
+                        <p>
+                            Most people see a massive spreadsheet of infectious
+                            disease data and want to close their laptop. I want
+                            to open Adobe Illustrator and Claude Code. I've
+                            distributed vaccines for the State of Minnesota,
+                            researched PPE barriers for long-term care
+                            facilities, and built custom data visualizations in
+                            R and Python. My goal is always the same: improving
+                            health outcomes for people around the world.
+                        </p>
+                        <p>
+                            <strong
+                                >Why work with a public health data designer?</strong
+                            ><br />
+                            <br />
+                            I've worked in pediatric ERs, veterinary diagnostic labs,
+                            and as a federal consultant. From HTML/CSS to JavaScript
+                            and R, I build digital experiences that are accessible,
+                            functional, and statistically sound. I've also spent my
+                            free time volunteering at the Minneapolis Institute of
+                            Art and The Bakken Museum. I know how to spark curiosity
+                            in people&mdash;whether they are five years old or a federal
+                            policymaker.
+                        </p>
+                        <p>
+                            I'm an award-winning analyst who believes that
+                            public health preparedness is only as good as its
+                            communication strategy.
+                        </p>
+                        <p>
+                            When I'm not organizing tcplot (our local Twin
+                            Cities data-viz community) or debating the universal
+                            principles of design, you can find me wandering
+                            around Minneapolis over-analyzing the typography on
+                            a craft beer can or explaining zoonotic pathogens
+                            and malaria vaccines to anyone who will listen.
+                        </p>
+                        <p>
+                            Want to collaborate on a project that requires both
+                            a microscope and a paintbrush? Get in touch at
+                            clairenyquist@gmail.com.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </BaseLayout>
-
