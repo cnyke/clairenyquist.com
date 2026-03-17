@@ -785,14 +785,26 @@ const description =
                     currentTooltipIdx = -1;
                 }
 
-                // Desktop: mouse events
+                // Track whether input is touch-based to avoid conflicts
+                let isTouch = false;
+
+                // Desktop: mouse events (skip if touch device)
                 canvas.addEventListener("mousemove", (e) => {
+                    if (isTouch) return;
                     showTooltipAt(e.clientX, e.clientY);
                 });
-                canvas.addEventListener("mouseleave", hideTooltip);
+                canvas.addEventListener("mouseleave", () => {
+                    if (isTouch) return;
+                    hideTooltip();
+                });
 
                 // Mobile: tap to toggle tooltip
+                canvas.addEventListener("touchstart", () => {
+                    isTouch = true;
+                }, { passive: true });
+
                 canvas.addEventListener("click", (e) => {
+                    if (!isTouch) return;
                     if (N === 0 || animProgress < 1) return;
 
                     const pos = positions[currentSort];
