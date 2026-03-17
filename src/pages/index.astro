@@ -1,1017 +1,820 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "The Met Collection | Claire Nyquist";
+const description =
+    "Every square is an artwork. Hundreds of objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
 ---
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<BaseLayout title={title} description={description}>
+    <!-- Fixed canvas behind everything -->
+    <canvas
+        id="met-canvas"
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;"
+    ></canvas>
 
-<BaseLayout title="Respiratory Viruses in Minnesota - Claire Nyquist" description="Interactive data visualizations tracking RSV, influenza, COVID-19, and other respiratory viruses in Minnesota. View hospitalization rates and laboratory detection trends from Minnesota Department of Health surveillance data.">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Hero Section -->
-    <div class="text-center mb-8 md:mb-12">
-      <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
-        Respiratory Viruses in Minnesota
-      </h1>
-        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-          This data from October 9th, 2025 explores trends in viral respiratory illnesses. 
-        </p>
-          <p class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4">
-            Cold and flu season is from October through mid-May. These data visualizations explore viral trends using <a href="https://www.health.state.mn.us/diseases/respiratory/stats/index.html" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener">Minnesota Department of Health data</a>. The first data visualization tracks hospitalizations due to RSV, influenza, and COVID-19. The second covers laboratory-confirmed viruses which cause cold-like symptoms. Note that seasonal coronavirus is distinct from SARS-CoV-2, the virus that causes COVID-19. You can filter by time period and pathogen using the dropdown menus.
-          </p>
+    <!-- Tooltip -->
+    <div
+        id="tooltip"
+        style="position:fixed;z-index:100;pointer-events:none;display:none;
+    background:rgba(0,0,0,0.9);color:#fff;padding:0;border-radius:8px;
+    font-size:13px;max-width:300px;line-height:1.4;box-shadow:0 4px 20px rgba(0,0,0,0.4);overflow:hidden;"
+    >
+        <div
+            id="tooltip-img-wrap"
+            style="width:300px;height:200px;background:#111;display:none;position:relative;"
+        >
+            <img
+                id="tooltip-img"
+                src=""
+                alt=""
+                style="width:100%;height:100%;object-fit:cover;"
+            />
+            <div
+                id="tooltip-img-loader"
+                style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"
+            >
+                <div
+                    style="width:20px;height:20px;border:2px solid #444;border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;"
+                >
+                </div>
+            </div>
+        </div>
+        <div id="tooltip-text" style="padding:8px 12px;"></div>
     </div>
 
-    <!-- Hospitalization Data Chart -->
-    <div class="mb-16">
-      <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div class="p-4 sm:p-6 bg-gray-50 border-b">
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Statewide Hospitalizations Since 2022</h2>
-          <p class="text-sm sm:text-base text-gray-600 mb-4">
-            Weekly hospitalization rates by pathogen from Minnesota Department of Health surveillance data.
-          </p>
-          
-          <!-- Hospitalization Controls -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div>
-              <label for="hosp-pathogen-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Pathogen</label>
-              <select id="hosp-pathogen-filter" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                <option value="">All Pathogens</option>
-              </select>
+    <!-- Scroll sections -->
+    <div
+        id="scroll-container"
+        style="position:relative;z-index:1;pointer-events:none;"
+    >
+        <!-- Section 0: Intro -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-left:5%;">
+                <h1
+                    style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
+                >
+                    The Met Collection
+                </h1>
+                <p
+                    style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Every square you see is an artwork from the
+                    <a
+                        href="https://www.metmuseum.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Metropolitan Museum of Art</a
+                    >'s open-access collection, colored by its dominant hue.
+                    <br /><br />
+                    Scroll to see hundreds of objects sorted by hue, date, culture,
+                    and medium.
+                </p>
             </div>
-            <div>
-              <label for="hosp-date-range" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-              <select id="hosp-date-range" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                <option value="all">All Time</option>
-                <option value="1year">Last 12 Months</option>
-                <option value="6months">Last 6 Months</option>
-                <option value="3months">Last 3 Months</option>
-              </select>
+        </section>
+
+        <!-- Section 1: Hue -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Color Spectrum
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Sorted purely by hue.
+                </p>
             </div>
-          </div>
-        </div>
+        </section>
 
-        <!-- Loading indicator -->
-        <div id="hosp-loading" class="p-8 text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p class="text-gray-600">Loading hospitalization data...</p>
-        </div>
+        <!-- Section 2: Chronological -->
+        <section
+            class="scroll-section"
+            data-sort="chronological"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-left:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    5,000 Years of Art
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Sorted by creation date, from ancient Egyptian artifacts to
+                    modern paintings. Each row reads left to right through time.
+                </p>
+            </div>
+        </section>
 
-        <!-- Chart container -->
-        <div id="hosp-chart" class="hidden">
-          <div class="p-2 sm:p-4">
-            <div id="hosp-container" class="w-full chart-container"></div>
-          </div>
-          <!-- Citation for hospitalization data -->
-          <div class="px-4 pb-4 text-xs text-gray-500 border-t bg-gray-50">
-            <p class="mt-2">
-              <strong>Data Source:</strong> Minnesota Department of Health. Hospitalization Data - Viral Respiratory Illness in Minnesota. 
-              <a href="https://www.health.state.mn.us/diseases/respiratory/stats/hosp.html" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.health.state.mn.us/diseases/respiratory/stats/hosp.html</a>
-            </p>
-          </div>
-        </div>
-      </div>
+        <!-- Section 3: Culture -->
+        <section
+            class="scroll-section"
+            data-sort="culture"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Cultures & Nations
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Grouped by culture of origin. Notice how color palettes
+                    differ.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Medium -->
+        <section
+            class="scroll-section"
+            data-sort="medium"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Materials & Media
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Grouped by material&mdash;oil on canvas, woodblock print,
+                    silver, ceramic. The medium shapes the palette.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 6: Outro -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;"
+        >
+            <div class="glass-card" style="max-width:520px;text-align:center;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
+                >
+                    Data Sources
+                </h2>
+                <p
+                    style="font-size:clamp(0.85rem,1.2vw,1rem);color:#000;line-height:1.7;margin:0;"
+                >
+                    Artwork data from the
+                    <a
+                        href="https://metmuseum.github.io/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Met Museum Collection API</a
+                    >
+                    and
+                    <a
+                        href="https://github.com/metmuseum/openaccess"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Open Access CSV</a
+                    >.
+                    <br /><br />
+                    Dominant colors extracted with
+                    <a
+                        href="https://github.com/obskyr/colorgram.py"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >colorgram.py</a
+                    >.
+                    <br /><br />
+                    <span style="font-size:0.85em;color:#000;"
+                        >Visualization by Claire Nyquist</span
+                    >
+                </p>
+            </div>
+        </section>
     </div>
 
-    <!-- Laboratory Data Chart -->
-    <div class="mb-16">
-      <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-        <div class="p-4 sm:p-6 bg-gray-50 border-b">
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Laboratory System Molecular Data</h2>
-          <p class="text-sm sm:text-base text-gray-600 mb-4">
-            Weekly laboratory detections by pathogen from Minnesota's molecular testing surveillance system.
-          </p>
-          
-          <!-- Laboratory Controls -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div>
-              <label for="lab-pathogen-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Pathogen</label>
-              <select id="lab-pathogen-filter" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">All Pathogens</option>
-              </select>
+    <style>
+        /* Glass card */
+        .glass-card {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            max-width: 420px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-card a {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+        .glass-card a:hover {
+            color: #1e40af;
+        }
+
+        /* Hide default page padding from BaseLayout main */
+        :global(main.flex-grow) {
+            padding: 0 !important;
+        }
+
+        /* Hide footer when on this page */
+        :global(footer) {
+            display: none;
+        }
+
+        /* Loading overlay */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: opacity 0.5s;
+        }
+        #loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay">
+        <div style="text-align:center;">
+            <div
+                style="width:48px;height:48px;border:3px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"
+            >
             </div>
-            <div>
-              <label for="lab-date-range" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-              <select id="lab-date-range" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="all">All Time</option>
-                <option value="6months">Last 6 Months</option>
-                <option value="3months">Last 3 Months</option>
-              </select>
-            </div>
-          </div>
+            <p style="color:#666;font-size:0.95rem;">Loading artworks...</p>
         </div>
-
-        <!-- Loading indicator -->
-        <div id="lab-loading" class="p-8 text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p class="text-gray-600">Loading laboratory data...</p>
-        </div>
-
-        <!-- Chart container -->
-        <div id="lab-chart" class="hidden">
-          <div class="p-2 sm:p-4">
-            <div id="lab-container" class="w-full chart-container"></div>
-          </div>
-          <!-- Citation for laboratory data -->
-          <div class="px-4 pb-4 text-xs text-gray-500 border-t bg-gray-50">
-            <p class="mt-2">
-              <strong>Data Source:</strong> Minnesota Department of Health. Laboratory Data - Viral Respiratory Illness in Minnesota. 
-              <a href="https://www.health.state.mn.us/diseases/respiratory/stats/lab.html" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.health.state.mn.us/diseases/respiratory/stats/lab.html</a>
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 
+    <script is:inline>
+        (function () {
+            "use strict";
 
-    <!-- Data Sources -->
-    <div class="mt-12 bg-white rounded-lg shadow-sm border p-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Sources</h3>
-      <p class="text-sm text-gray-600 mb-3">
-        Respiratory Virus Hospitalization Surveillance Network (RESP-NET). (2025). Viral Respiratory Illness in Minnesota. [Data set]. Minnesota Department of Health. <a href="https://www.health.state.mn.us/diseases/respiratory/stats/index.html" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.health.state.mn.us/diseases/respiratory/stats/index.html</a>
-      </p>
-    </div>
-  </div>
+            // --- State ---
+            let artworks = [];
+            let N = 0;
+            let currentSort = "hue";
+            let targetSort = "hue";
+            let animProgress = 1; // 1 = done
+            let animStart = 0;
+            const ANIM_DURATION = 800;
 
-  <script>
-    // Global D3 declaration
-    declare const d3: any;
+            // Position arrays: { [sortName]: Float32Array of [x0,y0,x1,y1,...] }
+            let positions = {};
+            // Colors as [r,g,b] arrays
+            let colors = [];
 
-    // Global variables for data
-    let hospitalizationData: any[] = [];
-    let laboratoryData: any[] = [];
+            // Canvas
+            const canvas = document.getElementById("met-canvas");
+            const ctx = canvas.getContext("2d");
+            let canvasW = 0,
+                canvasH = 0,
+                cols = 0,
+                rows = 0,
+                pixelSize = 0;
+            const dpr = window.devicePixelRatio || 1;
+            const navH = 64; // height of sticky navbar
 
-    // Color scheme for different pathogens and metrics - maximally different colors
-    const pathogenColors = {
-      // First Chart (Hospitalization) - Blue, Orange, Yellow
-      'Total': '#6B7280',        // Gray for total
-      'COVID-19': '#1E40AF',
-      'COVID': '#1E40AF',     // Blue
-      'RSV': '#EA580C',          // Orange  
-      'Influenza': '#EAB308',    // Yellow
-      
-      // Second Chart (Laboratory) - Red, Green, Purple, Teal, Pink
-      'Adenovirus': '#610b00',   // Red
-      'Human Metapneumovirus': '#16A34A',    // Green
-      'Parainfluenza Virus 1-4': '#EA580C',  // Orange
-      'Parainfluenza Virus 1': '#EA580C',
-      'Rhinovirus': '#1192e8',   // Teal
-      'Seasonal Coronavirus': '#EC4899',     // Pink
-      
-      // Legacy mappings for consistency
-      'Parainfluenza': '#EA580C', 
-      'Metapneumovirus': '#16A34A', 
-      'Enterovirus': '#002d9c',   
-      'Bocavirus': '#ee538b',     
-      'Other': '#b28600'          
-    };
+            // Tooltip
+            const tooltip = document.getElementById("tooltip");
 
-    // Initialize the visualization
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Loading respiratory virus data...');
-      loadAllData();
-    });
+            // --- CSV Parsing ---
+            function parseCSV(text) {
+                const lines = text.split("\n");
+                const headers = parseCSVLine(lines[0]);
+                const result = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    const vals = parseCSVLine(lines[i]);
+                    const obj = {};
+                    for (let j = 0; j < headers.length; j++) {
+                        obj[headers[j]] = vals[j] || "";
+                    }
+                    result.push(obj);
+                }
+                return result;
+            }
 
-    // Load all three datasets
-    async function loadAllData() {
-      try {
-        console.log('Starting to load all data...');
-        
-        const [hospData, labData] = await Promise.all([
-          loadHospitalizationData().catch(e => {
-            console.error('Hospitalization data error:', e);
-            return [];
-          }),
-          loadLaboratoryData().catch(e => {
-            console.error('Laboratory data error:', e);
-            return [];
-          })
-        ]);
+            function parseCSVLine(line) {
+                const result = [];
+                let current = "";
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (inQuotes) {
+                        if (ch === '"') {
+                            if (i + 1 < line.length && line[i + 1] === '"') {
+                                current += '"';
+                                i++;
+                            } else {
+                                inQuotes = false;
+                            }
+                        } else {
+                            current += ch;
+                        }
+                    } else {
+                        if (ch === '"') {
+                            inQuotes = true;
+                        } else if (ch === ",") {
+                            result.push(current.trim());
+                            current = "";
+                        } else {
+                            current += ch;
+                        }
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
 
-        hospitalizationData = hospData;
-        laboratoryData = labData;
+            // --- Hex to RGB ---
+            function hexToRGB(hex) {
+                hex = hex.replace("#", "");
+                return [
+                    parseInt(hex.substring(0, 2), 16),
+                    parseInt(hex.substring(2, 4), 16),
+                    parseInt(hex.substring(4, 6), 16),
+                ];
+            }
 
-        console.log('All data loaded:', {
-          hospitalizations: hospitalizationData.length,
-          laboratory: laboratoryData.length
-        });
+            function hexToLightness(hex) {
+                const [r, g, b] = hexToRGB(hex || "#888888");
+                const max = Math.max(r, g, b) / 255;
+                const min = Math.min(r, g, b) / 255;
+                return (max + min) / 2;
+            }
 
-        // Initialize all charts with small delay to ensure containers are ready
-        setTimeout(() => {
-          if (hospitalizationData.length > 0) {
-            initializeHospitalizationChart();
-          } else {
-            console.warn('No hospitalization data available');
-            showHospError();
-          }
-          
-          if (laboratoryData.length > 0) {
-            initializeLaboratoryChart();
-          } else {
-            console.warn('No laboratory data available');
-            showLabError();
-          }
-          
-          setupEventListeners();
-        }, 100);
+            // --- Grid Calculation ---
+            function computeGrid() {
+                canvasW = window.innerWidth;
+                canvasH = window.innerHeight;
+                canvas.width = canvasW * dpr;
+                canvas.height = canvasH * dpr;
+                canvas.style.width = canvasW + "px";
+                canvas.style.height = canvasH + "px";
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      } catch (error) {
-        console.error('Error loading data:', error);
-        showAllErrors();
-      }
-    }
+                if (N === 0) return;
 
+                // Size squares to fill the available viewport (below navbar)
+                const availH = canvasH - navH;
+                cols = Math.ceil(Math.sqrt((N * canvasW) / availH));
+                rows = Math.ceil(N / cols);
+                pixelSize = Math.min(canvasW / cols, availH / rows);
+                cols = Math.floor(canvasW / pixelSize);
+                rows = Math.ceil(N / cols);
+                pixelSize = Math.min(canvasW / cols, availH / rows);
 
-    // Load hospitalization data
-    async function loadHospitalizationData() {
-      const response = await fetch('/data/MDHRespiratoryData10.9.25/MDH-statewide-hospitalizations-since-2022.csv');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const csvText = await response.text();
-      const lines = csvText.split('\n').filter(line => line.trim());
-      
-      const data: any[] = [];
-      for (let i = 1; i < lines.length; i++) {
-        const columns = lines[i].split('\t');
-        if (columns.length >= 15) {
-          const dateStr = columns[0]?.trim();
-          const pathogen = (columns[11]?.trim() || 'Total');
-          const rateStr = columns[14]?.trim();
-          
-          if (dateStr && rateStr) {
-            const rate = parseFloat(rateStr);
-            if (!isNaN(rate) && rate >= 0) {
-              const date = parseDate(dateStr);
-              if (date) {
-                data.push({
-                  date: date,
-                  pathogen: pathogen,
-                  value: rate,
-                  metric: 'Hospitalization Rate'
+                // Recompute all positions
+                computeAllPositions();
+            }
+
+            // --- Sort Helpers ---
+            function getSortedIndices(sortKey) {
+                const indices = Array.from({ length: N }, (_, i) => i);
+
+                switch (sortKey) {
+                    case "chronological":
+                        indices.sort((a, b) => {
+                            const da =
+                                parseInt(artworks[a].objectBeginDate) || 0;
+                            const db =
+                                parseInt(artworks[b].objectBeginDate) || 0;
+                            return da - db;
+                        });
+                        break;
+                    case "culture":
+                        indices.sort((a, b) => {
+                            const ca = (
+                                artworks[a].culture || "Unknown"
+                            ).toLowerCase();
+                            const cb = (
+                                artworks[b].culture || "Unknown"
+                            ).toLowerCase();
+                            return ca < cb ? -1 : ca > cb ? 1 : 0;
+                        });
+                        break;
+                    case "medium":
+                        indices.sort((a, b) => {
+                            const ma = simplifyMedium(
+                                artworks[a].medium || "Unknown",
+                            ).toLowerCase();
+                            const mb = simplifyMedium(
+                                artworks[b].medium || "Unknown",
+                            ).toLowerCase();
+                            return ma < mb ? -1 : ma > mb ? 1 : 0;
+                        });
+                        break;
+                    case "hue":
+                        indices.sort((a, b) => {
+                            const ha = parseFloat(artworks[a].hue) || 0;
+                            const hb = parseFloat(artworks[b].hue) || 0;
+                            if (Math.abs(ha - hb) > 0.5) return hb - ha;
+                            const la = hexToLightness(artworks[a].hex);
+                            const lb = hexToLightness(artworks[b].hex);
+                            return lb - la;
+                        });
+                        break;
+                }
+                return indices;
+            }
+
+            function simplifyMedium(medium) {
+                const lower = medium.toLowerCase();
+                if (lower.includes("oil")) return "Oil paint";
+                if (lower.includes("watercolor")) return "Watercolor";
+                if (lower.includes("woodblock") || lower.includes("woodcut"))
+                    return "Woodblock print";
+                if (lower.includes("photograph") || lower.includes("gelatin"))
+                    return "Photography";
+                if (lower.includes("silk")) return "Silk";
+                if (lower.includes("cotton")) return "Cotton";
+                if (lower.includes("wool")) return "Wool";
+                if (
+                    lower.includes("ceramic") ||
+                    lower.includes("terracotta") ||
+                    lower.includes("earthenware") ||
+                    lower.includes("stoneware") ||
+                    lower.includes("porcelain")
+                )
+                    return "Ceramics";
+                if (lower.includes("bronze")) return "Bronze";
+                if (lower.includes("silver")) return "Silver";
+                if (lower.includes("gold")) return "Gold";
+                if (lower.includes("iron") || lower.includes("steel"))
+                    return "Iron/Steel";
+                if (lower.includes("wood")) return "Wood";
+                if (
+                    lower.includes("stone") ||
+                    lower.includes("marble") ||
+                    lower.includes("limestone")
+                )
+                    return "Stone";
+                if (lower.includes("paper") || lower.includes("ink"))
+                    return "Ink on paper";
+                if (lower.includes("engraving") || lower.includes("etching"))
+                    return "Engraving";
+                if (lower.includes("lithograph")) return "Lithograph";
+                if (lower.includes("glass")) return "Glass";
+                if (lower.includes("ivory")) return "Ivory";
+                if (lower.includes("leather")) return "Leather";
+                const comma = medium.indexOf(",");
+                return comma > 0
+                    ? medium.substring(0, comma)
+                    : medium.substring(0, 30);
+            }
+
+            function computePositionsForSort(sortKey) {
+                const sorted = getSortedIndices(sortKey);
+                const posArr = new Float32Array(N * 2);
+
+                // Simple grid layout
+                for (let i = 0; i < sorted.length; i++) {
+                    const origIdx = sorted[i];
+                    const gridCol = i % cols;
+                    const gridRow = Math.floor(i / cols);
+                    posArr[origIdx * 2] = gridCol * pixelSize;
+                    posArr[origIdx * 2 + 1] = gridRow * pixelSize + navH;
+                }
+
+                return posArr;
+            }
+
+            function computeAllPositions() {
+                const sorts = ["chronological", "culture", "medium", "hue"];
+                for (const s of sorts) {
+                    positions[s] = computePositionsForSort(s);
+                }
+            }
+
+            // --- Easing ---
+            function easeInOutCubic(t) {
+                return t < 0.5
+                    ? 4 * t * t * t
+                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            // --- Render ---
+            function render(timestamp) {
+                if (animProgress < 1) {
+                    const elapsed = timestamp - animStart;
+                    animProgress = Math.min(1, elapsed / ANIM_DURATION);
+                }
+
+                const t = easeInOutCubic(animProgress);
+
+                ctx.clearRect(0, 0, canvasW, canvasH);
+
+                const fromPos = positions[currentSort];
+                const toPos = positions[targetSort];
+
+                if (!fromPos || !toPos) {
+                    requestAnimationFrame(render);
+                    return;
+                }
+
+                for (let i = 0; i < N; i++) {
+                    const fi = i * 2;
+                    let x, y;
+
+                    if (animProgress >= 1) {
+                        x = toPos[fi];
+                        y = toPos[fi + 1];
+                    } else {
+                        x = fromPos[fi] + (toPos[fi] - fromPos[fi]) * t;
+                        y =
+                            fromPos[fi + 1] +
+                            (toPos[fi + 1] - fromPos[fi + 1]) * t;
+                    }
+
+                    const c = colors[i];
+                    ctx.fillStyle = c;
+                    ctx.fillRect(x, y, pixelSize - 0.5, pixelSize - 0.5);
+                }
+
+                if (animProgress >= 1 && currentSort !== targetSort) {
+                    currentSort = targetSort;
+                }
+
+                requestAnimationFrame(render);
+            }
+
+            // --- Transition ---
+            function transitionTo(sortName) {
+                if (sortName === targetSort && animProgress >= 1) return;
+                if (!positions[sortName]) return;
+                targetSort = sortName;
+                animProgress = 0;
+                animStart = performance.now();
+            }
+
+            // --- Intersection Observer for scroll sections ---
+            function setupScrollObserver() {
+                const sections = document.querySelectorAll(".scroll-section");
+
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries) {
+                            if (entry.isIntersecting) {
+                                const sort =
+                                    entry.target.getAttribute("data-sort");
+                                if (sort) transitionTo(sort);
+                            }
+                        }
+                    },
+                    { threshold: 0.5 },
+                );
+
+                sections.forEach((s) => observer.observe(s));
+            }
+
+            // --- Tooltip on hover/tap ---
+            function setupTooltip() {
+                const tooltipText = document.getElementById("tooltip-text");
+                const tooltipImgWrap =
+                    document.getElementById("tooltip-img-wrap");
+                const tooltipImg = document.getElementById("tooltip-img");
+                const tooltipImgLoader =
+                    document.getElementById("tooltip-img-loader");
+                let currentTooltipIdx = -1;
+                let imgLoadedFor = -1;
+
+                tooltipImg.addEventListener("load", () => {
+                    tooltipImgLoader.style.display = "none";
+                    imgLoadedFor = currentTooltipIdx;
                 });
-              }
+                tooltipImg.addEventListener("error", () => {
+                    tooltipImgWrap.style.display = "none";
+                    imgLoadedFor = -1;
+                });
+
+                function showTooltipAt(mx, my) {
+                    if (N === 0 || animProgress < 1) {
+                        tooltip.style.display = "none";
+                        currentTooltipIdx = -1;
+                        return;
+                    }
+
+                    const pos = positions[currentSort];
+                    let found = -1;
+
+                    for (let i = 0; i < N; i++) {
+                        const px = pos[i * 2];
+                        const py = pos[i * 2 + 1];
+                        if (
+                            mx >= px &&
+                            mx < px + pixelSize &&
+                            my >= py &&
+                            my < py + pixelSize
+                        ) {
+                            found = i;
+                            break;
+                        }
+                    }
+
+                    if (found >= 0) {
+                        const a = artworks[found];
+                        const year = parseInt(a.objectBeginDate);
+                        const yearStr =
+                            year < 0 ? `${Math.abs(year)} BCE` : `${year} CE`;
+
+                        tooltipText.innerHTML = `
+            <strong style="color:${a.hex};">\u25A0</strong>
+            <strong>${a.objectName || "Untitled"}</strong><br>
+            <span style="color:#ccc;font-size:12px;">
+              ${a.culture || "Unknown culture"} &middot; ${yearStr}<br>
+              ${a.department ? "<b>Dept:</b> " + a.department + "<br>" : ""}
+              ${a.medium ? "<b>Medium:</b> " + a.medium + "<br>" : ""}
+              <b>Color:</b> <span style="color:${a.hex};">${a.hex}</span>
+            </span>
+          `;
+
+                        if (found !== currentTooltipIdx) {
+                            currentTooltipIdx = found;
+                            const imgUrl = a.imageUrl;
+                            if (imgUrl) {
+                                tooltipImgWrap.style.display = "block";
+                                tooltipImgLoader.style.display = "flex";
+                                tooltipImg.src = imgUrl;
+                            } else {
+                                tooltipImgWrap.style.display = "none";
+                            }
+                        }
+
+                        tooltip.style.display = "block";
+
+                        const tooltipH = tooltip.offsetHeight || 250;
+                        const tooltipW = 300;
+                        let tx = mx + 14;
+                        let ty = my + 14;
+                        if (tx + tooltipW > window.innerWidth)
+                            tx = mx - tooltipW - 10;
+                        if (ty + tooltipH > window.innerHeight)
+                            ty = my - tooltipH - 10;
+                        if (tx < 0) tx = 4;
+                        if (ty < 0) ty = 4;
+                        tooltip.style.left = tx + "px";
+                        tooltip.style.top = ty + "px";
+                    } else {
+                        tooltip.style.display = "none";
+                        currentTooltipIdx = -1;
+                    }
+                }
+
+                function hideTooltip() {
+                    tooltip.style.display = "none";
+                    currentTooltipIdx = -1;
+                }
+
+                // Track whether input is touch-based to avoid conflicts
+                let isTouch = false;
+
+                // Desktop: mouse events (skip if touch device)
+                canvas.addEventListener("mousemove", (e) => {
+                    if (isTouch) return;
+                    showTooltipAt(e.clientX, e.clientY);
+                });
+                canvas.addEventListener("mouseleave", () => {
+                    if (isTouch) return;
+                    hideTooltip();
+                });
+
+                // Mobile: tap to toggle tooltip
+                canvas.addEventListener(
+                    "touchstart",
+                    () => {
+                        isTouch = true;
+                    },
+                    { passive: true },
+                );
+
+                canvas.addEventListener("click", (e) => {
+                    if (!isTouch) return;
+                    if (N === 0 || animProgress < 1) return;
+
+                    const pos = positions[currentSort];
+                    let found = -1;
+                    for (let i = 0; i < N; i++) {
+                        const px = pos[i * 2];
+                        const py = pos[i * 2 + 1];
+                        if (
+                            e.clientX >= px &&
+                            e.clientX < px + pixelSize &&
+                            e.clientY >= py &&
+                            e.clientY < py + pixelSize
+                        ) {
+                            found = i;
+                            break;
+                        }
+                    }
+
+                    // Toggle: hide if tapping the same square
+                    if (
+                        found >= 0 &&
+                        found === currentTooltipIdx &&
+                        tooltip.style.display === "block"
+                    ) {
+                        hideTooltip();
+                    } else if (found >= 0) {
+                        showTooltipAt(e.clientX, e.clientY);
+                    } else {
+                        hideTooltip();
+                    }
+                });
             }
-          }
-        }
-      }
-      return data;
-    }
 
-    // Load laboratory data  
-    async function loadLaboratoryData() {
-      const response = await fetch('/data/MDHRespiratoryData10.9.25/MDH-laboratory-system-molecular-data-1-year-10.9.25.csv');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const csvText = await response.text();
-      const lines = csvText.split('\n').filter(line => line.trim());
-      
-      const data: any[] = [];
-      for (let i = 1; i < lines.length; i++) {
-        const columns = lines[i].split('\t');
-        if (columns.length >= 3) {
-          const pathogen = columns[0]?.trim();
-          const dateStr = columns[1]?.trim();
-          const valueStr = columns[2]?.trim();
-          
-          // Skip empty values
-          if (!pathogen || !dateStr || !valueStr) continue;
-          
-          const value = parseFloat(valueStr);
-          
-          if (pathogen && dateStr && !isNaN(value) && value > 0) {
-            const date = parseDate(dateStr);
-            if (date) {
-              data.push({
-                date: date,
-                pathogen: pathogen,
-                value: value,
-                metric: 'Laboratory Detections'
-              });
-            }
-          }
-        }
-      }
-      return data;
-    }
-
-
-    // Initialize Hospitalization Chart
-    function initializeHospitalizationChart() {
-      populateHospPathogenFilter();
-      createHospitalizationChart();
-      hideHospLoadingIndicator();
-    }
-
-    // Initialize Laboratory Chart
-    function initializeLaboratoryChart() {
-      populateLabPathogenFilter();
-      createLaboratoryChart();
-      hideLabLoadingIndicator();
-    }
-
-
-    // Parse date strings in various formats
-    function parseDate(dateStr: string): Date | null {
-      if (!dateStr || dateStr.trim() === '') return null;
-      
-      const cleanDateStr = dateStr.trim();
-      
-      // Try different date formats
-      let date: Date | null = null;
-      
-      // Format: M/D/YYYY or MM/DD/YYYY
-      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cleanDateStr)) {
-        date = new Date(cleanDateStr);
-      }
-      // Format: YYYY-MM-DD
-      else if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(cleanDateStr)) {
-        date = new Date(cleanDateStr);
-      }
-      // Format: MM/DD/YYYY (try parsing as-is)
-      else {
-        date = new Date(cleanDateStr);
-      }
-      
-      // Validate the date
-      if (date && !isNaN(date.getTime())) {
-        // Additional validation - reject obviously wrong dates
-        const year = date.getFullYear();
-        if (year >= 2020 && year <= 2025) {
-          return date;
-        }
-      }
-      
-      console.log('Failed to parse date:', cleanDateStr);
-      return null;
-    }
-
-    // Populate hospitalization pathogen filter
-    function populateHospPathogenFilter() {
-      const pathogens = new Set<string>();
-      hospitalizationData.forEach(d => {
-        if (d.pathogen && d.pathogen !== 'Unknown') {
-          pathogens.add(d.pathogen);
-        }
-      });
-
-      const select = document.getElementById('hosp-pathogen-filter') as HTMLSelectElement;
-      if (select) {
-        // Clear existing options except first
-        while (select.children.length > 1) {
-          select.removeChild(select.lastChild!);
-        }
-        
-        Array.from(pathogens).sort().forEach(pathogen => {
-          const option = document.createElement('option');
-          option.value = pathogen;
-          option.textContent = pathogen;
-          select.appendChild(option);
-        });
-      }
-    }
-
-    // Populate laboratory pathogen filter
-    function populateLabPathogenFilter() {
-      const pathogens = new Set<string>();
-      laboratoryData.forEach(d => {
-        if (d.pathogen && d.pathogen !== 'Unknown') {
-          pathogens.add(d.pathogen);
-        }
-      });
-
-      const select = document.getElementById('lab-pathogen-filter') as HTMLSelectElement;
-      if (select) {
-        // Clear existing options except first
-        while (select.children.length > 1) {
-          select.removeChild(select.lastChild!);
-        }
-        
-        Array.from(pathogens).sort().forEach(pathogen => {
-          const option = document.createElement('option');
-          option.value = pathogen;
-          option.textContent = pathogen;
-          select.appendChild(option);
-        });
-      }
-    }
-
-    // Create hospitalization chart
-    function createHospitalizationChart() {
-      const container = document.getElementById('hosp-container');
-      if (!container) return;
-
-      // Clear any existing chart
-      d3.select(container).selectAll('*').remove();
-
-      // Get filtered data
-      const filteredData = getHospFilteredData();
-      
-      if (filteredData.length === 0) {
-        showNoDataMessage(container, 'No hospitalization data available for the selected filters');
-        return;
-      }
-
-      createChart(container, filteredData, 'Hospitalization Rate', pathogenColors['COVID-19']);
-    }
-
-    // Create laboratory chart
-    function createLaboratoryChart() {
-      const container = document.getElementById('lab-container');
-      if (!container) return;
-
-      // Clear any existing chart
-      d3.select(container).selectAll('*').remove();
-
-      // Get filtered data
-      const filteredData = getLabFilteredData();
-      
-      if (filteredData.length === 0) {
-        showNoDataMessage(container, 'No laboratory data available for the selected filters');
-        return;
-      }
-
-      createChart(container, filteredData, 'Laboratory Detections', pathogenColors['RSV']);
-    }
-
-
-
-    // Create legend
-    function createLegend(g: any, width: number, keys: string[]) {
-      const isMobile = window.innerWidth < 640;
-      const isTablet = window.innerWidth < 1024;
-      
-      const legend = g.append('g')
-        .attr('class', 'legend')
-        .attr('transform', `translate(${width + 10}, 20)`);
-
-      // Limit legend items based on screen size
-      const maxItems = isMobile ? 4 : isTablet ? 6 : 8;
-      keys.slice(0, maxItems).forEach((key, i) => {
-        const [pathogen, metric] = key.split('-');
-        
-        // Use the same color logic as the line drawing - always use predefined color
-        const color = pathogenColors[pathogen as keyof typeof pathogenColors] || '#6B7280';
-
-        const legendItem = legend.append('g')
-          .attr('transform', `translate(0, ${i * (isMobile ? 16 : 20)})`);
-
-        legendItem.append('line')
-          .attr('x1', 0)
-          .attr('x2', isMobile ? 12 : 15)
-          .attr('stroke', color)
-          .attr('stroke-width', isMobile ? 1.5 : 2);
-
-        legendItem.append('text')
-          .attr('x', isMobile ? 16 : 20)
-          .attr('y', 0)
-          .attr('dy', '0.35em')
-          .style('font-family', "'Lexend', sans-serif")
-          .style('font-size', isMobile ? '9px' : '11px')
-          .style('fill', '#374151')
-          .text(pathogen);
-      });
-    }
-
-    // Generic chart creation function
-    function createChart(container: HTMLElement, data: any[], yAxisLabel: string, defaultColor: string) {
-      // Validate container dimensions with retry
-      if (container.clientWidth === 0) {
-        console.log('Container width is 0, waiting for layout...');
-        setTimeout(() => {
-          if (container.clientWidth > 0) {
-            createChart(container, data, yAxisLabel, defaultColor);
-          } else {
-            showNoDataMessage(container, 'Chart container not ready. Please refresh the page.');
-          }
-        }, 100);
-        return;
-      }
-      
-      // Responsive dimensions based on screen size
-      const isMobile = window.innerWidth < 640; // sm breakpoint
-      const isTablet = window.innerWidth < 1024; // lg breakpoint
-      
-      // Adjust margins and legend space based on screen size
-      const margin = isMobile 
-        ? { top: 20, right: 20, bottom: 70, left: 50 }  // More space for x-axis labels on mobile
-        : isTablet 
-        ? { top: 20, right: 100, bottom: 80, left: 60 } // More space for x-axis labels on tablet
-        : { top: 20, right: 180, bottom: 80, left: 80 }; // More space for x-axis labels on desktop
-      
-      const width = Math.max(250, container.clientWidth - margin.left - margin.right);
-      const height = Math.max(200, container.clientHeight || 300) - margin.top - margin.bottom;
-      
-      // Validate data
-      if (!data || data.length === 0) {
-        showNoDataMessage(container, 'No data available for this chart.');
-        return;
-      }
-
-      try {
-        // Create SVG
-        const svg = d3.select(container)
-          .append('svg')
-          .attr('width', width + margin.left + margin.right)
-          .attr('height', height + margin.top + margin.bottom);
-
-        const g = svg.append('g')
-          .attr('transform', `translate(${margin.left},${margin.top})`);
-
-      // Set up scales
-      const dateExtent = d3.extent(data, (d: any) => d.date);
-      const valueExtent = d3.extent(data, (d: any) => d.value);
-
-      const xScale = d3.scaleTime()
-        .domain(dateExtent)
-        .range([0, width]);
-
-      // Configure y-axis to show appropriate scale and ticks
-      const maxValue = valueExtent[1] * 1.1;
-      let yAxisTicks: number[];
-      let yAxisFormat: string;
-      let yDomain: [number, number];
-      
-      if (maxValue <= 1) {
-        // If all values are less than 1, extend scale to 1 and show 0, 0.5, 1
-        yDomain = [0, 1];
-        yAxisTicks = [0, 0.5, 1];
-        yAxisFormat = '.1f'; // Show one decimal place
-      } else if (maxValue > 50) {
-        // If max value is greater than 21, show ticks every 10
-        yDomain = [0, maxValue];
-        const step = 20;
-        yAxisTicks = d3.range(0, Math.ceil(maxValue) + step, step);
-        yAxisFormat = '.0f'; // Whole numbers only
-      } else {
-        // Generate ticks as whole numbers
-        yDomain = [0, maxValue];
-        const tickCount = Math.min(Math.ceil(maxValue), 10); // Limit to 10 ticks max
-        yAxisTicks = d3.range(0, Math.ceil(maxValue) + 1, Math.max(1, Math.ceil(maxValue / tickCount)));
-        // Remove duplicates and ensure we don't exceed the scale
-        yAxisTicks = [...new Set(yAxisTicks)].filter((t: number) => t <= Math.ceil(maxValue));
-        yAxisFormat = '.0f'; // Whole numbers only
-      }
-      
-      const yScale = d3.scaleLinear()
-        .domain(yDomain)
-        .range([height, 0]);
-
-      // Create axes with responsive formatting
-      const xAxis = d3.axisBottom(xScale)
-        .tickFormat(d3.timeFormat('%b %Y'));
-      
-      const yAxis = d3.axisLeft(yScale)
-        .tickValues(yAxisTicks)
-        .tickFormat(d3.format(yAxisFormat));
-
-      g.append('g')
-        .attr('class', 'x-axis')
-        .attr('transform', `translate(0,${height})`)
-        .call(xAxis)
-        .selectAll('text')
-        .style('text-anchor', 'end')
-        .style('font-family', "'Lexend', sans-serif")
-        .style('font-size', isMobile ? '10px' : '12px')
-        .attr('dx', '-.8em')
-        .attr('dy', '.15em')
-        .attr('transform', isMobile ? 'rotate(-45)' : 'rotate(-45)');
-
-      g.append('g')
-        .attr('class', 'y-axis')
-        .call(yAxis)
-        .selectAll('text')
-        .style('font-family', "'Lexend', sans-serif")
-        .style('font-size', isMobile ? '10px' : '12px');
-
-      // Group data by pathogen and metric
-      const groupedData = d3.group(data, 
-        (d: any) => `${d.pathogen}-${d.metric || 'default'}`
-      );
-
-      // Create line generator
-      const line = d3.line()
-        .x((d: any) => xScale(d.date))
-        .y((d: any) => yScale(d.value))
-        .curve(d3.curveLinear);
-
-      // Draw lines for each group
-      groupedData.forEach((values: any, key: any) => {
-        const [pathogen, metric] = key.split('-');
-        const sortedValues = values.sort((a: any, b: any) => a.date - b.date);
-        
-        // Get color for this pathogen - always use the predefined color
-        const color = pathogenColors[pathogen as keyof typeof pathogenColors] || defaultColor;
-
-        // Draw the line
-        g.append('path')
-          .datum(sortedValues)
-          .attr('class', `line pathogen-${pathogen.replace(/[^a-zA-Z0-9]/g, '')}`)
-          .attr('fill', 'none')
-          .attr('stroke', color)
-          .attr('stroke-width', 2)
-          .attr('opacity', 0.8)
-          .attr('d', line);
-
-        // Add dots for data points
-        g.selectAll(`.dot-${pathogen.replace(/[^a-zA-Z0-9]/g, '')}-${metric}`)
-          .data(sortedValues)
-          .enter().append('circle')
-          .attr('class', `dot pathogen-${pathogen.replace(/[^a-zA-Z0-9]/g, '')}`)
-          .attr('cx', (d: any) => xScale(d.date))
-          .attr('cy', (d: any) => yScale(d.value))
-          .attr('r', 3)
-          .attr('fill', color)
-          .attr('opacity', 0.7)
-          .on('mouseover', function(event: any, d: any) {
-            event.target.setAttribute('r', '5');
-            event.target.setAttribute('opacity', '1');
-            showTooltip(event, d, color);
-          })
-          .on('mouseout', function(event: any) {
-            event.target.setAttribute('r', '3');
-            event.target.setAttribute('opacity', '0.7');
-            hideTooltip();
-          })
-          .on('touchstart', function(event: any, d: any) {
-            event.preventDefault();
-            document.querySelectorAll('circle.dot').forEach(function(el: any) {
-              el.setAttribute('r', '3');
-              el.setAttribute('opacity', '0.7');
+            // --- Resize handler ---
+            let resizeTimer;
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    computeGrid();
+                    animProgress = 1; // snap to current sort
+                }, 200);
             });
-            hideTooltip();
-            event.target.setAttribute('r', '5');
-            event.target.setAttribute('opacity', '1');
-            showTooltip(event.touches[0], d, color);
-          });
-      });
 
-      // Add legend only if there's space (not on mobile)
-      if (!isMobile) {
-        createLegend(g, width, Array.from(groupedData.keys()));
-      }
+            // --- Load data and start ---
+            async function init() {
+                try {
+                    const resp = await fetch("/data/met_colors.csv");
+                    if (!resp.ok)
+                        throw new Error(
+                            "CSV not found. Run the Python script first.",
+                        );
+                    const text = await resp.text();
+                    artworks = parseCSV(text);
+                    N = artworks.length;
 
-      // Add axis labels with responsive sizing
-      g.append('text')
-        .attr('class', 'axis-label')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - margin.left)
-        .attr('x', 0 - (height / 2))
-        .attr('dy', '1em')
-        .style('text-anchor', 'middle')
-        .style('font-family', "'Lexend', sans-serif")
-        .style('font-size', isMobile ? '10px' : '12px')
-        .style('fill', '#6B7280')
-        .text(yAxisLabel);
+                    // Pre-parse colors as hex strings
+                    colors = artworks.map((a) => a.hex || "#888888");
 
-      g.append('text')
-        .attr('class', 'axis-label')
-        .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 5})`)
-        .style('text-anchor', 'middle')
-        .style('font-family', "'Lexend', sans-serif")
-        .style('font-size', isMobile ? '10px' : '12px')
-        .style('fill', '#6B7280')
-        .text('Date');
-        
-      } catch (error) {
-        console.error('Error creating chart:', error);
-        showNoDataMessage(container, 'Error creating chart. Please refresh the page.');
-      }
-    }
+                    // Setup canvas and positions
+                    computeGrid();
 
-    // Get filtered hospitalization data
-    function getHospFilteredData() {
-      let filtered = [...hospitalizationData];
+                    // Start render loop
+                    requestAnimationFrame(render);
 
-      // Filter by pathogen
-      const pathogenFilter = (document.getElementById('hosp-pathogen-filter') as HTMLSelectElement)?.value;
-      if (pathogenFilter) {
-        filtered = filtered.filter(d => d.pathogen === pathogenFilter);
-      }
+                    // Setup interactions
+                    setupScrollObserver();
+                    setupTooltip();
 
-      // Filter by date range
-      const dateRange = (document.getElementById('hosp-date-range') as HTMLSelectElement)?.value;
-      if (dateRange && dateRange !== 'all') {
-        const now = new Date();
-        let cutoffDate = new Date();
-        
-        switch (dateRange) {
-          case '3months':
-            cutoffDate.setMonth(now.getMonth() - 3);
-            break;
-          case '6months':
-            cutoffDate.setMonth(now.getMonth() - 6);
-            break;
-          case '1year':
-            cutoffDate.setFullYear(now.getFullYear() - 1);
-            break;
-        }
-        
-        filtered = filtered.filter(d => d.date >= cutoffDate);
-      }
-
-      return filtered;
-    }
-
-    // Get filtered laboratory data
-    function getLabFilteredData() {
-      let filtered = [...laboratoryData];
-
-      // Filter by pathogen
-      const pathogenFilter = (document.getElementById('lab-pathogen-filter') as HTMLSelectElement)?.value;
-      if (pathogenFilter) {
-        filtered = filtered.filter(d => d.pathogen === pathogenFilter);
-      }
-
-      // Filter by date range
-      const dateRange = (document.getElementById('lab-date-range') as HTMLSelectElement)?.value;
-      if (dateRange && dateRange !== 'all') {
-        const now = new Date();
-        let cutoffDate = new Date();
-        
-        switch (dateRange) {
-          case '3months':
-            cutoffDate.setMonth(now.getMonth() - 3);
-            break;
-          case '6months':
-            cutoffDate.setMonth(now.getMonth() - 6);
-            break;
-        }
-        
-        filtered = filtered.filter(d => d.date >= cutoffDate);
-      }
-
-      return filtered;
-    }
-
-
-    // Show tooltip on hover
-    function showTooltip(event: any, d: any, color: string) {
-      const isMobile = window.innerWidth < 640;
-      
-      // Convert hex color to rgba with transparency
-      const hexToRgba = (hex: string, alpha: number) => {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      };
-      
-      const bgColor = hexToRgba(color, 0.9); // 90% opacity for slight transparency
-      
-      const tooltip = d3.select('body').append('div')
-        .attr('class', 'chart-tooltip')
-        .style('position', 'absolute')
-        .style('background', bgColor)
-        .style('color', 'white')
-        .style('padding', isMobile ? '6px 8px' : '8px 12px')
-        .style('border-radius', '4px')
-        .style('font-size', isMobile ? '10px' : '12px')
-        .style('pointer-events', 'none')
-        .style('z-index', '1000')
-        .style('max-width', isMobile ? '180px' : '300px')
-        .style('box-shadow', '0 2px 4px rgba(0,0,0,0.2)')
-        .html(`
-          <strong>${d.pathogen}</strong><br/>
-          ${d.metric}: ${d.value.toLocaleString()}<br/>
-          Date: ${d.date.toLocaleDateString()}
-        `);
-
-      // Position tooltip to avoid going off-screen
-      const tooltipNode = tooltip.node() as HTMLElement;
-      
-      // First position it to get actual dimensions
-      tooltip
-        .style('left', event.pageX + 10 + 'px')
-        .style('top', event.pageY - 10 + 'px');
-      
-      // Get actual tooltip dimensions after rendering
-      const tooltipRect = tooltipNode.getBoundingClientRect();
-      const tooltipWidth = tooltipRect.width;
-      const tooltipHeight = tooltipRect.height;
-      
-      // Calculate viewport boundaries
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-      
-      let left = event.pageX + 10;
-      let top = event.pageY - 10;
-      
-      // Adjust horizontal position
-      if (event.clientX + tooltipWidth + 20 > viewportWidth) {
-        // Tooltip would go off right edge, position to the left of cursor
-        left = event.pageX - tooltipWidth - 10;
-      }
-      
-      // Ensure tooltip doesn't go off left edge
-      if (left < scrollLeft + 5) {
-        left = scrollLeft + 5;
-      }
-      
-      // Adjust vertical position
-      if (event.clientY - tooltipHeight - 10 < 0) {
-        // Not enough space above, position below cursor
-        top = event.pageY + 20;
-      }
-      
-      // Ensure tooltip doesn't go off bottom edge
-      if (event.clientY + tooltipHeight + 30 > viewportHeight) {
-        // Position above cursor
-        top = event.pageY - tooltipHeight - 10;
-      }
-      
-      // Final safety check - keep within viewport
-      if (top < scrollTop + 5) {
-        top = scrollTop + 5;
-      }
-      if (top + tooltipHeight > scrollTop + viewportHeight - 5) {
-        top = scrollTop + viewportHeight - tooltipHeight - 5;
-      }
-
-      tooltip
-        .style('left', left + 'px')
-        .style('top', top + 'px');
-    }
-
-    // Hide tooltip
-    function hideTooltip() {
-      d3.selectAll('.chart-tooltip').remove();
-    }
-
-    // Show no data message
-    function showNoDataMessage(container: HTMLElement, message: string) {
-      d3.select(container)
-        .append('div')
-        .style('text-align', 'center')
-        .style('padding', '2rem')
-        .style('color', '#6B7280')
-        .text(message);
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-      // Hospitalization chart listeners
-      document.getElementById('hosp-pathogen-filter')?.addEventListener('change', () => {
-        createHospitalizationChart();
-      });
-      document.getElementById('hosp-date-range')?.addEventListener('change', () => {
-        createHospitalizationChart();
-      });
-
-      // Laboratory chart listeners
-      document.getElementById('lab-pathogen-filter')?.addEventListener('change', () => {
-        createLaboratoryChart();
-      });
-      document.getElementById('lab-date-range')?.addEventListener('change', () => {
-        createLaboratoryChart();
-      });
-
-
-      // Window resize handler
-      let resizeTimeout: ReturnType<typeof setTimeout>;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          createHospitalizationChart();
-          createLaboratoryChart();
-        }, 250);
-      });
-    }
-
-    // Hide loading indicators
-    function hideHospLoadingIndicator() {
-      const loading = document.getElementById('hosp-loading');
-      const chart = document.getElementById('hosp-chart');
-      
-      if (loading) loading.style.display = 'none';
-      if (chart) chart.classList.remove('hidden');
-    }
-
-    function hideLabLoadingIndicator() {
-      const loading = document.getElementById('lab-loading');
-      const chart = document.getElementById('lab-chart');
-      
-      if (loading) loading.style.display = 'none';
-      if (chart) chart.classList.remove('hidden');
-    }
-
-
-    // Show error messages
-    function showAllErrors() {
-      showHospError();
-      showLabError();
-    }
-
-    function showHospError() {
-      const loading = document.getElementById('hosp-loading');
-      if (loading) {
-        loading.innerHTML = `
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+                    // Hide loading
+                    const overlay = document.getElementById("loading-overlay");
+                    if (overlay) overlay.classList.add("hidden");
+                    setTimeout(() => {
+                        if (overlay) overlay.remove();
+                    }, 600);
+                } catch (err) {
+                    console.error("Met visualization error:", err);
+                    const overlay = document.getElementById("loading-overlay");
+                    if (overlay) {
+                        overlay.innerHTML = `
+            <div style="text-align:center;padding:2rem;">
+              <p style="color:#ef4444;font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">Could not load artwork data</p>
+              <p style="color:#666;font-size:0.9rem;">Run <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;">python scripts/met_color_extract.py</code> to generate the dataset.</p>
             </div>
-            <p class="text-red-600">Error loading hospitalization data</p>
-          </div>
-        `;
-      }
-    }
+          `;
+                    }
+                }
+            }
 
-    function showLabError() {
-      const loading = document.getElementById('lab-loading');
-      if (loading) {
-        loading.innerHTML = `
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <p class="text-red-600">Error loading laboratory data</p>
-          </div>
-        `;
-      }
-    }
-
-  </script>
-
-  <style>
-    /* Mobile-first responsive styles */
-    .disabled-filter {
-      background-color: #f3f4f6;
-      cursor: not-allowed;
-    }
-    
-    /* Chart container responsive behavior */
-    .chart-container {
-      min-height: 250px;
-      height: 300px;
-    }
-    
-    @media (min-width: 640px) {
-      .chart-container {
-        height: 350px;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .chart-container {
-        height: 400px;
-      }
-    }
-    
-    /* Mobile-optimized tooltips */
-    .chart-tooltip {
-      word-wrap: break-word;
-      white-space: normal;
-      box-sizing: border-box;
-    }
-    
-    /* Ensure tooltip is always visible on very small screens */
-    @media (max-width: 375px) {
-      .chart-tooltip {
-        max-width: calc(100vw - 20px) !important;
-        font-size: 9px !important;
-        padding: 5px 6px !important;
-      }
-    }
-    
-    /* Responsive text sizing */
-    @media (max-width: 639px) {
-      .text-responsive {
-        font-size: 0.875rem;
-      }
-    }
-    
-    /* Ensure charts don't overflow on mobile */
-    svg {
-      max-width: 100%;
-      height: auto;
-    }
-    
-    /* Mobile-friendly form controls */
-    @media (max-width: 639px) {
-      select {
-        font-size: 14px;
-        padding: 8px 12px;
-      }
-      
-      label {
-        font-size: 14px;
-      }
-    }
-    
-    /* Ensure links wrap properly and don't overflow */
-    a {
-      overflow-wrap: break-word;
-      word-break: normal;
-    }
-    
-    /* Specific styling for long URLs displayed as text */
-    a.break-words {
-      word-break: break-all;
-      overflow-wrap: anywhere;
-    }
-  </style>
+            // Wait for DOM
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init);
+            } else {
+                init();
+            }
+        })();
+    </script>
 </BaseLayout>
