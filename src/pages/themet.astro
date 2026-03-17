@@ -404,7 +404,7 @@ const description =
 
                 // Calculate cols — use more columns on desktop for smaller squares
                 const isDesktop = canvasW >= 768;
-                const scale = isDesktop ? 1.8 : 1;
+                const scale = isDesktop ? 1.8 : 1.5;
                 cols = Math.ceil(Math.sqrt((N * canvasW) / canvasH) * scale);
                 pixelSize = canvasW / cols;
                 rows = Math.ceil(N / cols);
@@ -791,25 +791,35 @@ const description =
                 });
                 canvas.addEventListener("mouseleave", hideTooltip);
 
-                // Mobile: touch events
-                canvas.addEventListener(
-                    "touchstart",
-                    (e) => {
-                        const touch = e.touches[0];
-                        showTooltipAt(touch.clientX, touch.clientY);
-                    },
-                    { passive: true },
-                );
-                canvas.addEventListener(
-                    "touchmove",
-                    (e) => {
-                        const touch = e.touches[0];
-                        showTooltipAt(touch.clientX, touch.clientY);
-                    },
-                    { passive: true },
-                );
-                canvas.addEventListener("touchend", hideTooltip);
-                canvas.addEventListener("touchcancel", hideTooltip);
+                // Mobile: tap to toggle tooltip
+                canvas.addEventListener("click", (e) => {
+                    if (N === 0 || animProgress < 1) return;
+
+                    const pos = positions[currentSort];
+                    let found = -1;
+                    for (let i = 0; i < N; i++) {
+                        const px = pos[i * 2];
+                        const py = pos[i * 2 + 1];
+                        if (
+                            e.clientX >= px &&
+                            e.clientX < px + pixelSize &&
+                            e.clientY >= py &&
+                            e.clientY < py + pixelSize
+                        ) {
+                            found = i;
+                            break;
+                        }
+                    }
+
+                    // Toggle: hide if tapping the same square
+                    if (found >= 0 && found === currentTooltipIdx && tooltip.style.display === "block") {
+                        hideTooltip();
+                    } else if (found >= 0) {
+                        showTooltipAt(e.clientX, e.clientY);
+                    } else {
+                        hideTooltip();
+                    }
+                });
             }
 
             // --- Resize handler ---
