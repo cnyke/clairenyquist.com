@@ -72,8 +72,8 @@ const description =
                         >Metropolitan Museum of Art</a
                     >'s open-access collection, colored by its dominant hue.
                     <br /><br />
-                    Scroll to see the 531 objects sorted by hue, date, culture, department,
-                    and media.
+                    Scroll to see the 531 objects sorted by hue, date, culture, and
+                    medium.
                 </p>
             </div>
         </section>
@@ -140,29 +140,7 @@ const description =
             </div>
         </section>
 
-        <!-- Section 4: Department -->
-        <section
-            class="scroll-section"
-            data-sort="department"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-left:5%;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
-                >
-                    Curatorial Departments
-                </h2>
-                <p
-                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    The Met organizes its collection into 17 curatorial
-                    departments. Each cluster is one department&mdash;from Asian
-                    Art to Arms & Armor.
-                </p>
-            </div>
-        </section>
-
-        <!-- Section 5: Medium -->
+        <!-- Section 4: Medium -->
         <section
             class="scroll-section"
             data-sort="medium"
@@ -402,21 +380,15 @@ const description =
 
                 if (N === 0) return;
 
-                // Calculate cols — use more columns on desktop for smaller squares
-                const isDesktop = canvasW >= 768;
-                const scale = isDesktop ? 1.8 : 1.5;
-                cols = Math.ceil(Math.sqrt((N * canvasW) / canvasH) * scale);
-                pixelSize = canvasW / cols;
+                // Size squares to fill the available viewport (below navbar)
+                const availH = canvasH - navH;
+                // Solve: cols * rows >= N, cols/rows ≈ canvasW/availH, pixelSize = canvasW/cols
+                cols = Math.ceil(Math.sqrt((N * canvasW) / availH));
                 rows = Math.ceil(N / cols);
-
-                // If rows overflow the viewport, add more columns to shrink squares
-                if (rows * pixelSize > canvasH) {
-                    rows = Math.floor(canvasH / pixelSize);
-                    if (rows < 1) rows = 1;
-                    cols = Math.ceil(N / rows);
-                    pixelSize = canvasW / cols;
-                    rows = Math.ceil(N / cols);
-                }
+                pixelSize = Math.min(canvasW / cols, availH / rows);
+                cols = Math.floor(canvasW / pixelSize);
+                rows = Math.ceil(N / cols);
+                pixelSize = Math.min(canvasW / cols, availH / rows);
 
                 // Recompute all positions
                 computeAllPositions();
@@ -445,17 +417,6 @@ const description =
                                 artworks[b].culture || "Unknown"
                             ).toLowerCase();
                             return ca < cb ? -1 : ca > cb ? 1 : 0;
-                        });
-                        break;
-                    case "department":
-                        indices.sort((a, b) => {
-                            const da = (
-                                artworks[a].department || ""
-                            ).toLowerCase();
-                            const db = (
-                                artworks[b].department || ""
-                            ).toLowerCase();
-                            return da < db ? -1 : da > db ? 1 : 0;
                         });
                         break;
                     case "medium":
@@ -532,10 +493,7 @@ const description =
                 const posArr = new Float32Array(N * 2);
 
                 // Check if this is a grouped sort (culture, department, medium)
-                const isGrouped =
-                    sortKey === "culture" ||
-                    sortKey === "department" ||
-                    sortKey === "medium";
+                const isGrouped = sortKey === "culture" || sortKey === "medium";
 
                 if (isGrouped) {
                     // Compute positions with row gaps between groups
@@ -546,8 +504,6 @@ const description =
                     const getGroup = (idx) => {
                         if (sortKey === "culture")
                             return artworks[idx].culture || "Unknown";
-                        if (sortKey === "department")
-                            return artworks[idx].department || "Unknown";
                         return simplifyMedium(
                             artworks[idx].medium || "Unknown",
                         );
@@ -592,13 +548,7 @@ const description =
             }
 
             function computeAllPositions() {
-                const sorts = [
-                    "chronological",
-                    "culture",
-                    "department",
-                    "medium",
-                    "hue",
-                ];
+                const sorts = ["chronological", "culture", "medium", "hue"];
                 for (const s of sorts) {
                     positions[s] = computePositionsForSort(s);
                 }

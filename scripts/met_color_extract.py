@@ -186,7 +186,8 @@ def fetch_object_and_color(object_id, session, keep_thumbs):
             "hex": hex_color,
             "hue": hue,
         }
-    except Exception:
+    except Exception as e:
+        print(f"\n  ERROR {object_id}: {type(e).__name__}: {e}", flush=True)
         return object_id, None
 
 
@@ -204,6 +205,9 @@ def stage2_fetch_and_extract(conn, sample_size, keep_thumbnails):
     if not pending:
         print("  No pending objects")
         return
+
+    # Shuffle so we don't get stuck on long runs of imageless objects
+    random.shuffle(pending)
 
     need = sample_size - done_count
     print(f"  Need {need} more objects ({done_count} already done, {len(pending)} pending)")
