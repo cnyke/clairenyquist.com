@@ -368,6 +368,13 @@ const description =
                 ];
             }
 
+            function hexToLightness(hex) {
+                const [r, g, b] = hexToRGB(hex || "#888888");
+                const max = Math.max(r, g, b) / 255;
+                const min = Math.min(r, g, b) / 255;
+                return (max + min) / 2;
+            }
+
             // --- Grid Calculation ---
             function computeGrid() {
                 canvasW = window.innerWidth;
@@ -434,7 +441,11 @@ const description =
                         indices.sort((a, b) => {
                             const ha = parseFloat(artworks[a].hue) || 0;
                             const hb = parseFloat(artworks[b].hue) || 0;
-                            return ha - hb;
+                            if (Math.abs(ha - hb) > 0.5) return hb - ha;
+                            // Same hue band — sort by lightness
+                            const la = hexToLightness(artworks[a].hex);
+                            const lb = hexToLightness(artworks[b].hex);
+                            return lb - la;
                         });
                         break;
                 }
@@ -493,7 +504,7 @@ const description =
                 const posArr = new Float32Array(N * 2);
 
                 // Check if this is a grouped sort (culture, department, medium)
-                const isGrouped = sortKey === "culture" || sortKey === "medium";
+                const isGrouped = false;
 
                 if (isGrouped) {
                     // Compute positions with row gaps between groups
