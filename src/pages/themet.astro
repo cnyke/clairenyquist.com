@@ -1,672 +1,878 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "The Met Collection | Claire Nyquist";
-const description = "Every pixel is an artwork. 10,000 objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
+const description =
+    "Every pixel is an artwork. 558 objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- Fixed canvas behind everything -->
-  <canvas id="met-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;"></canvas>
+    <!-- Fixed canvas behind everything -->
+    <canvas
+        id="met-canvas"
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;"
+    ></canvas>
 
-  <!-- Tooltip -->
-  <div id="tooltip" style="position:fixed;z-index:100;pointer-events:none;display:none;
+    <!-- Tooltip -->
+    <div
+        id="tooltip"
+        style="position:fixed;z-index:100;pointer-events:none;display:none;
     background:rgba(0,0,0,0.9);color:#fff;padding:0;border-radius:8px;
-    font-size:13px;max-width:300px;line-height:1.4;box-shadow:0 4px 20px rgba(0,0,0,0.4);overflow:hidden;">
-    <div id="tooltip-img-wrap" style="width:300px;height:200px;background:#111;display:none;position:relative;">
-      <img id="tooltip-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
-      <div id="tooltip-img-loader" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-        <div style="width:20px;height:20px;border:2px solid #444;border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;"></div>
-      </div>
+    font-size:13px;max-width:300px;line-height:1.4;box-shadow:0 4px 20px rgba(0,0,0,0.4);overflow:hidden;"
+    >
+        <div
+            id="tooltip-img-wrap"
+            style="width:300px;height:200px;background:#111;display:none;position:relative;"
+        >
+            <img
+                id="tooltip-img"
+                src=""
+                alt=""
+                style="width:100%;height:100%;object-fit:cover;"
+            />
+            <div
+                id="tooltip-img-loader"
+                style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"
+            >
+                <div
+                    style="width:20px;height:20px;border:2px solid #444;border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;"
+                >
+                </div>
+            </div>
+        </div>
+        <div id="tooltip-text" style="padding:8px 12px;"></div>
     </div>
-    <div id="tooltip-text" style="padding:8px 12px;"></div>
-  </div>
 
-  <!-- Scroll sections -->
-  <div id="scroll-container" style="position:relative;z-index:1;pointer-events:none;">
+    <!-- Scroll sections -->
+    <div
+        id="scroll-container"
+        style="position:relative;z-index:1;pointer-events:none;"
+    >
+        <!-- Section 0: Intro -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-left:5%;">
+                <h1
+                    style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
+                >
+                    The Met Collection
+                </h1>
+                <p
+                    style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Every pixel you see is an artwork from the
+                    <a
+                        href="https://www.metmuseum.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Metropolitan Museum of Art</a
+                    >'s open-access collection, colored by its dominant hue.
+                    <br /><br />
+                    Scroll to see the 558 objects sorted by hue, date, culture, department,
+                    and media.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 0: Intro -->
-    <section class="scroll-section" data-sort="chronological" style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;">
-      <div class="glass-card" style="margin-left:5%;">
-        <h1 style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;">
-          The Met Collection
-        </h1>
-        <p style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:#000;line-height:1.6;margin:0;">
-          Every pixel you see is an artwork from the
-          <a href="https://www.metmuseum.org/" target="_blank" rel="noopener noreferrer" style="color:#1d4ed8;text-decoration:underline;">Metropolitan Museum of Art</a>'s
-          open-access collection, colored by its dominant hue.
-          <br><br>
-          Scroll to watch 10,000 objects rearrange themselves.
-        </p>
-      </div>
-    </section>
+        <!-- Section 1: Hue -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Color Spectrum
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Sorted purely by hue.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 1: Chronological -->
-    <section class="scroll-section" data-sort="chronological" style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;">
-      <div class="glass-card" style="margin-right:5%;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;">
-          5,000 Years of Art
-        </h2>
-        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;">
-          Sorted by creation date, from ancient Egyptian artifacts to modern paintings.
-          Each row reads left to right through time.
-        </p>
-      </div>
-    </section>
+        <!-- Section 2: Chronological -->
+        <section
+            class="scroll-section"
+            data-sort="chronological"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-left:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    5,000 Years of Art
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Sorted by creation date, from ancient Egyptian artifacts to
+                    modern paintings. Each row reads left to right through time.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 2: Culture -->
-    <section class="scroll-section" data-sort="culture" style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;">
-      <div class="glass-card" style="margin-left:5%;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;">
-          Cultures & Nations
-        </h2>
-        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;">
-          Grouped by culture of origin. Notice how color palettes differ&mdash;Japanese woodblocks
-          glow differently than Greek pottery.
-        </p>
-      </div>
-    </section>
+        <!-- Section 3: Culture -->
+        <section
+            class="scroll-section"
+            data-sort="culture"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Cultures & Nations
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Grouped by culture of origin. Notice how color palettes
+                    differ.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 3: Department -->
-    <section class="scroll-section" data-sort="department" style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;">
-      <div class="glass-card" style="margin-right:5%;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;">
-          Curatorial Departments
-        </h2>
-        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;">
-          The Met organizes its collection into 17 curatorial departments.
-          Each cluster is one department&mdash;from Asian Art to Arms & Armor.
-        </p>
-      </div>
-    </section>
+        <!-- Section 4: Department -->
+        <section
+            class="scroll-section"
+            data-sort="department"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-left:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Curatorial Departments
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    The Met organizes its collection into 17 curatorial
+                    departments. Each cluster is one department&mdash;from Asian
+                    Art to Arms & Armor.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 4: Medium -->
-    <section class="scroll-section" data-sort="medium" style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;">
-      <div class="glass-card" style="margin-left:5%;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;">
-          Materials & Media
-        </h2>
-        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;">
-          Grouped by material&mdash;oil on canvas, woodblock print, silver, ceramic.
-          The medium shapes the palette.
-        </p>
-      </div>
-    </section>
+        <!-- Section 5: Medium -->
+        <section
+            class="scroll-section"
+            data-sort="medium"
+            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
+        >
+            <div class="glass-card" style="margin-right:5%;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+                >
+                    Materials & Media
+                </h2>
+                <p
+                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
+                >
+                    Grouped by material&mdash;oil on canvas, woodblock print,
+                    silver, ceramic. The medium shapes the palette.
+                </p>
+            </div>
+        </section>
 
-    <!-- Section 5: Hue -->
-    <section class="scroll-section" data-sort="hue" style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;">
-      <div class="glass-card" style="margin-right:5%;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;">
-          Color Spectrum
-        </h2>
-        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;">
-          Sorted purely by hue. A rainbow of art emerges&mdash;reds, oranges, yellows,
-          greens, blues, and violets sweep across the canvas.
-        </p>
-      </div>
-    </section>
-
-    <!-- Section 6: Outro -->
-    <section class="scroll-section" data-sort="hue" style="height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
-      <div class="glass-card" style="max-width:520px;text-align:center;">
-        <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;">
-          Data Sources
-        </h2>
-        <p style="font-size:clamp(0.85rem,1.2vw,1rem);color:#000;line-height:1.7;margin:0;">
-          Artwork data from the
-          <a href="https://metmuseum.github.io/" target="_blank" rel="noopener noreferrer" style="color:#1d4ed8;text-decoration:underline;">Met Museum Collection API</a>
-          and
-          <a href="https://github.com/metmuseum/openaccess" target="_blank" rel="noopener noreferrer" style="color:#1d4ed8;text-decoration:underline;">Open Access CSV</a>.
-          <br><br>
-          Dominant colors extracted with
-          <a href="https://github.com/obskyr/colorgram.py" target="_blank" rel="noopener noreferrer" style="color:#1d4ed8;text-decoration:underline;">colorgram.py</a>.
-          <br><br>
-          <span style="font-size:0.85em;color:#000;">Visualization by Claire Nyquist</span>
-        </p>
-      </div>
-    </section>
-
-  </div>
-
-  <style>
-    /* Glass card */
-    .glass-card {
-      pointer-events: auto;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 12px;
-      padding: 1.5rem 2rem;
-      max-width: 420px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .glass-card a {
-      color: #1d4ed8;
-      text-decoration: underline;
-    }
-    .glass-card a:hover {
-      color: #1e40af;
-    }
-
-    /* Hide default page padding from BaseLayout main */
-    :global(main.flex-grow) {
-      padding: 0 !important;
-    }
-
-    /* Hide footer when on this page */
-    :global(footer) {
-      display: none;
-    }
-
-    /* Loading overlay */
-    #loading-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-      transition: opacity 0.5s;
-    }
-    #loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-  </style>
-
-  <!-- Loading overlay -->
-  <div id="loading-overlay">
-    <div style="text-align:center;">
-      <div style="width:48px;height:48px;border:3px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"></div>
-      <p style="color:#666;font-size:0.95rem;">Loading 10,000 artworks...</p>
+        <!-- Section 6: Outro -->
+        <section
+            class="scroll-section"
+            data-sort="hue"
+            style="height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;"
+        >
+            <div class="glass-card" style="max-width:520px;text-align:center;">
+                <h2
+                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
+                >
+                    Data Sources
+                </h2>
+                <p
+                    style="font-size:clamp(0.85rem,1.2vw,1rem);color:#000;line-height:1.7;margin:0;"
+                >
+                    Artwork data from the
+                    <a
+                        href="https://metmuseum.github.io/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Met Museum Collection API</a
+                    >
+                    and
+                    <a
+                        href="https://github.com/metmuseum/openaccess"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >Open Access CSV</a
+                    >.
+                    <br /><br />
+                    Dominant colors extracted with
+                    <a
+                        href="https://github.com/obskyr/colorgram.py"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="color:#1d4ed8;text-decoration:underline;"
+                        >colorgram.py</a
+                    >.
+                    <br /><br />
+                    <span style="font-size:0.85em;color:#000;"
+                        >Visualization by Claire Nyquist</span
+                    >
+                </p>
+            </div>
+        </section>
     </div>
-  </div>
-  <style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
 
-  <script is:inline>
-  (function() {
-    'use strict';
-
-    // --- State ---
-    let artworks = [];
-    let N = 0;
-    let currentSort = 'chronological';
-    let targetSort = 'chronological';
-    let animProgress = 1; // 1 = done
-    let animStart = 0;
-    const ANIM_DURATION = 800;
-
-    // Position arrays: { [sortName]: Float32Array of [x0,y0,x1,y1,...] }
-    let positions = {};
-    // Colors as [r,g,b] arrays
-    let colors = [];
-
-    // Canvas
-    const canvas = document.getElementById('met-canvas');
-    const ctx = canvas.getContext('2d');
-    let canvasW = 0, canvasH = 0, cols = 0, rows = 0, pixelSize = 0;
-    const dpr = window.devicePixelRatio || 1;
-
-    // Tooltip
-    const tooltip = document.getElementById('tooltip');
-
-    // --- CSV Parsing ---
-    function parseCSV(text) {
-      const lines = text.split('\n');
-      const headers = parseCSVLine(lines[0]);
-      const result = [];
-      for (let i = 1; i < lines.length; i++) {
-        if (!lines[i].trim()) continue;
-        const vals = parseCSVLine(lines[i]);
-        const obj = {};
-        for (let j = 0; j < headers.length; j++) {
-          obj[headers[j]] = vals[j] || '';
+    <style>
+        /* Glass card */
+        .glass-card {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            max-width: 420px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        result.push(obj);
-      }
-      return result;
-    }
 
-    function parseCSVLine(line) {
-      const result = [];
-      let current = '';
-      let inQuotes = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (inQuotes) {
-          if (ch === '"') {
-            if (i + 1 < line.length && line[i + 1] === '"') {
-              current += '"';
-              i++;
-            } else {
-              inQuotes = false;
+        .glass-card a {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+        .glass-card a:hover {
+            color: #1e40af;
+        }
+
+        /* Hide default page padding from BaseLayout main */
+        :global(main.flex-grow) {
+            padding: 0 !important;
+        }
+
+        /* Hide footer when on this page */
+        :global(footer) {
+            display: none;
+        }
+
+        /* Loading overlay */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: opacity 0.5s;
+        }
+        #loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay">
+        <div style="text-align:center;">
+            <div
+                style="width:48px;height:48px;border:3px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"
+            >
+            </div>
+            <p style="color:#666;font-size:0.95rem;">Loading 558 artworks...</p>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
-          } else {
-            current += ch;
-          }
-        } else {
-          if (ch === '"') {
-            inQuotes = true;
-          } else if (ch === ',') {
-            result.push(current.trim());
-            current = '';
-          } else {
-            current += ch;
-          }
         }
-      }
-      result.push(current.trim());
-      return result;
-    }
+    </style>
 
-    // --- Hex to RGB ---
-    function hexToRGB(hex) {
-      hex = hex.replace('#', '');
-      return [
-        parseInt(hex.substring(0, 2), 16),
-        parseInt(hex.substring(2, 4), 16),
-        parseInt(hex.substring(4, 6), 16),
-      ];
-    }
+    <script is:inline>
+        (function () {
+            "use strict";
 
-    // --- Grid Calculation ---
-    function computeGrid() {
-      canvasW = window.innerWidth;
-      canvasH = window.innerHeight;
-      canvas.width = canvasW * dpr;
-      canvas.height = canvasH * dpr;
-      canvas.style.width = canvasW + 'px';
-      canvas.style.height = canvasH + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            // --- State ---
+            let artworks = [];
+            let N = 0;
+            let currentSort = "hue";
+            let targetSort = "hue";
+            let animProgress = 1; // 1 = done
+            let animStart = 0;
+            const ANIM_DURATION = 800;
 
-      if (N === 0) return;
+            // Position arrays: { [sortName]: Float32Array of [x0,y0,x1,y1,...] }
+            let positions = {};
+            // Colors as [r,g,b] arrays
+            let colors = [];
 
-      // Calculate cols so that squares fill the full viewport
-      cols = Math.ceil(Math.sqrt(N * canvasW / canvasH));
-      pixelSize = canvasW / cols;
-      rows = Math.ceil(N / cols);
+            // Canvas
+            const canvas = document.getElementById("met-canvas");
+            const ctx = canvas.getContext("2d");
+            let canvasW = 0,
+                canvasH = 0,
+                cols = 0,
+                rows = 0,
+                pixelSize = 0;
+            const dpr = window.devicePixelRatio || 1;
+            const navH = 64; // height of sticky navbar
 
-      // If rows overflow the viewport, add more columns to shrink squares
-      if (rows * pixelSize > canvasH) {
-        rows = Math.floor(canvasH / pixelSize);
-        if (rows < 1) rows = 1;
-        cols = Math.ceil(N / rows);
-        pixelSize = canvasW / cols;
-        rows = Math.ceil(N / cols);
-      }
+            // Tooltip
+            const tooltip = document.getElementById("tooltip");
 
-      // Recompute all positions
-      computeAllPositions();
-    }
-
-    // --- Sort Helpers ---
-    function getSortedIndices(sortKey) {
-      const indices = Array.from({ length: N }, (_, i) => i);
-
-      switch (sortKey) {
-        case 'chronological':
-          indices.sort((a, b) => {
-            const da = parseInt(artworks[a].objectBeginDate) || 0;
-            const db = parseInt(artworks[b].objectBeginDate) || 0;
-            return da - db;
-          });
-          break;
-        case 'culture':
-          indices.sort((a, b) => {
-            const ca = (artworks[a].culture || 'Unknown').toLowerCase();
-            const cb = (artworks[b].culture || 'Unknown').toLowerCase();
-            return ca < cb ? -1 : ca > cb ? 1 : 0;
-          });
-          break;
-        case 'department':
-          indices.sort((a, b) => {
-            const da = (artworks[a].department || '').toLowerCase();
-            const db = (artworks[b].department || '').toLowerCase();
-            return da < db ? -1 : da > db ? 1 : 0;
-          });
-          break;
-        case 'medium':
-          indices.sort((a, b) => {
-            const ma = simplifyMedium(artworks[a].medium || 'Unknown').toLowerCase();
-            const mb = simplifyMedium(artworks[b].medium || 'Unknown').toLowerCase();
-            return ma < mb ? -1 : ma > mb ? 1 : 0;
-          });
-          break;
-        case 'hue':
-          indices.sort((a, b) => {
-            const ha = parseFloat(artworks[a].hue) || 0;
-            const hb = parseFloat(artworks[b].hue) || 0;
-            return ha - hb;
-          });
-          break;
-      }
-      return indices;
-    }
-
-    function simplifyMedium(medium) {
-      // Take first meaningful chunk
-      const lower = medium.toLowerCase();
-      if (lower.includes('oil')) return 'Oil paint';
-      if (lower.includes('watercolor')) return 'Watercolor';
-      if (lower.includes('woodblock') || lower.includes('woodcut')) return 'Woodblock print';
-      if (lower.includes('photograph') || lower.includes('gelatin')) return 'Photography';
-      if (lower.includes('silk')) return 'Silk';
-      if (lower.includes('cotton')) return 'Cotton';
-      if (lower.includes('wool')) return 'Wool';
-      if (lower.includes('ceramic') || lower.includes('terracotta') || lower.includes('earthenware') || lower.includes('stoneware') || lower.includes('porcelain')) return 'Ceramics';
-      if (lower.includes('bronze')) return 'Bronze';
-      if (lower.includes('silver')) return 'Silver';
-      if (lower.includes('gold')) return 'Gold';
-      if (lower.includes('iron') || lower.includes('steel')) return 'Iron/Steel';
-      if (lower.includes('wood')) return 'Wood';
-      if (lower.includes('stone') || lower.includes('marble') || lower.includes('limestone')) return 'Stone';
-      if (lower.includes('paper') || lower.includes('ink')) return 'Ink on paper';
-      if (lower.includes('engraving') || lower.includes('etching')) return 'Engraving';
-      if (lower.includes('lithograph')) return 'Lithograph';
-      if (lower.includes('glass')) return 'Glass';
-      if (lower.includes('ivory')) return 'Ivory';
-      if (lower.includes('leather')) return 'Leather';
-      // Fallback: first word up to comma
-      const comma = medium.indexOf(',');
-      return comma > 0 ? medium.substring(0, comma) : medium.substring(0, 30);
-    }
-
-    function computePositionsForSort(sortKey) {
-      const sorted = getSortedIndices(sortKey);
-      const posArr = new Float32Array(N * 2);
-
-      // Check if this is a grouped sort (culture, department, medium)
-      const isGrouped = sortKey === 'culture' || sortKey === 'department' || sortKey === 'medium';
-
-      if (isGrouped) {
-        // Compute positions with row gaps between groups
-        let posIdx = 0;
-        let col = 0;
-        let row = 0;
-
-        const getGroup = (idx) => {
-          if (sortKey === 'culture') return artworks[idx].culture || 'Unknown';
-          if (sortKey === 'department') return artworks[idx].department || 'Unknown';
-          return simplifyMedium(artworks[idx].medium || 'Unknown');
-        };
-
-        let lastGroup = getGroup(sorted[0]);
-
-        for (let i = 0; i < sorted.length; i++) {
-          const origIdx = sorted[i];
-          const group = getGroup(origIdx);
-
-          // Add gap row when group changes
-          if (group !== lastGroup) {
-            col = 0;
-            row += 2; // extra row for gap
-            lastGroup = group;
-          }
-
-          const x = col * pixelSize;
-          const y = row * pixelSize;
-          posArr[origIdx * 2] = x;
-          posArr[origIdx * 2 + 1] = y;
-
-          col++;
-          if (col >= cols) {
-            col = 0;
-            row++;
-          }
-        }
-      } else {
-        // Simple grid layout
-        for (let i = 0; i < sorted.length; i++) {
-          const origIdx = sorted[i];
-          const gridCol = i % cols;
-          const gridRow = Math.floor(i / cols);
-          posArr[origIdx * 2] = gridCol * pixelSize;
-          posArr[origIdx * 2 + 1] = gridRow * pixelSize;
-        }
-      }
-
-      return posArr;
-    }
-
-    function computeAllPositions() {
-      const sorts = ['chronological', 'culture', 'department', 'medium', 'hue'];
-      for (const s of sorts) {
-        positions[s] = computePositionsForSort(s);
-      }
-    }
-
-    // --- Easing ---
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    // --- Render ---
-    function render(timestamp) {
-      // Calculate animation progress
-      if (animProgress < 1) {
-        const elapsed = timestamp - animStart;
-        animProgress = Math.min(1, elapsed / ANIM_DURATION);
-      }
-
-      const t = easeInOutCubic(animProgress);
-
-      ctx.clearRect(0, 0, canvasW, canvasH);
-
-      const fromPos = positions[currentSort];
-      const toPos = positions[targetSort];
-
-      if (!fromPos || !toPos) {
-        requestAnimationFrame(render);
-        return;
-      }
-
-      for (let i = 0; i < N; i++) {
-        const fi = i * 2;
-        let x, y;
-
-        if (animProgress >= 1) {
-          x = toPos[fi];
-          y = toPos[fi + 1];
-        } else {
-          x = fromPos[fi] + (toPos[fi] - fromPos[fi]) * t;
-          y = fromPos[fi + 1] + (toPos[fi + 1] - fromPos[fi + 1]) * t;
-        }
-
-        const c = colors[i];
-        ctx.fillStyle = c;
-        ctx.fillRect(x, y, pixelSize - 0.5, pixelSize - 0.5);
-      }
-
-      // When animation completes, update currentSort
-      if (animProgress >= 1 && currentSort !== targetSort) {
-        currentSort = targetSort;
-      }
-
-      requestAnimationFrame(render);
-    }
-
-    // --- Transition ---
-    function transitionTo(sortName) {
-      if (sortName === targetSort && animProgress >= 1) return;
-      if (!positions[sortName]) return;
-      targetSort = sortName;
-      animProgress = 0;
-      animStart = performance.now();
-    }
-
-    // --- Intersection Observer for scroll sections ---
-    function setupScrollObserver() {
-      const sections = document.querySelectorAll('.scroll-section');
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              const sort = entry.target.getAttribute('data-sort');
-              if (sort) transitionTo(sort);
+            // --- CSV Parsing ---
+            function parseCSV(text) {
+                const lines = text.split("\n");
+                const headers = parseCSVLine(lines[0]);
+                const result = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    const vals = parseCSVLine(lines[i]);
+                    const obj = {};
+                    for (let j = 0; j < headers.length; j++) {
+                        obj[headers[j]] = vals[j] || "";
+                    }
+                    result.push(obj);
+                }
+                return result;
             }
-          }
-        },
-        { threshold: 0.5 }
-      );
 
-      sections.forEach((s) => observer.observe(s));
-    }
+            function parseCSVLine(line) {
+                const result = [];
+                let current = "";
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (inQuotes) {
+                        if (ch === '"') {
+                            if (i + 1 < line.length && line[i + 1] === '"') {
+                                current += '"';
+                                i++;
+                            } else {
+                                inQuotes = false;
+                            }
+                        } else {
+                            current += ch;
+                        }
+                    } else {
+                        if (ch === '"') {
+                            inQuotes = true;
+                        } else if (ch === ",") {
+                            result.push(current.trim());
+                            current = "";
+                        } else {
+                            current += ch;
+                        }
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
 
-    // --- Tooltip on hover ---
-    function setupTooltip() {
-      const tooltipText = document.getElementById('tooltip-text');
-      const tooltipImgWrap = document.getElementById('tooltip-img-wrap');
-      const tooltipImg = document.getElementById('tooltip-img');
-      const tooltipImgLoader = document.getElementById('tooltip-img-loader');
-      let currentTooltipIdx = -1;
-      let imgLoadedFor = -1;
+            // --- Hex to RGB ---
+            function hexToRGB(hex) {
+                hex = hex.replace("#", "");
+                return [
+                    parseInt(hex.substring(0, 2), 16),
+                    parseInt(hex.substring(2, 4), 16),
+                    parseInt(hex.substring(4, 6), 16),
+                ];
+            }
 
-      tooltipImg.addEventListener('load', () => {
-        tooltipImgLoader.style.display = 'none';
-        imgLoadedFor = currentTooltipIdx;
-      });
-      tooltipImg.addEventListener('error', () => {
-        tooltipImgWrap.style.display = 'none';
-        imgLoadedFor = -1;
-      });
+            // --- Grid Calculation ---
+            function computeGrid() {
+                canvasW = window.innerWidth;
+                canvasH = window.innerHeight;
+                canvas.width = canvasW * dpr;
+                canvas.height = canvasH * dpr;
+                canvas.style.width = canvasW + "px";
+                canvas.style.height = canvasH + "px";
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      canvas.addEventListener('mousemove', (e) => {
-        if (N === 0 || animProgress < 1) {
-          tooltip.style.display = 'none';
-          currentTooltipIdx = -1;
-          return;
-        }
+                if (N === 0) return;
 
-        const mx = e.clientX;
-        const my = e.clientY;
-        const pos = positions[currentSort];
-        let found = -1;
+                // Calculate cols — use more columns on desktop for smaller squares
+                const isDesktop = canvasW >= 768;
+                const scale = isDesktop ? 1.8 : 1;
+                cols = Math.ceil(Math.sqrt((N * canvasW) / canvasH) * scale);
+                pixelSize = canvasW / cols;
+                rows = Math.ceil(N / cols);
 
-        for (let i = 0; i < N; i++) {
-          const px = pos[i * 2];
-          const py = pos[i * 2 + 1];
-          if (mx >= px && mx < px + pixelSize && my >= py && my < py + pixelSize) {
-            found = i;
-            break;
-          }
-        }
+                // If rows overflow the viewport, add more columns to shrink squares
+                if (rows * pixelSize > canvasH) {
+                    rows = Math.floor(canvasH / pixelSize);
+                    if (rows < 1) rows = 1;
+                    cols = Math.ceil(N / rows);
+                    pixelSize = canvasW / cols;
+                    rows = Math.ceil(N / cols);
+                }
 
-        if (found >= 0) {
-          const a = artworks[found];
-          const year = parseInt(a.objectBeginDate);
-          const yearStr = year < 0 ? `${Math.abs(year)} BCE` : `${year} CE`;
+                // Recompute all positions
+                computeAllPositions();
+            }
 
-          // Update text
-          tooltipText.innerHTML = `
+            // --- Sort Helpers ---
+            function getSortedIndices(sortKey) {
+                const indices = Array.from({ length: N }, (_, i) => i);
+
+                switch (sortKey) {
+                    case "chronological":
+                        indices.sort((a, b) => {
+                            const da =
+                                parseInt(artworks[a].objectBeginDate) || 0;
+                            const db =
+                                parseInt(artworks[b].objectBeginDate) || 0;
+                            return da - db;
+                        });
+                        break;
+                    case "culture":
+                        indices.sort((a, b) => {
+                            const ca = (
+                                artworks[a].culture || "Unknown"
+                            ).toLowerCase();
+                            const cb = (
+                                artworks[b].culture || "Unknown"
+                            ).toLowerCase();
+                            return ca < cb ? -1 : ca > cb ? 1 : 0;
+                        });
+                        break;
+                    case "department":
+                        indices.sort((a, b) => {
+                            const da = (
+                                artworks[a].department || ""
+                            ).toLowerCase();
+                            const db = (
+                                artworks[b].department || ""
+                            ).toLowerCase();
+                            return da < db ? -1 : da > db ? 1 : 0;
+                        });
+                        break;
+                    case "medium":
+                        indices.sort((a, b) => {
+                            const ma = simplifyMedium(
+                                artworks[a].medium || "Unknown",
+                            ).toLowerCase();
+                            const mb = simplifyMedium(
+                                artworks[b].medium || "Unknown",
+                            ).toLowerCase();
+                            return ma < mb ? -1 : ma > mb ? 1 : 0;
+                        });
+                        break;
+                    case "hue":
+                        indices.sort((a, b) => {
+                            const ha = parseFloat(artworks[a].hue) || 0;
+                            const hb = parseFloat(artworks[b].hue) || 0;
+                            return ha - hb;
+                        });
+                        break;
+                }
+                return indices;
+            }
+
+            function simplifyMedium(medium) {
+                // Take first meaningful chunk
+                const lower = medium.toLowerCase();
+                if (lower.includes("oil")) return "Oil paint";
+                if (lower.includes("watercolor")) return "Watercolor";
+                if (lower.includes("woodblock") || lower.includes("woodcut"))
+                    return "Woodblock print";
+                if (lower.includes("photograph") || lower.includes("gelatin"))
+                    return "Photography";
+                if (lower.includes("silk")) return "Silk";
+                if (lower.includes("cotton")) return "Cotton";
+                if (lower.includes("wool")) return "Wool";
+                if (
+                    lower.includes("ceramic") ||
+                    lower.includes("terracotta") ||
+                    lower.includes("earthenware") ||
+                    lower.includes("stoneware") ||
+                    lower.includes("porcelain")
+                )
+                    return "Ceramics";
+                if (lower.includes("bronze")) return "Bronze";
+                if (lower.includes("silver")) return "Silver";
+                if (lower.includes("gold")) return "Gold";
+                if (lower.includes("iron") || lower.includes("steel"))
+                    return "Iron/Steel";
+                if (lower.includes("wood")) return "Wood";
+                if (
+                    lower.includes("stone") ||
+                    lower.includes("marble") ||
+                    lower.includes("limestone")
+                )
+                    return "Stone";
+                if (lower.includes("paper") || lower.includes("ink"))
+                    return "Ink on paper";
+                if (lower.includes("engraving") || lower.includes("etching"))
+                    return "Engraving";
+                if (lower.includes("lithograph")) return "Lithograph";
+                if (lower.includes("glass")) return "Glass";
+                if (lower.includes("ivory")) return "Ivory";
+                if (lower.includes("leather")) return "Leather";
+                // Fallback: first word up to comma
+                const comma = medium.indexOf(",");
+                return comma > 0
+                    ? medium.substring(0, comma)
+                    : medium.substring(0, 30);
+            }
+
+            function computePositionsForSort(sortKey) {
+                const sorted = getSortedIndices(sortKey);
+                const posArr = new Float32Array(N * 2);
+
+                // Check if this is a grouped sort (culture, department, medium)
+                const isGrouped =
+                    sortKey === "culture" ||
+                    sortKey === "department" ||
+                    sortKey === "medium";
+
+                if (isGrouped) {
+                    // Compute positions with row gaps between groups
+                    let posIdx = 0;
+                    let col = 0;
+                    let row = 0;
+
+                    const getGroup = (idx) => {
+                        if (sortKey === "culture")
+                            return artworks[idx].culture || "Unknown";
+                        if (sortKey === "department")
+                            return artworks[idx].department || "Unknown";
+                        return simplifyMedium(
+                            artworks[idx].medium || "Unknown",
+                        );
+                    };
+
+                    let lastGroup = getGroup(sorted[0]);
+
+                    for (let i = 0; i < sorted.length; i++) {
+                        const origIdx = sorted[i];
+                        const group = getGroup(origIdx);
+
+                        // Add gap row when group changes
+                        if (group !== lastGroup) {
+                            col = 0;
+                            row += 1; // start new row for next group
+                            lastGroup = group;
+                        }
+
+                        const x = col * pixelSize;
+                        const y = row * pixelSize + navH;
+                        posArr[origIdx * 2] = x;
+                        posArr[origIdx * 2 + 1] = y;
+
+                        col++;
+                        if (col >= cols) {
+                            col = 0;
+                            row++;
+                        }
+                    }
+                } else {
+                    // Simple grid layout
+                    for (let i = 0; i < sorted.length; i++) {
+                        const origIdx = sorted[i];
+                        const gridCol = i % cols;
+                        const gridRow = Math.floor(i / cols);
+                        posArr[origIdx * 2] = gridCol * pixelSize;
+                        posArr[origIdx * 2 + 1] = gridRow * pixelSize + navH;
+                    }
+                }
+
+                return posArr;
+            }
+
+            function computeAllPositions() {
+                const sorts = [
+                    "chronological",
+                    "culture",
+                    "department",
+                    "medium",
+                    "hue",
+                ];
+                for (const s of sorts) {
+                    positions[s] = computePositionsForSort(s);
+                }
+            }
+
+            // --- Easing ---
+            function easeInOutCubic(t) {
+                return t < 0.5
+                    ? 4 * t * t * t
+                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            // --- Render ---
+            function render(timestamp) {
+                // Calculate animation progress
+                if (animProgress < 1) {
+                    const elapsed = timestamp - animStart;
+                    animProgress = Math.min(1, elapsed / ANIM_DURATION);
+                }
+
+                const t = easeInOutCubic(animProgress);
+
+                ctx.clearRect(0, 0, canvasW, canvasH);
+
+                const fromPos = positions[currentSort];
+                const toPos = positions[targetSort];
+
+                if (!fromPos || !toPos) {
+                    requestAnimationFrame(render);
+                    return;
+                }
+
+                for (let i = 0; i < N; i++) {
+                    const fi = i * 2;
+                    let x, y;
+
+                    if (animProgress >= 1) {
+                        x = toPos[fi];
+                        y = toPos[fi + 1];
+                    } else {
+                        x = fromPos[fi] + (toPos[fi] - fromPos[fi]) * t;
+                        y =
+                            fromPos[fi + 1] +
+                            (toPos[fi + 1] - fromPos[fi + 1]) * t;
+                    }
+
+                    const c = colors[i];
+                    ctx.fillStyle = c;
+                    ctx.fillRect(x, y, pixelSize - 0.5, pixelSize - 0.5);
+                }
+
+                // When animation completes, update currentSort
+                if (animProgress >= 1 && currentSort !== targetSort) {
+                    currentSort = targetSort;
+                }
+
+                requestAnimationFrame(render);
+            }
+
+            // --- Transition ---
+            function transitionTo(sortName) {
+                if (sortName === targetSort && animProgress >= 1) return;
+                if (!positions[sortName]) return;
+                targetSort = sortName;
+                animProgress = 0;
+                animStart = performance.now();
+            }
+
+            // --- Intersection Observer for scroll sections ---
+            function setupScrollObserver() {
+                const sections = document.querySelectorAll(".scroll-section");
+
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries) {
+                            if (entry.isIntersecting) {
+                                const sort =
+                                    entry.target.getAttribute("data-sort");
+                                if (sort) transitionTo(sort);
+                            }
+                        }
+                    },
+                    { threshold: 0.5 },
+                );
+
+                sections.forEach((s) => observer.observe(s));
+            }
+
+            // --- Tooltip on hover/tap ---
+            function setupTooltip() {
+                const tooltipText = document.getElementById("tooltip-text");
+                const tooltipImgWrap =
+                    document.getElementById("tooltip-img-wrap");
+                const tooltipImg = document.getElementById("tooltip-img");
+                const tooltipImgLoader =
+                    document.getElementById("tooltip-img-loader");
+                let currentTooltipIdx = -1;
+                let imgLoadedFor = -1;
+
+                tooltipImg.addEventListener("load", () => {
+                    tooltipImgLoader.style.display = "none";
+                    imgLoadedFor = currentTooltipIdx;
+                });
+                tooltipImg.addEventListener("error", () => {
+                    tooltipImgWrap.style.display = "none";
+                    imgLoadedFor = -1;
+                });
+
+                function showTooltipAt(mx, my) {
+                    if (N === 0 || animProgress < 1) {
+                        tooltip.style.display = "none";
+                        currentTooltipIdx = -1;
+                        return;
+                    }
+
+                    const pos = positions[currentSort];
+                    let found = -1;
+
+                    for (let i = 0; i < N; i++) {
+                        const px = pos[i * 2];
+                        const py = pos[i * 2 + 1];
+                        if (
+                            mx >= px &&
+                            mx < px + pixelSize &&
+                            my >= py &&
+                            my < py + pixelSize
+                        ) {
+                            found = i;
+                            break;
+                        }
+                    }
+
+                    if (found >= 0) {
+                        const a = artworks[found];
+                        const year = parseInt(a.objectBeginDate);
+                        const yearStr =
+                            year < 0 ? `${Math.abs(year)} BCE` : `${year} CE`;
+
+                        tooltipText.innerHTML = `
             <strong style="color:${a.hex};">\u25A0</strong>
-            <strong>${a.objectName || 'Untitled'}</strong><br>
+            <strong>${a.objectName || "Untitled"}</strong><br>
             <span style="color:#ccc;font-size:12px;">
-              ${a.culture || 'Unknown culture'} &middot; ${yearStr}<br>
-              ${a.department ? '<b>Dept:</b> ' + a.department + '<br>' : ''}
-              ${a.medium ? '<b>Medium:</b> ' + a.medium + '<br>' : ''}
+              ${a.culture || "Unknown culture"} &middot; ${yearStr}<br>
+              ${a.department ? "<b>Dept:</b> " + a.department + "<br>" : ""}
+              ${a.medium ? "<b>Medium:</b> " + a.medium + "<br>" : ""}
               <b>Color:</b> <span style="color:${a.hex};">${a.hex}</span>
             </span>
           `;
 
-          // Update image if hovering a new pixel
-          if (found !== currentTooltipIdx) {
-            currentTooltipIdx = found;
-            const imgUrl = a.imageUrl;
-            if (imgUrl) {
-              tooltipImgWrap.style.display = 'block';
-              tooltipImgLoader.style.display = 'flex';
-              tooltipImg.src = imgUrl;
-            } else {
-              tooltipImgWrap.style.display = 'none';
+                        if (found !== currentTooltipIdx) {
+                            currentTooltipIdx = found;
+                            const imgUrl = a.imageUrl;
+                            if (imgUrl) {
+                                tooltipImgWrap.style.display = "block";
+                                tooltipImgLoader.style.display = "flex";
+                                tooltipImg.src = imgUrl;
+                            } else {
+                                tooltipImgWrap.style.display = "none";
+                            }
+                        }
+
+                        tooltip.style.display = "block";
+
+                        const tooltipH = tooltip.offsetHeight || 250;
+                        const tooltipW = 300;
+                        let tx = mx + 14;
+                        let ty = my + 14;
+                        if (tx + tooltipW > window.innerWidth)
+                            tx = mx - tooltipW - 10;
+                        if (ty + tooltipH > window.innerHeight)
+                            ty = my - tooltipH - 10;
+                        if (tx < 0) tx = 4;
+                        if (ty < 0) ty = 4;
+                        tooltip.style.left = tx + "px";
+                        tooltip.style.top = ty + "px";
+                    } else {
+                        tooltip.style.display = "none";
+                        currentTooltipIdx = -1;
+                    }
+                }
+
+                function hideTooltip() {
+                    tooltip.style.display = "none";
+                    currentTooltipIdx = -1;
+                }
+
+                // Desktop: mouse events
+                canvas.addEventListener("mousemove", (e) => {
+                    showTooltipAt(e.clientX, e.clientY);
+                });
+                canvas.addEventListener("mouseleave", hideTooltip);
+
+                // Mobile: touch events
+                canvas.addEventListener(
+                    "touchstart",
+                    (e) => {
+                        const touch = e.touches[0];
+                        showTooltipAt(touch.clientX, touch.clientY);
+                    },
+                    { passive: true },
+                );
+                canvas.addEventListener(
+                    "touchmove",
+                    (e) => {
+                        const touch = e.touches[0];
+                        showTooltipAt(touch.clientX, touch.clientY);
+                    },
+                    { passive: true },
+                );
+                canvas.addEventListener("touchend", hideTooltip);
+                canvas.addEventListener("touchcancel", hideTooltip);
             }
-          }
 
-          tooltip.style.display = 'block';
+            // --- Resize handler ---
+            let resizeTimer;
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    computeGrid();
+                    animProgress = 1; // snap to current sort
+                }, 200);
+            });
 
-          // Position tooltip — account for image height
-          const tooltipH = tooltip.offsetHeight || 250;
-          const tooltipW = 300;
-          let tx = mx + 14;
-          let ty = my + 14;
-          if (tx + tooltipW > window.innerWidth) tx = mx - tooltipW - 10;
-          if (ty + tooltipH > window.innerHeight) ty = my - tooltipH - 10;
-          tooltip.style.left = tx + 'px';
-          tooltip.style.top = ty + 'px';
-        } else {
-          tooltip.style.display = 'none';
-          currentTooltipIdx = -1;
-        }
-      });
+            // --- Load data and start ---
+            async function init() {
+                try {
+                    const resp = await fetch("/data/met_colors.csv");
+                    if (!resp.ok)
+                        throw new Error(
+                            "CSV not found. Run the Python script first.",
+                        );
+                    const text = await resp.text();
+                    artworks = parseCSV(text);
+                    N = artworks.length;
 
-      canvas.addEventListener('mouseleave', () => {
-        tooltip.style.display = 'none';
-        currentTooltipIdx = -1;
-      });
-    }
+                    // Pre-parse colors as hex strings
+                    colors = artworks.map((a) => a.hex || "#888888");
 
-    // --- Resize handler ---
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        computeGrid();
-        animProgress = 1; // snap to current sort
-      }, 200);
-    });
+                    // Setup canvas and positions
+                    computeGrid();
 
-    // --- Load data and start ---
-    async function init() {
-      try {
-        const resp = await fetch('/data/met_colors.csv');
-        if (!resp.ok) throw new Error('CSV not found. Run the Python script first.');
-        const text = await resp.text();
-        artworks = parseCSV(text);
-        N = artworks.length;
+                    // Start render loop
+                    requestAnimationFrame(render);
 
-        // Pre-parse colors as hex strings
-        colors = artworks.map((a) => a.hex || '#888888');
+                    // Setup interactions
+                    setupScrollObserver();
+                    setupTooltip();
 
-        // Setup canvas and positions
-        computeGrid();
-
-        // Start render loop
-        requestAnimationFrame(render);
-
-        // Setup interactions
-        setupScrollObserver();
-        setupTooltip();
-
-        // Hide loading
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) overlay.classList.add('hidden');
-        setTimeout(() => { if (overlay) overlay.remove(); }, 600);
-
-      } catch (err) {
-        console.error('Met visualization error:', err);
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) {
-          overlay.innerHTML = `
+                    // Hide loading
+                    const overlay = document.getElementById("loading-overlay");
+                    if (overlay) overlay.classList.add("hidden");
+                    setTimeout(() => {
+                        if (overlay) overlay.remove();
+                    }, 600);
+                } catch (err) {
+                    console.error("Met visualization error:", err);
+                    const overlay = document.getElementById("loading-overlay");
+                    if (overlay) {
+                        overlay.innerHTML = `
             <div style="text-align:center;padding:2rem;">
               <p style="color:#ef4444;font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">Could not load artwork data</p>
               <p style="color:#666;font-size:0.9rem;">Run <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;">python scripts/met_color_extract.py</code> to generate the dataset.</p>
             </div>
           `;
-        }
-      }
-    }
+                    }
+                }
+            }
 
-    // Wait for DOM
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-  })();
-  </script>
+            // Wait for DOM
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init);
+            } else {
+                init();
+            }
+        })();
+    </script>
 </BaseLayout>
