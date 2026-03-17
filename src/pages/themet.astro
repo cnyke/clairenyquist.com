@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "The Met Collection | Claire Nyquist";
 const description =
-    "Every pixel is an artwork. 558 objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
+    "Every square is an artwork. 531 objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
 ---
 
 <BaseLayout title={title} description={description}>
@@ -63,7 +63,7 @@ const description =
                 <p
                     style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:#000;line-height:1.6;margin:0;"
                 >
-                    Every pixel you see is an artwork from the
+                    Every square you see is an artwork from the
                     <a
                         href="https://www.metmuseum.org/"
                         target="_blank"
@@ -72,7 +72,7 @@ const description =
                         >Metropolitan Museum of Art</a
                     >'s open-access collection, colored by its dominant hue.
                     <br /><br />
-                    Scroll to see the 558 objects sorted by hue, date, culture, department,
+                    Scroll to see the 531 objects sorted by hue, date, culture, department,
                     and media.
                 </p>
             </div>
@@ -288,7 +288,7 @@ const description =
                 style="width:48px;height:48px;border:3px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"
             >
             </div>
-            <p style="color:#666;font-size:0.95rem;">Loading 558 artworks...</p>
+            <p style="color:#666;font-size:0.95rem;">Loading 531 artworks...</p>
         </div>
     </div>
     <style>
@@ -799,9 +799,13 @@ const description =
                 });
 
                 // Mobile: tap to toggle tooltip
-                canvas.addEventListener("touchstart", () => {
-                    isTouch = true;
-                }, { passive: true });
+                canvas.addEventListener(
+                    "touchstart",
+                    () => {
+                        isTouch = true;
+                    },
+                    { passive: true },
+                );
 
                 canvas.addEventListener("click", (e) => {
                     if (!isTouch) return;
@@ -824,7 +828,11 @@ const description =
                     }
 
                     // Toggle: hide if tapping the same square
-                    if (found >= 0 && found === currentTooltipIdx && tooltip.style.display === "block") {
+                    if (
+                        found >= 0 &&
+                        found === currentTooltipIdx &&
+                        tooltip.style.display === "block"
+                    ) {
                         hideTooltip();
                     } else if (found >= 0) {
                         showTooltipAt(e.clientX, e.clientY);

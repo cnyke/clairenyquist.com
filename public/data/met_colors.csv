@@ -127,11 +127,9 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 1044,#391b1d,356.0,1750,American,The American Wing,"Mahogany, white pine, white oak",Bureau Table,https://images.metmuseum.org/CRDImages/ad/web-large/DP112865.JPG
 1177,#f7f7f7,0.0,1750,American,The American Wing,Wood,Candle stand,https://images.metmuseum.org/CRDImages/ad/web-large/189280.jpg
 1273,#d6d6d6,0.0,1750,,The American Wing,Brass,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/142483.jpg
-1274,#d6d6d6,0.0,1750,,The American Wing,Brass,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/142483.jpg
 6382,#402c18,30.0,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260590.jpg
 6392,#3d2c1c,29.1,1750,British,The American Wing,Earthenware,Dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP260592.jpg
 6396,#432b15,28.7,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260591.jpg
-6398,#432b15,28.7,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260591.jpg
 6672,#262420,40.0,1750,American,The American Wing,Silver,Porringer,https://images.metmuseum.org/CRDImages/ad/web-large/DP160371.jpg
 7471,#e9e9e9,0.0,1750,American or British,The American Wing,"Silver, paste",Buckle,https://images.metmuseum.org/CRDImages/ad/web-large/98480.jpg
 12562,#1a1a1a,0.0,1751,American,The American Wing,Pastel on light gray wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap08.238.jpg
@@ -156,7 +154,6 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 2524,#d5d4d4,0.0,1765,American,The American Wing,Silver,Sugar Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP245829.jpg
 7365,#d6d6d6,0.0,1767,,The American Wing,Paper-covered wax,Seal,https://images.metmuseum.org/CRDImages/ad/web-large/148298.jpg
 7545,#f5f5f5,0.0,1767,American,The American Wing,Gold,Cufflinks,https://images.metmuseum.org/CRDImages/ad/web-large/170413.jpg
-7546,#f5f5f5,0.0,1767,American,The American Wing,Gold,Cufflinks,https://images.metmuseum.org/CRDImages/ad/web-large/170413.jpg
 7783,#a6a6a6,0.0,1767,American,The American Wing,Pewter,Spoon,https://images.metmuseum.org/CRDImages/ad/web-large/123941.jpg
 13331,#eed7c5,26.3,1767,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap65.34.jpg
 50,#b3b3b3,0.0,1770,,The American Wing,Iron,Andiron,https://images.metmuseum.org/CRDImages/ad/web-large/130480.jpg
@@ -197,26 +194,9 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 13412,#cccccc,0.0,1782,American,The American Wing,Black chalk and white-chalk heightening on blue laid paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap60.44.10 verso.jpg
 14352,#dbdbdb,0.0,1782,American,The American Wing,Watercolor on ivory,"Painting, miniature",https://images.metmuseum.org/CRDImages/ad/web-large/APS6852.jpg
 842,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
-850,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
-855,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
 883,#555558,240.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258502.jpg
 983,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
-993,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
-997,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
-999,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
-1002,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
-1006,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
 6268,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6269,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6270,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6275,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6276,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6279,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6280,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6281,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6289,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6292,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
-6301,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
 6541,#c5cacd,202.5,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258644.jpg
 6542,#c4c8ca,200.0,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258643.jpg
 6548,#3c271a,22.9,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258500.jpg
@@ -262,7 +242,6 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 13619,#3e160d,11.0,1797,American,The American Wing,"Cotton, woven",Counterpane,https://images.metmuseum.org/CRDImages/ad/web-large/TP559.jpg
 14505,#2e2e2e,0.0,1797,,The American Wing,"Wax, glass, wood",Miniature,https://images.metmuseum.org/CRDImages/ad/web-large/148779.jpg
 13551,#2b2b2b,0.0,1799,American,The American Wing,Woven silk,Badge,https://images.metmuseum.org/CRDImages/ad/web-large/25540_83.2.153.jpg
-56,#e8e8e8,0.0,1800,,The American Wing,Bell metal,Andiron,https://images.metmuseum.org/CRDImages/ad/web-large/12875.jpg
 99,#dedede,0.0,1800,,The American Wing,"Brass, steel",Andiron,https://images.metmuseum.org/CRDImages/ad/web-large/142931.jpg
 126,#e1e1e1,0.0,1800,British (American market),The American Wing,"Earthenware, lusterware",Figure,https://images.metmuseum.org/CRDImages/ad/web-large/138290.jpg
 218,#ededed,0.0,1800,American,The American Wing,"Mahogany, ash",Armchair,https://images.metmuseum.org/CRDImages/ad/web-large/134786.jpg
@@ -271,8 +250,6 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 607,#0e2d1b,145.2,1800,American,The American Wing,Blown pattern-molded glass,Bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP243693.jpg
 751,#a1a1a1,0.0,1800,,The American Wing,Lacy pressed glass,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/153265.jpg
 964,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
-968,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
-969,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
 1127,#d7d7d7,0.0,1800,,The American Wing,Gilt bronze,Candelabrum,https://images.metmuseum.org/CRDImages/ad/web-large/159293.jpg
 1184,#34221d,13.0,1800,American,The American Wing,Earthenware,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/DP257752.jpg
 1317,#d5d5d5,0.0,1800,American,The American Wing,Silver,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/DP251738.jpg
@@ -347,7 +324,6 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 353,#e5e5e5,0.0,1815,American,The American Wing,Mahogany,Basin Stand,https://images.metmuseum.org/CRDImages/ad/web-large/35728.jpg
 477,#c6c6c6,0.0,1815,,The American Wing,Plaster,Bust,https://images.metmuseum.org/CRDImages/ad/web-large/103157.jpg
 6358,#b4b2ad,42.9,1815,French,The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260335.jpg
-6367,#b4b2ad,42.9,1815,French,The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260335.jpg
 7051,#0a312d,173.8,1815,American,The American Wing,Blown-molded glass,Salt,https://images.metmuseum.org/CRDImages/ad/web-large/DP206766.jpg
 7206,#11192d,222.9,1815,British (American market),The American Wing,"Earthenware, transfer-printed",Sauceboat,https://images.metmuseum.org/CRDImages/ad/web-large/LC-12_21_2-001.jpg
 7210,#575656,0.0,1815,French,The American Wing,Porcelain,Sauceboat,https://images.metmuseum.org/CRDImages/ad/web-large/DP260349.jpg
@@ -451,7 +427,6 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 13240,#c6c6c6,0.0,1854,American,The American Wing,Graphite on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193288.jpg
 13253,#dddddd,0.0,1854,American,The American Wing,Black ink on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/199560.jpg
 13255,#aaaaaa,0.0,1854,American,The American Wing,Pen and iron-gall ink on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193286.jpg
-13257,#dddddd,0.0,1854,American,The American Wing,Black ink and graphite on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/199560.jpg
 13260,#adadad,0.0,1854,American,The American Wing,Black ink and graphite on buff wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193274.jpg
 13403,#e5e5e5,0.0,1854,American,The American Wing,Britannia metal,Coffeepot,https://images.metmuseum.org/CRDImages/ad/web-large/249711.jpg
 29265,#3a2e24,27.3,1855,American,Arms and Armor,"Copper alloy, silver, iron",Spurs,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_367_368-001.jpg
@@ -523,9 +498,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 13142,#c2c2c2,0.0,1883,American,The American Wing,Bronze,Medallion,https://images.metmuseum.org/CRDImages/ad/web-large/270536.jpg
 2576,#3a3026,30.0,1885,American,The American Wing,Porcelain,Vegetable dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258778.jpg
 6931,#352a1d,32.5,1885,American,The American Wing,Porcelain,Salad plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258774.jpg
-6941,#352a1d,32.5,1885,American,The American Wing,Porcelain,Salad plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258774.jpg
 7125,#33281c,31.3,1885,American,The American Wing,Porcelain,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258764.jpg
-7135,#33281c,31.3,1885,American,The American Wing,Porcelain,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258764.jpg
 7185,#707070,0.0,1885,American,The American Wing,Pressed yellow glass,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/181935.jpg
 7187,#cbc7a3,54.0,1885,American,The American Wing,Pressed yellow glass,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP241463.jpg
 7521,#9a9fa7,216.9,1885,American,The American Wing,Pressed colorless and opalescent glass,Dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP241460.jpg
