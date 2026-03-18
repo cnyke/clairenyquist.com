@@ -73,8 +73,14 @@ const description =
                     >'s open-access collection, colored by its dominant hue.
                     <br /><br />
                     Scroll to see hundreds of objects sorted by hue, date, culture,
-                    and medium. Hover to see the individual artworks and their details.
+                    and medium.
                 </p>
+                <h3
+                    style="font-size:clamp(1.1rem,2vw,1.5rem);font-weight:700;margin:1rem 0 0 0;color:#000;"
+                >
+                    <span class="speech-desktop">Hover to see the artworks!</span>
+                    <span class="speech-mobile">Click to see the artworks!</span>
+                </h3>
             </div>
         </section>
 
@@ -232,6 +238,14 @@ const description =
         }
         .glass-card a:hover {
             color: #1e40af;
+        }
+
+        /* Show/hide based on pointer capability */
+        .speech-mobile { display: none; }
+        .speech-desktop { display: inline; }
+        @media (hover: none) and (pointer: coarse) {
+            .speech-mobile { display: inline; }
+            .speech-desktop { display: none; }
         }
 
         /* Hide default page padding from BaseLayout main */
@@ -774,6 +788,12 @@ const description =
                     if (!isTouch) return;
                     if (N === 0 || animProgress < 1) return;
 
+                    // If a tooltip is currently showing, always close it first
+                    if (tooltip.style.display === "block") {
+                        hideTooltip();
+                        return;
+                    }
+
                     const pos = positions[currentSort];
                     let found = -1;
                     for (let i = 0; i < N; i++) {
@@ -790,17 +810,8 @@ const description =
                         }
                     }
 
-                    // Toggle: hide if tapping the same square
-                    if (
-                        found >= 0 &&
-                        found === currentTooltipIdx &&
-                        tooltip.style.display === "block"
-                    ) {
-                        hideTooltip();
-                    } else if (found >= 0) {
+                    if (found >= 0) {
                         showTooltipAt(e.clientX, e.clientY);
-                    } else {
-                        hideTooltip();
                     }
                 });
             }
