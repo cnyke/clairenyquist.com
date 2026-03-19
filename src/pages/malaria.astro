@@ -28,9 +28,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 This visualization uses WHO estimates of malaria cases across
                 110 countries. Drag the globe to explore, hover for details, and
                 select a year to see how the burden has shifted over 25 years.
-                Colors represent absolute case counts as reported by the WHO,
-                not per-capita rates, so larger-population countries may appear
-                more prominent. Countries shown in gray have no WHO case
+                Use the toggle to switch between absolute case counts and
+                incidence per 1,000 population at risk. Absolute counts show
+                where the most people are affected; incidence reveals
+                transmission intensity regardless of country size. Countries shown in gray have no WHO case
                 estimates because they eliminated malaria before the reporting
                 period. The dataset only covers countries under active WHO
                 malaria surveillance.
@@ -52,17 +53,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         ><span class="sm:hidden">Tap</span> a country to see estimated
                         malaria cases.
                     </p>
-                    <div class="flex items-center gap-2">
-                        <label
-                            for="globe-year-select"
-                            class="text-sm font-medium text-gray-700"
-                            >Year</label
-                        >
-                        <select
-                            id="globe-year-select"
-                            class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer"
-                        >
-                        </select>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <label
+                                for="globe-year-select"
+                                class="text-sm font-medium text-gray-700"
+                                >Year</label
+                            >
+                            <select
+                                id="globe-year-select"
+                                class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer"
+                            >
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-1 rounded-md border border-gray-300 bg-white p-0.5">
+                            <button
+                                id="metric-cases"
+                                class="rounded px-3 py-1 text-sm font-medium transition-colors bg-gray-500 text-white"
+                                >Total Cases</button
+                            >
+                            <button
+                                id="metric-incidence"
+                                class="rounded px-3 py-1 text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100"
+                                >Per 1,000 at Risk</button
+                            >
+                        </div>
                     </div>
                 </div>
                 <div class="p-4 sm:p-6 flex justify-center">
@@ -122,12 +137,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     >world-atlas</a
                 > (TopoJSON, 110m resolution).
             </p>
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600 mb-3">
                 D3.js: Mike Bostock. (2024). D3: Data-Driven Documents. <a
                     href="https://d3js.org/"
                     class="text-blue-600 hover:text-blue-800 break-words"
                     target="_blank"
                     rel="noopener">https://d3js.org/</a
+                >
+            </p>
+            <p class="text-sm text-gray-600">
+                Roser, M. &amp; Ritchie, H. (2024). Malaria. <em>Our World in Data.</em>
+                <a
+                    href="https://ourworldindata.org/malaria"
+                    class="text-blue-600 hover:text-blue-800 break-words"
+                    target="_blank"
+                    rel="noopener"
+                    >https://ourworldindata.org/malaria</a
                 >
             </p>
 
@@ -383,6 +408,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             var allData = [];
             var worldTopo = null;
             var globeAnimId = null;
+            var currentMetric = "MALARIA_EST_CASES";
 
             function parseCSV(text) {
                 var lines = text.split("\n");
@@ -459,6 +485,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 // Build case lookup keyed by zero-padded numeric id
                 // Stores {cases, low, high} or null for missing
+                var isIncidence = currentMetric === "MALARIA_EST_INCIDENCE";
                 var caseLookup = {};
                 var numToName = {};
                 for (var i = 0; i < data.length; i++) {
@@ -467,14 +494,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     if (!numCode) continue;
                     var pid = padId(numCode);
                     if (d.Location) numToName[pid] = d.Location;
+                    if (d.IndicatorCode !== currentMetric) continue;
                     if (+d.Period === year) {
                         var raw = d.FactValueNumeric;
+                        var parsed = Number(raw);
                         // Only record if there is an actual numeric value in the field
-                        if (raw !== "" && raw !== undefined) {
+                        if (raw !== "" && raw !== undefined && !isNaN(parsed)) {
                             caseLookup[pid] = {
-                                cases: +raw || 0,
-                                low: +d.FactValueNumericLow || 0,
-                                high: +d.FactValueNumericHigh || 0,
+                                cases: parsed,
+                                low: Number(d.FactValueNumericLow) || 0,
+                                high: Number(d.FactValueNumericHigh) || 0,
                             };
                         }
                     }
@@ -529,10 +558,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .filter(function (v) {
                         return v > 0;
                     });
+                var minPositive = d3.min(caseValues) || 1;
                 var maxCases = d3.max(caseValues) || 1;
+                // For cases use domain [1, max] (log(0) undefined, but label shows 0)
+                // For incidence use actual min since values can be fractional
+                var domainMin = isIncidence ? minPositive : 1;
                 var colorScale = d3
                     .scaleSequentialLog(d3.interpolateBlues)
-                    .domain([1, maxCases]);
+                    .domain([domainMin, maxCases]);
 
                 // Convert TopoJSON → GeoJSON
                 var countries = topojson.feature(
@@ -550,11 +583,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .attr("d", pathGen)
                     .attr("fill", function (d) {
                         var id = padId(d.id);
-                        if (!(id in caseLookup)) return "#e5e7eb";
+                        if (!(id in caseLookup)) return "#d1d5db";
                         var entry = caseLookup[id];
                         return entry.cases > 0
                             ? colorScale(entry.cases)
-                            : "#f3f4f6";
+                            : "#f5f5f0";
                     })
                     .attr("stroke", "#fff")
                     .attr("stroke-width", 0.3);
@@ -604,29 +637,40 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .style("box-shadow", "0 2px 8px rgba(0,0,0,0.25)");
 
                 // Tooltip helpers
+                function fmtIncidence(v) {
+                    return v < 0.1 ? v.toPrecision(2) : v.toFixed(1);
+                }
+
                 function buildTooltipHtml(id) {
                     var name = numToName[id] || "Unknown";
                     var hasData = id in caseLookup;
                     if (hasData) {
                         var entry = caseLookup[id];
                         if (entry.cases > 0) {
+                            var label = isIncidence
+                                ? fmtIncidence(entry.cases) +
+                                  " per 1,000 at risk"
+                                : entry.cases.toLocaleString() + " cases";
                             var html =
-                                "<strong>" +
-                                name +
-                                "</strong><br>" +
-                                entry.cases.toLocaleString() +
-                                " cases";
+                                "<strong>" + name + "</strong><br>" + label;
                             if (entry.low > 0 || entry.high > 0) {
+                                var ciLow = isIncidence
+                                    ? fmtIncidence(entry.low)
+                                    : entry.low.toLocaleString();
+                                var ciHigh = isIncidence
+                                    ? fmtIncidence(entry.high)
+                                    : entry.high.toLocaleString();
                                 html +=
                                     "<br><span style='font-size:11px;color:#aaa'>95% CI: " +
-                                    entry.low.toLocaleString() +
+                                    ciLow +
                                     " \u2013 " +
-                                    entry.high.toLocaleString() +
+                                    ciHigh +
                                     "</span>";
                             }
                             return html;
                         }
-                        return "<strong>" + name + "</strong><br>0 cases";
+                        return "<strong>" + name + "</strong><br>" +
+                            (isIncidence ? "0 per 1,000 at risk" : "0 cases");
                     }
                     return "<strong>" + name + "</strong><br>No data";
                 }
@@ -855,19 +899,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 var legendW = Math.min(180, size * 0.4);
                 var legendH = 10;
                 var legendX = size - legendW - 14;
-                var legendY = size - 28;
+                var legendY = size - 40;
 
                 var defs = svg.append("defs");
                 var grad = defs.append("linearGradient").attr("id", "globe-lg");
-                grad.append("stop")
-                    .attr("offset", "0%")
-                    .attr("stop-color", d3.interpolateBlues(0.05));
-                grad.append("stop")
-                    .attr("offset", "50%")
-                    .attr("stop-color", d3.interpolateBlues(0.5));
-                grad.append("stop")
-                    .attr("offset", "100%")
-                    .attr("stop-color", d3.interpolateBlues(1));
+                var numStops = 10;
+                for (var si = 0; si <= numStops; si++) {
+                    var t = si / numStops;
+                    var val =
+                        domainMin *
+                        Math.pow(maxCases / domainMin, t);
+                    grad.append("stop")
+                        .attr("offset", t * 100 + "%")
+                        .attr("stop-color", colorScale(val));
+                }
 
                 svg.append("rect")
                     .attr("x", legendX)
@@ -878,19 +923,61 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .attr("fill", "url(#globe-lg)")
                     .attr("stroke", "#bbb");
 
+                // No-data / zero legend indicators
+                var swatchY = legendY - 14;
+                // No data swatch
+                svg.append("rect")
+                    .attr("x", legendX)
+                    .attr("y", swatchY)
+                    .attr("width", 8)
+                    .attr("height", 8)
+                    .attr("rx", 1)
+                    .attr("fill", "#d1d5db")
+                    .attr("stroke", "#bbb");
+                svg.append("text")
+                    .attr("x", legendX + 11)
+                    .attr("y", swatchY + 7)
+                    .attr("font-size", "8px")
+                    .attr("fill", "#666")
+                    .text("No data");
+                // Zero / eliminated swatch
+                svg.append("rect")
+                    .attr("x", legendX + 52)
+                    .attr("y", swatchY)
+                    .attr("width", 8)
+                    .attr("height", 8)
+                    .attr("rx", 1)
+                    .attr("fill", "#f5f5f0")
+                    .attr("stroke", "#bbb");
+                svg.append("text")
+                    .attr("x", legendX + 63)
+                    .attr("y", swatchY + 7)
+                    .attr("font-size", "8px")
+                    .attr("fill", "#666")
+                    .text("0 cases");
+
+                var minLabel = isIncidence
+                    ? (minPositive < 1 ? "<1" : fmtIncidence(minPositive))
+                    : "0";
+                var maxLabel = isIncidence
+                    ? (maxCases >= 10
+                        ? maxCases.toFixed(0)
+                        : maxCases.toFixed(1)) + "/1K"
+                    : formatNum(maxCases);
+
                 svg.append("text")
                     .attr("x", legendX)
-                    .attr("y", legendY - 3)
+                    .attr("y", legendY + legendH + 9)
                     .attr("font-size", "9px")
                     .attr("fill", "#666")
-                    .text("0");
+                    .text(minLabel);
                 svg.append("text")
                     .attr("x", legendX + legendW)
-                    .attr("y", legendY - 3)
+                    .attr("y", legendY + legendH + 9)
                     .attr("text-anchor", "end")
                     .attr("font-size", "9px")
                     .attr("fill", "#666")
-                    .text(formatNum(maxCases));
+                    .text(maxLabel);
             }
 
             // =========================================================
@@ -923,6 +1010,28 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             yearSelect.appendChild(opt);
                         }
                         yearSelect.addEventListener("change", function () {
+                            drawGlobe(allData);
+                        });
+
+                        // Metric toggle
+                        var btnCases =
+                            document.getElementById("metric-cases");
+                        var btnIncidence =
+                            document.getElementById("metric-incidence");
+                        function setMetricBtn(active, inactive) {
+                            active.className =
+                                "rounded px-3 py-1 text-sm font-medium transition-colors bg-gray-500 text-white";
+                            inactive.className =
+                                "rounded px-3 py-1 text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100";
+                        }
+                        btnCases.addEventListener("click", function () {
+                            currentMetric = "MALARIA_EST_CASES";
+                            setMetricBtn(btnCases, btnIncidence);
+                            drawGlobe(allData);
+                        });
+                        btnIncidence.addEventListener("click", function () {
+                            currentMetric = "MALARIA_EST_INCIDENCE";
+                            setMetricBtn(btnIncidence, btnCases);
                             drawGlobe(allData);
                         });
 
