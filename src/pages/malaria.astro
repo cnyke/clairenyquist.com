@@ -47,11 +47,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         Global Distribution
                     </h2>
                     <p class="text-sm sm:text-base text-gray-600 mb-4">
-                        Drag to rotate the globe. <span class="hidden sm:inline">Hover over</span><span class="sm:hidden">Tap</span> a country to see
-                        estimated malaria cases.
+                        Drag to rotate the globe. <span class="hidden sm:inline"
+                            >Hover over</span
+                        ><span class="sm:hidden">Tap</span> a country to see estimated
+                        malaria cases.
                     </p>
                     <div class="flex items-center gap-2">
-                        <label for="globe-year-select" class="text-sm font-medium text-gray-700">Year</label>
+                        <label
+                            for="globe-year-select"
+                            class="text-sm font-medium text-gray-700"
+                            >Year</label
+                        >
                         <select
                             id="globe-year-select"
                             class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer"
@@ -105,6 +111,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 produced by WHO and partners based on nationally reported data
                 adjusted for reporting completeness, diagnostic testing rates,
                 and health facility utilization.
+            </p>
+            <p class="text-sm text-gray-600 mb-3">
+                Natural Earth. (2024). Admin 0 – Countries. Via
+                <a
+                    href="https://github.com/topojson/world-atlas"
+                    class="text-blue-600 hover:text-blue-800 break-words"
+                    target="_blank"
+                    rel="noopener"
+                    >world-atlas</a
+                > (TopoJSON, 110m resolution).
             </p>
             <p class="text-sm text-gray-600">
                 D3.js: Mike Bostock. (2024). D3: Data-Driven Documents. <a
@@ -458,7 +474,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             caseLookup[pid] = {
                                 cases: +raw || 0,
                                 low: +d.FactValueNumericLow || 0,
-                                high: +d.FactValueNumericHigh || 0
+                                high: +d.FactValueNumericHigh || 0,
                             };
                         }
                     }
@@ -507,8 +523,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 // Color scale (log for better spread)
                 var caseValues = Object.values(caseLookup)
-                    .map(function (v) { return v.cases; })
-                    .filter(function (v) { return v > 0; });
+                    .map(function (v) {
+                        return v.cases;
+                    })
+                    .filter(function (v) {
+                        return v > 0;
+                    });
                 var maxCases = d3.max(caseValues) || 1;
                 var colorScale = d3
                     .scaleSequentialLog(d3.interpolateBlues)
@@ -579,7 +599,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .style("line-height", "1.4")
                     .style("display", "none")
                     .style("white-space", "pre-line")
-                    .style("max-width", "260px")
+                    .style("max-width", "280px")
                     .style("z-index", "10")
                     .style("box-shadow", "0 2px 8px rgba(0,0,0,0.25)");
 
@@ -590,12 +610,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     if (hasData) {
                         var entry = caseLookup[id];
                         if (entry.cases > 0) {
-                            var html = "<strong>" + name + "</strong><br>" +
-                                entry.cases.toLocaleString() + " cases";
+                            var html =
+                                "<strong>" +
+                                name +
+                                "</strong><br>" +
+                                entry.cases.toLocaleString() +
+                                " cases";
                             if (entry.low > 0 || entry.high > 0) {
-                                html += "<br><span style='font-size:11px;color:#aaa'>95% CI: " +
-                                    entry.low.toLocaleString() + " \u2013 " +
-                                    entry.high.toLocaleString() + "</span>";
+                                html +=
+                                    "<br><span style='font-size:11px;color:#aaa'>95% CI: " +
+                                    entry.low.toLocaleString() +
+                                    " \u2013 " +
+                                    entry.high.toLocaleString() +
+                                    "</span>";
                             }
                             return html;
                         }
@@ -626,8 +653,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 countryPaths
                     .on("mouseover", function (event, d) {
                         var id = padId(d.id);
-                        tooltip.style("display", "block").html(buildTooltipHtml(id));
-                        d3.select(this).attr("stroke", "#222").attr("stroke-width", 1.5).raise();
+                        tooltip
+                            .style("display", "block")
+                            .html(buildTooltipHtml(id));
+                        d3.select(this)
+                            .attr("stroke", "#222")
+                            .attr("stroke-width", 1.5)
+                            .raise();
                         activeCountry = this;
                     })
                     .on("mousemove", function (event) {
@@ -636,7 +668,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     })
                     .on("mouseout", function () {
                         tooltip.style("display", "none");
-                        d3.select(this).attr("stroke", "#fff").attr("stroke-width", 0.3);
+                        d3.select(this)
+                            .attr("stroke", "#fff")
+                            .attr("stroke-width", 0.3);
                         activeCountry = null;
                     });
 
@@ -646,23 +680,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     var svgCoords = d3.pointer(event, svg.node());
                     // Find which country was tapped using projection inversion
                     var lonlat = projection.invert(svgCoords);
-                    if (!lonlat) { tooltip.style("display", "none"); return; }
+                    if (!lonlat) {
+                        tooltip.style("display", "none");
+                        return;
+                    }
                     var tapped = null;
                     countries.features.forEach(function (f) {
                         if (d3.geoContains(f, lonlat)) tapped = f;
                     });
                     // Reset previous highlight
                     if (activeCountry) {
-                        d3.select(activeCountry).attr("stroke", "#fff").attr("stroke-width", 0.3);
+                        d3.select(activeCountry)
+                            .attr("stroke", "#fff")
+                            .attr("stroke-width", 0.3);
                     }
                     if (tapped) {
                         var id = padId(tapped.id);
-                        tooltip.style("display", "block").html(buildTooltipHtml(id));
+                        tooltip
+                            .style("display", "block")
+                            .html(buildTooltipHtml(id));
                         positionTooltip(coords[0], coords[1]);
                         // Highlight tapped country
                         countryPaths.each(function (dd) {
                             if (dd === tapped) {
-                                d3.select(this).attr("stroke", "#222").attr("stroke-width", 1.5).raise();
+                                d3.select(this)
+                                    .attr("stroke", "#222")
+                                    .attr("stroke-width", 1.5)
+                                    .raise();
                                 activeCountry = this;
                             }
                         });
@@ -782,10 +826,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 var pauseBtn = document.createElement("button");
                 pauseBtn.innerHTML = "&#10074;&#10074;";
                 pauseBtn.title = "Pause rotation";
-                pauseBtn.style.cssText = "position:absolute;top:6px;left:6px;width:36px;height:36px;border-radius:50%;border:1px solid #d1d5db;background:#fff;color:#6b7280;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0.6;transition:opacity 0.2s;z-index:5";
-                pauseBtn.addEventListener("mouseenter", function() { this.style.opacity = "1"; });
-                pauseBtn.addEventListener("mouseleave", function() { this.style.opacity = "0.6"; });
-                pauseBtn.addEventListener("click", function() {
+                pauseBtn.style.cssText =
+                    "position:absolute;top:6px;left:6px;width:36px;height:36px;border-radius:50%;border:1px solid #d1d5db;background:#fff;color:#6b7280;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0.6;transition:opacity 0.2s;z-index:5";
+                pauseBtn.addEventListener("mouseenter", function () {
+                    this.style.opacity = "1";
+                });
+                pauseBtn.addEventListener("mouseleave", function () {
+                    this.style.opacity = "0.6";
+                });
+                pauseBtn.addEventListener("click", function () {
                     paused = !paused;
                     if (paused) {
                         stopSpin();
@@ -847,6 +896,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // =========================================================
             // INIT
             // =========================================================
+
             function init() {
                 Promise.all([
                     fetch("/data/malariadata.csv").then(function (r) {
@@ -863,7 +913,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         worldTopo = results[1];
 
                         // Build year dropdown options
-                        var yearSelect = document.getElementById("globe-year-select");
+                        var yearSelect =
+                            document.getElementById("globe-year-select");
                         for (var yr = 2000; yr <= 2024; yr++) {
                             var opt = document.createElement("option");
                             opt.value = yr;

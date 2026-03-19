@@ -12,14 +12,20 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 544128,#a6844d,37.1,-1850,,Egyptian Art,"Faience, gold","Anklet, Senebtisi",https://images.metmuseum.org/CRDImages/eg/web-large/DP303020.jpg
 544783,#989898,0.0,-1640,,Egyptian Art,"Sycomore wood, stucco, paint","Coffin, Rishi",https://images.metmuseum.org/CRDImages/eg/web-large/14.10.1_223941_16-bit.jpg
 327254,#939693,120.0,-1500,Mitanni,Ancient West Asian Art,Stone,Cylinder seal,https://images.metmuseum.org/CRDImages/an/web-large/ss1986_311_51.jpg
+547645,#467282,196.0,-1479,,Egyptian Art,Egyptian blue,"Bangle, bracelet",https://images.metmuseum.org/CRDImages/eg/web-large/DP-41437-001.jpg
 544457,#57570c,60.0,-1473,,Egyptian Art,"Pottery, wood, leather, reed, stone, bronze or copper alloy, food remains","Foundation Deposit Pit, Hatshepsut",https://images.metmuseum.org/CRDImages/eg/web-large/vshatpit1.jpg
 551269,#695752,13.0,-1390,,Egyptian Art,"Glass, red-purple","Beads, string",https://images.metmuseum.org/CRDImages/eg/web-large/11.215.661.jpg
+557750,#d4c4a2,40.8,-1390,,Egyptian Art,Tempera on paper,"Facsimile, Malqata, papyrus",https://images.metmuseum.org/CRDImages/eg/web-large/DP-24011-001.jpg
+767314,#e6e6e6,0.0,-1390,,Egyptian Art,Mud,"Sealing, Nebmaatre, Amenhotep III, Re",https://images.metmuseum.org/CRDImages/eg/web-large/SC-PA_171.jpg
 549663,#3e3321,37.2,-1353,,Egyptian Art,Indurated limestone,"Inscribed Element, Aten epithets",https://images.metmuseum.org/CRDImages/eg/web-large/LC-57_180_8.jpg
+571920,#2b1f0d,36.0,-1353,,Egyptian Art,Polychrome faience,"Tile fragment, marsh scenes",https://images.metmuseum.org/CRDImages/eg/web-large/DP274292.jpg
 544691,#e3dbd2,31.8,-1336,,Egyptian Art,Granodiorite,"Head, Amun, Tutankhamun",https://images.metmuseum.org/CRDImages/eg/web-large/DT11639.jpg
 571706,#412008,25.3,-1323,,Egyptian Art,"Papyrus, ink","Papyrus funerary, Book of the Dead, Scribe Roy",https://images.metmuseum.org/CRDImages/eg/web-large/21.2.21a_EGDP014612.jpg
 257598,#39312c,23.1,-1299,Mycenaean,Greek and Roman Art,Terracotta,Squat alabastron,https://images.metmuseum.org/CRDImages/gr/web-large/DP121182.jpg
+559956,#876a3b,37.1,-1295,,Egyptian Art,Steatite,"Scarab, Ramesses II",https://images.metmuseum.org/CRDImages/eg/web-large/30.8.617_EGDP016868.jpg
 561385,#dbd1c6,31.4,-1295,,Egyptian Art,"Limestone, ink, paint","Ostracon, hieratic",https://images.metmuseum.org/CRDImages/eg/web-large/LC-09_184_744_EGDP035887.jpg
 244264,#f3f0f1,340.0,-1250,,Greek and Roman Art,Bronze,Chisel or awl ?,https://images.metmuseum.org/CRDImages/gr/web-large/DP2239.jpg
+62321,#e7d0b6,31.8,-1200,Japan,Asian Art,Bone,Harpoon head,https://images.metmuseum.org/CRDImages/as/web-large/LC-1975_268_340_001.jpg
 559942,#847556,40.4,-1070,,Egyptian Art,Shell,Hair ring,https://images.metmuseum.org/CRDImages/eg/web-large/LC-28_3_141_EGDP034975.jpg
 591129,#065a6e,191.5,-990,,Egyptian Art,Faience,"Shabti, Henettawy C",https://images.metmuseum.org/CRDImages/eg/web-large/25.3.19.140_EGDP012729.jpg
 326001,#212129,240.0,-900,Iran,Ancient West Asian Art,Ivory,Relief,https://images.metmuseum.org/CRDImages/an/web-large/DP115148.jpg
@@ -39,6 +45,8 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 773790,#f0ecee,330.0,-650,"Greek, Attic",Greek and Roman Art,Terracotta,Kylikes fragments,https://images.metmuseum.org/CRDImages/gr/web-large/DVB15544_1_ff.jpg
 241111,#282522,30.0,-600,Cypriot,Greek and Roman Art,Terracotta,"Statuette of a votary, female",https://images.metmuseum.org/CRDImages/gr/web-large/DP101629.jpg
 759802,#38261a,24.0,-600,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB13905_1_ff.jpg
+764570,#f0f1f6,230.0,-600,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB14019_1_ff.jpg
+330029,#cf8d56,27.3,-550,Etruscan,Greek and Roman Art,Bronze,Figure of a recumbent lion,https://images.metmuseum.org/CRDImages/gr/web-large/kn246b.jpg
 713913,#7b5747,18.5,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB07490_1_ff.jpg
 718887,#6e5444,22.9,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB06810_1_ff.jpg
 721727,#f2f9f5,145.7,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB08581_1_ff.jpg
@@ -48,8 +56,10 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 737500,#1e1813,27.3,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Skyphos fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB10563_1_ff.jpg
 740360,#af7055,18.0,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Pot fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB11032_1_ff.jpg
 740491,#26201a,30.0,-530,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB09408_1_ff.jpg
+53866,#4d452a,46.3,-500,Vietnam,Asian Art,Bronze,Anklet,https://images.metmuseum.org/CRDImages/as/web-large/2001_433_392_O1.jpg
 669634,#eeeff3,228.0,-500,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB00495_1_ff.jpg
 669800,#775c50,18.5,-500,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB00581_1_ff.jpg
+676676,#735b4f,20.0,-500,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragments,https://images.metmuseum.org/CRDImages/gr/web-large/DVB01357_1_ff.jpg
 691881,#2a1f19,21.2,-500,"Greek, Attic",Greek and Roman Art,Terracotta,Kylix fragment,https://images.metmuseum.org/CRDImages/gr/web-large/DVB03421_1_ff.jpg
 244879,#1a1815,36.0,-499,Greek,Greek and Roman Art,Chalcedony,Scaraboid,https://images.metmuseum.org/CRDImages/gr/web-large/DP142800.jpg
 588376,#a2663e,24.0,-400,,Egyptian Art,"Pottery, ink",Ostracon,https://images.metmuseum.org/CRDImages/eg/web-large/LC-25_10_25_28_EGDP039826.jpg
@@ -65,6 +75,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 29346,#2d2b23,48.0,-100,Thracian or Celtic,Arms and Armor,"Copper alloy (bronze), iron alloy",Bit,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_497-001-TIF_Original_300dpi.jpg
 49539,#4e3e2e,30.0,-99,China,Asian Art,Earthenware with painted decoration,Covered jar,https://images.metmuseum.org/CRDImages/as/web-large/DP341151.jpg
 241378,#3e2115,17.6,-99,"Roman, Cypriot",Greek and Roman Art,Terracotta,"Lamp, concave top",https://images.metmuseum.org/CRDImages/gr/web-large/DP-22527-002.jpg
+249254,#3f1726,337.5,-99,Roman,Greek and Roman Art,Glass ? opaque on blue [sic]; purple [CSL],Cameo,https://images.metmuseum.org/CRDImages/gr/web-large/DP143795.jpg
 257083,#b3997b,32.1,-25,Roman,Greek and Roman Art,Glass,"Fragment, mosaic",https://images.metmuseum.org/CRDImages/gr/web-large/DP22076edited.jpg
 29177,#2c2b24,52.5,1,possibly Roman,Arms and Armor,Copper alloy,Button,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_233-001.jpg
 44327,#d5d5d5,0.0,1,China,Asian Art,Earthenware with green lead glaze,Brazier model,https://images.metmuseum.org/CRDImages/as/web-large/272396.jpg
@@ -73,9 +84,15 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 322971,#f6f9f8,160.0,6,Sasanian or Islamic,Ancient West Asian Art,Ceramic,Bowl,https://images.metmuseum.org/CRDImages/an/web-large/me33_175_175.jpg
 241755,#ba6c4c,17.5,50,"Roman, Cypriot",Greek and Roman Art,Terracotta,Lamp,https://images.metmuseum.org/CRDImages/gr/web-large/DP-18844-103.jpg
 29273,#322a24,25.7,101,Gallo-Roman,Arms and Armor,Copper alloy (bronze),Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_382-002.jpg
+244699,#766f5d,43.2,200,Roman,Greek and Roman Art,Glass,Bowl or jar,https://images.metmuseum.org/CRDImages/gr/web-large/DP217772.jpg
+465116,#49351d,32.7,200,Roman,Medieval Art,Bone,Hairpin,https://images.metmuseum.org/CRDImages/md/web-large/sf17-191-67s1.jpg
 51255,#89633c,30.4,250,Pakistan,Asian Art,Painted terracotta,Shard,https://images.metmuseum.org/CRDImages/as/web-large/1992_256_20_kb.JPG
+477743,#3f2a1e,21.8,300,Coptic,Medieval Art,Earthenware,Vessel,https://images.metmuseum.org/CRDImages/md/web-large/cop0217s3.jpg
 478858,#3c3227,31.4,300,Coptic,Medieval Art,Earthenware,Bowl,https://images.metmuseum.org/CRDImages/md/web-large/cop0544s1.jpg
+479091,#ccc4a8,46.7,300,Coptic,Medieval Art,Glass,Fragment,https://images.metmuseum.org/CRDImages/md/web-large/cop0766.jpg
 479164,#322f1b,52.2,300,Coptic,Medieval Art,Glass (green),Fragment,https://images.metmuseum.org/CRDImages/md/web-large/cop0724.jpg
+475277,#22213d,242.1,400,Coptic,Medieval Art,"Linen, wool",Textile fragment,https://images.metmuseum.org/CRDImages/md/web-large/sftr-20-916-2002s1.jpg
+241731,#ddbd9e,29.5,500,Roman,Greek and Roman Art,Terracotta,Lamp,https://images.metmuseum.org/CRDImages/gr/web-large/DP-22527-150.jpg
 313430,#8caa91,130.0,500,Moche,The Michael C. Rockefeller Wing,Silvered copper,Ornament,https://images.metmuseum.org/CRDImages/ao/web-large/1979.206.1261.JPG
 313441,#87aa8e,132.0,500,Moche,The Michael C. Rockefeller Wing,"Silvered copper, stone",Ornament,https://images.metmuseum.org/CRDImages/ao/web-large/1979.206.1276_a.jpg
 465144,#b98532,36.9,500,Frankish,Medieval Art,"Gold, iron blade",Knife handle,https://images.metmuseum.org/CRDImages/md/web-large/sf17-191-92a-ds1.jpg
@@ -103,12 +120,16 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 37976,#e3cfba,30.7,1080,India (Bengal) or Bangladesh,Asian Art,Ink and color on palm leaf,Folio,https://images.metmuseum.org/CRDImages/as/web-large/DP238221.jpg
 446887,#3c251c,16.9,1100,,Islamic Art,"Stonepaste; underglaze- and luster-painted, transparent colorless-greenish glaze",Jar,https://images.metmuseum.org/CRDImages/is/web-large/sf17-74-2a.jpg
 466498,#544a1e,48.9,1100,French,Medieval Art,Colorless glass,Fragment,https://images.metmuseum.org/CRDImages/md/web-large/cdi23-229-4-9.jpg
+451359,#141a1e,204.0,1175,,Islamic Art,Stonepaste; painted under transparent turquoise glaze,Bowl,https://images.metmuseum.org/CRDImages/is/web-large/ISL507.jpg
 57508,#a2a2a0,60.0,1200,Korea,Asian Art,Stoneware with inlaid design under celadon glaze,Box,https://images.metmuseum.org/CRDImages/as/web-large/DP275599.jpg
 317031,#78724e,51.4,1200,Mexican,The Michael C. Rockefeller Wing,Stone,Ritual stone,https://images.metmuseum.org/CRDImages/ao/web-large/hz1994_35_303.jpg
+317119,#debedf,298.2,1200,Mexican,The Michael C. Rockefeller Wing,Jade,Earflare,https://images.metmuseum.org/CRDImages/ao/web-large/VS1994_35_581.JPG
+475340,#2f1906,27.8,1200,Crusader,Medieval Art,Stained Glass,Fragment,https://images.metmuseum.org/CRDImages/md/web-large/sf28-99-648.jpg
 29186,#362e29,23.1,1201,German or Slavic,Arms and Armor,Iron alloy,Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_250-001.jpg
 29195,#322e2b,25.7,1201,German,Arms and Armor,Iron alloy,Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_261-001.jpg
 447631,#856047,24.2,1300,,Islamic Art,Stonepaste; glazed,Tile,https://images.metmuseum.org/CRDImages/is/web-large/sf23-67-3.jpg
 472046,#e8ecf3,218.2,1300,French,The Cloisters,Lead,Pilgrim's badge,https://images.metmuseum.org/CRDImages/cl/web-large/cdi1977-240-21.jpg
+37790,#efd8c3,28.6,1400,India (Gujarat),Asian Art,"Ink, opaque watercolor, and gold on paper",Folio,https://images.metmuseum.org/CRDImages/as/web-large/55_121_38_1_d.JPG
 77298,#d0d0d0,0.0,1400,Korea,Asian Art,Pottery,Shard,https://images.metmuseum.org/CRDImages/as/web-large/1978_531_53.jpg
 463318,#322f27,43.6,1400,German,Medieval Art,Iron,Key,https://images.metmuseum.org/CRDImages/md/web-large/sf10-100-105s1.jpg
 29204,#65605b,30.0,1401,Bohemian,Arms and Armor,Iron,Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_271-002.jpg
@@ -118,6 +139,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 29375,#2f251d,26.7,1495,"German, Augsburg",Arms and Armor,"Steel, gold",Toe cap for a foot defense (Sabaton),https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_102_6-001.jpg
 29207,#dadfe3,206.7,1500,German,Arms and Armor,Iron alloy,Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_274-001.jpg
 187941,#cac3aa,46.9,1500,,European Sculpture and Decorative Arts,Tin-glazed earthenware,Tile,https://images.metmuseum.org/CRDImages/es/web-large/SFES2439D.jpg
+216353,#5d5d5d,0.0,1500,,European Sculpture and Decorative Arts,Silk,Piece,https://images.metmuseum.org/CRDImages/es/web-large/14310.jpg
 337563,#efdbbe,35.5,1500,,Drawings and Prints,Pen and dark brown ink (recto); pen and gray-brown ink (verso),Drawing; Ornament & Architecture,https://images.metmuseum.org/CRDImages/dp/web-large/DP800642.jpg
 360483,#43331d,34.7,1500,,Drawings and Prints,"Dark brown ink, black chalk, and incised lines",Drawing,https://images.metmuseum.org/CRDImages/dp/web-large/DP810627.jpg
 29112,#383015,46.3,1501,Italian,Arms and Armor,"Bronze, gold",Sword pommel,https://images.metmuseum.org/CRDImages/aa/web-large/sfsb42.50.154_001.jpg
@@ -127,8 +149,10 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 384662,#e6dcc7,40.6,1510,,Drawings and Prints,Woodcut,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP849316.jpg
 665499,#e5dcc3,44.1,1517,,Drawings and Prints,Woodcut,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP848940.jpg
 453078,#e8c5a4,29.1,1525,,Islamic Art,Ink and opaque watercolor on paper,Folio from an illustrated manuscript,https://images.metmuseum.org/CRDImages/is/web-large/DP300726.jpg
+658730,#efe3cc,39.4,1529,,Drawings and Prints,"Woodcut (pages inlaid, modern vellum binding)",Books Prints Ornament & Architecture,https://images.metmuseum.org/CRDImages/dp/web-large/DP364466.jpg
 402954,#e0dad4,30.0,1530,,Drawings and Prints,Engraving and etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP870295.jpg
 459493,#4a3115,31.7,1536,,Robert Lehman Collection,Pen and dark and light brown ink.,Drawing,https://images.metmuseum.org/CRDImages/rl/web-large/DP-19531-059.jpg
+632385,#d6c0a4,33.6,1544,,Drawings and Prints,Engraving,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP269722.jpg
 27392,#241b15,24.0,1550,"Italian, Pisan",Arms and Armor,"Steel, brass",Morion,https://images.metmuseum.org/CRDImages/aa/web-large/64.203.1_006AA2015.jpg
 29122,#ab8742,39.4,1550,possibly German,Arms and Armor,"copper alloy, gold",Bit boss,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_165-001.jpg
 29127,#302a1c,42.0,1550,Italian,Arms and Armor,"Copper alloy, gold, iron",Bit boss,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_171-001.jpg
@@ -168,6 +192,8 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 923807,#ebdcc4,36.9,1601,French,Arms and Armor,"Ink, paper",Plate 9 from Plusieurs Pieces d’Arquebuzerie,https://images.metmuseum.org/CRDImages/aa/web-large/LC-2025_224-001.jpg
 662901,#e7d1b7,32.5,1603,,Drawings and Prints,Woodcut,Books Prints Ornament & Architecture,https://images.metmuseum.org/CRDImages/dp/web-large/DP363883.jpg
 29238,#312821,26.2,1605,German,Arms and Armor,"Iron, gold",Spur,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_316-001.jpg
+380394,#f5e0c9,31.4,1606,,Drawings and Prints,Red chalk,Drawing,https://images.metmuseum.org/CRDImages/dp/web-large/DP803385.jpg
+400896,#dfd6cc,31.6,1606,,Drawings and Prints,Etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP866544.jpg
 685111,#e3cfb5,33.9,1608,,Drawings and Prints,Woodcut,Books Prints Ornament & Architecture,https://images.metmuseum.org/CRDImages/dp/web-large/DP364949.jpg
 416693,#e5dad3,23.3,1615,,Drawings and Prints,Etching; first state of four (Lieure),Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP888220.jpg
 63415,#ddcfc2,28.9,1633,China,Asian Art,Leaf from a printed book; ink and color on paper,Print,https://images.metmuseum.org/CRDImages/as/web-large/LC-CP87_001.jpg
@@ -240,6 +266,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 119816,#d7ccaf,43.5,1700,probably American,Costume Institute,cotton,Gloves,https://images.metmuseum.org/CRDImages/ci/web-large/CI50.8.6ab.jpg
 190254,#d5d5d5,0.0,1700,,European Sculpture and Decorative Arts,Gilt bronze,Frieze part,https://images.metmuseum.org/CRDImages/es/web-large/4204.jpg
 206847,#2e2720,30.0,1700,,European Sculpture and Decorative Arts,"Silver, silver gilt, topaz, diamonds",Brooch,https://images.metmuseum.org/CRDImages/es/web-large/DP-34958-001.jpg
+209889,#d9c797,43.6,1700,,European Sculpture and Decorative Arts,Paper and ivory,Fan,https://images.metmuseum.org/CRDImages/es/web-large/DP-41217-001.jpg
 343565,#dbb3ac,8.9,1700,,Drawings and Prints,"Pen and black ink, graphite, and red crayon",Drawing,https://images.metmuseum.org/CRDImages/dp/web-large/DP808996.jpg
 444727,#7e6b59,29.2,1700,,Islamic Art,Glass; free blown; tooled on the pontil,Bottle,https://images.metmuseum.org/CRDImages/is/web-large/sf91-1-1548a.jpg
 444760,#2e356b,233.1,1700,,Islamic Art,Applied glass,Ewer,https://images.metmuseum.org/CRDImages/is/web-large/sf91-1-1583a.jpg
@@ -277,6 +304,8 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 1479,#211a17,18.0,1730,American,The American Wing,Silver,Caster,https://images.metmuseum.org/CRDImages/ad/web-large/DP110843.jpg
 6651,#312820,28.2,1730,American,The American Wing,Silver,Porringer,https://images.metmuseum.org/CRDImages/ad/web-large/DP158853.jpg
 7064,#1a1713,34.3,1730,American,The American Wing,Silver,Salt,https://images.metmuseum.org/CRDImages/ad/web-large/DP216613.jpg
+227870,#d6d6d6,0.0,1730,,European Sculpture and Decorative Arts,Silk and metal thread,Piece,https://images.metmuseum.org/CRDImages/es/web-large/160516.jpg
+365381,#e5d7c0,37.3,1730,,Drawings and Prints,Etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP827955.jpg
 2512,#e5e5e5,0.0,1732,,The American Wing,Pewter,Sugar bowl,https://images.metmuseum.org/CRDImages/ad/web-large/240214.jpg
 29377,#ebc084,35.0,1734,American,Arms and Armor,"Horn, wood",Powder horn,https://images.metmuseum.org/CRDImages/aa/web-large/42.145_001Sept2014.jpg
 186,#311a14,12.4,1735,American,The American Wing,Maple,Armchair,https://images.metmuseum.org/CRDImages/ad/web-large/85D_ACF138R8.jpg
@@ -313,6 +342,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 1044,#391b1d,356.0,1750,American,The American Wing,"Mahogany, white pine, white oak",Bureau Table,https://images.metmuseum.org/CRDImages/ad/web-large/DP112865.JPG
 1177,#f7f7f7,0.0,1750,American,The American Wing,Wood,Candle stand,https://images.metmuseum.org/CRDImages/ad/web-large/189280.jpg
 1273,#d6d6d6,0.0,1750,,The American Wing,Brass,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/142483.jpg
+1274,#d6d6d6,0.0,1750,,The American Wing,Brass,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/142483.jpg
 1719,#f6f6f6,0.0,1750,American,The American Wing,"Mahogany, cherry, white oak",Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/124515.jpg
 2082,#efefef,0.0,1750,,The American Wing,"Enamel on copper, brass",Pin,https://images.metmuseum.org/CRDImages/ad/web-large/69013.jpg
 2083,#e8e8e8,0.0,1750,,The American Wing,"Enamel on copper, brass",Pin,https://images.metmuseum.org/CRDImages/ad/web-large/69014.jpg
@@ -321,15 +351,19 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 6382,#402c18,30.0,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260590.jpg
 6392,#3d2c1c,29.1,1750,British,The American Wing,Earthenware,Dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP260592.jpg
 6396,#432b15,28.7,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260591.jpg
+6398,#432b15,28.7,1750,British,The American Wing,Earthenware,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260591.jpg
 6672,#262420,40.0,1750,American,The American Wing,Silver,Porringer,https://images.metmuseum.org/CRDImages/ad/web-large/DP160371.jpg
 7471,#e9e9e9,0.0,1750,American or British,The American Wing,"Silver, paste",Buckle,https://images.metmuseum.org/CRDImages/ad/web-large/98480.jpg
 201220,#988558,42.2,1750,,European Sculpture and Decorative Arts,Hard-paste porcelain,Cup,https://images.metmuseum.org/CRDImages/es/web-large/DP-35815-002.jpg
+204205,#342416,28.0,1750,,European Sculpture and Decorative Arts,Polychromed terracotta head and wooden limbs; body of wire wrapped in tow; cotton and velvet garments; metal buckle on shoe,Crèche figure,https://images.metmuseum.org/CRDImages/es/web-large/LC-64_164_104-001.jpg
 12562,#1a1a1a,0.0,1751,American,The American Wing,Pastel on light gray wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap08.238.jpg
 45478,#f6eee3,34.7,1754,Japan,Asian Art,Woodblock print; ink and color on paper,Print,https://images.metmuseum.org/CRDImages/as/web-large/DP141285.jpg
 437502,#69341a,19.7,1754,,European Paintings,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ep/web-large/DP169217.jpg
 1740,#0a5790,205.5,1755,American,The American Wing,"Maple, Atlantic white cedar",Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/DP-26089-002.jpg
 6863,#f1f5f8,205.7,1755,European,The American Wing,"Gold, diamonds",Ring,https://images.metmuseum.org/CRDImages/ad/web-large/DP205040.jpg
 7571,#dcdcdc,0.0,1755,American,The American Wing,Silver,Snuffer Stand,https://images.metmuseum.org/CRDImages/ad/web-large/DP110186.jpg
+187168,#f1f1f1,0.0,1755,,European Sculpture and Decorative Arts,"Copper, brass",Tobacco box,https://images.metmuseum.org/CRDImages/es/web-large/17246.jpg
+416063,#eae4d8,40.0,1756,,Drawings and Prints,Etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP831891.jpg
 617,#cdd4da,207.7,1757,British,The American Wing,Opaque glass with enamel decoration,Bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP243768.jpg
 619,#d2d5d7,204.0,1757,British,The American Wing,Opaque glass with enamel decoration,Bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP243794.jpg
 708,#a2a2a2,0.0,1757,British (American market),The American Wing,Tin-enameled earthenware,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/133259.jpg
@@ -338,6 +372,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 6818,#446c54,144.0,1757,British (American market),The American Wing,Stoneware,Punch pot,https://images.metmuseum.org/CRDImages/ad/web-large/DP-18258-001.jpg
 7763,#e5e5e5,0.0,1757,American,The American Wing,Silver,Spoon,https://images.metmuseum.org/CRDImages/ad/web-large/98081.jpg
 8350,#1c2d1c,120.0,1757,British (American market),The American Wing,Stoneware,Teapot,https://images.metmuseum.org/CRDImages/ad/web-large/DP-12448-053.jpg
+437245,#432c1b,25.5,1757,,European Paintings,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ep/web-large/DT1403.jpg
 197428,#383025,34.7,1759,,European Sculpture and Decorative Arts,"Silver, parcel-gilt",Beaker,https://images.metmuseum.org/CRDImages/es/web-large/ES1062.jpg
 334,#252525,0.0,1760,American,The American Wing,Pewter,Basin,https://images.metmuseum.org/CRDImages/ad/web-large/132033.jpg
 417,#764f5a,343.1,1760,British,The American Wing,Opaque glass with enamel decoration,Beaker,https://images.metmuseum.org/CRDImages/ad/web-large/DP243689.jpg
@@ -361,6 +396,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 2524,#d5d4d4,0.0,1765,American,The American Wing,Silver,Sugar Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP245829.jpg
 7365,#d6d6d6,0.0,1767,,The American Wing,Paper-covered wax,Seal,https://images.metmuseum.org/CRDImages/ad/web-large/148298.jpg
 7545,#f5f5f5,0.0,1767,American,The American Wing,Gold,Cufflinks,https://images.metmuseum.org/CRDImages/ad/web-large/170413.jpg
+7546,#f5f5f5,0.0,1767,American,The American Wing,Gold,Cufflinks,https://images.metmuseum.org/CRDImages/ad/web-large/170413.jpg
 7783,#a6a6a6,0.0,1767,American,The American Wing,Pewter,Spoon,https://images.metmuseum.org/CRDImages/ad/web-large/123941.jpg
 13331,#eed7c5,26.3,1767,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap65.34.jpg
 68896,#0e0e0e,0.0,1767,China,Asian Art,"Silk, metallic thread on silk",Rank Badge,https://images.metmuseum.org/CRDImages/as/web-large/79939.jpg
@@ -385,6 +421,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 7468,#5f5f5f,0.0,1770,,The American Wing,Silver plate on copper,Shoe buckle,https://images.metmuseum.org/CRDImages/ad/web-large/98385.jpg
 7811,#030604,140.0,1770,American,The American Wing,Silver,Spoon,https://images.metmuseum.org/CRDImages/ad/web-large/ADA4340.jpg
 198697,#d4d4d4,0.0,1770,,European Sculpture and Decorative Arts,"Bronze, gilt bronze, enamel",Clock,https://images.metmuseum.org/CRDImages/es/web-large/123309.jpg
+835332,#e5dad4,21.2,1771,,Drawings and Prints,Engraving,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP889439.jpg
 1663,#ded3b5,43.9,1772,American,The American Wing,"Mahogany, yellow poplar, yellow pine; upholstery (modern)",Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/DP-28524-001.jpg
 13010,#263842,201.4,1772,American,The American Wing,"Pastel on blue (now oxidized) laid paper, mounted on a wood strainer",Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/DP-32139-001.jpg
 6690,#9f9f9f,0.0,1773,American,The American Wing,Pewter,Porringer,https://images.metmuseum.org/CRDImages/ad/web-large/118736.jpg
@@ -395,6 +432,8 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 6957,#ccc0af,35.2,1775,American,The American Wing,Silver,Spoon,https://images.metmuseum.org/CRDImages/ad/web-large/DP253500.jpg
 7459,#969696,0.0,1775,,The American Wing,Silver plate on copper,Shoe buckle,https://images.metmuseum.org/CRDImages/ad/web-large/97882.jpg
 12614,#a7a7a7,0.0,1775,American,The American Wing,Watercolor and graphite on off-white wove paper,Watercolor,https://images.metmuseum.org/CRDImages/ad/web-large/263200.jpg
+86879,#d3e0e7,201.0,1775,British,Costume Institute,silk,Robe à la Polonaise,https://images.metmuseum.org/CRDImages/ci/web-large/1981.314.1_1981.245.2.jpg
+201460,#a7a7a7,0.0,1775,,European Sculpture and Decorative Arts,Hard-paste porcelain,Group,https://images.metmuseum.org/CRDImages/es/web-large/155135.jpg
 377241,#e1d5d0,17.6,1775,,Drawings and Prints,Etching and engraving; only state,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP891486.jpg
 469,#dedede,0.0,1776,,The American Wing,Enamel,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/25580.jpg
 485,#e9e9e9,0.0,1776,,The American Wing,Panel,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/25583.jpg
@@ -405,6 +444,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 6731,#30040e,346.4,1776,,The American Wing,Bronze,Plaque,https://images.metmuseum.org/CRDImages/ad/web-large/LC-83_2_94.jpg
 6854,#242424,0.0,1776,,The American Wing,Bronze,Plaque,https://images.metmuseum.org/CRDImages/ad/web-large/25916.jpg
 383461,#d1b9b1,15.0,1776,,Drawings and Prints,Etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP889577.jpg
+437360,#231a0d,35.5,1776,,European Paintings,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ep/web-large/DP169400.jpg
 1616,#d8d8d8,0.0,1777,American,The American Wing,"Mahogany, maple, red oak",Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/142785.jpg
 3325,#dbdbdb,0.0,1777,"French, possibly",The American Wing,Porcelain,Dish,https://images.metmuseum.org/CRDImages/ad/web-large/125555.jpg
 3640,#4d2b1e,16.6,1777,American,The American Wing,Mahogany,Firescreen,https://images.metmuseum.org/CRDImages/ad/web-large/DP8275.jpg
@@ -412,6 +452,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 489,#4b230e,20.7,1778,,The American Wing,Terracotta,Medallion,https://images.metmuseum.org/CRDImages/ad/web-large/DP248064.jpg
 232282,#59451b,40.6,1778,,European Sculpture and Decorative Arts,Silver gilt,Taperstick,https://images.metmuseum.org/CRDImages/es/web-large/LC-2006_470_9a-c.jpg
 2063,#0c0e29,235.9,1780,American,The American Wing,Blown pattern-molded green glass,Hanging light,https://images.metmuseum.org/CRDImages/ad/web-large/ADA5132.jpg
+2064,#0c0e29,235.9,1780,American,The American Wing,Blown pattern-molded amethyst glass,Hanging light,https://images.metmuseum.org/CRDImages/ad/web-large/ADA5132.jpg
 2597,#fafafa,0.0,1780,American or British,The American Wing,Blown pattern-molded lead glass,Cream pot,https://images.metmuseum.org/CRDImages/ad/web-large/17441.jpg
 6834,#d9d9d9,0.0,1780,American,The American Wing,Pewter,Quart mug,https://images.metmuseum.org/CRDImages/ad/web-large/132005.jpg
 6972,#f3f3f3,0.0,1780,American or British,The American Wing,Blown pattern-molded lead blue glass,Saltcellar,https://images.metmuseum.org/CRDImages/ad/web-large/17448.jpg
@@ -424,12 +465,29 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 230009,#d6c39c,40.3,1784,,European Sculpture and Decorative Arts,Silk,Length,https://images.metmuseum.org/CRDImages/es/web-large/ES410.jpg
 736052,#e6d9c8,34.0,1784,,Drawings and Prints,Hand-colored etching,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP871750.jpg
 842,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
+850,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
+855,#382f2c,15.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258517.jpg
 883,#555558,240.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP258502.jpg
 983,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
+993,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
+997,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
+999,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
+1002,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
+1006,#686462,20.0,1785,"Chinese, for American market",The American Wing,Porcelain,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258638.jpg
 2393,#e4e4e4,0.0,1785,Chinese,The American Wing,Porcelain,Vase,https://images.metmuseum.org/CRDImages/ad/web-large/138216.jpg
 2871,#746c67,23.1,1785,"Chinese, for American market",The American Wing,Porcelain,Cup and saucer,https://images.metmuseum.org/CRDImages/ad/web-large/DP258879.jpg
 3863,#e9e9ec,240.0,1785,American,The American Wing,Blown pattern-molded non-lead glass,Funnel,https://images.metmuseum.org/CRDImages/ad/web-large/DP234124.jpg
 6268,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6269,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6270,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6275,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6276,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6279,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6280,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6281,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6289,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6292,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
+6301,#7c6148,28.8,1785,"Chinese, for American market",The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/ADA2657.jpg
 6541,#c5cacd,202.5,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258644.jpg
 6542,#c4c8ca,200.0,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258643.jpg
 6548,#3c271a,22.9,1785,"Chinese, for American market",The American Wing,Porcelain,Platter,https://images.metmuseum.org/CRDImages/ad/web-large/DP258500.jpg
@@ -490,6 +548,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 13619,#3e160d,11.0,1797,American,The American Wing,"Cotton, woven",Counterpane,https://images.metmuseum.org/CRDImages/ad/web-large/TP559.jpg
 14505,#2e2e2e,0.0,1797,,The American Wing,"Wax, glass, wood",Miniature,https://images.metmuseum.org/CRDImages/ad/web-large/148779.jpg
 13551,#2b2b2b,0.0,1799,American,The American Wing,Woven silk,Badge,https://images.metmuseum.org/CRDImages/ad/web-large/25540_83.2.153.jpg
+56,#e8e8e8,0.0,1800,,The American Wing,Bell metal,Andiron,https://images.metmuseum.org/CRDImages/ad/web-large/12875.jpg
 99,#dedede,0.0,1800,,The American Wing,"Brass, steel",Andiron,https://images.metmuseum.org/CRDImages/ad/web-large/142931.jpg
 126,#e1e1e1,0.0,1800,British (American market),The American Wing,"Earthenware, lusterware",Figure,https://images.metmuseum.org/CRDImages/ad/web-large/138290.jpg
 218,#ededed,0.0,1800,American,The American Wing,"Mahogany, ash",Armchair,https://images.metmuseum.org/CRDImages/ad/web-large/134786.jpg
@@ -498,6 +557,8 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 607,#0e2d1b,145.2,1800,American,The American Wing,Blown pattern-molded glass,Bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP243693.jpg
 751,#a1a1a1,0.0,1800,,The American Wing,Lacy pressed glass,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/153265.jpg
 964,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
+968,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
+969,#969696,0.0,1800,"British, probably",The American Wing,Cut blown glass,Brandy tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/60434.jpg
 1127,#d7d7d7,0.0,1800,,The American Wing,Gilt bronze,Candelabrum,https://images.metmuseum.org/CRDImages/ad/web-large/159293.jpg
 1184,#34221d,13.0,1800,American,The American Wing,Earthenware,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/DP257752.jpg
 1317,#d5d5d5,0.0,1800,American,The American Wing,Silver,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/DP251738.jpg
@@ -533,6 +594,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 7689,#dbdbdb,0.0,1800,Chinese,The American Wing,Porcelain,Soup plate,https://images.metmuseum.org/CRDImages/ad/web-large/157728.jpg
 7691,#d5d5d5,0.0,1800,Chinese,The American Wing,Porcelain,Soup plate,https://images.metmuseum.org/CRDImages/ad/web-large/157730.jpg
 8894,#30261e,26.7,1800,,The American Wing,Iron,Trivet,https://images.metmuseum.org/CRDImages/ad/web-large/AW_1978_302_63.jpg
+8964,#2f251c,28.4,1800,,The American Wing,Iron,Trivet,https://images.metmuseum.org/CRDImages/ad/web-large/AW_1978_302_133.jpg
 12859,#262626,0.0,1800,American,The American Wing,Oil on canvas mounted on masonite,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap63.138.4.jpg
 12909,#7d8790,208.4,1800,American,The American Wing,Watercolor on ivory in a gold and pearl ring,"Painting, miniature",https://images.metmuseum.org/CRDImages/ad/web-large/ap32.134.3.jpg
 12914,#cdcdcd,0.0,1800,American,The American Wing,Graphite on Bristol board,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap26.216.80.jpg
@@ -557,6 +619,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 217854,#e9dbc7,35.3,1800,,European Sculpture and Decorative Arts,Crochet,Sample,https://images.metmuseum.org/CRDImages/es/web-large/DP3262.jpg
 219069,#ddd268,54.4,1800,,European Sculpture and Decorative Arts,Silk,Fragment,https://images.metmuseum.org/CRDImages/es/web-large/DP2313.jpg
 219306,#59160d,7.1,1800,,European Sculpture and Decorative Arts,Silk,Samples,https://images.metmuseum.org/CRDImages/es/web-large/DP7041.jpg
+224756,#492411,20.4,1800,,European Sculpture and Decorative Arts,Silk on felt,Sample,https://images.metmuseum.org/CRDImages/es/web-large/DP1780.jpg
 225235,#e8e1db,27.7,1800,,European Sculpture and Decorative Arts,Silk,Piece,https://images.metmuseum.org/CRDImages/es/web-large/DP7115.jpg
 228652,#2d2519,36.0,1800,,European Sculpture and Decorative Arts,Machine net,Sampler,https://images.metmuseum.org/CRDImages/es/web-large/DP784.jpg
 364282,#e3d4b7,39.5,1800,,Drawings and Prints,"Pen and ink, brush and wash, watercolor",Drawing ; Ornament and Architecture,https://images.metmuseum.org/CRDImages/dp/web-large/DP806261.jpg
@@ -577,6 +640,7 @@ objectID,hex,hue,objectBeginDate,culture,department,medium,objectName,imageUrl
 white pine, mahogany",Card table,https://images.metmuseum.org/CRDImages/ad/web-large/137117.jpg
 7415,#d6d6d6,0.0,1805,American,The American Wing,"Silver, leather",Sheath,https://images.metmuseum.org/CRDImages/ad/web-large/97689.jpg
 395489,#d9ccc1,27.5,1805,,Drawings and Prints,Etching with drypoint; third state of three,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP874428.jpg
+843259,#2f2821,30.0,1805,,European Sculpture and Decorative Arts,"Cut steel; red moroccan leather, gilt stamped",Parure,https://images.metmuseum.org/CRDImages/es/web-large/DP-20253-042.jpg
 14058,#a4a4a4,0.0,1806,American,The American Wing,Silk embroidery on linen,Sampler,https://images.metmuseum.org/CRDImages/ad/web-large/119436.jpg
 3537,#ededed,0.0,1807,,The American Wing,Gilt bronze,Epergne,https://images.metmuseum.org/CRDImages/ad/web-large/158337.jpg
 13341,#d7dadd,210.0,1807,American,The American Wing,Watercolor on ivory,"Painting, miniature",https://images.metmuseum.org/CRDImages/ad/web-large/ap38.146.9.jpg
@@ -626,6 +690,7 @@ white pine, mahogany",Card table,https://images.metmuseum.org/CRDImages/ad/web-l
 3159,#532207,21.3,1815,American,The American Wing,"Mahogany, mahogany veneer, satinwood, gilded
 gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum.org/CRDImages/ad/web-large/DP171118.jpg
 6358,#b4b2ad,42.9,1815,French,The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260335.jpg
+6367,#b4b2ad,42.9,1815,French,The American Wing,Porcelain,Plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP260335.jpg
 7051,#0a312d,173.8,1815,American,The American Wing,Blown-molded glass,Salt,https://images.metmuseum.org/CRDImages/ad/web-large/DP206766.jpg
 7206,#11192d,222.9,1815,British (American market),The American Wing,"Earthenware, transfer-printed",Sauceboat,https://images.metmuseum.org/CRDImages/ad/web-large/LC-12_21_2-001.jpg
 7210,#575656,0.0,1815,French,The American Wing,Porcelain,Sauceboat,https://images.metmuseum.org/CRDImages/ad/web-large/DP260349.jpg
@@ -634,6 +699,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 74276,#ecd7b2,38.3,1815,Japan,Asian Art,Woodblock-printed book,Illustrated book,https://images.metmuseum.org/CRDImages/as/web-large/LC-L_1993_9_53_004_crd.jpg
 1923,#9a9a9a,0.0,1816,American,The American Wing,Pewter,Chalice,https://images.metmuseum.org/CRDImages/ad/web-large/127252.jpg
 12681,#000003,240.0,1816,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/DT240957.jpg
+360409,#e9e3da,36.0,1816,,Drawings and Prints,"Etching, burnished aquatint, drypoint",Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP817509.jpg
 773,#a3a3a3,0.0,1817,,The American Wing,Burlwood,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/196887.jpg
 7512,#e4e4e4,0.0,1817,American or British,The American Wing,Free-blown lead glass,Sillabub cup,https://images.metmuseum.org/CRDImages/ad/web-large/23002.jpg
 14067,#dcdcdc,0.0,1817,American,The American Wing,Embroidered silk and cotton on cotton,Sampler,https://images.metmuseum.org/CRDImages/ad/web-large/164846.jpg
@@ -760,6 +826,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 12939,#9e9e9e,0.0,1847,American,The American Wing,Oil on wood,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap63.138.3.jpg
 14265,#262016,37.5,1847,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/DP-25702-001.jpg
 14679,#3d2713,28.6,1848,American,The American Wing,Bronze,Medal,https://images.metmuseum.org/CRDImages/ad/web-large/AW_09_164_2-001.jpg
+282051,#142026,200.0,1848,,Photographs,Daguerreotype,Photograph,https://images.metmuseum.org/CRDImages/ph/web-large/DT1154.jpg
 555,#352217,22.0,1849,American,The American Wing,Mottled brown earthenware,Flask,https://images.metmuseum.org/CRDImages/ad/web-large/DP253042.jpg
 646,#68400e,33.3,1849,American,The American Wing,Mottled brown earthenware,Bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP252536.jpg
 13043,#292e33,210.0,1849,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap24.186.jpg
@@ -774,6 +841,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 2249,#613227,11.4,1850,American,The American Wing,"Rosewood, marble",Console table,https://images.metmuseum.org/CRDImages/ad/web-large/DP-20190-001.jpg
 3747,#e4e4e4,0.0,1850,American,The American Wing,Free-blown molded green glass,Flask,https://images.metmuseum.org/CRDImages/ad/web-large/8335.jpg
 3979,#ded2c3,33.3,1850,American,The American Wing,"Cased and cut blown and engraved glass, marble",Girandole,https://images.metmuseum.org/CRDImages/ad/web-large/ADA5243.jpg
+3980,#ded2c3,33.3,1850,American,The American Wing,"Cased and cut blown glass, marble",Girandole,https://images.metmuseum.org/CRDImages/ad/web-large/ADA5243.jpg
 4018,#4f4f4f,0.0,1850,American,The American Wing,Plaster-of-Paris,Glassmaking mold,https://images.metmuseum.org/CRDImages/ad/web-large/173912.jpg
 4153,#d4d4d4,0.0,1850,American,The American Wing,"Pressed glass, diamond thumbprint",Half-pint decanter,https://images.metmuseum.org/CRDImages/ad/web-large/DP208100.jpg
 6912,#dedede,0.0,1850,American,The American Wing,Pressed glass,Rummer tumbler,https://images.metmuseum.org/CRDImages/ad/web-large/DP235390.jpg
@@ -784,14 +852,17 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 13177,#cac0b1,36.0,1852,American,The American Wing,Pastel and graphite on paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap1980.512.1.jpg
 2777,#d2d2d2,0.0,1853,Chinese,The American Wing,Porcelain,Cup and saucer,https://images.metmuseum.org/CRDImages/ad/web-large/142737.jpg
 3984,#acacac,0.0,1853,American,The American Wing,"Gilt brass, marble, glass",Girandole,https://images.metmuseum.org/CRDImages/ad/web-large/234272.jpg
+3985,#acacac,0.0,1853,American,The American Wing,"Gilt brass, marble, glass",Girandole,https://images.metmuseum.org/CRDImages/ad/web-large/234272.jpg
 265092,#ede4d2,40.0,1853,,Photographs,Albumen silver print from glass negative,Photograph,https://images.metmuseum.org/CRDImages/ph/web-large/DP147810.jpg
 287917,#f1e8dc,34.3,1853,,Photographs,Salted paper print,Photograph,https://images.metmuseum.org/CRDImages/ph/web-large/DP143495.jpg
 13092,#131517,210.0,1854,American,The American Wing,Oil on wood,"Painting, miniature",https://images.metmuseum.org/CRDImages/ad/web-large/ap38.146.5.jpg
 13240,#c6c6c6,0.0,1854,American,The American Wing,Graphite on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193288.jpg
 13253,#dddddd,0.0,1854,American,The American Wing,Black ink on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/199560.jpg
 13255,#aaaaaa,0.0,1854,American,The American Wing,Pen and iron-gall ink on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193286.jpg
+13257,#dddddd,0.0,1854,American,The American Wing,Black ink and graphite on off-white wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/199560.jpg
 13260,#adadad,0.0,1854,American,The American Wing,Black ink and graphite on buff wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/193274.jpg
 13403,#e5e5e5,0.0,1854,American,The American Wing,Britannia metal,Coffeepot,https://images.metmuseum.org/CRDImages/ad/web-large/249711.jpg
+287064,#f5f1ea,38.2,1854,,Photographs,Salted paper print from paper negative,Photograph,https://images.metmuseum.org/CRDImages/ph/web-large/DP131391.jpg
 2209,#282724,45.0,1855,American,The American Wing,Cut and engraved glass,Compote,https://images.metmuseum.org/CRDImages/ad/web-large/DP208155.jpg
 29265,#3a2e24,27.3,1855,American,Arms and Armor,"Copper alloy, silver, iron",Spurs,https://images.metmuseum.org/CRDImages/aa/web-large/LC-42_50_367_368-001.jpg
 14547,#35322c,40.0,1856,American,The American Wing,White metal,Medal,https://images.metmuseum.org/CRDImages/ad/web-large/AW_07_251_96a-001.jpg
@@ -817,20 +888,25 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 13548,#d9d9d9,0.0,1861,American,The American Wing,Graphite on off-white Bristol board,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap65.280.9.jpg
 73411,#f1d9bb,33.3,1861,Japan,Asian Art,Woodblock print; ink and color on paper,Print,https://images.metmuseum.org/CRDImages/as/web-large/DP147979.jpg
 1548,#b1b0b0,0.0,1862,American,The American Wing,Silver,Waste bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP157656.jpg
+107640,#0e1836,225.0,1862,British,Costume Institute,"wool, cotton, silk, wood",Ensemble,https://images.metmuseum.org/CRDImages/ci/web-large/DT8033.jpg
 12955,#252525,0.0,1863,American,The American Wing,Graphite on green wove paper,Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/ap1993.527.jpg
 14478,#412b1a,26.2,1864,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/DP105669.jpg
 14609,#492913,24.4,1864,American,The American Wing,Bronze,Medal,https://images.metmuseum.org/CRDImages/ad/web-large/AW_07_228_20-002.jpg
 2263,#dbdbdb,0.0,1865,American,The American Wing,Pressed glass,Cordial glass,https://images.metmuseum.org/CRDImages/ad/web-large/DP235373.jpg
 2661,#a0a0a0,0.0,1865,American,The American Wing,Pressed glass,Cream pot,https://images.metmuseum.org/CRDImages/ad/web-large/186972.jpg
 12537,#e0e0e0,0.0,1865,American,The American Wing,"White pine, painted",Sculpture,https://images.metmuseum.org/CRDImages/ad/web-large/97323.jpg
+107825,#e7d9c1,37.9,1865,probably French,Costume Institute,"wool, silk",Wedding Cape,https://images.metmuseum.org/CRDImages/ci/web-large/C.I.51.29.2_F.jpg
 383825,#a29284,28.0,1865,,Drawings and Prints,Watercolor over graphite with touches of gouache (bodycolor),Drawing,https://images.metmuseum.org/CRDImages/dp/web-large/DP801264.jpg
 754592,#e3dfd5,42.9,1865,,Drawings and Prints,Lithograph on newsprint; second state of two (Delteil),Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP877371.jpg
 754650,#e8e5dd,43.6,1865,,Drawings and Prints,Lithograph on newsprint; second state of two (Delteil),Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP877457.jpg
 12951,#604512,39.2,1867,American,The American Wing,Copper and gold leaf,Medal,https://images.metmuseum.org/CRDImages/ad/web-large/AW_92_10_99a.jpg
+293995,#e1cfb9,33.0,1867,,Photographs,Albumen silver print from glass negative,Photograph,https://images.metmuseum.org/CRDImages/ph/web-large/DP-388-026.jpg
 3879,#aaaaaa,0.0,1868,American,The American Wing,Brass,Chandelier,https://images.metmuseum.org/CRDImages/ad/web-large/192987.jpg
 3901,#a3a3a3,0.0,1868,,The American Wing,Bronze,Sconce,https://images.metmuseum.org/CRDImages/ad/web-large/236470.jpg
 12394,#dbdbdb,0.0,1868,American,The American Wing,Watercolor on white wove paper,Watercolor,https://images.metmuseum.org/CRDImages/ad/web-large/219000.jpg
 12461,#e2e2e2,0.0,1868,American,The American Wing,Watercolor and graphite on off-white wove paper,Watercolor,https://images.metmuseum.org/CRDImages/ad/web-large/ap50.130.82h.jpg
+73436,#f6e0bc,37.2,1868,Japan,Asian Art,Triptych of woodblock prints; ink and color on paper,Print,https://images.metmuseum.org/CRDImages/as/web-large/DP148006.jpg
+756398,#e3ddd2,38.8,1868,,Drawings and Prints,Lithograph on newsprint; second state of two (Delteil),Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP877700.jpg
 955,#a1a1a1,0.0,1869,American,The American Wing,"Graphite, white gouache, on blue paper",Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/257740.jpg
 1009,#dbdbdb,0.0,1870,,The American Wing,Pressed glass,Bread plate,https://images.metmuseum.org/CRDImages/ad/web-large/223429.jpg
 2230,#979797,0.0,1870,American,The American Wing,Pressed purple marble glass,Compote,https://images.metmuseum.org/CRDImages/ad/web-large/182070.jpg
@@ -842,6 +918,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 7338,#6e6e6e,0.0,1870,British (American Market),The American Wing,Cameo opaque white and yellow glass,Scent bottle,https://images.metmuseum.org/CRDImages/ad/web-large/178950.jpg
 7339,#1b808f,187.8,1870,British (American Market),The American Wing,"Cameo opaque white and red glass, silver",Scent bottle,https://images.metmuseum.org/CRDImages/ad/web-large/DP-17728-009.jpg
 12293,#d9d9d9,0.0,1870,American,The American Wing,Watercolor and graphite on off-white wove paper,Watercolor,https://images.metmuseum.org/CRDImages/ad/web-large/ap50.130.82j.jpg
+764766,#cd5c43,10.9,1870,,Photographs,"Albumen silver print, lithograph",Carte-de-visite; Photocollage; Collage,https://images.metmuseum.org/CRDImages/ph/web-large/DP-15801-033.jpg
 13062,#382c22,27.3,1872,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap58.28.jpg
 2691,#2c2116,30.0,1873,American,The American Wing,Porcelain,Cream pot,https://images.metmuseum.org/CRDImages/ad/web-large/DP223044.jpg
 7539,#000003,240.0,1873,American,The American Wing,Porcelain,Sleeve button,https://images.metmuseum.org/CRDImages/ad/web-large/ADA5685.jpg
@@ -856,6 +933,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 14208,#57676a,189.5,1876,American,The American Wing,Parian porcelain,Bust,https://images.metmuseum.org/CRDImages/ad/web-large/DP208152.jpg
 232,#e1e1e1,0.0,1877,American,The American Wing,Cast iron,Armchair,https://images.metmuseum.org/CRDImages/ad/web-large/192570.jpg
 1796,#b2b2b2,0.0,1877,American,The American Wing,Mahogany,Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/199193.jpg
+1798,#b2b2b2,0.0,1877,American,The American Wing,Mahogany,Side Chair,https://images.metmuseum.org/CRDImages/ad/web-large/199193.jpg
 2021,#b09c29,51.1,1877,American,The American Wing,"Cherry, poplar, cedar",Chest of drawers,https://images.metmuseum.org/CRDImages/ad/web-large/ADA3658.jpg
 3439,#4a2510,21.7,1877,American,The American Wing,"Bamboo, oak, sycamore, poplar",Dressing Table,https://images.metmuseum.org/CRDImages/ad/web-large/DP305390.jpg
 13121,#3e0e10,357.5,1878,American,The American Wing,Oil on wood,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/DP-19085-001.jpg
@@ -864,6 +942,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 12768,#606060,0.0,1879,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap63.200.6.jpg
 14207,#663f12,32.1,1879,American,The American Wing,Earthenware,Tile,https://images.metmuseum.org/CRDImages/ad/web-large/ADA6004.jpg
 14696,#48290f,27.4,1879,American,The American Wing,"Brass, earthenware",Clock,https://images.metmuseum.org/CRDImages/ad/web-large/ADA6141.jpg
+365878,#e8d9c1,36.9,1879,,Drawings and Prints,"Etching and drypoint, printed in black ink on medium weight ivory laid paper; first state of three (Glasgow)",Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP813645.jpg
 452,#a5a5a5,0.0,1880,,The American Wing,Pressed purple marble glass,Bellows,https://images.metmuseum.org/CRDImages/ad/web-large/182239.jpg
 1257,#8d8d8d,0.0,1880,,The American Wing,Pressed purple marble glass,Candlestick,https://images.metmuseum.org/CRDImages/ad/web-large/182238.jpg
 2304,#888888,0.0,1880,,The American Wing,Pressed purple marble glass,Bowl,https://images.metmuseum.org/CRDImages/ad/web-large/182106.jpg
@@ -880,6 +959,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 578,#e1e1e1,0.0,1881,American,The American Wing,Earthenware,Tile,https://images.metmuseum.org/CRDImages/ad/web-large/196990.jpg
 14539,#3c2117,16.2,1881,American,The American Wing,Bronze,Medal,https://images.metmuseum.org/CRDImages/ad/web-large/AW_07_251_104-001.jpg
 503807,#2f251b,30.0,1881,British,Musical Instruments,Brass,Slide Trumpet in E,https://images.metmuseum.org/CRDImages/mi/web-large/DP-12679-095.jpg
+631523,#eedfc0,40.4,1881,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP842728.jpg
 631555,#edddc0,38.7,1881,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP842741.jpg
 577,#131313,0.0,1882,American,The American Wing,Earthenware,Tile,https://images.metmuseum.org/CRDImages/ad/web-large/196989.jpg
 2443,#bc530d,24.0,1882,American,The American Wing,Blown glass,Punch bowl,https://images.metmuseum.org/CRDImages/ad/web-large/DP242165.jpg
@@ -898,7 +978,9 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 2242,#d1c9c2,28.0,1885,American,The American Wing,Porcelain,Condiment dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258775.jpg
 2576,#3a3026,30.0,1885,American,The American Wing,Porcelain,Vegetable dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258778.jpg
 6931,#352a1d,32.5,1885,American,The American Wing,Porcelain,Salad plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258774.jpg
+6941,#352a1d,32.5,1885,American,The American Wing,Porcelain,Salad plate,https://images.metmuseum.org/CRDImages/ad/web-large/DP258774.jpg
 7125,#33281c,31.3,1885,American,The American Wing,Porcelain,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258764.jpg
+7135,#33281c,31.3,1885,American,The American Wing,Porcelain,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP258764.jpg
 7185,#707070,0.0,1885,American,The American Wing,Pressed yellow glass,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/181935.jpg
 7187,#cbc7a3,54.0,1885,American,The American Wing,Pressed yellow glass,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP241463.jpg
 7521,#9a9fa7,216.9,1885,American,The American Wing,Pressed colorless and opalescent glass,Dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP241460.jpg
@@ -910,11 +992,14 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 7117,#a00935,342.5,1887,American,The American Wing,"Pressed colorless, cranberry and opalescent glass",Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP241412.jpg
 7179,#9a0b2c,346.2,1887,American,The American Wing,Pressed cranberry and opaque white glass,Sauce dish,https://images.metmuseum.org/CRDImages/ad/web-large/DP238671.jpg
 400762,#f1e0c1,38.8,1887,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP823268.jpg
+422230,#edddc2,37.7,1887,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP839406.jpg
 665865,#d2c891,50.8,1887,,Drawings and Prints,Commercial color lithograph,Print baseball card,https://images.metmuseum.org/CRDImages/dp/web-large/DPB878970.jpg
 712378,#035772,194.6,1887,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DPB873755.jpg
 12447,#3b2f25,27.3,1888,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/DP161222.jpg
 13183,#656152,47.4,1888,American,The American Wing,Oil on canvas,Painting,https://images.metmuseum.org/CRDImages/ad/web-large/ap88.7.jpg
+403133,#e4d8c3,38.2,1888,,Drawings and Prints,Albumen photograph,"Baseball card, photograph",https://images.metmuseum.org/CRDImages/dp/web-large/DP845601.jpg
 408645,#b4655e,4.9,1888,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP834969.jpg
+423890,#cb5e46,10.8,1888,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DPB883206.jpg
 460058,#e4d7bf,38.9,1888,,Robert Lehman Collection,carpenter's pencil (?) with stumping on paper,Drawing,https://images.metmuseum.org/CRDImages/rl/web-large/DP-22110-001.jpg
 710257,#543319,26.4,1888,,Drawings and Prints,Albumen photograph,Photograph,https://images.metmuseum.org/CRDImages/dp/web-large/DPB869702.jpg
 711944,#e64e49,1.9,1888,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DPB873789.jpg
@@ -928,6 +1013,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 12844,#d3c59d,44.4,1890,American,The American Wing,"Pastel on pumice paper, mounted on cardboard",Drawing,https://images.metmuseum.org/CRDImages/ad/web-large/DT203409.jpg
 13007,#f3f3f3,0.0,1890,American,The American Wing,"Drawings in graphite on off-white wove paper, bound in a leather cover",Sketchbook,https://images.metmuseum.org/CRDImages/ad/web-large/268464.jpg
 54760,#e1c8ab,32.2,1890,Japan,Asian Art,Album leaf; silk,Album leaf,https://images.metmuseum.org/CRDImages/as/web-large/DP211864.jpg
+400511,#f1e6cd,41.7,1890,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP821957.jpg
 422005,#d6c49b,41.7,1890,,Drawings and Prints,Commercial color lithograph,Print,https://images.metmuseum.org/CRDImages/dp/web-large/DP839261.jpg
 655582,#3f2718,23.1,1890,,Drawings and Prints,Albumen photograph,Photograph,https://images.metmuseum.org/CRDImages/dp/web-large/DP859161.jpg
 657228,#e2d6ca,30.0,1890,,Drawings and Prints,Albumen photograph,Photograph,https://images.metmuseum.org/CRDImages/dp/web-large/DP859643.jpg
@@ -945,6 +1031,7 @@ gesso with yellow poplar, white pine",Desk and bookcase,https://images.metmuseum
 12789,#a59f8e,44.3,1900,American,The American Wing,Watercolor on ivory,"Painting, miniature",https://images.metmuseum.org/CRDImages/ad/web-large/DP168940.jpg
 64091,#d8d0ca,25.7,1900,Japan,Asian Art,Ink on paper,Rubbing,https://images.metmuseum.org/CRDImages/as/web-large/LC-20_184-001.jpg
 479900,#f4f1ed,34.3,1900,,Modern and Contemporary Art,Silk,Textile sample,https://images.metmuseum.org/CRDImages/ma/web-large/DP10618.jpg
+480176,#fbf8fa,320.0,1900,,Modern and Contemporary Art,Silk,Textile sample,https://images.metmuseum.org/CRDImages/ma/web-large/DP10244.jpg
 43633,#cfcfcf,0.0,1902,Guatemala,Asian Art,Jadeite,Cutting tool,https://images.metmuseum.org/CRDImages/as/web-large/02_18_225 Cutting Instrument.JPG
 43744,#9b9b9b,0.0,1902,China,Asian Art,Nephrite,Signet,https://images.metmuseum.org/CRDImages/as/web-large/02_18_343 Signet.jpg
 78816,#332717,34.3,1903,Japan,Asian Art,Woodblock printed book; ink and color on paper,Illustrated book,https://images.metmuseum.org/CRDImages/as/web-large/2013_800_05_crd.jpg
