@@ -27,10 +27,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             >
                 This visualization uses WHO estimates of malaria cases across
                 110 countries. Drag the globe to explore, hover for details, and
-                slide the year to see how the burden has shifted over 25 years.
+                select a year to see how the burden has shifted over 25 years.
                 Colors represent absolute case counts as reported by the WHO,
                 not per-capita rates, so larger-population countries may appear
-                more prominent.
+                more prominent. Countries shown in gray have no WHO case
+                estimates because they eliminated malaria before the reporting
+                period. The dataset only covers countries under active WHO
+                malaria surveillance.
             </p>
         </div>
 
@@ -148,6 +151,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <li>
                     Chen, J. et al. (2025). Malaria Vaccines: Current Achievements and Path Forward. <em>Vaccines,</em> 13(5), 542.
                     <a href="https://pubmed.ncbi.nlm.nih.gov/40432151/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/40432151/</a>
+                </li>
+                <li>
+                    United States Census Office, Ninth Census (1870), and Francis Amasa Walker. <em>Statistical Atlas of the United States Based on the Results of the Ninth Census.</em> New York: Julius Bien, lithographer, 1874. Plate XLII: Map Showing the Proportion of Deaths from Malarial Diseases to Deaths from All Causes.
+                    <a href="https://www.loc.gov/item/05019329/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.loc.gov/item/05019329/</a>
                 </li>
             </ul>
             -->
