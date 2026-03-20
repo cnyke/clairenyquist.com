@@ -46,7 +46,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     loading="eager"
                 />
                 <figcaption class="text-xs text-gray-500 mt-2 text-center">
-                    Ziehl-Neelsen-stained specimen showing acid-fast <em
+                    Ziehl-Neelsen-stained specimen showing a magenta acid-fast <em
                         >Mycobacterium tuberculosis</em
                     > bacilli. CDC/V. McPheeters, 1965. Public Health Image Library,
                     ID <a
@@ -633,7 +633,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     if (idx !== undefined) highlightLegend(idx);
                 };
                 legendUnhighlight = function () {
-                    for (var i = 0; i < circles.length; i++) unhighlightLegend(i);
+                    for (var i = 0; i < circles.length; i++)
+                        unhighlightLegend(i);
                 };
 
                 for (var i = 0; i < layers.length; i++) {
