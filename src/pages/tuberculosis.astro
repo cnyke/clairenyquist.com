@@ -831,8 +831,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 "translate(" + d._x + "," + d._y + ")",
                             );
 
-                        // Invisible hit area for small circles
-                        if (minTapRadius > 0) {
+                        // Invisible hit area for small circles on mobile
+                        if (minTapRadius > 0 && d._r < minTapRadius) {
                             var hitCircle = countryG
                                 .append("circle")
                                 .attr("class", "tb-layer-hit")
