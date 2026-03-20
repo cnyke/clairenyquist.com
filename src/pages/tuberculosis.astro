@@ -232,6 +232,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             var layoutBuilt = false;
             // countryNodes[iso3] = { g, incCircle, notCircle, dthCircle }
             var countryNodes = {};
+            // Legend highlight API (set by drawLegend)
+            var legendHighlight = null; // function(layerName)
+            var legendUnhighlight = null; // function()
 
             // --- CSV Parsing ---
             function parseCSV(text) {
@@ -608,16 +611,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     labelGroups.push({ g: g, textNode: textNode });
                 }
 
+                var layerIndexByName = { incidence: 0, notified: 1, deaths: 2 };
+
                 function highlightLegend(idx) {
                     circles[idx].attr("stroke", "#000").attr("stroke-width", 2);
                     labelGroups[idx].textNode
                         .attr("text-decoration", "underline")
+                        .attr("font-weight", "bold")
                         .attr("fill", "#000");
                 }
                 function unhighlightLegend(idx) {
                     circles[idx].attr("stroke", "none").attr("stroke-width", 0);
-                    labelGroups[idx].textNode.attr("text-decoration", "none");
+                    labelGroups[idx].textNode
+                        .attr("text-decoration", "none")
+                        .attr("font-weight", "normal");
                 }
+
+                // Expose for chart circle hover
+                legendHighlight = function (layerName) {
+                    var idx = layerIndexByName[layerName];
+                    if (idx !== undefined) highlightLegend(idx);
+                };
+                legendUnhighlight = function () {
+                    for (var i = 0; i < circles.length; i++) unhighlightLegend(i);
+                };
 
                 for (var i = 0; i < layers.length; i++) {
                     (function (idx) {
@@ -653,6 +670,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             layer: layerName,
                             event: event,
                         };
+                        if (legendHighlight) legendHighlight(layerName);
                         showTooltip(event, dd, layerName);
                     })
                     .on("mousemove", function (event) {
@@ -664,6 +682,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             .attr("stroke", "none")
                             .attr("stroke-width", 0);
                         activeHover = null;
+                        if (legendUnhighlight) legendUnhighlight();
                         hideTooltip();
                     })
                     .on("touchstart", function (event) {
@@ -682,6 +701,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             layer: layerName,
                             event: fakeEvent,
                         };
+                        if (legendHighlight) legendHighlight(layerName);
                         showTooltip(fakeEvent, dd, layerName);
                     })
                     .on("touchend", function () {
@@ -689,6 +709,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             .attr("stroke", "none")
                             .attr("stroke-width", 0);
                         activeHover = null;
+                        if (legendUnhighlight) legendUnhighlight();
                         hideTooltip();
                     });
             }
