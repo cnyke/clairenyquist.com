@@ -46,7 +46,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     loading="eager"
                 />
                 <figcaption class="text-xs text-gray-500 mt-2 text-center">
-                    Ziehl-Neelsen-stained specimen showing acid-fast <em>Mycobacterium tuberculosis</em> bacilli. CDC/V. McPheeters, 1965. Public Health Image Library, ID <a href="https://wwwn.cdc.gov/PHIL/Details.aspx?pid=23001" class="text-gray-500 underline hover:text-gray-700" target="_blank" rel="noopener">23001</a>. Public domain.
+                    Ziehl-Neelsen-stained specimen showing acid-fast <em
+                        >Mycobacterium tuberculosis</em
+                    > bacilli. CDC/V. McPheeters, 1965. Public Health Image Library,
+                    ID <a
+                        href="https://wwwn.cdc.gov/PHIL/Details.aspx?pid=23001"
+                        class="text-gray-500 underline hover:text-gray-700"
+                        target="_blank"
+                        rel="noopener">23001</a
+                    >. Public domain.
                 </figcaption>
             </figure>
             <p
@@ -55,9 +63,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 This page uses WHO Global Tuberculosis Programme estimates
                 across 217 countries. Each country is shown as three concentric
                 circles: the outer circle is estimated true incidence, the
-                middle circle is detected (notified) cases, and the inner
-                core is estimated deaths. The gap between the outer and
-                middle circles represents undetected cases.
+                middle circle is detected (notified) cases, and the inner core
+                is estimated deaths. The gap between the outer and middle
+                circles represents undetected cases.
             </p>
         </div>
 
@@ -68,10 +76,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <h2
                         class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4"
                     >
-                        TB Cascade by Country
+                        Tuberculosis by Country
                     </h2>
                     <p class="text-sm sm:text-base text-gray-600 mb-4">
-                        <span class="hidden sm:inline">Hover over</span><span class="sm:hidden">Tap</span> a country to see estimated incidence, detected cases, and deaths.
+                        <span class="hidden sm:inline">Hover over</span><span
+                            class="sm:hidden">Tap</span
+                        > a country to see estimated incidence, detected cases, and
+                        deaths.
                     </p>
                     <div class="flex flex-wrap items-center gap-3">
                         <button
@@ -79,10 +90,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer flex-shrink-0"
                             aria-label="Play"
                         >
-                            <svg id="tb-play-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="4,2 14,8 4,14"/></svg>
-                            <svg id="tb-pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:none"><rect x="3" y="2" width="4" height="12"/><rect x="9" y="2" width="4" height="12"/></svg>
+                            <svg
+                                id="tb-play-icon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                ><polygon points="4,2 14,8 4,14"></polygon></svg
+                            >
+                            <svg
+                                id="tb-pause-icon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                style="display:none"
+                                ><rect x="3" y="2" width="4" height="12"
+                                ></rect><rect x="9" y="2" width="4" height="12"
+                                ></rect></svg
+                            >
                         </button>
-                        <span id="tb-year-label" class="text-sm font-bold text-gray-900 tabular-nums w-10 text-center flex-shrink-0">2000</span>
+                        <span
+                            id="tb-year-label"
+                            class="text-sm font-bold text-gray-900 tabular-nums w-10 text-center flex-shrink-0"
+                            >2000</span
+                        >
                         <input
                             type="range"
                             id="tb-year-slider"
@@ -91,20 +123,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             value="2024"
                             step="1"
                             class="flex-1 min-w-0 h-2 rounded-lg appearance-none cursor-pointer"
-                            style="accent-color:#c026d3;background:#d1d5db"
+                            style="accent-color:#df5fb0;background:#d1d5db"
                         />
                     </div>
                 </div>
                 <div class="p-4 sm:p-6">
-                    <div id="tb-legend" class="sticky top-0 z-40 bg-white" style="margin-bottom:16px;padding-top:4px;padding-bottom:4px;"></div>
-                    <div id="tb-bubble-chart" style="width:100%;position:relative;"></div>
+                    <div
+                        id="tb-legend"
+                        class="sticky top-0 z-40 bg-white"
+                        style="margin-bottom:16px;padding-top:4px;padding-bottom:4px;"
+                    >
+                    </div>
+                    <div
+                        id="tb-bubble-chart"
+                        style="width:100%;position:relative;overflow-x:hidden;"
+                    >
+                    </div>
                 </div>
                 <div
                     class="px-4 pb-4 text-xs text-gray-500 border-t bg-gray-50"
                 >
                     <p class="mt-2">
-                        <strong>Data Source:</strong> World Health Organization.
-                        Global Tuberculosis Programme: TB burden estimates, 2000–2024.
+                        <strong>Data Source:</strong> World Health Organization. Global
+                        Tuberculosis Programme: TB burden estimates, 2000–2024.
                     </p>
                 </div>
             </div>
@@ -129,13 +170,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 Data covers WHO member state estimates of TB incidence and
                 mortality from 2000 to 2024 across 217 countries. Estimates
                 include incidence per 100,000 population, total mortality
-                (including TB-HIV coinfection), and case fatality ratios. Produced by WHO and partners based on
-                nationally reported surveillance data, surveys, and
-                statistical modeling.
+                (including TB-HIV coinfection), and case fatality ratios.
+                Produced by WHO and partners based on nationally reported
+                surveillance data, surveys, and statistical modeling.
             </p>
             <p class="text-sm text-gray-600 mb-3">
-                World Health Organization. (2025). <em>Global Tuberculosis
-                Report 2025.</em> Geneva: WHO. <a
+                World Health Organization. (2025). <em
+                    >Global Tuberculosis Report 2025.</em
+                > Geneva: WHO. <a
                     href="https://www.who.int/teams/global-programme-on-tuberculosis-and-lung-health/tb-reports/global-tuberculosis-report-2025"
                     class="text-blue-600 hover:text-blue-800 break-words"
                     target="_blank"
@@ -150,7 +192,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         id="tb-floating-year"
         class="fixed bottom-4 left-4 z-50 rounded-full bg-white/90 backdrop-blur border border-gray-200 shadow-md px-4 py-1.5 text-lg font-bold text-gray-900 tabular-nums pointer-events-none opacity-0 transition-opacity duration-300"
         aria-hidden="true"
-    >2024</div>
+    >
+        2024
+    </div>
 
     <script is:inline>
         (function () {
@@ -170,8 +214,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             var COLOR_NOTIFIED = "#df5fb0";
             var COLOR_DEATHS = "#a8326e";
             var MIN_RADIUS = 2;
-            var TRANSITION_MS = 400;
-            var PLAY_INTERVAL_MS = 700;
+            var TRANSITION_MS = 300;
+            var PLAY_INTERVAL_MS = 500;
 
             var allRows = [];
             var allYears = [];
@@ -243,13 +287,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     var r = rows[i];
                     var year = +r.year;
                     if (!year) continue;
-                    if (!seen[year]) { seen[year] = true; allYears.push(year); }
+                    if (!seen[year]) {
+                        seen[year] = true;
+                        allYears.push(year);
+                    }
 
                     var incidence = +r.e_inc_num;
                     if (!incidence || incidence <= 0) continue;
                     var pop = +r.e_pop_num || 0;
                     var cNewinc100k = +r.c_newinc_100k || 0;
-                    var notified = pop > 0 ? Math.round(cNewinc100k * pop / 100000) : 0;
+                    var notified =
+                        pop > 0 ? Math.round((cNewinc100k * pop) / 100000) : 0;
                     if (notified > incidence) notified = incidence;
                     var deaths = +r.e_mort_num || 0;
 
@@ -274,7 +322,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         cfrPctHi: r.cfr_pct_hi !== "" ? +r.cfr_pct_hi : NaN,
                     };
                 }
-                allYears.sort(function (a, b) { return a - b; });
+                allYears.sort(function (a, b) {
+                    return a - b;
+                });
             }
 
             // Build a list of countries using max incidence across all years for stable layout
@@ -287,7 +337,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     for (var ki = 0; ki < keys.length; ki++) {
                         var d = yd[keys[ki]];
                         if (!maxMap[d.iso3]) {
-                            maxMap[d.iso3] = { country: d.country, iso3: d.iso3, region: d.region, incidence: d.incidence };
+                            maxMap[d.iso3] = {
+                                country: d.country,
+                                iso3: d.iso3,
+                                region: d.region,
+                                incidence: d.incidence,
+                            };
                         } else if (d.incidence > maxMap[d.iso3].incidence) {
                             maxMap[d.iso3].incidence = d.incidence;
                         }
@@ -295,7 +350,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 }
                 var result = [];
                 var keys = Object.keys(maxMap);
-                for (var i = 0; i < keys.length; i++) result.push(maxMap[keys[i]]);
+                for (var i = 0; i < keys.length; i++)
+                    result.push(maxMap[keys[i]]);
                 return result;
             }
 
@@ -303,9 +359,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             function clusterBubbles(items, rScale) {
                 var padding = 3;
                 for (var i = 0; i < items.length; i++) {
-                    items[i]._r = Math.max(rScale(items[i].incidence), MIN_RADIUS);
+                    items[i]._r = Math.max(
+                        rScale(items[i].incidence),
+                        MIN_RADIUS,
+                    );
                 }
-                items.sort(function (a, b) { return b._r - a._r; });
+                items.sort(function (a, b) {
+                    return b._r - a._r;
+                });
 
                 for (var i = 0; i < items.length; i++) {
                     var angle = i * 0.5;
@@ -314,12 +375,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     items[i]._y = Math.sin(angle) * dist;
                 }
 
-                var sim = d3.forceSimulation(items)
+                var sim = d3
+                    .forceSimulation(items)
                     .force("cx", d3.forceX(0).strength(0.06))
                     .force("cy", d3.forceY(0).strength(0.06))
-                    .force("collide", d3.forceCollide(function (d) {
-                        return d._r + padding;
-                    }).iterations(4).strength(1))
+                    .force(
+                        "collide",
+                        d3
+                            .forceCollide(function (d) {
+                                return d._r + padding;
+                            })
+                            .iterations(4)
+                            .strength(1),
+                    )
                     .stop();
 
                 for (var i = 0; i < 200; i++) sim.tick();
@@ -329,7 +397,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     items[i]._y = items[i].y;
                 }
 
-                var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                var minX = Infinity,
+                    maxX = -Infinity,
+                    minY = Infinity,
+                    maxY = -Infinity;
                 for (var i = 0; i < items.length; i++) {
                     var r = items[i]._r;
                     if (items[i]._x - r < minX) minX = items[i]._x - r;
@@ -365,27 +436,66 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             function showTooltip(event, d, layer) {
                 var tt = ensureTooltip();
                 // Use WHO-provided CDR and CFR when available, fall back to computed
-                var cdr = !isNaN(d.cdr) ? d.cdr.toFixed(0) :
-                    (d.incidence > 0 ? ((d.notified / d.incidence) * 100).toFixed(0) : "\u2014");
-                var cfr = !isNaN(d.cfrPct) ? d.cfrPct.toFixed(1) :
-                    (d.incidence > 0 ? ((d.deaths / d.incidence) * 100).toFixed(1) : "\u2014");
-                var uInc = layer === "incidence" ? "text-decoration:underline;text-underline-offset:2px;color:#000;" : "color:#000;";
-                var uNot = layer === "notified" ? "text-decoration:underline;text-underline-offset:2px;color:#000;" : "color:#000;";
-                var uDth = layer === "deaths" ? "text-decoration:underline;text-underline-offset:2px;color:#000;" : "color:#000;";
+                var cdr = !isNaN(d.cdr)
+                    ? d.cdr.toFixed(0)
+                    : d.incidence > 0
+                      ? ((d.notified / d.incidence) * 100).toFixed(0)
+                      : "\u2014";
+                var cfr = !isNaN(d.cfrPct)
+                    ? d.cfrPct.toFixed(1)
+                    : d.incidence > 0
+                      ? ((d.deaths / d.incidence) * 100).toFixed(1)
+                      : "\u2014";
+                var uInc =
+                    layer === "incidence"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
+                var uNot =
+                    layer === "notified"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
+                var uDth =
+                    layer === "deaths"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
                 var html =
-                    "<strong style='font-size:14px;color:#000'>" + d.country + "</strong>" +
-                    "<br><span style='" + uInc + "'><span style='color:" + COLOR_INCIDENCE + "'>\u25CF</span> Estimated incidence: " +
+                    "<strong style='font-size:14px;color:#000'>" +
+                    d.country +
+                    "</strong>" +
+                    "<br><span style='" +
+                    uInc +
+                    "'><span style='color:" +
+                    COLOR_INCIDENCE +
+                    "'>\u25CF</span> Estimated incidence: " +
                     formatNum(d.incidence) +
                     " <span style='font-size:11px;color:#555'>(" +
-                    formatNum(d.incidenceLo) + " \u2013 " + formatNum(d.incidenceHi) + ")</span></span>" +
-                    "<br><span style='" + uNot + "'><span style='color:" + COLOR_NOTIFIED + "'>\u25CF</span> Detected cases: " +
+                    formatNum(d.incidenceLo) +
+                    " \u2013 " +
+                    formatNum(d.incidenceHi) +
+                    ")</span></span>" +
+                    "<br><span style='" +
+                    uNot +
+                    "'><span style='color:" +
+                    COLOR_NOTIFIED +
+                    "'>\u25CF</span> Detected cases: " +
                     formatNum(d.notified) +
-                    " <span style='font-size:11px;color:#555'>(CDR: " + cdr + "%)</span></span>" +
-                    "<br><span style='" + uDth + "'><span style='color:" + COLOR_DEATHS + "'>\u25CF</span> Deaths: " +
+                    " <span style='font-size:11px;color:#555'>(CDR: " +
+                    cdr +
+                    "%)</span></span>" +
+                    "<br><span style='" +
+                    uDth +
+                    "'><span style='color:" +
+                    COLOR_DEATHS +
+                    "'>\u25CF</span> Deaths: " +
                     formatNum(d.deaths) +
                     " <span style='font-size:11px;color:#555'>(" +
-                    formatNum(d.deathsLo) + " \u2013 " + formatNum(d.deathsHi) + ")</span></span>" +
-                    "<br><span style='font-size:11px;color:#555'>Case fatality: " + cfr + "%</span>";
+                    formatNum(d.deathsLo) +
+                    " \u2013 " +
+                    formatNum(d.deathsHi) +
+                    ")</span></span>" +
+                    "<br><span style='font-size:11px;color:#555'>Case fatality: " +
+                    cfr +
+                    "%</span>";
                 tt.innerHTML = html;
                 tt.style.display = "block";
                 positionTooltip(event);
@@ -428,18 +538,41 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 if (!container) return;
                 container.innerHTML = "";
 
-                var svg = d3.select(container)
+                var svg = d3
+                    .select(container)
                     .append("svg")
                     .attr("width", 340)
                     .attr("height", 60)
                     .style("overflow", "visible");
 
-                var cx = 30, cy = 30;
+                var cx = 30,
+                    cy = 30;
 
                 var layers = [
-                    { r: 26, fill: COLOR_INCIDENCE, opacity: 1, dotColor: COLOR_INCIDENCE, label: "Estimated incidence (outer circle)", labelY: 14 },
-                    { r: 18, fill: COLOR_NOTIFIED, opacity: 0.7, dotColor: COLOR_NOTIFIED, label: "Detected cases (filled)", labelY: 32 },
-                    { r: 9, fill: COLOR_DEATHS, opacity: 1, dotColor: COLOR_DEATHS, label: "Deaths (dark core)", labelY: 50 },
+                    {
+                        r: 26,
+                        fill: COLOR_INCIDENCE,
+                        opacity: 1,
+                        dotColor: COLOR_INCIDENCE,
+                        label: "Estimated incidence",
+                        labelY: 14,
+                    },
+                    {
+                        r: 18,
+                        fill: COLOR_NOTIFIED,
+                        opacity: 0.7,
+                        dotColor: COLOR_NOTIFIED,
+                        label: "Detected cases",
+                        labelY: 32,
+                    },
+                    {
+                        r: 9,
+                        fill: COLOR_DEATHS,
+                        opacity: 1,
+                        dotColor: COLOR_DEATHS,
+                        label: "Deaths",
+                        labelY: 50,
+                    },
                 ];
 
                 var textX = 66;
@@ -448,15 +581,28 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 for (var i = 0; i < layers.length; i++) {
                     var l = layers[i];
-                    var c = svg.append("circle").attr("cx", cx).attr("cy", cy).attr("r", l.r)
-                        .attr("fill", l.fill).attr("fill-opacity", l.opacity).attr("stroke", "none")
+                    var c = svg
+                        .append("circle")
+                        .attr("cx", cx)
+                        .attr("cy", cy)
+                        .attr("r", l.r)
+                        .attr("fill", l.fill)
+                        .attr("fill-opacity", l.opacity)
+                        .attr("stroke", "none")
                         .style("cursor", "pointer");
                     var g = svg.append("g").style("cursor", "pointer");
-                    g.append("text").attr("x", textX).attr("y", l.labelY)
-                        .attr("font-size", "12px").attr("fill", l.dotColor)
+                    g.append("text")
+                        .attr("x", textX)
+                        .attr("y", l.labelY)
+                        .attr("font-size", "12px")
+                        .attr("fill", l.dotColor)
                         .text("\u25CF ");
-                    var textNode = g.append("text").attr("x", textX + 14).attr("y", l.labelY)
-                        .attr("font-size", "12px").attr("fill", "#000")
+                    var textNode = g
+                        .append("text")
+                        .attr("x", textX + 14)
+                        .attr("y", l.labelY)
+                        .attr("font-size", "12px")
+                        .attr("fill", "#000")
                         .text(l.label);
                     circles.push(c);
                     labelGroups.push({ g: g, textNode: textNode });
@@ -464,7 +610,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 function highlightLegend(idx) {
                     circles[idx].attr("stroke", "#000").attr("stroke-width", 2);
-                    labelGroups[idx].textNode.attr("text-decoration", "underline").attr("fill", "#000");
+                    labelGroups[idx].textNode
+                        .attr("text-decoration", "underline")
+                        .attr("fill", "#000");
                 }
                 function unhighlightLegend(idx) {
                     circles[idx].attr("stroke", "none").attr("stroke-width", 0);
@@ -474,11 +622,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 for (var i = 0; i < layers.length; i++) {
                     (function (idx) {
                         circles[idx]
-                            .on("mouseover", function () { highlightLegend(idx); })
-                            .on("mouseout", function () { unhighlightLegend(idx); });
+                            .on("mouseover", function () {
+                                highlightLegend(idx);
+                            })
+                            .on("mouseout", function () {
+                                unhighlightLegend(idx);
+                            });
                         labelGroups[idx].g
-                            .on("mouseover", function () { highlightLegend(idx); })
-                            .on("mouseout", function () { unhighlightLegend(idx); });
+                            .on("mouseover", function () {
+                                highlightLegend(idx);
+                            })
+                            .on("mouseout", function () {
+                                unhighlightLegend(idx);
+                            });
                     })(i);
                 }
             }
@@ -489,8 +645,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .style("cursor", "pointer")
                     .on("mouseover", function (event) {
                         var dd = d3.select(this.parentNode).datum();
-                        d3.select(this).attr("stroke", "#000").attr("stroke-width", 2);
-                        activeHover = { iso3: dd.iso3, layer: layerName, event: event };
+                        d3.select(this)
+                            .attr("stroke", "#000")
+                            .attr("stroke-width", 2);
+                        activeHover = {
+                            iso3: dd.iso3,
+                            layer: layerName,
+                            event: event,
+                        };
                         showTooltip(event, dd, layerName);
                     })
                     .on("mousemove", function (event) {
@@ -498,7 +660,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         positionTooltip(event);
                     })
                     .on("mouseout", function () {
-                        d3.select(this).attr("stroke", "none").attr("stroke-width", 0);
+                        d3.select(this)
+                            .attr("stroke", "none")
+                            .attr("stroke-width", 0);
                         activeHover = null;
                         hideTooltip();
                     })
@@ -506,13 +670,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         event.preventDefault();
                         var dd = d3.select(this.parentNode).datum();
                         var touch = event.touches[0];
-                        var fakeEvent = { clientX: touch.clientX, clientY: touch.clientY };
-                        d3.select(this).attr("stroke", "#000").attr("stroke-width", 2);
-                        activeHover = { iso3: dd.iso3, layer: layerName, event: fakeEvent };
+                        var fakeEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                        };
+                        d3.select(this)
+                            .attr("stroke", "#000")
+                            .attr("stroke-width", 2);
+                        activeHover = {
+                            iso3: dd.iso3,
+                            layer: layerName,
+                            event: fakeEvent,
+                        };
                         showTooltip(fakeEvent, dd, layerName);
                     })
                     .on("touchend", function () {
-                        d3.select(this).attr("stroke", "none").attr("stroke-width", 0);
+                        d3.select(this)
+                            .attr("stroke", "none")
+                            .attr("stroke-width", 0);
                         activeHover = null;
                         hideTooltip();
                     });
@@ -530,21 +705,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 var containerWidth = container.offsetWidth || 800;
                 var isMobile = containerWidth < 640;
-                var maxRadius = isMobile ? containerWidth / 2 : Math.min(360, (containerWidth - 140) / 2);
+                var maxRadius = isMobile
+                    ? containerWidth / 3
+                    : Math.min(360, (containerWidth - 140) / 2);
 
                 // Global max incidence across ALL years for stable scale
                 var globalMaxInc = 0;
                 for (var i = 0; i < maxCountries.length; i++) {
-                    if (maxCountries[i].incidence > globalMaxInc) globalMaxInc = maxCountries[i].incidence;
+                    if (maxCountries[i].incidence > globalMaxInc)
+                        globalMaxInc = maxCountries[i].incidence;
                 }
-                var rScale = d3.scaleSqrt().domain([0, globalMaxInc]).range([0, maxRadius]);
+                var rScale = d3
+                    .scaleSqrt()
+                    .domain([0, globalMaxInc])
+                    .range([0, maxRadius]);
 
                 // Group by region
                 var regionGroups = {};
-                for (var i = 0; i < REGION_ORDER.length; i++) regionGroups[REGION_ORDER[i]] = [];
+                for (var i = 0; i < REGION_ORDER.length; i++)
+                    regionGroups[REGION_ORDER[i]] = [];
                 for (var i = 0; i < maxCountries.length; i++) {
                     var reg = maxCountries[i].region;
-                    if (regionGroups[reg]) regionGroups[reg].push(maxCountries[i]);
+                    if (regionGroups[reg])
+                        regionGroups[reg].push(maxCountries[i]);
                 }
 
                 var regionBurden = [];
@@ -552,10 +735,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     var reg = REGION_ORDER[i];
                     var items = regionGroups[reg];
                     if (!items.length) continue;
-                    items.sort(function (a, b) { return b.incidence - a.incidence; });
+                    items.sort(function (a, b) {
+                        return b.incidence - a.incidence;
+                    });
                     var total = 0;
-                    for (var j = 0; j < items.length; j++) total += items[j].incidence;
-                    regionBurden.push({ region: reg, items: items, total: total });
+                    for (var j = 0; j < items.length; j++)
+                        total += items[j].incidence;
+                    regionBurden.push({
+                        region: reg,
+                        items: items,
+                        total: total,
+                    });
                 }
                 // Keep REGION_ORDER (alphabetical) ordering
 
@@ -569,7 +759,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 for (var i = 0; i < regionBurden.length; i++) {
                     var rb = regionBurden[i];
                     var clusterSize = clusterBubbles(rb.items, rScale);
-                    var clusterOffsetX = Math.max(0, (bubbleAreaWidth - clusterSize.width) / 2);
+                    var clusterOffsetX = Math.max(
+                        0,
+                        (bubbleAreaWidth - clusterSize.width) / 2,
+                    );
                     for (var j = 0; j < rb.items.length; j++) {
                         rb.items[j]._x += clusterOffsetX;
                     }
@@ -577,12 +770,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         region: rb.region,
                         items: rb.items,
                         height: clusterSize.height,
-                        yOffset: totalHeight + (isMobile ? regionLabelHeight : 0),
+                        yOffset:
+                            totalHeight + (isMobile ? regionLabelHeight : 0),
                     });
-                    totalHeight += clusterSize.height + regionPadding + (isMobile ? regionLabelHeight : 0);
+                    totalHeight +=
+                        clusterSize.height +
+                        regionPadding +
+                        (isMobile ? regionLabelHeight : 0);
                 }
 
-                var svg = d3.select(container)
+                var svg = d3
+                    .select(container)
                     .append("svg")
                     .attr("width", containerWidth)
                     .attr("height", totalHeight)
@@ -593,47 +791,61 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                 for (var ri = 0; ri < regionLayouts.length; ri++) {
                     var rl = regionLayouts[ri];
-                    var regionG = svg.append("g")
+                    var regionG = svg
+                        .append("g")
                         .attr("transform", "translate(0," + rl.yOffset + ")");
 
                     if (isMobile) {
-                        regionG.append("text")
-                            .attr("x", 4).attr("y", -6)
-                            .attr("font-size", "13px").attr("font-weight", "600")
+                        regionG
+                            .append("text")
+                            .attr("x", 4)
+                            .attr("y", -6)
+                            .attr("font-size", "13px")
+                            .attr("font-weight", "600")
                             .attr("fill", "#374151")
                             .text(REGION_NAMES[rl.region] || rl.region);
                     } else {
-                        regionG.append("text")
-                            .attr("x", labelWidth - 12)
-                            .attr("y", Math.min(rl.height / 2, 30))
-                            .attr("text-anchor", "end").attr("dominant-baseline", "middle")
-                            .attr("font-size", "13px").attr("font-weight", "600")
+                        regionG
+                            .append("text")
+                            .attr("x", 4)
+                            .attr("y", 16)
+                            .attr("text-anchor", "start")
+                            .attr("font-size", "13px")
+                            .attr("font-weight", "600")
                             .attr("fill", "#374151")
                             .text(REGION_NAMES[rl.region] || rl.region);
                     }
 
-                    var bubblesG = regionG.append("g")
+                    var bubblesG = regionG
+                        .append("g")
                         .attr("transform", "translate(" + labelWidth + ",0)");
 
                     for (var ci = 0; ci < rl.items.length; ci++) {
                         var d = rl.items[ci];
-                        var countryG = bubblesG.append("g")
-                            .attr("transform", "translate(" + d._x + "," + d._y + ")");
+                        var countryG = bubblesG
+                            .append("g")
+                            .attr(
+                                "transform",
+                                "translate(" + d._x + "," + d._y + ")",
+                            );
 
-                        var incCircle = countryG.append("circle")
+                        var incCircle = countryG
+                            .append("circle")
                             .attr("class", "tb-layer-incidence")
                             .attr("r", 0)
                             .attr("fill", COLOR_INCIDENCE)
                             .attr("stroke", "none");
 
-                        var notCircle = countryG.append("circle")
+                        var notCircle = countryG
+                            .append("circle")
                             .attr("class", "tb-layer-notified")
                             .attr("r", 0)
                             .attr("fill", COLOR_NOTIFIED)
                             .attr("fill-opacity", 0.7)
                             .attr("stroke", "none");
 
-                        var dthCircle = countryG.append("circle")
+                        var dthCircle = countryG
+                            .append("circle")
                             .attr("class", "tb-layer-deaths")
                             .attr("r", 0)
                             .attr("fill", COLOR_DEATHS)
@@ -675,12 +887,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                     if (!d) {
                         // No data this year — shrink to 0
-                        var emptyDatum = { country: iso, iso3: iso, region: "", incidence: 0, incidenceLo: 0, incidenceHi: 0, notified: 0, deaths: 0, deathsLo: 0, deathsHi: 0, pop: 0 };
+                        var emptyDatum = {
+                            country: iso,
+                            iso3: iso,
+                            region: "",
+                            incidence: 0,
+                            incidenceLo: 0,
+                            incidenceHi: 0,
+                            notified: 0,
+                            deaths: 0,
+                            deathsLo: 0,
+                            deathsHi: 0,
+                            pop: 0,
+                        };
                         node.g.datum(emptyDatum);
                         if (dur) {
-                            node.incCircle.transition().duration(dur).attr("r", 0);
-                            node.notCircle.transition().duration(dur).attr("r", 0);
-                            node.dthCircle.transition().duration(dur).attr("r", 0);
+                            node.incCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
+                            node.notCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
+                            node.dthCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
                         } else {
                             node.incCircle.attr("r", 0);
                             node.notCircle.attr("r", 0);
@@ -692,15 +925,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     node.g.datum(d);
 
                     var rInc = Math.max(rScale(d.incidence), MIN_RADIUS);
-                    var rNot = d.notified > 0 ? Math.max(rScale(d.notified), MIN_RADIUS * 0.8) : 0;
-                    var rDth = d.deaths > 0 ? Math.max(rScale(d.deaths), MIN_RADIUS * 0.6) : 0;
+                    var rNot =
+                        d.notified > 0
+                            ? Math.max(rScale(d.notified), MIN_RADIUS * 0.8)
+                            : 0;
+                    var rDth =
+                        d.deaths > 0
+                            ? Math.max(rScale(d.deaths), MIN_RADIUS * 0.6)
+                            : 0;
                     if (rNot > rInc) rNot = rInc;
                     if (rDth > rInc) rDth = rInc;
 
                     if (dur) {
-                        node.incCircle.transition().duration(dur).attr("r", rInc);
-                        node.notCircle.transition().duration(dur).attr("r", rNot);
-                        node.dthCircle.transition().duration(dur).attr("r", rDth);
+                        node.incCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rInc);
+                        node.notCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rNot);
+                        node.dthCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rDth);
                     } else {
                         node.incCircle.attr("r", rInc);
                         node.notCircle.attr("r", rNot);
@@ -752,7 +1000,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 if (!isPlaying) return;
                 isPlaying = false;
                 updatePlayIcon();
-                if (playTimer) { clearTimeout(playTimer); playTimer = null; }
+                if (playTimer) {
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                }
             }
 
             function updatePlayIcon() {
@@ -760,8 +1011,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 var pauseIcon = document.getElementById("tb-pause-icon");
                 var playBtn = document.getElementById("tb-play-btn");
                 if (playIcon) playIcon.style.display = isPlaying ? "none" : "";
-                if (pauseIcon) pauseIcon.style.display = isPlaying ? "" : "none";
-                if (playBtn) playBtn.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
+                if (pauseIcon)
+                    pauseIcon.style.display = isPlaying ? "" : "none";
+                if (playBtn)
+                    playBtn.setAttribute(
+                        "aria-label",
+                        isPlaying ? "Pause" : "Play",
+                    );
             }
 
             // --- Init ---
@@ -792,7 +1048,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         var playBtn = document.getElementById("tb-play-btn");
                         if (playBtn) {
                             playBtn.addEventListener("click", function () {
-                                if (isPlaying) stopPlay(); else startPlay();
+                                if (isPlaying) stopPlay();
+                                else startPlay();
                             });
                         }
 
@@ -814,24 +1071,34 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         });
 
                         // Show floating year when slider is scrolled out of view
-                        var floatingYear = document.getElementById("tb-floating-year");
-                        var sliderEl = document.getElementById("tb-year-slider");
+                        var floatingYear =
+                            document.getElementById("tb-floating-year");
+                        var sliderEl =
+                            document.getElementById("tb-year-slider");
                         if (floatingYear && sliderEl) {
                             function updateFloatingVisibility() {
                                 var rect = sliderEl.getBoundingClientRect();
-                                var hidden = rect.bottom > 0 && rect.top < window.innerHeight;
+                                var hidden =
+                                    rect.bottom > 0 &&
+                                    rect.top < window.innerHeight;
                                 floatingYear.style.opacity = hidden ? "0" : "1";
                             }
-                            window.addEventListener("scroll", updateFloatingVisibility, { passive: true });
+                            window.addEventListener(
+                                "scroll",
+                                updateFloatingVisibility,
+                                { passive: true },
+                            );
                             updateFloatingVisibility();
                         }
                     })
                     .catch(function (err) {
-                        var container = document.getElementById("tb-bubble-chart");
+                        var container =
+                            document.getElementById("tb-bubble-chart");
                         if (container) {
                             container.innerHTML =
                                 '<p style="text-align:center;color:#ef4444;padding:2rem">Error loading data: ' +
-                                err.message + "</p>";
+                                err.message +
+                                "</p>";
                         }
                     });
             }
