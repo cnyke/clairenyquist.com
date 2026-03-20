@@ -820,6 +820,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         .append("g")
                         .attr("transform", "translate(" + labelWidth + ",0)");
 
+                    var minTapRadius = isMobile ? 16 : 0;
+
                     for (var ci = 0; ci < rl.items.length; ci++) {
                         var d = rl.items[ci];
                         var countryG = bubblesG
@@ -828,6 +830,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 "transform",
                                 "translate(" + d._x + "," + d._y + ")",
                             );
+
+                        // Invisible hit area for small circles
+                        if (minTapRadius > 0) {
+                            var hitCircle = countryG
+                                .append("circle")
+                                .attr("class", "tb-layer-hit")
+                                .attr("r", minTapRadius)
+                                .attr("fill", "transparent")
+                                .attr("stroke", "none");
+                            attachCircleEvents(hitCircle, "incidence");
+                        }
 
                         var incCircle = countryG
                             .append("circle")
