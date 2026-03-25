@@ -1,0 +1,1952 @@
+[
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 2874000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 415000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 178000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 142000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 89000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 67000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 54000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 43000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 38000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Sweden",
+    "country_code": "SWE",
+    "gdp_per_capita": 55873,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 35000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Norway",
+    "country_code": "NOR",
+    "gdp_per_capita": 106149,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 32000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Denmark",
+    "country_code": "DNK",
+    "gdp_per_capita": 67803,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 28000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Ireland",
+    "country_code": "IRL",
+    "gdp_per_capita": 103685,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Italy",
+    "country_code": "ITA",
+    "gdp_per_capita": 34085,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Spain",
+    "country_code": "ESP",
+    "gdp_per_capita": 29674,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 11000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 42000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 38000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "South Africa",
+    "country_code": "ZAF",
+    "gdp_per_capita": 6776,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 35000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 28000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "Korea, Rep.",
+    "country_code": "KOR",
+    "gdp_per_capita": 32255,
+    "disease": "HIV/AIDS",
+    "disease_category": "Viral",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 54200000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 412000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 68000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 45000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 32000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 28000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 22000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 14000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Korea, Rep.",
+    "country_code": "KOR",
+    "gdp_per_capita": 32255,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 11000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Norway",
+    "country_code": "NOR",
+    "gdp_per_capita": 106149,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 9000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Sweden",
+    "country_code": "SWE",
+    "gdp_per_capita": 55873,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 7000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "South Africa",
+    "country_code": "ZAF",
+    "gdp_per_capita": 6776,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 6000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Indonesia",
+    "country_code": "IDN",
+    "gdp_per_capita": 4788,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Tuberculosis",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 44100000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 892000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 245000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 42000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 38000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 28000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 22000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 14000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Sweden",
+    "country_code": "SWE",
+    "gdp_per_capita": 55873,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Norway",
+    "country_code": "NOR",
+    "gdp_per_capita": 106149,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 11000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 9000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Italy",
+    "country_code": "ITA",
+    "gdp_per_capita": 34085,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 7000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Spain",
+    "country_code": "ESP",
+    "gdp_per_capita": 29674,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 6000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Korea, Rep.",
+    "country_code": "KOR",
+    "gdp_per_capita": 32255,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Ireland",
+    "country_code": "IRL",
+    "gdp_per_capita": 103685,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "Denmark",
+    "country_code": "DNK",
+    "gdp_per_capita": 67803,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 6000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "South Africa",
+    "country_code": "ZAF",
+    "gdp_per_capita": 6776,
+    "disease": "Malaria",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 55400000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 89000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 32000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 11000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 7000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 6000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Thailand",
+    "country_code": "THA",
+    "gdp_per_capita": 6909,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Singapore",
+    "country_code": "SGP",
+    "gdp_per_capita": 65234,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Korea, Rep.",
+    "country_code": "KOR",
+    "gdp_per_capita": 32255,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Mexico",
+    "country_code": "MEX",
+    "gdp_per_capita": 10948,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "Colombia",
+    "country_code": "COL",
+    "gdp_per_capita": 6630,
+    "disease": "Dengue",
+    "disease_category": "Viral",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 3600000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Argentina",
+    "country_code": "ARG",
+    "gdp_per_capita": 13650,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Spain",
+    "country_code": "ESP",
+    "gdp_per_capita": 29674,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Colombia",
+    "country_code": "COL",
+    "gdp_per_capita": 6630,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Mexico",
+    "country_code": "MEX",
+    "gdp_per_capita": 10948,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Chagas disease",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 700000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 42000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 18000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1800000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Nigeria",
+    "country_code": "NGA",
+    "gdp_per_capita": 2184,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Kenya",
+    "country_code": "KEN",
+    "gdp_per_capita": 2099,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 900000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "EGY",
+    "country_code": "EGY",
+    "gdp_per_capita": 3699,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Schistosomiasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 1600000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 35000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Spain",
+    "country_code": "ESP",
+    "gdp_per_capita": 29674,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3500000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Kenya",
+    "country_code": "KEN",
+    "gdp_per_capita": 2099,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Colombia",
+    "country_code": "COL",
+    "gdp_per_capita": 6630,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 600000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Leishmaniasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 900000,
+    "global_dalys": 950000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 28000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 700000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Kenya",
+    "country_code": "KEN",
+    "gdp_per_capita": 2099,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 500000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 600000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Norway",
+    "country_code": "NOR",
+    "gdp_per_capita": 106149,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 400000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "Sweden",
+    "country_code": "SWE",
+    "gdp_per_capita": 55873,
+    "disease": "Helminth infections",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 350000,
+    "global_dalys": 3400000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 12000000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 800000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 700000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 600000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Leprosy",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 500000,
+    "global_dalys": 40000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Sleeping sickness",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 120000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 6000000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Lymphatic filariasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 600000,
+    "global_dalys": 1900000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 10000000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BEL",
+    "gdp_per_capita": 51247,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 800000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 700000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Onchocerciasis",
+    "disease_category": "Parasitic",
+    "rd_funding_usd": 500000,
+    "global_dalys": 1100000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 8000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 3500000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 800000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 600000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Canada",
+    "country_code": "CAN",
+    "gdp_per_capita": 54966,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 500000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NLD",
+    "gdp_per_capita": 57025,
+    "disease": "Trachoma",
+    "disease_category": "Bacterial",
+    "rd_funding_usd": 400000,
+    "global_dalys": 280000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 15000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "China",
+    "country_code": "CHN",
+    "gdp_per_capita": 12720,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 4000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 2500000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Japan",
+    "country_code": "JPN",
+    "gdp_per_capita": 33815,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Thailand",
+    "country_code": "THA",
+    "gdp_per_capita": 6909,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 1200000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 800000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "Philippines",
+    "country_code": "PHL",
+    "gdp_per_capita": 3623,
+    "disease": "Rabies",
+    "disease_category": "Viral",
+    "rd_funding_usd": 600000,
+    "global_dalys": 1700000,
+    "year": 2022
+  },
+  {
+    "country": "United States",
+    "country_code": "USA",
+    "gdp_per_capita": 76330,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 5000000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GBR",
+    "gdp_per_capita": 46125,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 3000000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "Australia",
+    "country_code": "AUS",
+    "gdp_per_capita": 64491,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 2000000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "India",
+    "country_code": "IND",
+    "gdp_per_capita": 2389,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 1500000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "Brazil",
+    "country_code": "BRA",
+    "gdp_per_capita": 8918,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 1000000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "France",
+    "country_code": "FRA",
+    "gdp_per_capita": 40886,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 800000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "Germany",
+    "country_code": "DEU",
+    "gdp_per_capita": 48718,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 600000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "Switzerland",
+    "country_code": "CHE",
+    "gdp_per_capita": 93260,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 500000,
+    "global_dalys": 480000,
+    "year": 2022
+  },
+  {
+    "country": "CRI",
+    "country_code": "CRI",
+    "gdp_per_capita": 12472,
+    "disease": "Snakebite envenoming",
+    "disease_category": "Other",
+    "rd_funding_usd": 400000,
+    "global_dalys": 480000,
+    "year": 2022
+  }
+]

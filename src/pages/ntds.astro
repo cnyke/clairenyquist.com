@@ -1,0 +1,74 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="NTD R&D Funding | Claire Nyquist"
+    description="Interactive charts exploring how R&D investment in neglected tropical diseases compares to their global health burden."
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1
+                class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 md:mb-6"
+            >
+                NTD R&D Funding
+            </h1>
+            <p
+                class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4"
+            >
+                Are neglected tropical diseases funded in proportion to their global health burden?
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                These charts compare total global R&D funding against disease burden
+                for 15 neglected tropical diseases. The bar chart ranks diseases by
+                how much R&D funding they receive per disability-adjusted life year
+                (DALY), directly revealing which diseases are underfunded relative to
+                their burden. The scatterplot below shows the relationship between
+                total burden and total funding.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                <strong class="text-gray-700">R&D funding data</strong> comes from
+                <a href="https://gfinderdata.policycuresresearch.org/" class="text-blue-600 hover:underline" target="_blank" rel="noopener">G-FINDER</a>,
+                a project of Policy Cures Research that has tracked global funding for
+                neglected disease R&D annually since 2007. G-FINDER surveys over 200
+                funding organizations — governments, philanthropies, pharmaceutical
+                companies, and multilateral agencies — to produce the most comprehensive
+                picture of who funds what in neglected disease research. The figures shown
+                here are from the 2022 funding year, covering product development for
+                drugs, vaccines, diagnostics, and vector control across approximately
+                30 neglected diseases.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                <strong class="text-gray-700">Disease burden (DALYs)</strong> comes from the
+                <a href="https://www.who.int/data/global-health-estimates" class="text-blue-600 hover:underline" target="_blank" rel="noopener">WHO Global Health Estimates</a>
+                (2019 revision). One DALY represents one lost year of healthy life — either
+                through premature death or living with disability. DALYs capture the full
+                health impact of a disease in a single number, making it possible to
+                compare conditions as different as malaria (55.4 million DALYs) and
+                leprosy (40,000 DALYs) on the same scale.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                <strong class="text-gray-700">GDP per capita</strong> (used in the
+                underlying dataset) is drawn from the
+                <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.CD" class="text-blue-600 hover:underline" target="_blank" rel="noopener">World Bank Open Data</a>
+                platform (indicator NY.GDP.PCAP.CD, 2022 current USD). The dataset
+                covers 32 funder countries, from low-income nations like Ethiopia and
+                Uganda to high-income countries like Switzerland and Luxembourg.
+            </p>
+        </div>
+
+        <!-- Visualization placeholder -->
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden p-8 text-center text-gray-400 min-h-[400px] flex items-center justify-center">
+            <p class="text-lg">Visualization coming soon</p>
+        </div>
+    </div>
+</BaseLayout>

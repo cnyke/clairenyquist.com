@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><!-- Basic Meta Tags --><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Exoplanet Discoveries - Claire Nyquist</title><meta name="description" content="Data visualization exploring exoplanet discoveries, showing distance from Earth and discovery methods over time."><meta name="author" content="Claire Nyquist"><meta name="keywords" content="data visualization, public health, science communication, epidemiology, biology, Claire Nyquist, interactive data, design, science fiction"><!-- Canonical URL --><link rel="canonical" href="https://clairenyquist.com/exoplanets/"><!-- Favicon and Icons --><link rel="icon" type="image/png" href="/favicon.png"><link rel="apple-touch-icon" href="/favicon.png"><!-- Open Graph / Facebook Meta Tags --><meta property="og:type" content="website"><meta property="og:url" content="https://clairenyquist.com/exoplanets/"><meta property="og:title" content="Exoplanet Discoveries - Claire Nyquist"><meta property="og:description" content="Data visualization exploring exoplanet discoveries, showing distance from Earth and discovery methods over time."><meta property="og:image" content="https://clairenyquist.com/images/headshot.jpeg"><meta property="og:site_name" content="Claire Nyquist"><meta property="og:locale" content="en_US"><!-- Twitter Card Meta Tags --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://clairenyquist.com/exoplanets/"><meta name="twitter:title" content="Exoplanet Discoveries - Claire Nyquist"><meta name="twitter:description" content="Data visualization exploring exoplanet discoveries, showing distance from Earth and discovery methods over time."><meta name="twitter:image" content="https://clairenyquist.com/images/headshot.jpeg"><meta name="twitter:creator" content="@clairenyquist"><!-- DNS Prefetch & Preconnect for Performance --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://unpkg.com"><!-- Fonts --><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"><!-- Leaflet CSS --><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!-- Structured Data (Schema.org JSON-LD) --><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Claire Nyquist","url":"https://clairenyquist.com/exoplanets/","description":"Data visualization exploring exoplanet discoveries, showing distance from Earth and discovery methods over time.","author":{"@type":"Person","name":"Claire Nyquist","email":"clairenyquist@gmail.com"},"publisher":{"@type":"Organization","name":"Claire Nyquist","logo":{"@type":"ImageObject","url":"https://clairenyquist.com/favicon.png"}}}</script><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-7PZ8NQ5JQD"></script><script>(function(){const GA_MEASUREMENT_ID = "G-7PZ8NQ5JQD";
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+        })();</script><link rel="stylesheet" href="/_astro/about-contact.uiAC-MUX.css">
+<style>.masonry-container[data-astro-cid-zo5pxuxx]{width:100%;max-width:100%}.masonry-item[data-astro-cid-zo5pxuxx]{display:block;width:100%;margin-bottom:2rem;background:#fff;border-radius:.5rem;overflow:hidden;position:relative}.masonry-item[data-astro-cid-zo5pxuxx] img[data-astro-cid-zo5pxuxx]{display:block;width:100%;height:auto;-o-object-fit:contain;object-fit:contain}.masonry-item[data-astro-cid-zo5pxuxx] .relative[data-astro-cid-zo5pxuxx]{overflow:hidden;border-bottom:1px solid rgba(0,0,0,.05)}.masonry-item[data-astro-cid-zo5pxuxx] .p-6[data-astro-cid-zo5pxuxx]{background:#fff;position:relative;z-index:10}
+</style><script type="module" src="/_astro/hoisted.t_BYlHZp.js"></script></head> <body class="font-lexend bg-white text-gray-900 min-h-screen flex flex-col"> <header class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200" style="z-index: 1000;"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16"> <!-- Logo/Title --> <div class="flex-shrink-0"> <a href="/" class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+Claire Nyquist
+</a> </div> <!-- Desktop Navigation --> <nav class="hidden md:flex space-x-8"> <!-- Data Visualizations Dropdown --> <div class="relative group"> <button class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1"> <span>Data Visualizations</span> <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path> </svg> </button> <div class="absolute left-0 top-full pt-2 w-56 hidden group-hover:block z-50"> <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"> <div class="py-1"> <a href="/ai-models-timeline" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+AI Models
+</a> <a href="/malaria" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Malaria
+</a> <a href="/meps" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Medical Expenditure Panel Survey
+</a> <a href="/minnesota-bryophytes" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Minnesota Mosses
+</a> <a href="/ntds" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Neglected Tropical Diseases
+</a> <a href="/octopuses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Octopuses
+</a> <a href="/respiratoryviruses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Respiratory Viruses
+</a> <a href="/tuberculosis" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Tuberculosis
+</a> <a href="/themet" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+The Met Collection
+</a> </div> </div> </div> </div> <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+Graphic Design
+</a> <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+tcplot()
+</a> <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+Resumé
+</a> <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+About & Contact
+</a> </nav> <!-- Mobile menu button --> <div class="md:hidden"> <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> <!-- Mobile Navigation --> <div id="mobile-menu" class="hidden md:hidden pb-4"> <div class="flex flex-col space-y-2"> <!-- Data Visualizations Dropdown for Mobile --> <div> <button id="mobile-dataviz-toggle" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full"> <span>Data Visualizations</span> <svg id="mobile-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path> </svg> </button> <div id="mobile-dataviz-menu" class="hidden pl-4 space-y-2 mt-2"> <a href="/ai-models-timeline" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+AI Models
+</a> <a href="/malaria" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Malaria
+</a> <a href="/meps" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Medical Expenditure Panel Survey
+</a> <a href="/minnesota-bryophytes" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Minnesota Mosses
+</a> <a href="/ntds" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Neglected Tropical Diseases
+</a> <a href="/octopuses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Octopuses
+</a> <a href="/respiratoryviruses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Respiratory Viruses
+</a> <a href="/tuberculosis" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Tuberculosis
+</a> <a href="/themet" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+The Met Collection
+</a> </div> </div> <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+Graphic Design
+</a> <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+tcplot()
+</a> <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+Resumé
+</a> <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+About & Contact
+</a> </div> </div> </div> </header> <main class="flex-grow">  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-astro-cid-zo5pxuxx> <!-- Project Header --> <div class="text-center mb-12" data-astro-cid-zo5pxuxx> <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6" data-astro-cid-zo5pxuxx>
+Exoplanet Discoveries
+</h1> <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" data-astro-cid-zo5pxuxx>
+Exoplanets are planets orbiting stars that are not our sun.
+</p> <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4" data-astro-cid-zo5pxuxx>
+They help us understand possible environments for other forms of life. These two visualizations, built using R, show how exoplanet detection has changed since scientists discovered the first planets orbiting other star systems in the mid-1990s. Each point represents a confirmed exoplanet, with colors indicating the discovery method used and point size representing planet mass. As detection methods have become more sensitive, we are able to detect exoplanets farther and farther away, especially via the transit method (light dims as exoplanets pass in front of their star) or the microlensing method (where light from extrasolar stars and planets is bent due to gravity of objects in space). These two images show the same data with different scales.
+</p> </div> <!-- Project Gallery --> <div class="mb-16" data-astro-cid-zo5pxuxx> <div class="masonry-container" data-astro-cid-zo5pxuxx> <!-- Gallery Item 1 - All Exoplanet Discoveries --> <div class="masonry-item bg-white rounded-lg overflow-hidden mb-6" data-astro-cid-zo5pxuxx> <img src="/images/exoHighRes1.png" alt="Exoplanet Discoveries - scatter plot showing all confirmed exoplanet discoveries up to 30,000 light-years" class="w-full h-auto object-contain" data-astro-cid-zo5pxuxx> </div> <!-- Gallery Item 2 - Near Earth Exoplanets --> <div class="masonry-item bg-white rounded-lg overflow-hidden mb-6" data-astro-cid-zo5pxuxx> <img src="/images/exoHighRes2.png" alt="Near Earth Exoplanets - scatter plot showing exoplanet discoveries within 4000 light-years" class="w-full h-auto object-contain" data-astro-cid-zo5pxuxx> </div> </div> </div> <!-- Data Sources --> <div class="bg-white rounded-lg shadow-sm border p-6 mb-8" data-astro-cid-zo5pxuxx> <h3 class="text-lg font-semibold text-gray-900 mb-3" data-astro-cid-zo5pxuxx>Data Sources</h3> <div class="text-sm text-gray-600 space-y-2" data-astro-cid-zo5pxuxx> <p data-astro-cid-zo5pxuxx>
+This 2021 visualization has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
+</p> <p data-astro-cid-zo5pxuxx>
+R Core Team (2022). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. <a href="https://www.R-project.org/" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener" data-astro-cid-zo5pxuxx>https://www.R-project.org/</a> </p> </div> </div> </div>   </main> <footer class="bg-gray-50 border-t border-gray-200"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"> <div class="grid grid-cols-1 md:grid-cols-2 gap-8"> <!-- Background Section --> <div> <h3 class="text-lg font-semibold text-gray-900 mb-4">Background</h3> <p class="text-gray-600 leading-relaxed">
+Claire Nyquist explores science and public health through data visualization and graphic design.
+</p> </div> <!-- Contact Section --> <div> <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact</h3> <div class="space-y-2 text-gray-600"> <p>Email: clairenyquist@gmail.com</p> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-300 text-center text-gray-500"> <p>&copy; 2026 Claire Nyquist. All rights reserved.</p> </div> </div> </footer>  </body> </html>

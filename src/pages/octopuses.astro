@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
+<script is:inline src="https://d3js.org/d3.v7.min.js"></script>
+<script is:inline src="https://unpkg.com/topojson-client@3"></script>
+
 <BaseLayout title="Octopuses - Claire Nyquist" description="Interactive data visualization exploring global octopus populations and biodiversity from GBIF. Discover where octopus species have been observed from 2000-2024 with interactive maps and time-series analysis.">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Hero Section -->
@@ -13,40 +16,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Where are octopuses found around the world?
       </p>
       <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4">
-        This data visualization shows octopus observations since 2000. Each species is shown in a unique color, and each dot represents a documented octopus observation in the Global Biodiversity Information Facility (GBIF). Click on a dot to see the species name, and use the slider and play button below to explore when and where each species has been seen.
+        This data visualization shows octopus observations since 2000. Each species is shown in a unique color, and each dot represents a documented octopus observation in the Global Biodiversity Information Facility (GBIF). Drag the globe to explore, and use the slider and play button below to explore when and where each species has been seen.
       </p>
     </div>
 
-    <!-- Map Section -->
+    <!-- Globe Section -->
     <div class="mb-16">
       <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="relative">
-          <div id="octopus-map" class="w-full h-96 md:h-[500px] bg-gray-100"></div>
-          
-          <!-- Legend -->
-          <div id="species-legend" class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-xs max-h-80 overflow-y-auto">
-            <h3 class="text-sm font-semibold text-gray-900 mb-2">Species Legend</h3>
-            <div id="legend-content" class="space-y-1 text-xs">
-              <p class="text-gray-500">Loading species data...</p>
-            </div>
-          </div>
-          
-          <!-- Loading indicator -->
-          <div id="loading-indicator" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center">
-            <div class="bg-white rounded-lg p-6 shadow-lg">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p class="text-gray-600">Loading octopus data...</p>
-            </div>
-          </div>
-        </div>
-        
         <!-- Time Controls -->
-        <div class="mt-6 bg-gray-50 rounded-lg p-6">
+        <div class="bg-gray-50 rounded-t-lg p-6">
           <div class="flex flex-col space-y-4">
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-semibold text-gray-900">Time Explorer</h3>
               <div class="flex items-center space-x-4">
-                <span id="current-year" class="text-lg font-mono text-blue-600">2014</span>
+                <span id="current-year" class="text-lg font-mono text-blue-600">2015</span>
                 <button id="play-pause-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2">
                   <svg id="play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
@@ -60,19 +43,44 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
             <div class="flex items-center space-x-4">
               <span class="text-sm text-gray-600 font-mono">2000</span>
-              <input 
-                type="range" 
-                id="year-slider" 
-                min="2000" 
-                max="2024" 
-                value="2014" 
+              <input
+                type="range"
+                id="year-slider"
+                min="2000"
+                max="2024"
+                value="2015"
                 class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
               />
               <span class="text-sm text-gray-600 font-mono">2024</span>
             </div>
-            <div class="flex justify-between text-xs text-gray-500">
-              <span>Use the slider to explore data by year</span>
-              <span id="data-count">Loading...</span>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="flex justify-center p-4 sm:p-6">
+            <div id="octopus-globe" style="width:100%;max-width:640px;aspect-ratio:1;position:relative;">
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div id="species-legend" class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg max-w-xs">
+            <button id="legend-toggle" class="flex items-center justify-between w-full p-3 sm:hidden text-sm font-semibold text-gray-900">
+              <span>Species Legend</span>
+              <svg id="legend-chevron" class="w-4 h-4 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <h3 class="text-sm font-semibold text-gray-900 mb-2 px-4 pt-4 hidden sm:block">Species Legend</h3>
+            <div id="legend-content" class="space-y-1 text-xs hidden sm:block px-4 pb-4 max-h-64 sm:max-h-80 overflow-y-auto">
+              <p class="text-gray-500">Loading species data...</p>
+            </div>
+          </div>
+
+          <!-- Loading indicator -->
+          <div id="loading-indicator" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 shadow-lg">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p class="text-gray-600">Loading octopus data...</p>
             </div>
           </div>
         </div>
@@ -89,303 +97,558 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
-  <script>
-    // Global variables
-    let map: any;
-    let octopusData: any[] = [];
-    let currentMarkers: any[] = [];
-    let currentYear: number = 2014;
-    let isPlaying: boolean = false;
-    let playInterval: any;
-    const L = (window as any).L;
+  <script is:inline>
+    (function () {
+      "use strict";
 
-    // Species color mapping - using an ocean-inspired color palette
-    const speciesColors = {
-      'Octopus vulgaris Cuvier, 1797': '#FF6B6B',
-      'Octopus tetricus Gould, 1852': '#4ECDC4',
-      'Octopus cyanea Gray, 1849': '#45B7D1',
-      'Octopus bimaculoides Pickford & McConnaughey, 1949': '#F7DC6F',
-      'Octopus rubescens S.S.Berry, 1953': '#BB8FCE',
-      'Octopus insularis Leite & Haimovici, 2008': '#52C4B0',
-      'Octopus briareus G.C.Robson, 1929': '#FF8A65',
-      'Octopus djinda Amor, 2021': '#5D6D7E',
-      'Octopus americanus Froriep, 1806': '#EC7063',
-      'Octopus berrima Stranks & Norman, 1992': '#58D68D',
-      'Octopus pallidus Hoyle, 1885': '#F8C471',
-      'Octopus kaurna Stranks, 1990': '#85929E',
-      'Octopus hubbsorum S.S.Berry, 1953': '#A569BD',
-      'Octopus sinensis d\'Orbigny, 1834': '#FF7043',
-      'Octopus oculifer (Hoyle, 1904)': '#26A69A',
-      'Octopus tehuelchus d\'Orbigny': '#7986CB',
-      'Octopus joubini G.C.Robson, 1929': '#FFB74D',
-      'Octopus mimus Gould, 1852': '#66BB6A',
-      'Octopus micropyrsus S.S.Berry, 1953': '#42A5F5',
-      'Octopus hummelincki Adam, 1936': '#FFCA28',
-      'Octopus australis Hoyle, 1885': '#AB47BC',
-      'Octopus bimaculatus A.E.Verrill, 1883': '#26C6DA',
-      'Octopus maya G.L.Voss & Solís, 1966': '#9CCC65',
-      'Octopus wolfi (Wülker, 1913)': '#FFA726',
-      'Octopus fitchi S.S.Berry, 1953': '#8D6E63',
-      'Octopus veligero S.S.Berry, 1953': '#78909C',
-      'Octopus salutii Vérany, 1839': '#F06292',
-      'Octopus minor (Sasaki, 1920)': '#5C6BC0',
-      'Octopus laqueus Kaneko & Kubodera, 2005': '#4DB6AC',
-      'Octopus bocki Adam, 1941': '#FF7043',
-      'Octopus californicus (S.S.Berry, 1911)': '#D4E157',
-      'Octopus Cuvier, 1798': '#90A4AE'
-    };
+      // Species color mapping - using an ocean-inspired color palette
+      var speciesColors = {
+        'Octopus vulgaris Cuvier, 1797': '#FF6B6B',
+        'Octopus tetricus Gould, 1852': '#4ECDC4',
+        'Octopus cyanea Gray, 1849': '#45B7D1',
+        'Octopus bimaculoides Pickford & McConnaughey, 1949': '#F7DC6F',
+        'Octopus rubescens S.S.Berry, 1953': '#BB8FCE',
+        'Octopus insularis Leite & Haimovici, 2008': '#52C4B0',
+        'Octopus briareus G.C.Robson, 1929': '#FF8A65',
+        'Octopus djinda Amor, 2021': '#5D6D7E',
+        'Octopus americanus Froriep, 1806': '#EC7063',
+        'Octopus berrima Stranks & Norman, 1992': '#58D68D',
+        'Octopus pallidus Hoyle, 1885': '#F8C471',
+        'Octopus kaurna Stranks, 1990': '#85929E',
+        'Octopus hubbsorum S.S.Berry, 1953': '#A569BD',
+        'Octopus sinensis d\'Orbigny, 1834': '#FF7043',
+        'Octopus oculifer (Hoyle, 1904)': '#26A69A',
+        'Octopus tehuelchus d\'Orbigny': '#7986CB',
+        'Octopus joubini G.C.Robson, 1929': '#FFB74D',
+        'Octopus mimus Gould, 1852': '#66BB6A',
+        'Octopus micropyrsus S.S.Berry, 1953': '#42A5F5',
+        'Octopus hummelincki Adam, 1936': '#FFCA28',
+        'Octopus australis Hoyle, 1885': '#AB47BC',
+        'Octopus bimaculatus A.E.Verrill, 1883': '#26C6DA',
+        'Octopus maya G.L.Voss & Solís, 1966': '#9CCC65',
+        'Octopus wolfi (Wülker, 1913)': '#FFA726',
+        'Octopus fitchi S.S.Berry, 1953': '#8D6E63',
+        'Octopus veligero S.S.Berry, 1953': '#78909C',
+        'Octopus salutii Vérany, 1839': '#F06292',
+        'Octopus minor (Sasaki, 1920)': '#5C6BC0',
+        'Octopus laqueus Kaneko & Kubodera, 2005': '#4DB6AC',
+        'Octopus bocki Adam, 1941': '#FF7043',
+        'Octopus californicus (S.S.Berry, 1911)': '#D4E157',
+        'Octopus Cuvier, 1798': '#90A4AE'
+      };
 
-    // Parse CSV data
-    async function loadOctopusData() {
-      try {
-        const response = await fetch('/data/OctopusGBIF.csv');
-        const csvText = await response.text();
-        const lines = csvText.split('\n');
-        const headers = lines[0].split('\t');
-        
-        // Find column indices
-        const latIndex = headers.indexOf('decimalLatitude');
-        const lngIndex = headers.indexOf('decimalLongitude');
-        const speciesIndex = headers.indexOf('scientificName');
-        const yearIndex = headers.indexOf('year');
-        const localityIndex = headers.indexOf('locality');
-        const countryIndex = headers.indexOf('countryCode');
-        const observerIndex = headers.indexOf('recordedBy');
-        const dateIndex = headers.indexOf('eventDate');
-        
-        octopusData = [];
-        
-        for (let i = 1; i < lines.length; i++) {
-          const row = lines[i].split('\t');
-          if (row.length < headers.length) continue;
-          
-          const lat = parseFloat(row[latIndex]);
-          const lng = parseFloat(row[lngIndex]);
-          const year = parseInt(row[yearIndex]);
-          const species = row[speciesIndex];
-          
-          // Filter valid coordinates and years
-          if (!isNaN(lat) && !isNaN(lng) && !isNaN(year) && 
-              lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 &&
-              year >= 2000 && year <= 2024 && species) {
-            octopusData.push({
-              lat,
-              lng,
-              species,
-              year,
-              locality: row[localityIndex] || 'Unknown',
-              country: row[countryIndex] || 'Unknown',
-              observer: row[observerIndex] || 'Unknown',
-              date: row[dateIndex] || 'Unknown'
-            });
-          }
-        }
-        
-        console.log(`Loaded ${octopusData.length} octopus observations`);
-        hideLoadingIndicator();
-        updateMap();
-        updateLegend();
-        
-      } catch (error) {
-        console.error('Error loading octopus data:', error);
-        hideLoadingIndicator();
-        const legendContent = document.getElementById('legend-content');
-        if (legendContent) {
-          legendContent.innerHTML = '<p class="text-red-500">Error loading data</p>';
-        }
+      var octopusData = [];
+      var currentYear = 2015;
+      var isPlaying = false;
+      var playInterval = null;
+      var worldTopo = null;
+      var globeAnimId = null;
+
+      // Parse TSV data
+      function loadOctopusData() {
+        return fetch('/data/OctopusGBIF.csv')
+          .then(function (r) { return r.text(); })
+          .then(function (csvText) {
+            var lines = csvText.split('\n');
+            var headers = lines[0].split('\t');
+
+            var latIndex = headers.indexOf('decimalLatitude');
+            var lngIndex = headers.indexOf('decimalLongitude');
+            var speciesIndex = headers.indexOf('scientificName');
+            var yearIndex = headers.indexOf('year');
+            var localityIndex = headers.indexOf('locality');
+            var countryIndex = headers.indexOf('countryCode');
+            var observerIndex = headers.indexOf('recordedBy');
+            var dateIndex = headers.indexOf('eventDate');
+
+            octopusData = [];
+
+            for (var i = 1; i < lines.length; i++) {
+              var row = lines[i].split('\t');
+              if (row.length < headers.length) continue;
+
+              var lat = parseFloat(row[latIndex]);
+              var lng = parseFloat(row[lngIndex]);
+              var year = parseInt(row[yearIndex]);
+              var species = row[speciesIndex];
+
+              if (!isNaN(lat) && !isNaN(lng) && !isNaN(year) &&
+                  lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 &&
+                  year >= 2000 && year <= 2024 && species) {
+                octopusData.push({
+                  lat: lat,
+                  lng: lng,
+                  species: species,
+                  year: year,
+                  date: row[dateIndex] || 'Unknown'
+                });
+              }
+            }
+
+            console.log('Loaded ' + octopusData.length + ' octopus observations');
+          });
       }
-    }
 
-    // Hide loading indicator
-    function hideLoadingIndicator() {
-      const indicator = document.getElementById('loading-indicator');
-      if (indicator) {
-        indicator.style.display = 'none';
+      function hideLoadingIndicator() {
+        var indicator = document.getElementById('loading-indicator');
+        if (indicator) indicator.style.display = 'none';
       }
-    }
 
-    // Update map markers for current year
-    function updateMap() {
-      // Clear existing markers
-      currentMarkers.forEach(marker => map.removeLayer(marker));
-      currentMarkers = [];
-      
-      // Filter data for current year
-      const yearData = octopusData.filter(d => d.year === currentYear);
-      
-      // Add markers for current year
-      yearData.forEach(observation => {
-        const color = (speciesColors as any)[observation.species] || '#999999';
-        
-        const marker = L.circleMarker([observation.lat, observation.lng], {
-          radius: 6,
-          fillColor: color,
-          color: 'transparent',
-          weight: 0,
-          opacity: 0,
-          fillOpacity: 0.8
-        });
-        
-        // Create popup content
-        const popupContent = `
-          <div class="p-2">
-            <h4 class="font-semibold text-sm mb-2" style="color: ${color};">${observation.species}</h4>
-            <div class="text-xs space-y-1">
-              <p><strong>Date:</strong> ${observation.date}</p>
-              <p><strong>Coordinates:</strong> ${observation.lat.toFixed(4)}, ${observation.lng.toFixed(4)}</p>
-            </div>
-          </div>
-        `;
-        
-        marker.bindPopup(popupContent);
-        marker.addTo(map);
-        currentMarkers.push(marker);
-      });
-      
-      // Update data count
-      const dataCountElement = document.getElementById('data-count');
-      if (dataCountElement) {
-        dataCountElement.textContent = `${yearData.length} observations in ${currentYear}`;
-      }
-    }
+      // =========================================================
+      // GLOBE — persistent state shared between init and update
+      // =========================================================
+      var globe = null; // holds projection, pathGen, svg refs, etc.
 
-    // Update species legend
-    function updateLegend() {
-      const yearData = octopusData.filter(d => d.year === currentYear);
-      const speciesInYear = [...new Set(yearData.map(d => d.species))].sort();
-      
-      const legendContent = document.getElementById('legend-content');
-      if (!legendContent) return;
-      
-      if (speciesInYear.length === 0) {
-        legendContent.innerHTML = '<p class="text-gray-500">No data for this year</p>';
-        return;
+      // Create geo circle generator (radius in degrees ~0.8° ≈ ~90km)
+      function getCircleRadius() {
+        return window.innerWidth < 640 ? 1.12 : 0.88;
       }
-      
-      const legendHTML = speciesInYear.map(species => {
-        const color = (speciesColors as any)[species] || '#999999';
-        const count = yearData.filter(d => d.species === species).length;
-        const shortName = species.split(' ').slice(0, 2).join(' ');
-        
-        return `
-          <div class="flex items-center space-x-2">
-            <div class="w-3 h-3 rounded-full border border-white" style="background-color: ${color};"></div>
-            <span class="text-gray-700 flex-1">${shortName}</span>
-            <span class="text-gray-500">${count}</span>
-          </div>
-        `;
-      }).join('');
-      
-      legendContent.innerHTML = legendHTML;
-    }
+      var geoCircle = d3.geoCircle().radius(getCircleRadius()).precision(10);
 
-    // Handle year slider change
-    function onYearChange(year: any) {
-      currentYear = parseInt(year);
-      const currentYearElement = document.getElementById('current-year');
-      const yearSliderElement = document.getElementById('year-slider') as HTMLInputElement;
-      
-      if (currentYearElement) {
-        currentYearElement.textContent = currentYear.toString();
-      }
-      if (yearSliderElement) {
-        yearSliderElement.value = currentYear.toString();
-      }
-      updateMap();
-      updateLegend();
-    }
+      var lastCircleRadius = null;
 
-    // Play/pause functionality
-    function togglePlayPause() {
-      if (isPlaying) {
-        pauseAnimation();
-      } else {
-        startAnimation();
-      }
-    }
-
-    function startAnimation() {
-      isPlaying = true;
-      const playIcon = document.getElementById('play-icon');
-      const pauseIcon = document.getElementById('pause-icon');
-      const playText = document.getElementById('play-text');
-      
-      if (playIcon) playIcon.classList.add('hidden');
-      if (pauseIcon) pauseIcon.classList.remove('hidden');
-      if (playText) playText.textContent = 'Pause';
-      
-      playInterval = setInterval(() => {
-        if (currentYear >= 2024) {
-          currentYear = 2000;
+      // Pre-compute geo circles for ALL observations (recompute if radius changed)
+      function ensureGeoCircles() {
+        var r = getCircleRadius();
+        if (r !== lastCircleRadius) {
+          geoCircle.radius(r);
+          lastCircleRadius = r;
+          octopusData.forEach(function (d) {
+            d._geoCircle = geoCircle.center([d.lng, d.lat])();
+          });
         } else {
-          currentYear++;
-        }
-        onYearChange(currentYear);
-      }, 600); // Change year every 600ms
-    }
-
-    function pauseAnimation() {
-      isPlaying = false;
-      const playIcon = document.getElementById('play-icon');
-      const pauseIcon = document.getElementById('pause-icon');
-      const playText = document.getElementById('play-text');
-      
-      if (playIcon) playIcon.classList.remove('hidden');
-      if (pauseIcon) pauseIcon.classList.add('hidden');
-      if (playText) playText.textContent = 'Play';
-      
-      if (playInterval) {
-        clearInterval(playInterval);
-      }
-    }
-
-    // Initialize everything when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof window !== 'undefined' && L) {
-        // Initialize map centered on Central America (no zoom controls)
-        map = L.map('octopus-map', {
-          zoomControl: false,
-          scrollWheelZoom: false,
-          doubleClickZoom: false,
-          touchZoom: false,
-          boxZoom: false
-        }).setView([15, -85], 3);
-
-        // Add light tile layer
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-          attribution: '© OpenStreetMap contributors © CARTO'
-        }).addTo(map);
-
-        // Set up event listeners
-        const yearSlider = document.getElementById('year-slider');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        
-        if (yearSlider) {
-          yearSlider.addEventListener('input', (e) => {
-            const target = e.target as HTMLInputElement;
-            if (target) {
-              onYearChange(target.value);
+          octopusData.forEach(function (d) {
+            if (!d._geoCircle) {
+              d._geoCircle = geoCircle.center([d.lng, d.lat])();
             }
           });
         }
+      }
 
-        if (playPauseBtn) {
-          playPauseBtn.addEventListener('click', togglePlayPause);
+      function initGlobe() {
+        var container = document.getElementById('octopus-globe');
+        if (!container || !worldTopo) return;
+        container.innerHTML = '';
+
+        if (globeAnimId) {
+          cancelAnimationFrame(globeAnimId);
+          globeAnimId = null;
         }
 
-        // Load data
-        loadOctopusData();
+        var rect = container.getBoundingClientRect();
+        var size = Math.min(rect.width, 640);
+        if (size < 50) size = 300;
+
+        // Preserve rotation if globe already existed
+        var prevRotation = globe ? globe.projection.rotate() : [80, -15];
+
+        var projection = d3.geoOrthographic()
+          .scale(size * 0.45)
+          .translate([size / 2, size / 2])
+          .clipAngle(90)
+          .rotate(prevRotation);
+
+        var pathGen = d3.geoPath().projection(projection);
+
+        var svg = d3.select(container)
+          .append('svg')
+          .attr('width', size)
+          .attr('height', size)
+          .style('touch-action', 'none')
+          .style('cursor', 'grab')
+          .style('-webkit-user-select', 'none')
+          .style('user-select', 'none');
+
+        // Ocean
+        var sphere = { type: 'Sphere' };
+        svg.append('path')
+          .datum(sphere)
+          .attr('d', pathGen)
+          .attr('fill', '#ffffff')
+          .attr('stroke', '#ccc')
+          .attr('stroke-width', 1.5);
+
+        // Graticule
+        var graticulePath = svg.append('path')
+          .datum(d3.geoGraticule10())
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', '#ddd')
+          .attr('stroke-width', 0.4);
+
+        // Countries
+        var countries = topojson.feature(worldTopo, worldTopo.objects.countries);
+
+        var countryPaths = svg.selectAll('.country')
+          .data(countries.features)
+          .enter()
+          .append('path')
+          .attr('class', 'country')
+          .attr('d', pathGen)
+          .attr('fill', '#e8e8e8')
+          .attr('stroke', '#fff')
+          .attr('stroke-width', 0.3);
+
+        // Borders
+        var bordersPath = svg.append('path')
+          .datum(topojson.mesh(worldTopo, worldTopo.objects.countries, function (a, b) { return a !== b; }))
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', '#fff')
+          .attr('stroke-width', 0.5);
+
+        // Sphere outline on top
+        var spherePath = svg.append('path')
+          .datum(sphere)
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', '#ccc')
+          .attr('stroke-width', 1.5);
+
+        // Dot layer
+        var dotGroup = svg.append('g').attr('class', 'dots');
+
+        // Tooltip
+        var tooltip = d3.select(container)
+          .append('div')
+          .style('position', 'absolute')
+          .style('pointer-events', 'none')
+          .style('background', 'rgba(0,0,0,0.85)')
+          .style('color', '#fff')
+          .style('padding', '8px 12px')
+          .style('border-radius', '6px')
+          .style('font-size', '13px')
+          .style('line-height', '1.4')
+          .style('display', 'none')
+          .style('white-space', 'pre-line')
+          .style('max-width', '280px')
+          .style('z-index', '10')
+          .style('box-shadow', '0 2px 8px rgba(0,0,0,0.25)');
+
+        // Store refs
+        globe = {
+          container: container,
+          projection: projection,
+          pathGen: pathGen,
+          svg: svg,
+          countryPaths: countryPaths,
+          graticulePath: graticulePath,
+          bordersPath: bordersPath,
+          spherePath: spherePath,
+          dotGroup: dotGroup,
+          tooltip: tooltip,
+          dots: null,
+          dragging: false,
+          paused: false,
+          velocity: [0, 0]
+        };
+
+        // --- Redraw helper ---
+        function redraw() {
+          countryPaths.attr('d', pathGen);
+          graticulePath.attr('d', pathGen);
+          bordersPath.attr('d', pathGen);
+          spherePath.attr('d', pathGen);
+          if (globe.dots) {
+            globe.dots.attr('d', function (d) { return pathGen(d._geoCircle); });
+          }
+        }
+        globe.redraw = redraw;
+
+        // --- Drag rotation ---
+        svg.call(
+          d3.drag()
+            .on('start', function (event) {
+              globe.dragging = true;
+              // Cancel any ongoing momentum
+              if (globeAnimId) {
+                cancelAnimationFrame(globeAnimId);
+                globeAnimId = null;
+              }
+              svg.style('cursor', 'grabbing');
+              var r = projection.rotate();
+              this._r0 = [r[0], r[1]];
+              this._xy0 = [event.x, event.y];
+              this._last = { x: event.x, y: event.y, t: Date.now() };
+              globe.velocity = [0, 0];
+            })
+            .on('drag', function (event) {
+              var sens = 0.4;
+              projection.rotate([
+                this._r0[0] + (event.x - this._xy0[0]) * sens,
+                Math.max(-60, Math.min(60, this._r0[1] - (event.y - this._xy0[1]) * sens))
+              ]);
+              redraw();
+
+              var now = Date.now();
+              var dt = Math.max(1, now - this._last.t);
+              globe.velocity = [
+                ((event.x - this._last.x) / dt) * 16,
+                ((event.y - this._last.y) / dt) * 16
+              ];
+              this._last = { x: event.x, y: event.y, t: now };
+            })
+            .on('end', function () {
+              globe.dragging = false;
+              svg.style('cursor', 'grab');
+
+              // Momentum coast then stop
+              var vx = globe.velocity[0] * 0.3;
+              var vy = globe.velocity[1] * 0.3;
+              if (Math.abs(vx) > 0.2 || Math.abs(vy) > 0.2) {
+                (function coast() {
+                  if (globe.dragging) return;
+                  vx *= 0.95;
+                  vy *= 0.95;
+                  if (Math.abs(vx) < 0.01 && Math.abs(vy) < 0.01) return;
+                  var r = projection.rotate();
+                  projection.rotate([r[0] + vx, Math.max(-60, Math.min(60, r[1] - vy))]);
+                  redraw();
+                  globeAnimId = requestAnimationFrame(coast);
+                })();
+              }
+            })
+        );
+
+        // Draw initial dots
+        updateDots();
       }
-    });
+
+      // Update only the dots for the current year (no globe rebuild)
+      function updateDots() {
+        if (!globe) return;
+
+        ensureGeoCircles();
+
+        var yearData = octopusData.filter(function (d) { return d.year === currentYear; });
+
+        // Clear old dots
+        globe.dotGroup.selectAll('*').remove();
+
+        // Draw new dots
+        globe.dots = globe.dotGroup.selectAll('path')
+          .data(yearData)
+          .enter()
+          .append('path')
+          .attr('d', function (d) { return globe.pathGen(d._geoCircle); })
+          .attr('fill', function (d) { return speciesColors[d.species] || '#999999'; })
+          .attr('fill-opacity', 0.6)
+          .attr('stroke', 'none');
+
+        // Dot hover/click for tooltip
+        var container = globe.container;
+        var tooltip = globe.tooltip;
+
+        globe.dots.style('cursor', 'pointer')
+          .on('mouseover', function (event, d) {
+            var color = speciesColors[d.species] || '#999999';
+            tooltip.style('display', 'block')
+              .html('<strong style="color:' + color + '">' + d.species + '</strong><br>' +
+                    'Date: ' + d.date + '<br>' +
+                    'Coords: ' + d.lat.toFixed(4) + ', ' + d.lng.toFixed(4));
+            d3.select(this).attr('fill-opacity', 0.9);
+          })
+          .on('mousemove', function (event) {
+            var coords = d3.pointer(event, container);
+            var cw = container.offsetWidth;
+            var x = coords[0] + 14;
+            var y = coords[1] - 12;
+            var ttNode = tooltip.node();
+            var tw = ttNode.offsetWidth || 150;
+            if (x + tw > cw - 8) x = coords[0] - tw - 8;
+            if (y < 4) y = 4;
+            tooltip.style('left', x + 'px').style('top', y + 'px');
+          })
+          .on('mouseout', function () {
+            tooltip.style('display', 'none');
+            d3.select(this).attr('fill-opacity', 0.6);
+          });
+
+      }
+
+      // Stable species order: computed once from all-time totals
+      var speciesOrder = null;
+
+      function buildSpeciesOrder() {
+        var counts = {};
+        octopusData.forEach(function (d) {
+          counts[d.species] = (counts[d.species] || 0) + 1;
+        });
+        speciesOrder = Object.keys(counts).sort(function (a, b) {
+          return counts[b] - counts[a];
+        });
+      }
+
+      // Update species legend
+      function updateLegend() {
+        var yearData = octopusData.filter(function (d) { return d.year === currentYear; });
+
+        // Count per species for this year
+        var yearCounts = {};
+        yearData.forEach(function (d) {
+          yearCounts[d.species] = (yearCounts[d.species] || 0) + 1;
+        });
+
+        var legendContent = document.getElementById('legend-content');
+        if (!legendContent) return;
+
+        if (yearData.length === 0) {
+          legendContent.innerHTML = '<p class="text-gray-500">No data for this year</p>';
+          return;
+        }
+
+        var legendHTML = speciesOrder.map(function (species) {
+          var count = yearCounts[species] || 0;
+          var color = speciesColors[species] || '#999999';
+          var shortName = species.split(' ').slice(0, 2).join(' ');
+          var dimmed = count === 0 ? ' style="opacity:0.35"' : '';
+
+          return '<div class="flex items-center space-x-2"' + dimmed + '>' +
+            '<div class="w-3 h-3 rounded-full border border-white" style="background-color: ' + color + ';"></div>' +
+            '<span class="text-gray-700 flex-1">' + shortName + '</span>' +
+            '<span class="text-gray-500">' + count + '</span>' +
+            '</div>';
+        }).join('');
+
+        legendContent.innerHTML = legendHTML;
+      }
+
+      // Handle year change
+      function onYearChange(year) {
+        currentYear = parseInt(year);
+        var currentYearElement = document.getElementById('current-year');
+        var yearSliderElement = document.getElementById('year-slider');
+
+        if (currentYearElement) currentYearElement.textContent = String(currentYear);
+        if (yearSliderElement) yearSliderElement.value = String(currentYear);
+        updateDots();
+        updateLegend();
+      }
+
+      // Play/pause
+      function togglePlayPause() {
+        if (isPlaying) {
+          pauseAnimation();
+        } else {
+          startAnimation();
+        }
+      }
+
+      function startAnimation() {
+        isPlaying = true;
+        var playIcon = document.getElementById('play-icon');
+        var pauseIcon = document.getElementById('pause-icon');
+        var playText = document.getElementById('play-text');
+
+        if (playIcon) playIcon.classList.add('hidden');
+        if (pauseIcon) pauseIcon.classList.remove('hidden');
+        if (playText) playText.textContent = 'Pause';
+
+        playInterval = setInterval(function () {
+          if (currentYear >= 2024) {
+            currentYear = 2000;
+          } else {
+            currentYear++;
+          }
+          onYearChange(currentYear);
+        }, 600);
+      }
+
+      function pauseAnimation() {
+        isPlaying = false;
+        var playIcon = document.getElementById('play-icon');
+        var pauseIcon = document.getElementById('pause-icon');
+        var playText = document.getElementById('play-text');
+
+        if (playIcon) playIcon.classList.remove('hidden');
+        if (pauseIcon) pauseIcon.classList.add('hidden');
+        if (playText) playText.textContent = 'Play';
+
+        if (playInterval) {
+          clearInterval(playInterval);
+          playInterval = null;
+        }
+      }
+
+      // =========================================================
+      // INIT
+      // =========================================================
+      function init() {
+        Promise.all([
+          loadOctopusData(),
+          d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+        ])
+        .then(function (results) {
+          worldTopo = results[1];
+          hideLoadingIndicator();
+          buildSpeciesOrder();
+
+          // Set up event listeners
+          var yearSlider = document.getElementById('year-slider');
+          var playPauseBtn = document.getElementById('play-pause-btn');
+
+          if (yearSlider) {
+            yearSlider.addEventListener('input', function (e) {
+              onYearChange(e.target.value);
+            });
+          }
+
+          if (playPauseBtn) {
+            playPauseBtn.addEventListener('click', togglePlayPause);
+          }
+
+          // Legend toggle for mobile
+          var legendToggle = document.getElementById('legend-toggle');
+          var legendContent = document.getElementById('legend-content');
+          var legendChevron = document.getElementById('legend-chevron');
+          if (legendToggle && legendContent && legendChevron) {
+            legendToggle.addEventListener('click', function () {
+              var isHidden = legendContent.classList.contains('hidden');
+              if (isHidden) {
+                legendContent.classList.remove('hidden');
+                legendChevron.style.transform = 'rotate(180deg)';
+              } else {
+                legendContent.classList.add('hidden');
+                legendChevron.style.transform = '';
+              }
+            });
+          }
+
+          initGlobe();
+          updateLegend();
+
+          // Auto-play on load
+          startAnimation();
+
+          // Responsive redraw (full rebuild needed for size change)
+          var resizeTimer;
+          window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+              initGlobe();
+            }, 200);
+          });
+        })
+        .catch(function (err) {
+          console.error('Octopus globe error:', err);
+          hideLoadingIndicator();
+          var legendContent = document.getElementById('legend-content');
+          if (legendContent) {
+            legendContent.innerHTML = '<p class="text-red-500">Error loading data</p>';
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
   </script>
-  
-  <!-- Load Leaflet JavaScript and CSS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
-  <!-- Custom styles for the slider and map -->
+
+  <!-- Custom styles for the slider -->
   <style>
-    /* Custom slider styles */
     .slider {
       -webkit-appearance: none;
       appearance: none;
@@ -395,11 +658,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       outline: none;
       transition: all 0.2s;
     }
-    
+
     .slider:hover {
       background: linear-gradient(90deg, #d1d5db 0%, #9ca3af 100%);
     }
-    
+
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -412,12 +675,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       transition: all 0.2s;
     }
-    
+
     .slider::-webkit-slider-thumb:hover {
       transform: scale(1.1);
       border-color: #1d4ed8;
     }
-    
+
     .slider::-moz-range-thumb {
       width: 20px;
       height: 20px;
@@ -428,16 +691,5 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       border: none;
     }
-    
-    /* Leaflet popup customization */
-    .leaflet-popup-content-wrapper {
-      border-radius: 8px;
-    }
-    
-    .leaflet-popup-content {
-      margin: 0;
-      line-height: 1.4;
-    }
   </style>
 </BaseLayout>
-

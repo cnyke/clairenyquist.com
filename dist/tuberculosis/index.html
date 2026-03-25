@@ -1,0 +1,1057 @@
+<!DOCTYPE html><script src="https://d3js.org/d3.v7.min.js"></script> <html lang="en" class="scroll-smooth"> <head><!-- Basic Meta Tags --><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Global Tuberculosis | Claire Nyquist</title><meta name="description" content="Interactive visualization of estimated tuberculosis incidence and mortality worldwide from 2000–2024, using WHO Global Tuberculosis Programme data."><meta name="author" content="Claire Nyquist"><meta name="keywords" content="data visualization, public health, science communication, epidemiology, biology, Claire Nyquist, interactive data, design, science fiction"><!-- Canonical URL --><link rel="canonical" href="https://clairenyquist.com/tuberculosis/"><!-- Favicon and Icons --><link rel="icon" type="image/png" href="/favicon.png"><link rel="apple-touch-icon" href="/favicon.png"><!-- Open Graph / Facebook Meta Tags --><meta property="og:type" content="website"><meta property="og:url" content="https://clairenyquist.com/tuberculosis/"><meta property="og:title" content="Global Tuberculosis | Claire Nyquist"><meta property="og:description" content="Interactive visualization of estimated tuberculosis incidence and mortality worldwide from 2000–2024, using WHO Global Tuberculosis Programme data."><meta property="og:image" content="https://clairenyquist.com/images/headshot.jpeg"><meta property="og:site_name" content="Claire Nyquist"><meta property="og:locale" content="en_US"><!-- Twitter Card Meta Tags --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://clairenyquist.com/tuberculosis/"><meta name="twitter:title" content="Global Tuberculosis | Claire Nyquist"><meta name="twitter:description" content="Interactive visualization of estimated tuberculosis incidence and mortality worldwide from 2000–2024, using WHO Global Tuberculosis Programme data."><meta name="twitter:image" content="https://clairenyquist.com/images/headshot.jpeg"><meta name="twitter:creator" content="@clairenyquist"><!-- DNS Prefetch & Preconnect for Performance --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="dns-prefetch" href="https://unpkg.com"><!-- Fonts --><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"><!-- Leaflet CSS --><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!-- Structured Data (Schema.org JSON-LD) --><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Claire Nyquist","url":"https://clairenyquist.com/tuberculosis/","description":"Interactive visualization of estimated tuberculosis incidence and mortality worldwide from 2000–2024, using WHO Global Tuberculosis Programme data.","author":{"@type":"Person","name":"Claire Nyquist","email":"clairenyquist@gmail.com"},"publisher":{"@type":"Organization","name":"Claire Nyquist","logo":{"@type":"ImageObject","url":"https://clairenyquist.com/favicon.png"}}}</script><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-7PZ8NQ5JQD"></script><script>(function(){const GA_MEASUREMENT_ID = "G-7PZ8NQ5JQD";
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+        })();</script><link rel="stylesheet" href="/_astro/about-contact.uiAC-MUX.css"><script type="module" src="/_astro/hoisted.t_BYlHZp.js"></script></head> <body class="font-lexend bg-white text-gray-900 min-h-screen flex flex-col"> <header class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200" style="z-index: 1000;"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16"> <!-- Logo/Title --> <div class="flex-shrink-0"> <a href="/" class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+Claire Nyquist
+</a> </div> <!-- Desktop Navigation --> <nav class="hidden md:flex space-x-8"> <!-- Data Visualizations Dropdown --> <div class="relative group"> <button class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1"> <span>Data Visualizations</span> <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path> </svg> </button> <div class="absolute left-0 top-full pt-2 w-56 hidden group-hover:block z-50"> <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"> <div class="py-1"> <a href="/ai-models-timeline" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+AI Models
+</a> <a href="/malaria" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Malaria
+</a> <a href="/meps" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Medical Expenditure Panel Survey
+</a> <a href="/minnesota-bryophytes" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Minnesota Mosses
+</a> <a href="/ntds" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Neglected Tropical Diseases
+</a> <a href="/octopuses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Octopuses
+</a> <a href="/respiratoryviruses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Respiratory Viruses
+</a> <a href="/tuberculosis" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+Tuberculosis
+</a> <a href="/themet" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+The Met Collection
+</a> </div> </div> </div> </div> <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+Graphic Design
+</a> <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+tcplot()
+</a> <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+Resumé
+</a> <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+About & Contact
+</a> </nav> <!-- Mobile menu button --> <div class="md:hidden"> <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> <!-- Mobile Navigation --> <div id="mobile-menu" class="hidden md:hidden pb-4"> <div class="flex flex-col space-y-2"> <!-- Data Visualizations Dropdown for Mobile --> <div> <button id="mobile-dataviz-toggle" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full"> <span>Data Visualizations</span> <svg id="mobile-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path> </svg> </button> <div id="mobile-dataviz-menu" class="hidden pl-4 space-y-2 mt-2"> <a href="/ai-models-timeline" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+AI Models
+</a> <a href="/malaria" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Malaria
+</a> <a href="/meps" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Medical Expenditure Panel Survey
+</a> <a href="/minnesota-bryophytes" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Minnesota Mosses
+</a> <a href="/ntds" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Neglected Tropical Diseases
+</a> <a href="/octopuses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Octopuses
+</a> <a href="/respiratoryviruses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Respiratory Viruses
+</a> <a href="/tuberculosis" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+Tuberculosis
+</a> <a href="/themet" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+The Met Collection
+</a> </div> </div> <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+Graphic Design
+</a> <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+tcplot()
+</a> <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+Resumé
+</a> <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+About & Contact
+</a> </div> </div> </div> </header> <main class="flex-grow">  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"> <!-- Hero Section --> <div class="text-center mb-8 md:mb-12"> <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
+Tuberculosis
+</h1> <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
+Estimated tuberculosis incidence and mortality by country from
+                2000 to 2024.
+</p> <p class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4">
+Tuberculosis remains the world's deadliest infectious disease.
+                In 2024, an estimated 10.8 million people fell ill with TB and
+                1.25 million died, more than from HIV/AIDS or malaria. Nearly a
+                quarter of the world's population carries latent TB infection.
+                The disease is curable and preventable, yet a persistent gap
+                between estimated incidence and detected cases means millions go
+                undiagnosed each year, driving ongoing transmission and
+                preventable deaths. The burden falls hardest on South-East Asia
+                and Africa, which together account for roughly three-quarters of
+                all cases.
+</p> <figure class="my-6 md:my-8 max-w-2xl mx-auto px-4"> <img src="/images/tb-microscopy.jpg" alt="Acid-fast stain microscopy of a sputum sample showing Mycobacterium tuberculosis bacilli as pink rod-shaped organisms against blue-stained cellular material." class="w-full rounded-lg shadow-sm" width="1800" height="1185" loading="eager"> <figcaption class="text-xs text-gray-500 mt-2 text-center">
+Ziehl-Neelsen-stained specimen showing a magenta acid-fast <em>Mycobacterium tuberculosis</em> bacilli. CDC/V. McPheeters, 1965. Public Health Image Library,
+                    ID <a href="https://wwwn.cdc.gov/PHIL/Details.aspx?pid=23001" class="text-gray-500 underline hover:text-gray-700" target="_blank" rel="noopener">23001</a>. Public domain.
+</figcaption> </figure> <p class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4">
+This page uses WHO Global Tuberculosis Programme estimates
+                across 217 countries. Each country is shown as three concentric
+                circles: the outer circle is estimated true incidence, the
+                middle circle is detected (notified) cases, and the inner core
+                is estimated deaths. The gap between the outer and middle
+                circles represents undetected cases.
+</p> </div> <!-- Bubble Chart --> <div class="mb-16"> <div class="bg-white rounded-lg shadow-sm border overflow-x-clip"> <div class="p-4 sm:p-6 bg-gray-50 border-b"> <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+Tuberculosis by Country
+</h2> <p class="text-sm sm:text-base text-gray-600 mb-4"> <span class="hidden sm:inline">Hover over</span><span class="sm:hidden">Tap</span> a country to see estimated incidence, detected cases, and
+                        deaths.
+</p> <div class="flex flex-wrap items-center gap-3"> <button id="tb-play-btn" class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer flex-shrink-0" aria-label="Play"> <svg id="tb-play-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="4,2 14,8 4,14"></polygon></svg> <svg id="tb-pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:none"><rect x="3" y="2" width="4" height="12"></rect><rect x="9" y="2" width="4" height="12"></rect></svg> </button> <span id="tb-year-label" class="text-sm font-bold text-gray-900 tabular-nums w-10 text-center flex-shrink-0">2000</span> <input type="range" id="tb-year-slider" min="2000" max="2024" value="2024" step="1" class="flex-1 min-w-0 h-2 rounded-lg appearance-none cursor-pointer" style="accent-color:#df5fb0;background:#d1d5db"> </div> </div> <div class="p-4 sm:p-6"> <div id="tb-legend" class="sticky top-0 z-40 bg-white" style="margin-bottom:16px;padding-top:4px;padding-bottom:4px;"></div> <div id="tb-bubble-chart" style="width:100%;position:relative;overflow-x:hidden;"></div> </div> <div class="px-4 pb-4 text-xs text-gray-500 border-t bg-gray-50"> <p class="mt-2"> <strong>Data Source:</strong> World Health Organization. Global
+                        Tuberculosis Programme: TB burden estimates, 2000–2024.
+</p> </div> </div> </div> <!-- Data Sources --> <div class="mt-12 bg-white rounded-lg shadow-sm border p-6"> <h3 class="text-lg font-semibold text-gray-900 mb-3">
+Data Sources
+</h3> <p class="text-sm text-gray-600 mb-3">
+World Health Organization. (2025). Global Tuberculosis
+                Programme: TB burden estimates. [Data set]. <a href="https://www.who.int/teams/global-tuberculosis-programme/data" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.who.int/teams/global-tuberculosis-programme/data</a> </p> <p class="text-sm text-gray-600 mb-3">
+Data covers WHO member state estimates of TB incidence and
+                mortality from 2000 to 2024 across 217 countries. Estimates
+                include incidence per 100,000 population, total mortality
+                (including TB-HIV coinfection), and case fatality ratios.
+                Produced by WHO and partners based on nationally reported
+                surveillance data, surveys, and statistical modeling.
+</p> <p class="text-sm text-gray-600 mb-3">
+World Health Organization. (2025). <em>Global Tuberculosis Report 2025.</em> Geneva: WHO. <a href="https://www.who.int/teams/global-programme-on-tuberculosis-and-lung-health/tb-reports/global-tuberculosis-report-2025" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.who.int/teams/global-programme-on-tuberculosis-and-lung-health/tb-reports/global-tuberculosis-report-2025</a> </p> </div> </div> <div id="tb-floating-year" class="fixed bottom-4 left-4 z-50 rounded-full bg-white/90 backdrop-blur border border-gray-200 shadow-md px-4 py-1.5 text-lg font-bold text-gray-900 tabular-nums pointer-events-none opacity-0 transition-opacity duration-300" aria-hidden="true">
+2024
+</div> <script>
+        (function () {
+            "use strict";
+
+            // --- Constants ---
+            var REGION_ORDER = ["AFR", "AMR", "EMR", "EUR", "SEA", "WPR"];
+            var REGION_NAMES = {
+                AFR: "Africa",
+                AMR: "Americas",
+                EMR: "Eastern Mediterranean",
+                EUR: "Europe",
+                SEA: "South-East Asia",
+                WPR: "Western Pacific",
+            };
+            var COLOR_INCIDENCE = "#f0d0e8";
+            var COLOR_NOTIFIED = "#c054a0";
+            var COLOR_DEATHS = "#7b2d6e";
+            var MIN_RADIUS = 2;
+            var TRANSITION_MS = 300;
+            var PLAY_INTERVAL_MS = 500;
+
+            var allRows = [];
+            var allYears = [];
+            var currentYear = 2024;
+            var playTimer = null;
+            var isPlaying = false;
+
+            // Track active hover for live tooltip updates
+            var activeHover = null; // { iso3, layer, event }
+
+            // Precomputed: dataByYear[year] = { iso3: { country, iso3, region, incidence, ... } }
+            var dataByYear = {};
+            // Stable layout positions computed from max-across-years data
+            var layoutBuilt = false;
+            // countryNodes[iso3] = { g, incCircle, notCircle, dthCircle }
+            var countryNodes = {};
+            // Legend highlight API (set by drawLegend)
+            var legendHighlight = null; // function(layerName)
+            var legendUnhighlight = null; // function()
+
+            // --- CSV Parsing ---
+            function parseCSV(text) {
+                var lines = text.split("\n");
+                var headers = parseCSVLine(lines[0]);
+                var result = [];
+                for (var i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    var vals = parseCSVLine(lines[i]);
+                    var obj = {};
+                    for (var j = 0; j < headers.length; j++)
+                        obj[headers[j]] = vals[j] || "";
+                    result.push(obj);
+                }
+                return result;
+            }
+
+            function parseCSVLine(line) {
+                var result = [];
+                var current = "",
+                    inQuotes = false;
+                for (var i = 0; i < line.length; i++) {
+                    var ch = line[i];
+                    if (inQuotes) {
+                        if (ch === '"') {
+                            if (i + 1 < line.length && line[i + 1] === '"') {
+                                current += '"';
+                                i++;
+                            } else inQuotes = false;
+                        } else current += ch;
+                    } else {
+                        if (ch === '"') inQuotes = true;
+                        else if (ch === ",") {
+                            result.push(current.trim());
+                            current = "";
+                        } else current += ch;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+            function formatNum(n) {
+                if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+                if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+                return String(Math.round(n));
+            }
+
+            // --- Build per-year lookup and find max incidence per country across all years ---
+            function buildDataIndex(rows) {
+                var seen = {};
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    var year = +r.year;
+                    if (!year) continue;
+                    if (!seen[year]) {
+                        seen[year] = true;
+                        allYears.push(year);
+                    }
+
+                    var incidence = +r.e_inc_num;
+                    if (!incidence || incidence <= 0) continue;
+                    var pop = +r.e_pop_num || 0;
+                    var cNewinc100k = +r.c_newinc_100k || 0;
+                    var notified =
+                        pop > 0 ? Math.round((cNewinc100k * pop) / 100000) : 0;
+                    if (notified > incidence) notified = incidence;
+                    var deaths = +r.e_mort_num || 0;
+
+                    if (!dataByYear[year]) dataByYear[year] = {};
+                    dataByYear[year][r.iso3] = {
+                        country: r.country,
+                        iso3: r.iso3,
+                        region: r.g_whoregion,
+                        incidence: incidence,
+                        incidenceLo: +r.e_inc_num_lo || 0,
+                        incidenceHi: +r.e_inc_num_hi || 0,
+                        notified: notified,
+                        deaths: deaths,
+                        deathsLo: +r.e_mort_num_lo || 0,
+                        deathsHi: +r.e_mort_num_hi || 0,
+                        pop: pop,
+                        cdr: r.c_cdr !== "" ? +r.c_cdr : NaN,
+                        cdrLo: r.c_cdr_lo !== "" ? +r.c_cdr_lo : NaN,
+                        cdrHi: r.c_cdr_hi !== "" ? +r.c_cdr_hi : NaN,
+                        cfrPct: r.cfr_pct !== "" ? +r.cfr_pct : NaN,
+                        cfrPctLo: r.cfr_pct_lo !== "" ? +r.cfr_pct_lo : NaN,
+                        cfrPctHi: r.cfr_pct_hi !== "" ? +r.cfr_pct_hi : NaN,
+                    };
+                }
+                allYears.sort(function (a, b) {
+                    return a - b;
+                });
+            }
+
+            // Build a list of countries using max incidence across all years for stable layout
+            function buildMaxCountries() {
+                var maxMap = {}; // iso3 -> { country, iso3, region, maxIncidence }
+                for (var yi = 0; yi < allYears.length; yi++) {
+                    var yd = dataByYear[allYears[yi]];
+                    if (!yd) continue;
+                    var keys = Object.keys(yd);
+                    for (var ki = 0; ki < keys.length; ki++) {
+                        var d = yd[keys[ki]];
+                        if (!maxMap[d.iso3]) {
+                            maxMap[d.iso3] = {
+                                country: d.country,
+                                iso3: d.iso3,
+                                region: d.region,
+                                incidence: d.incidence,
+                            };
+                        } else if (d.incidence > maxMap[d.iso3].incidence) {
+                            maxMap[d.iso3].incidence = d.incidence;
+                        }
+                    }
+                }
+                var result = [];
+                var keys = Object.keys(maxMap);
+                for (var i = 0; i < keys.length; i++)
+                    result.push(maxMap[keys[i]]);
+                return result;
+            }
+
+            // --- Circle-packing cluster via D3 force simulation ---
+            function clusterBubbles(items, rScale) {
+                var padding = 3;
+                for (var i = 0; i < items.length; i++) {
+                    items[i]._r = Math.max(
+                        rScale(items[i].incidence),
+                        MIN_RADIUS,
+                    );
+                }
+                items.sort(function (a, b) {
+                    return b._r - a._r;
+                });
+
+                for (var i = 0; i < items.length; i++) {
+                    var angle = i * 0.5;
+                    var dist = items[i]._r * 1.5;
+                    items[i]._x = Math.cos(angle) * dist;
+                    items[i]._y = Math.sin(angle) * dist;
+                }
+
+                var sim = d3
+                    .forceSimulation(items)
+                    .force("cx", d3.forceX(0).strength(0.06))
+                    .force("cy", d3.forceY(0).strength(0.06))
+                    .force(
+                        "collide",
+                        d3
+                            .forceCollide(function (d) {
+                                return d._r + padding;
+                            })
+                            .iterations(4)
+                            .strength(1),
+                    )
+                    .stop();
+
+                for (var i = 0; i < 200; i++) sim.tick();
+
+                for (var i = 0; i < items.length; i++) {
+                    items[i]._x = items[i].x;
+                    items[i]._y = items[i].y;
+                }
+
+                var minX = Infinity,
+                    maxX = -Infinity,
+                    minY = Infinity,
+                    maxY = -Infinity;
+                for (var i = 0; i < items.length; i++) {
+                    var r = items[i]._r;
+                    if (items[i]._x - r < minX) minX = items[i]._x - r;
+                    if (items[i]._x + r > maxX) maxX = items[i]._x + r;
+                    if (items[i]._y - r < minY) minY = items[i]._y - r;
+                    if (items[i]._y + r > maxY) maxY = items[i]._y + r;
+                }
+
+                for (var i = 0; i < items.length; i++) {
+                    items[i]._x -= minX;
+                    items[i]._y -= minY;
+                }
+
+                return { width: maxX - minX, height: maxY - minY };
+            }
+
+            // --- Tooltip ---
+            var tooltipEl = null;
+
+            function ensureTooltip() {
+                if (tooltipEl) return tooltipEl;
+                tooltipEl = document.createElement("div");
+                tooltipEl.style.cssText =
+                    "position:fixed;pointer-events:none;background:#fff;color:#111;" +
+                    "padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;" +
+                    "display:none;white-space:pre-line;max-width:min(320px,calc(100vw - 24px));z-index:1100;" +
+                    "box-shadow:0 2px 12px rgba(0,0,0,0.18);border:1px solid #e5e7eb;" +
+                    "box-sizing:border-box;";
+                document.body.appendChild(tooltipEl);
+                return tooltipEl;
+            }
+
+            function showTooltip(event, d, layer) {
+                var tt = ensureTooltip();
+                // Use WHO-provided CDR and CFR when available, fall back to computed
+                var cdr = !isNaN(d.cdr)
+                    ? d.cdr.toFixed(0)
+                    : d.incidence > 0
+                      ? ((d.notified / d.incidence) * 100).toFixed(0)
+                      : "\u2014";
+                var cfr = !isNaN(d.cfrPct)
+                    ? d.cfrPct.toFixed(1)
+                    : d.incidence > 0
+                      ? ((d.deaths / d.incidence) * 100).toFixed(1)
+                      : "\u2014";
+                var uInc =
+                    layer === "incidence"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
+                var uNot =
+                    layer === "notified"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
+                var uDth =
+                    layer === "deaths"
+                        ? "text-decoration:underline;text-underline-offset:2px;font-weight:bold;color:#000;"
+                        : "color:#000;";
+                var html =
+                    "<strong style='font-size:14px;color:#000'>" +
+                    d.country +
+                    "</strong>" +
+                    "<br><span style='" +
+                    uInc +
+                    "'><span style='color:" +
+                    COLOR_INCIDENCE +
+                    "'>\u25CF</span> Estimated incidence: " +
+                    formatNum(d.incidence) +
+                    " <span style='font-size:11px;color:#555'>(" +
+                    formatNum(d.incidenceLo) +
+                    " \u2013 " +
+                    formatNum(d.incidenceHi) +
+                    ")</span></span>" +
+                    "<br><span style='" +
+                    uNot +
+                    "'><span style='color:" +
+                    COLOR_NOTIFIED +
+                    "'>\u25CF</span> Detected cases: " +
+                    formatNum(d.notified) +
+                    " <span style='font-size:11px;color:#555'>(CDR: " +
+                    cdr +
+                    "%)</span></span>" +
+                    "<br><span style='" +
+                    uDth +
+                    "'><span style='color:" +
+                    COLOR_DEATHS +
+                    "'>\u25CF</span> Deaths: " +
+                    formatNum(d.deaths) +
+                    " <span style='font-size:11px;color:#555'>(" +
+                    formatNum(d.deathsLo) +
+                    " \u2013 " +
+                    formatNum(d.deathsHi) +
+                    ")</span></span>" +
+                    "<br><span style='font-size:11px;color:#555'>Case fatality: " +
+                    cfr +
+                    "%</span>";
+                tt.innerHTML = html;
+                tt.style.display = "block";
+                positionTooltip(event);
+            }
+
+            function positionTooltip(event) {
+                var tt = ensureTooltip();
+                var margin = 12;
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+                var tw = tt.offsetWidth || 200;
+                var th = tt.offsetHeight || 60;
+
+                var x, y;
+                if (vw < 640) {
+                    x = Math.max(margin, (vw - tw) / 2);
+                    y = event.clientY - th - 16;
+                    if (y < margin) y = event.clientY + 24;
+                    if (y + th > vh - margin) y = vh - th - margin;
+                } else {
+                    x = event.clientX + 16;
+                    y = event.clientY - 12;
+                    if (x + tw > vw - margin) x = event.clientX - tw - 12;
+                    if (x < margin) x = margin;
+                    if (y + th > vh - margin) y = vh - th - margin;
+                    if (y < margin) y = margin;
+                }
+                tt.style.left = x + "px";
+                tt.style.top = y + "px";
+            }
+
+            function hideTooltip() {
+                var tt = ensureTooltip();
+                tt.style.display = "none";
+            }
+
+            // --- Legend ---
+            function drawLegend() {
+                var container = document.getElementById("tb-legend");
+                if (!container) return;
+                container.innerHTML = "";
+
+                var svg = d3
+                    .select(container)
+                    .append("svg")
+                    .attr("width", 340)
+                    .attr("height", 60)
+                    .style("overflow", "visible");
+
+                var cx = 30,
+                    cy = 30;
+
+                var layers = [
+                    {
+                        r: 26,
+                        fill: COLOR_INCIDENCE,
+                        opacity: 1,
+                        dotColor: COLOR_INCIDENCE,
+                        label: "Estimated incidence",
+                        labelY: 14,
+                    },
+                    {
+                        r: 18,
+                        fill: COLOR_NOTIFIED,
+                        opacity: 0.7,
+                        dotColor: COLOR_NOTIFIED,
+                        label: "Detected cases",
+                        labelY: 32,
+                    },
+                    {
+                        r: 9,
+                        fill: COLOR_DEATHS,
+                        opacity: 1,
+                        dotColor: COLOR_DEATHS,
+                        label: "Deaths",
+                        labelY: 50,
+                    },
+                ];
+
+                var textX = 66;
+                var circles = [];
+                var labelGroups = [];
+
+                for (var i = 0; i < layers.length; i++) {
+                    var l = layers[i];
+                    var c = svg
+                        .append("circle")
+                        .attr("cx", cx)
+                        .attr("cy", cy)
+                        .attr("r", l.r)
+                        .attr("fill", l.fill)
+                        .attr("fill-opacity", l.opacity)
+                        .attr("stroke", "none")
+                        .style("cursor", "pointer");
+                    var g = svg.append("g").style("cursor", "pointer");
+                    g.append("text")
+                        .attr("x", textX)
+                        .attr("y", l.labelY)
+                        .attr("font-size", "12px")
+                        .attr("fill", l.dotColor)
+                        .text("\u25CF ");
+                    var textNode = g
+                        .append("text")
+                        .attr("x", textX + 14)
+                        .attr("y", l.labelY)
+                        .attr("font-size", "12px")
+                        .attr("fill", "#000")
+                        .text(l.label);
+                    circles.push(c);
+                    labelGroups.push({ g: g, textNode: textNode });
+                }
+
+                var layerIndexByName = { incidence: 0, notified: 1, deaths: 2 };
+
+                function highlightLegend(idx) {
+                    circles[idx].attr("stroke", "#000").attr("stroke-width", 2);
+                    labelGroups[idx].textNode
+                        .attr("text-decoration", "underline")
+                        .attr("font-weight", "bold")
+                        .attr("fill", "#000");
+                }
+                function unhighlightLegend(idx) {
+                    circles[idx].attr("stroke", "none").attr("stroke-width", 0);
+                    labelGroups[idx].textNode
+                        .attr("text-decoration", "none")
+                        .attr("font-weight", "normal");
+                }
+
+                // Expose for chart circle hover
+                legendHighlight = function (layerName) {
+                    var idx = layerIndexByName[layerName];
+                    if (idx !== undefined) highlightLegend(idx);
+                };
+                legendUnhighlight = function () {
+                    for (var i = 0; i < circles.length; i++)
+                        unhighlightLegend(i);
+                };
+
+                for (var i = 0; i < layers.length; i++) {
+                    (function (idx) {
+                        circles[idx]
+                            .on("mouseover", function () {
+                                highlightLegend(idx);
+                            })
+                            .on("mouseout", function () {
+                                unhighlightLegend(idx);
+                            });
+                        labelGroups[idx].g
+                            .on("mouseover", function () {
+                                highlightLegend(idx);
+                            })
+                            .on("mouseout", function () {
+                                unhighlightLegend(idx);
+                            });
+                    })(i);
+                }
+            }
+
+            // --- Attach per-circle interaction events ---
+            function attachCircleEvents(circle, layerName) {
+                circle
+                    .style("cursor", "pointer")
+                    .on("mouseover", function (event) {
+                        var dd = d3.select(this.parentNode).datum();
+                        d3.select(this)
+                            .attr("stroke", "#000")
+                            .attr("stroke-width", 2);
+                        activeHover = {
+                            iso3: dd.iso3,
+                            layer: layerName,
+                            event: event,
+                        };
+                        if (legendHighlight) legendHighlight(layerName);
+                        showTooltip(event, dd, layerName);
+                    })
+                    .on("mousemove", function (event) {
+                        if (activeHover) activeHover.event = event;
+                        positionTooltip(event);
+                    })
+                    .on("mouseout", function () {
+                        d3.select(this)
+                            .attr("stroke", "none")
+                            .attr("stroke-width", 0);
+                        activeHover = null;
+                        if (legendUnhighlight) legendUnhighlight();
+                        hideTooltip();
+                    })
+                    .on("touchstart", function (event) {
+                        event.preventDefault();
+                        var dd = d3.select(this.parentNode).datum();
+                        var touch = event.touches[0];
+                        var fakeEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                        };
+                        d3.select(this)
+                            .attr("stroke", "#000")
+                            .attr("stroke-width", 2);
+                        activeHover = {
+                            iso3: dd.iso3,
+                            layer: layerName,
+                            event: fakeEvent,
+                        };
+                        if (legendHighlight) legendHighlight(layerName);
+                        showTooltip(fakeEvent, dd, layerName);
+                    })
+                    .on("touchend", function () {
+                        d3.select(this)
+                            .attr("stroke", "none")
+                            .attr("stroke-width", 0);
+                        activeHover = null;
+                        if (legendUnhighlight) legendUnhighlight();
+                        hideTooltip();
+                    });
+            }
+
+            // --- Build the initial layout (once) using max-across-years for stable positions ---
+            function buildLayout() {
+                var container = document.getElementById("tb-bubble-chart");
+                if (!container) return;
+                container.innerHTML = "";
+                countryNodes = {};
+
+                var maxCountries = buildMaxCountries();
+                if (!maxCountries.length) return;
+
+                var containerWidth = container.offsetWidth || 800;
+                var isMobile = containerWidth < 640;
+                var maxRadius = isMobile
+                    ? containerWidth / 3
+                    : Math.min(360, (containerWidth - 140) / 2);
+
+                // Global max incidence across ALL years for stable scale
+                var globalMaxInc = 0;
+                for (var i = 0; i < maxCountries.length; i++) {
+                    if (maxCountries[i].incidence > globalMaxInc)
+                        globalMaxInc = maxCountries[i].incidence;
+                }
+                var rScale = d3
+                    .scaleSqrt()
+                    .domain([0, globalMaxInc])
+                    .range([0, maxRadius]);
+
+                // Group by region
+                var regionGroups = {};
+                for (var i = 0; i < REGION_ORDER.length; i++)
+                    regionGroups[REGION_ORDER[i]] = [];
+                for (var i = 0; i < maxCountries.length; i++) {
+                    var reg = maxCountries[i].region;
+                    if (regionGroups[reg])
+                        regionGroups[reg].push(maxCountries[i]);
+                }
+
+                var regionBurden = [];
+                for (var i = 0; i < REGION_ORDER.length; i++) {
+                    var reg = REGION_ORDER[i];
+                    var items = regionGroups[reg];
+                    if (!items.length) continue;
+                    items.sort(function (a, b) {
+                        return b.incidence - a.incidence;
+                    });
+                    var total = 0;
+                    for (var j = 0; j < items.length; j++)
+                        total += items[j].incidence;
+                    regionBurden.push({
+                        region: reg,
+                        items: items,
+                        total: total,
+                    });
+                }
+                // Keep REGION_ORDER (alphabetical) ordering
+
+                var labelWidth = isMobile ? 0 : 140;
+                var bubbleAreaWidth = containerWidth - labelWidth;
+                var regionPadding = isMobile ? 20 : 28;
+                var regionLabelHeight = isMobile ? 32 : 0;
+
+                var totalHeight = 0;
+                var regionLayouts = [];
+                for (var i = 0; i < regionBurden.length; i++) {
+                    var rb = regionBurden[i];
+                    var clusterSize = clusterBubbles(rb.items, rScale);
+                    var clusterOffsetX = Math.max(
+                        0,
+                        (bubbleAreaWidth - clusterSize.width) / 2,
+                    );
+                    for (var j = 0; j < rb.items.length; j++) {
+                        rb.items[j]._x += clusterOffsetX;
+                    }
+                    regionLayouts.push({
+                        region: rb.region,
+                        items: rb.items,
+                        height: clusterSize.height,
+                        yOffset:
+                            totalHeight + (isMobile ? regionLabelHeight : 0),
+                    });
+                    totalHeight +=
+                        clusterSize.height +
+                        regionPadding +
+                        (isMobile ? regionLabelHeight : 0);
+                }
+
+                var svg = d3
+                    .select(container)
+                    .append("svg")
+                    .attr("width", containerWidth)
+                    .attr("height", totalHeight)
+                    .style("overflow", "visible");
+
+                // Store rScale on svg for updateYear
+                svg.node().__rScale = rScale;
+
+                for (var ri = 0; ri < regionLayouts.length; ri++) {
+                    var rl = regionLayouts[ri];
+                    var regionG = svg
+                        .append("g")
+                        .attr("transform", "translate(0," + rl.yOffset + ")");
+
+                    if (isMobile) {
+                        regionG
+                            .append("text")
+                            .attr("x", 4)
+                            .attr("y", -6)
+                            .attr("font-size", "13px")
+                            .attr("font-weight", "600")
+                            .attr("fill", "#374151")
+                            .text(REGION_NAMES[rl.region] || rl.region);
+                    } else {
+                        regionG
+                            .append("text")
+                            .attr("x", 4)
+                            .attr("y", 16)
+                            .attr("text-anchor", "start")
+                            .attr("font-size", "13px")
+                            .attr("font-weight", "600")
+                            .attr("fill", "#374151")
+                            .text(REGION_NAMES[rl.region] || rl.region);
+                    }
+
+                    var bubblesG = regionG
+                        .append("g")
+                        .attr("transform", "translate(" + labelWidth + ",0)");
+
+                    var minTapRadius = isMobile ? 16 : 0;
+
+                    for (var ci = 0; ci < rl.items.length; ci++) {
+                        var d = rl.items[ci];
+                        var countryG = bubblesG
+                            .append("g")
+                            .attr(
+                                "transform",
+                                "translate(" + d._x + "," + d._y + ")",
+                            );
+
+                        // Invisible hit area for small circles on mobile
+                        if (minTapRadius > 0 && d._r < minTapRadius) {
+                            var hitCircle = countryG
+                                .append("circle")
+                                .attr("class", "tb-layer-hit")
+                                .attr("r", minTapRadius)
+                                .attr("fill", "transparent")
+                                .attr("stroke", "none");
+                            attachCircleEvents(hitCircle, "incidence");
+                        }
+
+                        var incCircle = countryG
+                            .append("circle")
+                            .attr("class", "tb-layer-incidence")
+                            .attr("r", 0)
+                            .attr("fill", COLOR_INCIDENCE)
+                            .attr("stroke", "none");
+
+                        var notCircle = countryG
+                            .append("circle")
+                            .attr("class", "tb-layer-notified")
+                            .attr("r", 0)
+                            .attr("fill", COLOR_NOTIFIED)
+                            .attr("fill-opacity", 0.7)
+                            .attr("stroke", "none");
+
+                        var dthCircle = countryG
+                            .append("circle")
+                            .attr("class", "tb-layer-deaths")
+                            .attr("r", 0)
+                            .attr("fill", COLOR_DEATHS)
+                            .attr("stroke", "none");
+
+                        attachCircleEvents(incCircle, "incidence");
+                        attachCircleEvents(notCircle, "notified");
+                        attachCircleEvents(dthCircle, "deaths");
+
+                        countryNodes[d.iso3] = {
+                            g: countryG,
+                            incCircle: incCircle,
+                            notCircle: notCircle,
+                            dthCircle: dthCircle,
+                        };
+                    }
+                }
+
+                layoutBuilt = true;
+            }
+
+            // --- Update circle radii for a given year with smooth transitions ---
+            function updateYear(year, animate) {
+                var container = document.getElementById("tb-bubble-chart");
+                if (!container) return;
+                var svgNode = container.querySelector("svg");
+                if (!svgNode) return;
+                var rScale = svgNode.__rScale;
+                if (!rScale) return;
+
+                var yearData = dataByYear[year] || {};
+                var dur = animate ? TRANSITION_MS : 0;
+
+                var isos = Object.keys(countryNodes);
+                for (var i = 0; i < isos.length; i++) {
+                    var iso = isos[i];
+                    var node = countryNodes[iso];
+                    var d = yearData[iso];
+
+                    if (!d) {
+                        // No data this year — shrink to 0
+                        var emptyDatum = {
+                            country: iso,
+                            iso3: iso,
+                            region: "",
+                            incidence: 0,
+                            incidenceLo: 0,
+                            incidenceHi: 0,
+                            notified: 0,
+                            deaths: 0,
+                            deathsLo: 0,
+                            deathsHi: 0,
+                            pop: 0,
+                        };
+                        node.g.datum(emptyDatum);
+                        if (dur) {
+                            node.incCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
+                            node.notCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
+                            node.dthCircle
+                                .transition()
+                                .duration(dur)
+                                .attr("r", 0);
+                        } else {
+                            node.incCircle.attr("r", 0);
+                            node.notCircle.attr("r", 0);
+                            node.dthCircle.attr("r", 0);
+                        }
+                        continue;
+                    }
+
+                    node.g.datum(d);
+
+                    var rInc = Math.max(rScale(d.incidence), MIN_RADIUS);
+                    var rNot =
+                        d.notified > 0
+                            ? Math.max(rScale(d.notified), MIN_RADIUS * 0.8)
+                            : 0;
+                    var rDth =
+                        d.deaths > 0
+                            ? Math.max(rScale(d.deaths), MIN_RADIUS * 0.6)
+                            : 0;
+                    if (rNot > rInc) rNot = rInc;
+                    if (rDth > rInc) rDth = rInc;
+
+                    if (dur) {
+                        node.incCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rInc);
+                        node.notCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rNot);
+                        node.dthCircle
+                            .transition()
+                            .duration(dur)
+                            .attr("r", rDth);
+                    } else {
+                        node.incCircle.attr("r", rInc);
+                        node.notCircle.attr("r", rNot);
+                        node.dthCircle.attr("r", rDth);
+                    }
+                }
+
+                // Update year labels
+                var label = document.getElementById("tb-year-label");
+                if (label) label.textContent = year;
+                var floatingLabel = document.getElementById("tb-floating-year");
+                if (floatingLabel) floatingLabel.textContent = year;
+
+                // Refresh tooltip if hovering over a country
+                if (activeHover) {
+                    var hd = yearData[activeHover.iso3];
+                    if (hd) {
+                        showTooltip(activeHover.event, hd, activeHover.layer);
+                    } else {
+                        hideTooltip();
+                        activeHover = null;
+                    }
+                }
+            }
+
+            // --- Play/Pause ---
+            function startPlay() {
+                if (isPlaying) return;
+                isPlaying = true;
+                updatePlayIcon();
+                var slider = document.getElementById("tb-year-slider");
+
+                function step() {
+                    var idx = allYears.indexOf(currentYear);
+                    if (idx < allYears.length - 1) {
+                        currentYear = allYears[idx + 1];
+                    } else {
+                        // Loop back to start
+                        currentYear = allYears[0];
+                    }
+                    if (slider) slider.value = currentYear;
+                    updateYear(currentYear, true);
+                    playTimer = setTimeout(step, PLAY_INTERVAL_MS);
+                }
+                step();
+            }
+
+            function stopPlay() {
+                if (!isPlaying) return;
+                isPlaying = false;
+                updatePlayIcon();
+                if (playTimer) {
+                    clearTimeout(playTimer);
+                    playTimer = null;
+                }
+            }
+
+            function updatePlayIcon() {
+                var playIcon = document.getElementById("tb-play-icon");
+                var pauseIcon = document.getElementById("tb-pause-icon");
+                var playBtn = document.getElementById("tb-play-btn");
+                if (playIcon) playIcon.style.display = isPlaying ? "none" : "";
+                if (pauseIcon)
+                    pauseIcon.style.display = isPlaying ? "" : "none";
+                if (playBtn)
+                    playBtn.setAttribute(
+                        "aria-label",
+                        isPlaying ? "Pause" : "Play",
+                    );
+            }
+
+            // --- Init ---
+            function init() {
+                fetch("/data/tb_estimates.csv")
+                    .then(function (r) {
+                        if (!r.ok) throw new Error("Failed to load TB data");
+                        return r.text();
+                    })
+                    .then(function (text) {
+                        allRows = parseCSV(text);
+                        buildDataIndex(allRows);
+
+                        // Configure slider
+                        var slider = document.getElementById("tb-year-slider");
+                        if (slider && allYears.length) {
+                            slider.min = allYears[0];
+                            slider.max = allYears[allYears.length - 1];
+                            slider.value = currentYear;
+                            slider.addEventListener("input", function () {
+                                stopPlay();
+                                currentYear = +this.value;
+                                updateYear(currentYear, false);
+                            });
+                        }
+
+                        // Play button
+                        var playBtn = document.getElementById("tb-play-btn");
+                        if (playBtn) {
+                            playBtn.addEventListener("click", function () {
+                                if (isPlaying) stopPlay();
+                                else startPlay();
+                            });
+                        }
+
+                        drawLegend();
+                        buildLayout();
+                        currentYear = allYears[0];
+                        if (slider) slider.value = currentYear;
+                        updateYear(currentYear, false);
+                        startPlay();
+
+                        // Responsive full rebuild
+                        var resizeTimer;
+                        window.addEventListener("resize", function () {
+                            clearTimeout(resizeTimer);
+                            resizeTimer = setTimeout(function () {
+                                buildLayout();
+                                updateYear(currentYear, false);
+                            }, 200);
+                        });
+
+                        // Show floating year when slider is scrolled out of view
+                        var floatingYear =
+                            document.getElementById("tb-floating-year");
+                        var sliderEl =
+                            document.getElementById("tb-year-slider");
+                        if (floatingYear && sliderEl) {
+                            function updateFloatingVisibility() {
+                                var rect = sliderEl.getBoundingClientRect();
+                                var hidden =
+                                    rect.bottom > 0 &&
+                                    rect.top < window.innerHeight;
+                                floatingYear.style.opacity = hidden ? "0" : "1";
+                            }
+                            window.addEventListener(
+                                "scroll",
+                                updateFloatingVisibility,
+                                { passive: true },
+                            );
+                            updateFloatingVisibility();
+                        }
+                    })
+                    .catch(function (err) {
+                        var container =
+                            document.getElementById("tb-bubble-chart");
+                        if (container) {
+                            container.innerHTML =
+                                '<p style="text-align:center;color:#ef4444;padding:2rem">Error loading data: ' +
+                                err.message +
+                                "</p>";
+                        }
+                    });
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init);
+            } else {
+                init();
+            }
+        })();
+    </script>  </main> <footer class="bg-gray-50 border-t border-gray-200"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"> <div class="grid grid-cols-1 md:grid-cols-2 gap-8"> <!-- Background Section --> <div> <h3 class="text-lg font-semibold text-gray-900 mb-4">Background</h3> <p class="text-gray-600 leading-relaxed">
+Claire Nyquist explores science and public health through data visualization and graphic design.
+</p> </div> <!-- Contact Section --> <div> <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact</h3> <div class="space-y-2 text-gray-600"> <p>Email: clairenyquist@gmail.com</p> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-300 text-center text-gray-500"> <p>&copy; 2026 Claire Nyquist. All rights reserved.</p> </div> </div> </footer>  </body> </html>

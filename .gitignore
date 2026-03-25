@@ -26,3 +26,7 @@ yarn-error.log*
 .cache/
 scripts/MetObjects.csv
 scripts/met_progress.db
+
+# Large data files (exceed GitHub 100MB limit)
+public/data/malariadata/gbifanopheles.csv
+dist/data/malariadata/gbifanopheles.csv

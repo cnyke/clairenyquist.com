@@ -1,1081 +1,957 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Malaria, Mosquitoes & Sickle Cell | Claire Nyquist";
+const description =
+    "A scrollytelling choropleth exploring the geographic overlap between Anopheles mosquitoes, malaria incidence, and sickle cell disease.";
 ---
 
-<script is:inline src="https://d3js.org/d3.v7.min.js"></script>
-<script is:inline src="https://unpkg.com/topojson-client@3"></script>
+<BaseLayout title={title} description={description}>
+    <!-- Fixed full-screen map -->
+    <div id="map-wrap" class="fixed inset-0 w-full h-full" style="z-index:2;">
+        <svg id="map-svg" class="w-full h-full"></svg>
+    </div>
 
-<BaseLayout
-    title="Global Malaria Cases | Claire Nyquist"
-    description="Interactive visualization of estimated malaria cases worldwide from 2000–2024, using WHO Global Health Observatory data."
->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Hero Section -->
-        <div class="text-center mb-8 md:mb-12">
-            <h1
-                class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 md:mb-6"
-            >
-                Malaria
-            </h1>
-            <p
-                class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4"
-            >
-                Estimated malaria cases by country from 2000 to 2024.
-            </p>
-            <p
-                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
-            >
-                This visualization uses WHO estimates of malaria cases across
-                110 countries. Drag the globe to explore, hover for details, and
-                select a year to see how the burden has shifted over 25 years.
-                Use the toggle to switch between absolute case counts and
-                incidence per 1,000 population at risk. Absolute counts show
-                where the most people are affected; incidence reveals
-                transmission intensity regardless of country size. Countries shown in gray have no WHO case
-                estimates because they eliminated malaria before the reporting
-                period. The dataset only covers countries under active WHO
-                malaria surveillance.
-            </p>
+    <!-- Legend -->
+    <div
+        id="legend"
+        class="bg-white/90 backdrop-blur rounded-lg shadow-lg p-3 transition-opacity duration-300 opacity-0"
+        style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:50; min-width:160px;"
+    >
+        <div id="legend-title" class="text-xs font-semibold text-gray-700 mb-1">
         </div>
-
-        <!-- Interactive Globe -->
-        <div class="mb-16">
-            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <div class="p-4 sm:p-6 bg-gray-50 border-b">
-                    <h2
-                        class="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4"
-                    >
-                        Global Distribution
-                    </h2>
-                    <p class="text-sm sm:text-base text-gray-600 mb-4">
-                        Drag to rotate the globe. <span class="hidden sm:inline"
-                            >Hover over</span
-                        ><span class="sm:hidden">Tap</span> a country to see estimated
-                        malaria cases.
-                    </p>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="flex items-center gap-2">
-                            <label
-                                for="globe-year-select"
-                                class="text-sm font-medium text-gray-700"
-                                >Year</label
-                            >
-                            <select
-                                id="globe-year-select"
-                                class="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 cursor-pointer"
-                            >
-                            </select>
-                        </div>
-                        <div class="flex items-center gap-1 rounded-md border border-gray-300 bg-white p-0.5">
-                            <button
-                                id="metric-cases"
-                                class="rounded px-3 py-1 text-sm font-medium transition-colors bg-gray-500 text-white"
-                                >Total Cases</button
-                            >
-                            <button
-                                id="metric-incidence"
-                                class="rounded px-3 py-1 text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100"
-                                >Per 1,000 at Risk</button
-                            >
-                        </div>
-                    </div>
-                </div>
-                <div class="p-4 sm:p-6 flex justify-center">
-                    <div
-                        id="globe-chart"
-                        style="width:100%;max-width:640px;aspect-ratio:1;position:relative;"
-                    >
-                    </div>
-                </div>
-                <div
-                    class="px-4 pb-4 text-xs text-gray-500 border-t bg-gray-50"
-                >
-                    <p class="mt-2">
-                        <strong>Data Source:</strong> World Health Organization. Estimated
-                        number of malaria cases. Global Health Observatory, 2000–2024.
-                        Map data from Natural Earth via
-                        <a
-                            href="https://github.com/topojson/world-atlas"
-                            class="text-blue-600 hover:text-blue-800"
-                            target="_blank"
-                            rel="noopener">world-atlas</a
-                        >.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Data Sources -->
-        <div class="mt-12 bg-white rounded-lg shadow-sm border p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                Data Sources
-            </h3>
-            <p class="text-sm text-gray-600 mb-3">
-                World Health Organization. (2025). Estimated number of malaria
-                cases. Global Health Observatory. [Data set]. <a
-                    href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-number-of-malaria-cases"
-                    class="text-blue-600 hover:text-blue-800 break-words"
-                    target="_blank"
-                    rel="noopener"
-                    >https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-number-of-malaria-cases</a
-                >
-            </p>
-            <p class="text-sm text-gray-600 mb-3">
-                Data covers WHO member state estimates of malaria cases from
-                2000 to 2024, reported by country and WHO region. Estimates are
-                produced by WHO and partners based on nationally reported data
-                adjusted for reporting completeness, diagnostic testing rates,
-                and health facility utilization.
-            </p>
-            <p class="text-sm text-gray-600 mb-3">
-                Natural Earth. (2024). Admin 0 – Countries. Via
-                <a
-                    href="https://github.com/topojson/world-atlas"
-                    class="text-blue-600 hover:text-blue-800 break-words"
-                    target="_blank"
-                    rel="noopener"
-                    >world-atlas</a
-                > (TopoJSON, 110m resolution).
-            </p>
-            <p class="text-sm text-gray-600 mb-3">
-                D3.js: Mike Bostock. (2024). D3: Data-Driven Documents. <a
-                    href="https://d3js.org/"
-                    class="text-blue-600 hover:text-blue-800 break-words"
-                    target="_blank"
-                    rel="noopener">https://d3js.org/</a
-                >
-            </p>
-            <p class="text-sm text-gray-600">
-                Roser, M. &amp; Ritchie, H. (2024). Malaria. <em>Our World in Data.</em>
-                <a
-                    href="https://ourworldindata.org/malaria"
-                    class="text-blue-600 hover:text-blue-800 break-words"
-                    target="_blank"
-                    rel="noopener"
-                    >https://ourworldindata.org/malaria</a
-                >
-            </p>
-        </div>
-
-        <!-- Embedded Video -->
-        <div class="mt-8">
-            <div class="relative w-full" style="padding-bottom: 56.25%;">
-                <iframe
-                    class="absolute top-0 left-0 w-full h-full rounded-lg shadow-sm"
-                    src="https://www.youtube.com/embed/g5xAdcTxjIM"
-                    title="Malaria video"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                ></iframe>
-            </div>
-        </div>
-
-        <!-- Video Sources -->
-        <div class="mt-8 bg-white rounded-lg shadow-sm border p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                Video Sources
-            </h3>
-            <ul class="text-sm text-gray-600 space-y-3 list-none">
-                <li>
-                    World Health Organization. (2025). <em>World Malaria Report 2025: Addressing the Threat of Antimalarial Drug Resistance.</em> Geneva: WHO.
-                    <a href="https://www.who.int/publications/i/item/9789240117822" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.who.int/publications/i/item/9789240117822</a>
-                </li>
-                <li>
-                    Kaithamanakallam, R.P. et al. (2025). Malaria Vaccines and Global Equity: A Scoping Review of Current Progress and Future Directions. <em>Biomedicines,</em> 13(6), 1270.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/40563989/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/40563989/</a>
-                </li>
-                <li>
-                    Nema, S. et al. (2025). Unlocking the Potential of Blood-Stage Vaccines for Malaria Elimination. <em>Transactions of the Royal Society of Tropical Medicine and Hygiene,</em> 119(10), 1200–1203.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/39921411/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/39921411/</a>
-                </li>
-                <li>
-                    Sanyaolu, A. et al. (2025). Emerging Molecular Mechanisms in Malaria Pathogenesis and Novel Therapeutic Approaches: A Focus on <em>P. falciparum</em> Malaria. <em>Biomolecules,</em> 15(7), 1038.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/40723909/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/40723909/</a>
-                </li>
-                <li>
-                    Wu, N.R. et al. (2025). mRNA Delivery of Circumsporozoite Protein Epitope-Based Malaria Vaccines Induces Protection in a Mouse Model. <em>npj Vaccines,</em> 10, 238.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/41253879/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/41253879/</a>
-                </li>
-                <li>
-                    Ryan, E. et al. (2025). Comparison of Major, Minor and Junctional Circumsporozoite Protein Epitopes for Malaria Vaccine Design. <em>npj Vaccines,</em> 10, 215.
-                    <a href="https://www.nature.com/articles/s41541-025-01264-0" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.nature.com/articles/s41541-025-01264-0</a>
-                </li>
-                <li>
-                    Sallam, M. et al. (2025). Current Developments in Malaria Vaccination: A Concise Review on Implementation, Challenges, and Future Directions. <em>Clinical Pharmacology: Advances and Applications,</em> 17, 29–47.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/40191019/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/40191019/</a>
-                </li>
-                <li>
-                    Chen, J. et al. (2025). Malaria Vaccines: Current Achievements and Path Forward. <em>Vaccines,</em> 13(5), 542.
-                    <a href="https://pubmed.ncbi.nlm.nih.gov/40432151/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/40432151/</a>
-                </li>
-                <li>
-                    United States Census Office, Ninth Census (1870), and Francis Amasa Walker. <em>Statistical Atlas of the United States Based on the Results of the Ninth Census.</em> New York: Julius Bien, lithographer, 1874. Plate XLII: Map Showing the Proportion of Deaths from Malarial Diseases to Deaths from All Causes.
-                    <a href="https://www.loc.gov/item/05019329/" class="text-blue-600 hover:text-blue-800 break-words" target="_blank" rel="noopener">https://www.loc.gov/item/05019329/</a>
-                </li>
-            </ul>
+        <div id="legend-bar" class="h-3 rounded" style="width:140px;"></div>
+        <div class="flex justify-between text-[10px] text-gray-500 mt-0.5">
+            <span id="legend-min"></span>
+            <span id="legend-max"></span>
         </div>
     </div>
+
+    <!-- Tooltip -->
+    <div
+        id="tooltip"
+        class="fixed pointer-events-none hidden text-gray-900 text-sm rounded-lg px-3 py-2 shadow-lg"
+        style="z-index:100; max-width:220px; background:rgba(255,255,255,0.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.5);"
+    >
+    </div>
+
+    <!-- Scroll sections overlay -->
+    <div
+        id="scroll-container"
+        class="relative pointer-events-none"
+        style="z-index:3;"
+    >
+        <!-- Step 0: Intro — visible immediately -->
+        <section
+            data-step="0"
+            class="scroll-step visible px-4 md:px-12 pt-24 pb-8"
+        >
+            <div class="glass-card ml-0 md:ml-[5%]">
+                <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
+                    Malaria, Mosquitoes & Sickle Cell
+                </h1>
+                <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                    Scroll to see how Anopheles mosquito distribution, malaria
+                    incidence, and sickle cell disease overlap geographically
+                    &mdash; revealing the evolutionary pressure that made a
+                    deadly blood disorder a survival advantage.
+                </p>
+                <p class="text-xs text-gray-400 mt-3">Scroll to continue</p>
+            </div>
+        </section>
+
+        <!-- Spacer — map visible -->
+        <div style="height:80vh;"></div>
+
+        <!-- Step 1: Anopheles -->
+        <section
+            data-step="1"
+            class="scroll-step px-4 md:px-12 py-8 flex justify-end"
+        >
+            <div class="glass-card mr-0 md:mr-[5%]">
+                <h2
+                    class="text-xl md:text-2xl font-bold mb-2"
+                    style="color:#1a7a3a;"
+                >
+                    Anopheles Mosquito Distribution
+                </h2>
+                <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                    Of the roughly 500 known <em>Anopheles</em> species, about 40
+                    are competent malaria vectors. The genus thrives in tropical and
+                    subtropical climates where standing water, warm temperatures,
+                    and humidity support larval development. Countries are shaded
+                    by GBIF occurrence records &mdash; a proxy for species diversity
+                    and surveillance effort. Sub-Saharan Africa dominates, home to
+                    <em>Anopheles gambiae</em> and <em>Anopheles funestus</em>,
+                    the most efficient vectors of <em>Plasmodium falciparum</em
+                    >. Southeast Asia harbors a distinct complex including <em
+                        >Anopheles dirus</em
+                    > and <em>Anopheles minimus</em>, adapted to forest-fringe
+                    habitats. Note that the United States appears heavily shaded
+                    despite having eliminated malaria in 1951 &mdash; this
+                    reflects sampling bias, not vector competence. U.S.
+                    institutions contribute disproportionately to GBIF, and
+                    decades of well-funded entomological surveillance have
+                    generated far more digitized specimen records per capita
+                    than most tropical countries where <em>Anopheles</em> actually
+                    transmits disease. Gaps elsewhere often reflect limited sampling
+                    rather than true absence.
+                </p>
+                <p class="text-xs text-gray-400 mt-3 leading-relaxed">
+                    GBIF.org (24 March 2026) GBIF Occurrence Download <a
+                        href="https://doi.org/10.15468/dl.zffc2v"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="underline hover:text-gray-600"
+                        >https://doi.org/10.15468/dl.zffc2v</a
+                    >
+                </p>
+            </div>
+        </section>
+
+        <!-- Spacer — map visible -->
+        <div style="height:80vh;"></div>
+
+        <!-- Step 2: Malaria Incidence -->
+        <section data-step="2" class="scroll-step px-4 md:px-12 py-8">
+            <div class="glass-card ml-0 md:ml-[5%]">
+                <h2
+                    class="text-xl md:text-2xl font-bold mb-2"
+                    style="color:#1a5fb4;"
+                >
+                    Malaria Incidence
+                </h2>
+                <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                    WHO estimated number of malaria cases by country (2021).
+                    Nigeria alone accounts for roughly 65 million cases &mdash;
+                    about 27% of the global total. Five species of <em>Plasmodium</em>
+                    infect humans, but <em>P. falciparum</em>
+                    causes over 90% of deaths, concentrated in sub-Saharan Africa.
+                    The parasite's complex life cycle &mdash; sexual reproduction
+                    in the mosquito, asexual multiplication in human liver and red
+                    blood cells &mdash; makes eradication exceptionally difficult.
+                    Notice how the case burden tracks the vector distribution:
+                    where <em>Anopheles</em> density is highest, malaria follows.
+                    Countries with zero cases in the tropics (e.g., Sri Lanka)
+                    represent hard-won elimination successes through vector control,
+                    surveillance, and treatment access. This map uses absolute case
+                    counts rather than per-capita rates to parallel the sickle cell
+                    data below &mdash; both show total burden, making the geographic
+                    overlap between the two diseases directly comparable. The tradeoff
+                    is that populous countries like Nigeria and the DRC dominate the
+                    color scale; a per-capita view would more evenly highlight
+                    smaller high-burden nations like Niger and Burkina Faso.
+                </p>
+                <p class="text-xs text-gray-400 mt-3 leading-relaxed">
+                    World Health Organization. Global Health Observatory —
+                    Estimated number of malaria cases,
+                    2021. <a
+                        href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/malaria-incidence-(per-1-000-population-at-risk)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="underline hover:text-gray-600"
+                        >https://www.who.int/data/gho</a
+                    >
+                </p>
+            </div>
+        </section>
+
+        <!-- Spacer — map visible -->
+        <div style="height:80vh;"></div>
+
+        <!-- Step 3: Sickle Cell -->
+        <section
+            data-step="3"
+            class="scroll-step px-4 md:px-12 py-8 flex justify-end"
+        >
+            <div class="glass-card mr-0 md:mr-[5%]">
+                <h2
+                    class="text-xl md:text-2xl font-bold mb-2"
+                    style="color:#6b21a8;"
+                >
+                    Sickle Cell Disease
+                </h2>
+                <p class="text-sm md:text-base text-gray-700 leading-relaxed">
+                    Sickle cell disease arises from a point mutation in the
+                    &beta;-globin gene (HBB, Glu6Val) that causes hemoglobin S
+                    to polymerize under low oxygen, deforming red blood cells
+                    into rigid sickle shapes. Homozygous individuals (HbSS)
+                    suffer chronic hemolytic anemia, vaso-occlusive crises, and
+                    organ damage. Yet heterozygous carriers (HbAS) gain
+                    significant protection against severe <em>P. falciparum</em> malaria
+                    &mdash; sickled cells are cleared faster by the spleen, and the
+                    parasite grows poorly in HbS erythrocytes. This heterozygote advantage
+                    has maintained allele frequencies as high as 15&ndash;20% in malaria-endemic
+                    West and Central Africa over thousands of generations, a textbook
+                    case of balancing selection. Compare this map to the malaria layer
+                    above: the geographic overlap is striking evidence that infectious
+                    disease has shaped human genetics.
+                </p>
+                <p class="text-xs text-gray-400 mt-3 leading-relaxed">
+                    Source: Institute for Health Metrics and Evaluation. Used
+                    with permission. All rights reserved.
+                    <br /><br />
+                    Global Burden of Disease Study 2021 (GBD 2021) Sickle Cell Disease
+                    Estimates 2000-2021. Seattle, United States: Institute for Health
+                    Metrics and Evaluation (IHME), 2023.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <style>
+        /* Glass card — hidden by default, revealed on scroll */
+        .glass-card {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            max-width: 400px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            transform: translateY(30px);
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease;
+        }
+        .scroll-step.visible .glass-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .glass-card a {
+            color: #6b7280;
+        }
+
+        /* Make page transparent so fixed map shows through */
+        :global(body) {
+            background: transparent !important;
+        }
+        :global(main.flex-grow) {
+            padding: 0 !important;
+            background: transparent !important;
+        }
+        :global(footer) {
+            display: none;
+        }
+
+        /* Country paths */
+        :global(.country) {
+            stroke: none;
+            transition: fill 0.8s ease;
+            cursor: pointer;
+        }
+        /* Hover highlight layer */
+        :global(.country-highlight) {
+            fill: none;
+            stroke: #333;
+            stroke-width: 1.5;
+            pointer-events: none;
+        }
+        /* Uniform border mesh */
+        :global(.borders) {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 0.5;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+    </style>
 
     <script is:inline>
         (function () {
             "use strict";
 
-            // --- ISO alpha-3 to numeric code mapping ---
-            var ISO_A3_TO_NUM = {
-                AFG: "004",
-                ALB: "008",
-                DZA: "012",
-                ASM: "016",
-                AND: "020",
-                AGO: "024",
-                ATG: "028",
-                ARG: "032",
-                ARM: "051",
-                AUS: "036",
-                AUT: "040",
-                AZE: "031",
-                BHS: "044",
-                BHR: "048",
-                BGD: "050",
-                BRB: "052",
-                BLR: "112",
-                BEL: "056",
-                BLZ: "084",
-                BEN: "204",
-                BTN: "064",
-                BOL: "068",
-                BIH: "070",
-                BWA: "072",
-                BRA: "076",
-                BRN: "096",
-                BGR: "100",
-                BFA: "854",
-                BDI: "108",
-                CPV: "132",
-                KHM: "116",
-                CMR: "120",
-                CAN: "124",
-                CAF: "140",
-                TCD: "148",
-                CHL: "152",
-                CHN: "156",
-                COL: "170",
-                COM: "174",
-                COG: "178",
-                COD: "180",
-                CRI: "188",
-                CIV: "384",
-                HRV: "191",
-                CUB: "192",
-                CYP: "196",
-                CZE: "203",
-                DNK: "208",
-                DJI: "262",
-                DMA: "212",
-                DOM: "214",
-                ECU: "218",
-                EGY: "818",
-                SLV: "222",
-                GNQ: "226",
-                ERI: "232",
-                EST: "233",
-                SWZ: "748",
-                ETH: "231",
-                FJI: "242",
-                FIN: "246",
-                FRA: "250",
-                GAB: "266",
-                GMB: "270",
-                GEO: "268",
-                DEU: "276",
-                GHA: "288",
-                GRC: "300",
-                GRD: "308",
-                GTM: "320",
-                GIN: "324",
-                GNB: "624",
-                GUY: "328",
-                HTI: "332",
-                HND: "340",
-                HUN: "348",
-                ISL: "352",
-                IND: "356",
-                IDN: "360",
-                IRN: "364",
-                IRQ: "368",
-                IRL: "372",
-                ISR: "376",
-                ITA: "380",
-                JAM: "388",
-                JPN: "392",
-                JOR: "400",
-                KAZ: "398",
-                KEN: "404",
-                KIR: "296",
-                PRK: "408",
-                KOR: "410",
-                KWT: "414",
-                KGZ: "417",
-                LAO: "418",
-                LVA: "428",
-                LBN: "422",
-                LSO: "426",
-                LBR: "430",
-                LBY: "434",
-                LTU: "440",
-                LUX: "442",
-                MDG: "450",
-                MWI: "454",
-                MYS: "458",
-                MDV: "462",
-                MLI: "466",
-                MLT: "470",
-                MRT: "478",
-                MUS: "480",
-                MEX: "484",
-                MDA: "498",
-                MNG: "496",
-                MNE: "499",
-                MAR: "504",
-                MOZ: "508",
-                MMR: "104",
-                NAM: "516",
-                NPL: "524",
-                NLD: "528",
-                NZL: "554",
-                NIC: "558",
-                NER: "562",
-                NGA: "566",
-                MKD: "807",
-                NOR: "578",
-                OMN: "512",
-                PAK: "586",
-                PAN: "591",
-                PNG: "598",
-                PRY: "600",
-                PER: "604",
-                PHL: "608",
-                POL: "616",
-                PRT: "620",
-                QAT: "634",
-                ROU: "642",
-                RUS: "643",
-                RWA: "646",
-                KNA: "659",
-                LCA: "662",
-                VCT: "670",
-                WSM: "882",
-                STP: "678",
-                SAU: "682",
-                SEN: "686",
-                SRB: "688",
-                SYC: "690",
-                SLE: "694",
-                SGP: "702",
-                SVK: "703",
-                SVN: "705",
-                SLB: "090",
-                SOM: "706",
-                ZAF: "710",
-                SSD: "728",
-                ESP: "724",
-                LKA: "144",
-                SDN: "729",
-                SUR: "740",
-                SWE: "752",
-                CHE: "756",
-                SYR: "760",
-                TJK: "762",
-                TZA: "834",
-                THA: "764",
-                TLS: "626",
-                TGO: "768",
-                TON: "776",
-                TTO: "780",
-                TUN: "788",
-                TUR: "792",
-                TKM: "795",
-                UGA: "800",
-                UKR: "804",
-                ARE: "784",
-                GBR: "826",
-                USA: "840",
-                URY: "858",
-                UZB: "860",
-                VUT: "548",
-                VEN: "862",
-                VNM: "704",
-                YEM: "887",
-                ZMB: "894",
-                ZWE: "716",
-                PSE: "275",
-                XKX: "412",
-                TWN: "158",
-                HKG: "344",
-                MAC: "446",
-                PRI: "630",
-                NCL: "540",
-                GUF: "254",
-                MYT: "175",
+            // --- Configuration per step ---
+            const STEPS = {
+                0: {
+                    title: "Anopheles Observations",
+                    colorScheme: "greens",
+                    dataKey: "anopheles",
+                    label: "Species observations",
+                    unit: "",
+                },
+                1: {
+                    title: "Anopheles Observations",
+                    colorScheme: "greens",
+                    dataKey: "anopheles",
+                    label: "Species observations",
+                    unit: "",
+                },
+                2: {
+                    title: "Malaria Incidence",
+                    colorScheme: "blues",
+                    dataKey: "malaria",
+                    label: "Estimated cases",
+                    unit: "",
+                },
+                3: {
+                    title: "Sickle Cell Incidence",
+                    colorScheme: "purples",
+                    dataKey: "sickle",
+                    label: "Estimated new cases",
+                    unit: "",
+                },
             };
 
-            var allData = [];
-            var worldTopo = null;
-            var globeAnimId = null;
-            var currentMetric = "MALARIA_EST_CASES";
+            // --- State ---
+            let worldGeo = null;
+            let worldTopo = null;
+            let dataByStep = { anopheles: {}, malaria: {}, sickle: {} };
+            let currentStep = 0;
+            let svg, g, projection, pathGen;
+            const tooltip = document.getElementById("tooltip");
+            const legend = document.getElementById("legend");
+            const legendTitle = document.getElementById("legend-title");
+            const legendBar = document.getElementById("legend-bar");
+            const legendMin = document.getElementById("legend-min");
+            const legendMax = document.getElementById("legend-max");
 
+            // --- Color interpolators (manual, no D3 dependency for color) ---
+            // D3-style interpolation
+            function interpolateGreens(t) {
+                const r = Math.round(247 - t * 203);
+                const g = Math.round(252 - t * 120);
+                const b = Math.round(245 - t * 200);
+                return `rgb(${r},${g},${b})`;
+            }
+            function interpolateBlues(t) {
+                const r = Math.round(247 - t * 179);
+                const g = Math.round(251 - t * 139);
+                const b = Math.round(255 - t * 51);
+                return `rgb(${r},${g},${b})`;
+            }
+            function interpolatePurples(t) {
+                const r = Math.round(252 - t * 139);
+                const g = Math.round(251 - t * 172);
+                const b = Math.round(253 - t * 51);
+                return `rgb(${r},${g},${b})`;
+            }
+
+            function getInterpolator(scheme) {
+                if (scheme === "greens") return interpolateGreens;
+                if (scheme === "blues") return interpolateBlues;
+                if (scheme === "purples") return interpolatePurples;
+                return () => "#e5e7eb";
+            }
+
+            function getGradientCSS(scheme) {
+                const interp = getInterpolator(scheme);
+                const stops = [0, 0.25, 0.5, 0.75, 1]
+                    .map((t) => interp(t))
+                    .join(", ");
+                return `linear-gradient(to right, ${stops})`;
+            }
+
+            // Power scale (exponent 0.5 = sqrt) for better visual distribution
+            function powerScale(value, max, exponent) {
+                if (max <= 0 || value <= 0) return 0;
+                return Math.pow(value / max, exponent);
+            }
+
+            // --- CSV parsing ---
             function parseCSV(text) {
-                var lines = text.split("\n");
-                var headers = parseCSVLine(lines[0]);
-                var result = [];
-                for (var i = 1; i < lines.length; i++) {
+                const lines = text.split("\n");
+                const headers = lines[0].split(",").map((h) => h.trim());
+                const rows = [];
+                for (let i = 1; i < lines.length; i++) {
                     if (!lines[i].trim()) continue;
-                    var vals = parseCSVLine(lines[i]);
-                    var obj = {};
-                    for (var j = 0; j < headers.length; j++)
+                    const vals = lines[i].split(",").map((v) => v.trim());
+                    const obj = {};
+                    for (let j = 0; j < headers.length; j++) {
                         obj[headers[j]] = vals[j] || "";
-                    result.push(obj);
-                }
-                return result;
-            }
-
-            function parseCSVLine(line) {
-                var result = [];
-                var current = "",
-                    inQuotes = false;
-                for (var i = 0; i < line.length; i++) {
-                    var ch = line[i];
-                    if (inQuotes) {
-                        if (ch === '"') {
-                            if (i + 1 < line.length && line[i + 1] === '"') {
-                                current += '"';
-                                i++;
-                            } else inQuotes = false;
-                        } else current += ch;
-                    } else {
-                        if (ch === '"') inQuotes = true;
-                        else if (ch === ",") {
-                            result.push(current.trim());
-                            current = "";
-                        } else current += ch;
                     }
+                    rows.push(obj);
                 }
-                result.push(current.trim());
-                return result;
+                return rows;
             }
 
-            function formatNum(n) {
-                if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
-                if (n >= 1e3) return (n / 1e3).toFixed(0) + "K";
-                return String(n);
-            }
+            // --- Load all data ---
+            async function loadData() {
+                const [anophelesResp, whoResp, sickleResp, topoResp] =
+                    await Promise.all([
+                        fetch("/data/malariadata/anopheles_by_country.csv"),
+                        fetch("/data/malariadata/whomalariadata.csv"),
+                        fetch("/data/malariadata/ihme_sickle_cell.csv"),
+                        fetch(
+                            "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
+                        ),
+                    ]);
 
-            function padId(id) {
-                return String(id).padStart(3, "0");
-            }
-
-            // =========================================================
-            // GLOBE
-            // =========================================================
-            function drawGlobe(data) {
-                var container = document.getElementById("globe-chart");
-                if (!container) return;
-                container.innerHTML = "";
-
-                // Cancel any running animation
-                if (globeAnimId) {
-                    cancelAnimationFrame(globeAnimId);
-                    globeAnimId = null;
-                }
-
-                if (!worldTopo) {
-                    container.innerHTML =
-                        '<p style="text-align:center;color:#999;padding:3rem 0">Loading globe data&hellip;</p>';
-                    return;
-                }
-
-                var yearSelect = document.getElementById("globe-year-select");
-                var year = yearSelect ? +yearSelect.value : 2024;
-
-                // Build case lookup keyed by zero-padded numeric id
-                // Stores {cases, low, high} or null for missing
-                var isIncidence = currentMetric === "MALARIA_EST_INCIDENCE";
-                var caseLookup = {};
-                var numToName = {};
-                for (var i = 0; i < data.length; i++) {
-                    var d = data[i];
-                    var numCode = ISO_A3_TO_NUM[d.SpatialDimValueCode];
-                    if (!numCode) continue;
-                    var pid = padId(numCode);
-                    if (d.Location) numToName[pid] = d.Location;
-                    if (d.IndicatorCode !== currentMetric) continue;
-                    if (+d.Period === year) {
-                        var raw = d.FactValueNumeric;
-                        var parsed = Number(raw);
-                        // Only record if there is an actual numeric value in the field
-                        if (raw !== "" && raw !== undefined && !isNaN(parsed)) {
-                            caseLookup[pid] = {
-                                cases: parsed,
-                                low: Number(d.FactValueNumericLow) || 0,
-                                high: Number(d.FactValueNumericHigh) || 0,
-                            };
-                        }
+                // Parse anopheles
+                const anophelesRows = parseCSV(await anophelesResp.text());
+                for (const row of anophelesRows) {
+                    const code = row.iso_a3;
+                    const count = parseFloat(row.count);
+                    if (code && !isNaN(count)) {
+                        dataByStep.anopheles[code] = count;
                     }
                 }
 
-                var rect = container.getBoundingClientRect();
-                var size = Math.min(rect.width, 640);
-                if (size < 50) size = 300;
+                // Parse WHO malaria — filter: MALARIA_EST_INCIDENCE, Period == 2021
+                const whoText = await whoResp.text();
+                const whoLines = whoText.split("\n");
+                for (let i = 1; i < whoLines.length; i++) {
+                    const line = whoLines[i];
+                    if (!line.includes("MALARIA_EST_CASES")) continue;
+                    const parts = line.split(",");
+                    const period = parts[9];
+                    if (period !== "2021") continue;
+                    const code = parts[6];
+                    const value = parseFloat(parts[23]);
+                    if (code && !isNaN(value)) {
+                        dataByStep.malaria[code] = value;
+                    }
+                }
 
-                // Projection & path
-                var projection = d3
-                    .geoOrthographic()
-                    .scale(size * 0.45)
-                    .translate([size / 2, size / 2])
-                    .clipAngle(90);
+                // Parse sickle cell — filter: year == 2021
+                const sickleRows = parseCSV(await sickleResp.text());
+                for (const row of sickleRows) {
+                    if (row.year !== "2021") continue;
+                    const code = row.iso_a3;
+                    const value = parseFloat(row.incidence);
+                    if (code && !isNaN(value)) {
+                        dataByStep.sickle[code] = value;
+                    }
+                }
 
-                var pathGen = d3.geoPath().projection(projection);
-
-                var svg = d3
-                    .select(container)
-                    .append("svg")
-                    .attr("width", size)
-                    .attr("height", size)
-                    .style("touch-action", "none")
-                    .style("cursor", "grab")
-                    .style("-webkit-user-select", "none")
-                    .style("user-select", "none");
-
-                // Ocean
-                var sphere = { type: "Sphere" };
-                svg.append("path")
-                    .datum(sphere)
-                    .attr("d", pathGen)
-                    .attr("fill", "#ffffff")
-                    .attr("stroke", "#ccc")
-                    .attr("stroke-width", 1.5);
-
-                // Graticule
-                var graticulePath = svg
-                    .append("path")
-                    .datum(d3.geoGraticule10())
-                    .attr("d", pathGen)
-                    .attr("fill", "none")
-                    .attr("stroke", "#ddd")
-                    .attr("stroke-width", 0.4);
-
-                // Color scale (log for better spread)
-                var caseValues = Object.values(caseLookup)
-                    .map(function (v) {
-                        return v.cases;
-                    })
-                    .filter(function (v) {
-                        return v > 0;
-                    });
-                var minPositive = d3.min(caseValues) || 1;
-                var maxCases = d3.max(caseValues) || 1;
-                // For cases use domain [1, max] (log(0) undefined, but label shows 0)
-                // For incidence use actual min since values can be fractional
-                var domainMin = isIncidence ? minPositive : 1;
-                var colorScale = d3
-                    .scaleSequentialLog(d3.interpolateBlues)
-                    .domain([domainMin, maxCases]);
-
-                // Convert TopoJSON → GeoJSON
-                var countries = topojson.feature(
-                    worldTopo,
-                    worldTopo.objects.countries,
+                // Parse TopoJSON
+                const topoData = await topoResp.json();
+                worldTopo = topoData;
+                worldGeo = topojson.feature(
+                    topoData,
+                    topoData.objects.countries,
                 );
+            }
 
-                // Draw countries
-                var countryPaths = svg
-                    .selectAll(".country")
-                    .data(countries.features)
+            // --- Map rendering ---
+            function isMobile() {
+                return window.innerWidth < 768;
+            }
+
+            function applyProjection(width, height) {
+                projection = d3
+                    .geoNaturalEarth1()
+                    .fitSize([width, height], worldGeo);
+
+                if (isMobile()) {
+                    // Center on Africa, filling the mobile screen
+                    projection = d3.geoNaturalEarth1()
+                        .center([20, 5])
+                        .scale(projection.scale() * 3.5)
+                        .translate([width / 2, height / 2]);
+                } else {
+                    projection.translate([
+                        width / 2,
+                        height / 2 + height * 0.08,
+                    ]);
+                }
+            }
+
+            function initMap() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                svg = d3
+                    .select("#map-svg")
+                    .attr("viewBox", `0 0 ${width} ${height}`)
+                    .attr("preserveAspectRatio", "xMidYMid meet");
+
+                applyProjection(width, height);
+
+                pathGen = d3.geoPath().projection(projection);
+
+                // We need iso_a3 codes — world-atlas uses numeric IDs, so build a lookup
+                g = svg.append("g");
+
+                g.selectAll("path")
+                    .data(worldGeo.features)
                     .enter()
                     .append("path")
                     .attr("class", "country")
                     .attr("d", pathGen)
-                    .attr("fill", function (d) {
-                        var id = padId(d.id);
-                        if (!(id in caseLookup)) return "#d1d5db";
-                        var entry = caseLookup[id];
-                        return entry.cases > 0
-                            ? colorScale(entry.cases)
-                            : "#f5f5f0";
-                    })
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 0.3);
+                    .attr("fill", "#e5e7eb")
+                    .attr("data-id", (d) => d.id)
+                    .attr("data-name", (d) => d.properties.name)
+                    .on("mouseenter", handleMouseEnter)
+                    .on("mousemove", handleMouseMove)
+                    .on("mouseleave", handleMouseLeave)
+                    .on("click", handleClick);
 
-                // Borders (mesh)
-                var bordersPath = svg
-                    .append("path")
+                // Draw uniform border mesh on top
+                g.append("path")
                     .datum(
                         topojson.mesh(
                             worldTopo,
                             worldTopo.objects.countries,
-                            function (a, b) {
-                                return a !== b;
-                            },
+                            (a, b) => a !== b,
                         ),
                     )
-                    .attr("d", pathGen)
-                    .attr("fill", "none")
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 0.5);
+                    .attr("class", "borders")
+                    .attr("d", pathGen);
 
-                // Sphere outline on top
-                var spherePath = svg
-                    .append("path")
-                    .datum(sphere)
-                    .attr("d", pathGen)
-                    .attr("fill", "none")
-                    .attr("stroke", "#ccc")
-                    .attr("stroke-width", 1.5);
+                // Hover highlight path — sits on top of everything
+                g.append("path")
+                    .attr("class", "country-highlight")
+                    .attr("d", null);
+            }
 
-                // Tooltip div
-                var tooltip = d3
-                    .select(container)
-                    .append("div")
-                    .style("position", "absolute")
-                    .style("pointer-events", "none")
-                    .style("background", "rgba(0,0,0,0.85)")
-                    .style("color", "#fff")
-                    .style("padding", "8px 12px")
-                    .style("border-radius", "6px")
-                    .style("font-size", "13px")
-                    .style("line-height", "1.4")
-                    .style("display", "none")
-                    .style("white-space", "pre-line")
-                    .style("max-width", "280px")
-                    .style("z-index", "10")
-                    .style("box-shadow", "0 2px 8px rgba(0,0,0,0.25)");
+            // --- Numeric ID to ISO A3 lookup ---
+            // World-atlas uses UN M49 numeric codes; we need to map them to ISO A3
+            const numericToIso = {
+                "4": "AFG",
+                "8": "ALB",
+                "12": "DZA",
+                "16": "ASM",
+                "20": "AND",
+                "24": "AGO",
+                "28": "ATG",
+                "31": "AZE",
+                "32": "ARG",
+                "36": "AUS",
+                "40": "AUT",
+                "44": "BHS",
+                "48": "BHR",
+                "50": "BGD",
+                "51": "ARM",
+                "52": "BRB",
+                "56": "BEL",
+                "60": "BMU",
+                "64": "BTN",
+                "68": "BOL",
+                "70": "BIH",
+                "72": "BWA",
+                "76": "BRA",
+                "84": "BLZ",
+                "86": "IOT",
+                "90": "SLB",
+                "92": "VGB",
+                "96": "BRN",
+                "100": "BGR",
+                "104": "MMR",
+                "108": "BDI",
+                "112": "BLR",
+                "116": "KHM",
+                "120": "CMR",
+                "124": "CAN",
+                "132": "CPV",
+                "140": "CAF",
+                "144": "LKA",
+                "148": "TCD",
+                "152": "CHL",
+                "156": "CHN",
+                "158": "TWN",
+                "162": "CXI",
+                "166": "CCK",
+                "170": "COL",
+                "174": "COM",
+                "175": "MYT",
+                "178": "COG",
+                "180": "COD",
+                "184": "COK",
+                "188": "CRI",
+                "191": "HRV",
+                "192": "CUB",
+                "196": "CYP",
+                "203": "CZE",
+                "204": "BEN",
+                "208": "DNK",
+                "212": "DMA",
+                "214": "DOM",
+                "218": "ECU",
+                "222": "SLV",
+                "226": "GNQ",
+                "231": "ETH",
+                "232": "ERI",
+                "233": "EST",
+                "234": "FRO",
+                "238": "FLK",
+                "242": "FJI",
+                "246": "FIN",
+                "250": "FRA",
+                "254": "GUF",
+                "258": "PYF",
+                "260": "ATF",
+                "262": "DJI",
+                "266": "GAB",
+                "268": "GEO",
+                "270": "GMB",
+                "275": "PSE",
+                "276": "DEU",
+                "288": "GHA",
+                "292": "GIB",
+                "296": "KIR",
+                "300": "GRC",
+                "304": "GRL",
+                "308": "GRD",
+                "312": "GLP",
+                "316": "GUM",
+                "320": "GTM",
+                "324": "GIN",
+                "328": "GUY",
+                "332": "HTI",
+                "336": "VAT",
+                "340": "HND",
+                "344": "HKG",
+                "348": "HUN",
+                "352": "ISL",
+                "356": "IND",
+                "360": "IDN",
+                "364": "IRN",
+                "368": "IRQ",
+                "372": "IRL",
+                "376": "ISR",
+                "380": "ITA",
+                "384": "CIV",
+                "388": "JAM",
+                "392": "JPN",
+                "398": "KAZ",
+                "400": "JOR",
+                "404": "KEN",
+                "408": "PRK",
+                "410": "KOR",
+                "414": "KWT",
+                "417": "KGZ",
+                "418": "LAO",
+                "422": "LBN",
+                "426": "LSO",
+                "428": "LVA",
+                "430": "LBR",
+                "434": "LBY",
+                "438": "LIE",
+                "440": "LTU",
+                "442": "LUX",
+                "446": "MAC",
+                "450": "MDG",
+                "454": "MWI",
+                "458": "MYS",
+                "462": "MDV",
+                "466": "MLI",
+                "470": "MLT",
+                "474": "MTQ",
+                "478": "MRT",
+                "480": "MUS",
+                "484": "MEX",
+                "492": "MCO",
+                "496": "MNG",
+                "498": "MDA",
+                "499": "MNE",
+                "500": "MSR",
+                "504": "MAR",
+                "508": "MOZ",
+                "512": "OMN",
+                "516": "NAM",
+                "520": "NRU",
+                "524": "NPL",
+                "528": "NLD",
+                "530": "ANT",
+                "533": "ABW",
+                "540": "NCL",
+                "548": "VUT",
+                "554": "NZL",
+                "558": "NIC",
+                "562": "NER",
+                "566": "NGA",
+                "570": "NIU",
+                "574": "NFK",
+                "578": "NOR",
+                "580": "MNP",
+                "583": "FSM",
+                "584": "MHL",
+                "585": "PLW",
+                "586": "PAK",
+                "591": "PAN",
+                "598": "PNG",
+                "600": "PRY",
+                "604": "PER",
+                "608": "PHL",
+                "612": "PCN",
+                "616": "POL",
+                "620": "PRT",
+                "624": "GNB",
+                "626": "TLS",
+                "630": "PRI",
+                "634": "QAT",
+                "638": "REU",
+                "642": "ROU",
+                "643": "RUS",
+                "646": "RWA",
+                "652": "BLM",
+                "654": "SHN",
+                "659": "KNA",
+                "660": "AIA",
+                "662": "LCA",
+                "666": "SPM",
+                "670": "VCT",
+                "674": "SMR",
+                "678": "STP",
+                "682": "SAU",
+                "686": "SEN",
+                "688": "SRB",
+                "690": "SYC",
+                "694": "SLE",
+                "702": "SGP",
+                "703": "SVK",
+                "704": "VNM",
+                "705": "SVN",
+                "706": "SOM",
+                "710": "ZAF",
+                "716": "ZWE",
+                "724": "ESP",
+                "728": "SSD",
+                "729": "SDN",
+                "732": "ESH",
+                "740": "SUR",
+                "744": "SJM",
+                "748": "SWZ",
+                "752": "SWE",
+                "756": "CHE",
+                "760": "SYR",
+                "762": "TJK",
+                "764": "THA",
+                "768": "TGO",
+                "772": "TKL",
+                "776": "TON",
+                "780": "TTO",
+                "784": "ARE",
+                "788": "TUN",
+                "792": "TUR",
+                "795": "TKM",
+                "796": "TCA",
+                "798": "TUV",
+                "800": "UGA",
+                "804": "UKR",
+                "807": "MKD",
+                "818": "EGY",
+                "826": "GBR",
+                "831": "GGY",
+                "832": "JEY",
+                "833": "IMN",
+                "834": "TZA",
+                "840": "USA",
+                "850": "VIR",
+                "854": "BFA",
+                "858": "URY",
+                "860": "UZB",
+                "862": "VEN",
+                "876": "WLF",
+                "882": "WSM",
+                "887": "YEM",
+                "894": "ZMB",
+                "10": "ATA",
+                "74": "BVT",
+                "239": "SGS",
+                "334": "HMD",
+                "581": "UMI",
+                "680": "SXM",
+                "531": "CUW",
+                "535": "BES",
+            };
 
-                // Tooltip helpers
-                function fmtIncidence(v) {
-                    return v < 0.1 ? v.toPrecision(2) : v.toFixed(1);
+            function getIsoA3(feature) {
+                return numericToIso[String(Number(feature.id))] || "";
+            }
+
+            // --- Get value for a country and dataset ---
+            function getValue(feature, dataKey) {
+                if (!dataKey) return null;
+                const iso = getIsoA3(feature);
+                if (!iso) return null;
+                const val = dataByStep[dataKey][iso];
+                return val !== undefined ? val : null;
+            }
+
+            // --- Get max for a dataset ---
+            function getMax(dataKey) {
+                if (!dataKey) return 0;
+                const vals = Object.values(dataByStep[dataKey]);
+                return vals.length ? Math.max(...vals) : 0;
+            }
+
+            // --- Update map colors ---
+            function updateMap(stepIdx) {
+                const step = STEPS[stepIdx];
+                const dataKey = step.dataKey;
+                const scheme = step.colorScheme;
+                const interp = getInterpolator(scheme);
+                const maxVal = getMax(dataKey);
+
+                g.selectAll(".country")
+                    .transition()
+                    .duration(800)
+                    .attr("fill", function (d) {
+                        if (!dataKey) return "#e5e7eb";
+                        const val = getValue(d, dataKey);
+                        if (val === null || val === 0) return "#f3f4f6";
+                        const t = powerScale(val, maxVal, 0.5);
+                        return interp(t);
+                    });
+
+                // Update legend
+                if (!dataKey) {
+                    legend.style.opacity = "0";
+                } else {
+                    legend.style.opacity = "1";
+                    legendTitle.textContent = step.label;
+                    legendBar.style.background = getGradientCSS(scheme);
+                    legendMin.textContent = "0";
+                    legendMax.textContent = formatNumber(maxVal);
                 }
+            }
 
-                function buildTooltipHtml(id) {
-                    var name = numToName[id] || "Unknown";
-                    var hasData = id in caseLookup;
-                    if (hasData) {
-                        var entry = caseLookup[id];
-                        if (entry.cases > 0) {
-                            var label = isIncidence
-                                ? fmtIncidence(entry.cases) +
-                                  " per 1,000 at risk"
-                                : entry.cases.toLocaleString() + " cases";
-                            var html =
-                                "<strong>" + name + "</strong><br>" + label;
-                            if (entry.low > 0 || entry.high > 0) {
-                                var ciLow = isIncidence
-                                    ? fmtIncidence(entry.low)
-                                    : entry.low.toLocaleString();
-                                var ciHigh = isIncidence
-                                    ? fmtIncidence(entry.high)
-                                    : entry.high.toLocaleString();
-                                html +=
-                                    "<br><span style='font-size:11px;color:#aaa'>95% CI: " +
-                                    ciLow +
-                                    " \u2013 " +
-                                    ciHigh +
-                                    "</span>";
+            function formatNumber(n) {
+                if (n >= 1000) return Math.round(n).toLocaleString();
+                if (n >= 10) return Math.round(n).toString();
+                return n.toFixed(1);
+            }
+
+            // --- Tooltip & highlight ---
+            function showTooltip(event, d) {
+                // Draw highlight outline on top
+                g.select(".country-highlight").attr("d", pathGen(d));
+
+                const step = STEPS[currentStep];
+                const val = step.dataKey ? getValue(d, step.dataKey) : null;
+                const name = d.properties.name || "Unknown";
+                const valStr = val !== null ? formatNumber(val) : "No data";
+                const label = step.dataKey ? step.label : "";
+                tooltip.innerHTML = label
+                    ? `<strong>${name}</strong><br>${label}: ${valStr}`
+                    : `<strong>${name}</strong>`;
+                tooltip.classList.remove("hidden");
+                positionTooltip(event);
+            }
+
+            function positionTooltip(event) {
+                let x = event.clientX + 12;
+                let y = event.clientY + 12;
+                if (x + 220 > window.innerWidth) x = event.clientX - 230;
+                if (y + 60 > window.innerHeight) y = event.clientY - 70;
+                tooltip.style.left = x + "px";
+                tooltip.style.top = y + "px";
+            }
+
+            function handleMouseEnter(event, d) {
+                showTooltip(event, d);
+            }
+
+            function handleMouseMove(event, d) {
+                positionTooltip(event);
+            }
+
+            function handleMouseLeave() {
+                g.select(".country-highlight").attr("d", null);
+                tooltip.classList.add("hidden");
+            }
+
+            // Mobile tap
+            function handleClick(event, d) {
+                if (window.matchMedia("(hover: hover)").matches) return;
+                if (tooltip.classList.contains("hidden")) {
+                    showTooltip(event, d);
+                } else {
+                    handleMouseLeave();
+                }
+            }
+
+            // --- Scroll observer ---
+            function setupScrollObserver() {
+                const sections = document.querySelectorAll("[data-step]");
+
+                // Observer for map data transitions
+                const mapObserver = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries) {
+                            if (entry.isIntersecting) {
+                                const step = parseInt(
+                                    entry.target.getAttribute("data-step"),
+                                );
+                                if (step !== currentStep) {
+                                    currentStep = step;
+                                    updateMap(step);
+                                }
                             }
-                            return html;
                         }
-                        return "<strong>" + name + "</strong><br>" +
-                            (isIncidence ? "0 per 1,000 at risk" : "0 cases");
-                    }
-                    return "<strong>" + name + "</strong><br>No data";
-                }
-
-                function positionTooltip(px, py) {
-                    var cw = container.offsetWidth;
-                    var ch = container.offsetHeight;
-                    // Show tooltip, measure it, then clamp position
-                    var ttNode = tooltip.node();
-                    var tw = ttNode.offsetWidth || 150;
-                    var th = ttNode.offsetHeight || 40;
-                    var x = px + 14;
-                    var y = py - 12;
-                    // Keep within container bounds
-                    if (x + tw > cw - 8) x = px - tw - 8;
-                    if (y + th > ch - 8) y = ch - th - 8;
-                    if (y < 4) y = 4;
-                    if (x < 4) x = 4;
-                    tooltip.style("left", x + "px").style("top", y + "px");
-                }
-
-                var activeCountry = null;
-
-                countryPaths
-                    .on("mouseover", function (event, d) {
-                        var id = padId(d.id);
-                        tooltip
-                            .style("display", "block")
-                            .html(buildTooltipHtml(id));
-                        d3.select(this)
-                            .attr("stroke", "#222")
-                            .attr("stroke-width", 1.5)
-                            .raise();
-                        activeCountry = this;
-                    })
-                    .on("mousemove", function (event) {
-                        var coords = d3.pointer(event, container);
-                        positionTooltip(coords[0], coords[1]);
-                    })
-                    .on("mouseout", function () {
-                        tooltip.style("display", "none");
-                        d3.select(this)
-                            .attr("stroke", "#fff")
-                            .attr("stroke-width", 0.3);
-                        activeCountry = null;
-                    });
-
-                // Touch: tap a country to show tooltip, tap elsewhere to dismiss
-                svg.on("click", function (event) {
-                    var coords = d3.pointer(event, container);
-                    var svgCoords = d3.pointer(event, svg.node());
-                    // Find which country was tapped using projection inversion
-                    var lonlat = projection.invert(svgCoords);
-                    if (!lonlat) {
-                        tooltip.style("display", "none");
-                        return;
-                    }
-                    var tapped = null;
-                    countries.features.forEach(function (f) {
-                        if (d3.geoContains(f, lonlat)) tapped = f;
-                    });
-                    // Reset previous highlight
-                    if (activeCountry) {
-                        d3.select(activeCountry)
-                            .attr("stroke", "#fff")
-                            .attr("stroke-width", 0.3);
-                    }
-                    if (tapped) {
-                        var id = padId(tapped.id);
-                        tooltip
-                            .style("display", "block")
-                            .html(buildTooltipHtml(id));
-                        positionTooltip(coords[0], coords[1]);
-                        // Highlight tapped country
-                        countryPaths.each(function (dd) {
-                            if (dd === tapped) {
-                                d3.select(this)
-                                    .attr("stroke", "#222")
-                                    .attr("stroke-width", 1.5)
-                                    .raise();
-                                activeCountry = this;
-                            }
-                        });
-                    } else {
-                        tooltip.style("display", "none");
-                        activeCountry = null;
-                    }
-                });
-
-                // --- Redraw helper ---
-                function redraw() {
-                    countryPaths.attr("d", pathGen);
-                    graticulePath.attr("d", pathGen);
-                    bordersPath.attr("d", pathGen);
-                    spherePath.attr("d", pathGen);
-                }
-
-                // --- Drag rotation (mouse + touch) ---
-                var dragging = false;
-                var velocity = [0, 0];
-
-                svg.call(
-                    d3
-                        .drag()
-                        .on("start", function (event) {
-                            dragging = true;
-                            stopSpin();
-                            svg.style("cursor", "grabbing");
-                            var r = projection.rotate();
-                            this._r0 = [r[0], r[1]];
-                            this._xy0 = [event.x, event.y];
-                            this._last = {
-                                x: event.x,
-                                y: event.y,
-                                t: Date.now(),
-                            };
-                            velocity = [0, 0];
-                        })
-                        .on("drag", function (event) {
-                            var sens = 0.4;
-                            projection.rotate([
-                                this._r0[0] + (event.x - this._xy0[0]) * sens,
-                                Math.max(
-                                    -60,
-                                    Math.min(
-                                        60,
-                                        this._r0[1] -
-                                            (event.y - this._xy0[1]) * sens,
-                                    ),
-                                ),
-                            ]);
-                            redraw();
-
-                            var now = Date.now();
-                            var dt = Math.max(1, now - this._last.t);
-                            velocity = [
-                                ((event.x - this._last.x) / dt) * 16,
-                                ((event.y - this._last.y) / dt) * 16,
-                            ];
-                            this._last = { x: event.x, y: event.y, t: now };
-                        })
-                        .on("end", function () {
-                            dragging = false;
-                            svg.style("cursor", "grab");
-
-                            // Momentum
-                            var vx = velocity[0] * 0.3;
-                            var vy = velocity[1] * 0.3;
-                            if (Math.abs(vx) > 0.2 || Math.abs(vy) > 0.2) {
-                                (function coast() {
-                                    if (dragging) return;
-                                    vx *= 0.95;
-                                    vy *= 0.95;
-                                    if (
-                                        Math.abs(vx) < 0.01 &&
-                                        Math.abs(vy) < 0.01
-                                    ) {
-                                        startSpin();
-                                        return;
-                                    }
-                                    var r = projection.rotate();
-                                    projection.rotate([
-                                        r[0] + vx,
-                                        Math.max(-60, Math.min(60, r[1] - vy)),
-                                    ]);
-                                    redraw();
-                                    globeAnimId = requestAnimationFrame(coast);
-                                })();
-                            } else {
-                                startSpin();
-                            }
-                        }),
+                    },
+                    { threshold: 0.5 },
                 );
 
-                // --- Auto-spin ---
-                var paused = false;
-
-                function startSpin() {
-                    if (dragging || paused) return;
-                    (function spin() {
-                        if (dragging || paused) return;
-                        var r = projection.rotate();
-                        projection.rotate([r[0] + 0.15, r[1]]);
-                        redraw();
-                        globeAnimId = requestAnimationFrame(spin);
-                    })();
-                }
-
-                function stopSpin() {
-                    if (globeAnimId) {
-                        cancelAnimationFrame(globeAnimId);
-                        globeAnimId = null;
-                    }
-                }
-
-                // Pause button (upper-left of globe container)
-                var pauseBtn = document.createElement("button");
-                pauseBtn.innerHTML = "&#10074;&#10074;";
-                pauseBtn.title = "Pause rotation";
-                pauseBtn.style.cssText =
-                    "position:absolute;top:6px;left:6px;width:36px;height:36px;border-radius:50%;border:1px solid #d1d5db;background:#fff;color:#6b7280;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0.6;transition:opacity 0.2s;z-index:5";
-                pauseBtn.addEventListener("mouseenter", function () {
-                    this.style.opacity = "1";
-                });
-                pauseBtn.addEventListener("mouseleave", function () {
-                    this.style.opacity = "0.6";
-                });
-                pauseBtn.addEventListener("click", function () {
-                    paused = !paused;
-                    if (paused) {
-                        stopSpin();
-                        pauseBtn.innerHTML = "&#9654;";
-                        pauseBtn.title = "Resume rotation";
-                    } else {
-                        pauseBtn.innerHTML = "&#10074;&#10074;";
-                        pauseBtn.title = "Pause rotation";
-                        startSpin();
-                    }
-                });
-                container.appendChild(pauseBtn);
-
-                // Kick off the spin
-                startSpin();
-
-                // --- Legend ---
-                var legendW = Math.min(180, size * 0.4);
-                var legendH = 10;
-                var legendX = size - legendW - 14;
-                var legendY = size - 40;
-
-                var defs = svg.append("defs");
-                var grad = defs.append("linearGradient").attr("id", "globe-lg");
-                var numStops = 10;
-                for (var si = 0; si <= numStops; si++) {
-                    var t = si / numStops;
-                    var val =
-                        domainMin *
-                        Math.pow(maxCases / domainMin, t);
-                    grad.append("stop")
-                        .attr("offset", t * 100 + "%")
-                        .attr("stop-color", colorScale(val));
-                }
-
-                svg.append("rect")
-                    .attr("x", legendX)
-                    .attr("y", legendY)
-                    .attr("width", legendW)
-                    .attr("height", legendH)
-                    .attr("rx", 2)
-                    .attr("fill", "url(#globe-lg)")
-                    .attr("stroke", "#bbb");
-
-                // No-data / zero legend indicators
-                var swatchY = legendY - 14;
-                // No data swatch
-                svg.append("rect")
-                    .attr("x", legendX)
-                    .attr("y", swatchY)
-                    .attr("width", 8)
-                    .attr("height", 8)
-                    .attr("rx", 1)
-                    .attr("fill", "#d1d5db")
-                    .attr("stroke", "#bbb");
-                svg.append("text")
-                    .attr("x", legendX + 11)
-                    .attr("y", swatchY + 7)
-                    .attr("font-size", "8px")
-                    .attr("fill", "#666")
-                    .text("No data");
-                // Zero / eliminated swatch
-                svg.append("rect")
-                    .attr("x", legendX + 52)
-                    .attr("y", swatchY)
-                    .attr("width", 8)
-                    .attr("height", 8)
-                    .attr("rx", 1)
-                    .attr("fill", "#f5f5f0")
-                    .attr("stroke", "#bbb");
-                svg.append("text")
-                    .attr("x", legendX + 63)
-                    .attr("y", swatchY + 7)
-                    .attr("font-size", "8px")
-                    .attr("fill", "#666")
-                    .text("0 cases");
-
-                var minLabel = isIncidence
-                    ? (minPositive < 1 ? "<1" : fmtIncidence(minPositive))
-                    : "0";
-                var maxLabel = isIncidence
-                    ? (maxCases >= 10
-                        ? maxCases.toFixed(0)
-                        : maxCases.toFixed(1)) + "/1K"
-                    : formatNum(maxCases);
-
-                svg.append("text")
-                    .attr("x", legendX)
-                    .attr("y", legendY + legendH + 9)
-                    .attr("font-size", "9px")
-                    .attr("fill", "#666")
-                    .text(minLabel);
-                svg.append("text")
-                    .attr("x", legendX + legendW)
-                    .attr("y", legendY + legendH + 9)
-                    .attr("text-anchor", "end")
-                    .attr("font-size", "9px")
-                    .attr("fill", "#666")
-                    .text(maxLabel);
-            }
-
-            // =========================================================
-            // INIT
-            // =========================================================
-
-            function init() {
-                Promise.all([
-                    fetch("/data/malariadata.csv").then(function (r) {
-                        if (!r.ok)
-                            throw new Error("CSV fetch failed: " + r.status);
-                        return r.text();
-                    }),
-                    d3.json(
-                        "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
-                    ),
-                ])
-                    .then(function (results) {
-                        allData = parseCSV(results[0]);
-                        worldTopo = results[1];
-
-                        // Build year dropdown options
-                        var yearSelect =
-                            document.getElementById("globe-year-select");
-                        for (var yr = 2000; yr <= 2024; yr++) {
-                            var opt = document.createElement("option");
-                            opt.value = yr;
-                            opt.textContent = yr;
-                            if (yr === 2024) opt.selected = true;
-                            yearSelect.appendChild(opt);
+                // Observer for card reveal animations
+                const revealObserver = new IntersectionObserver(
+                    (entries) => {
+                        for (const entry of entries) {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add("visible");
+                            } else {
+                                entry.target.classList.remove("visible");
+                            }
                         }
-                        yearSelect.addEventListener("change", function () {
-                            drawGlobe(allData);
-                        });
+                    },
+                    { threshold: 0.3 },
+                );
 
-                        // Metric toggle
-                        var btnCases =
-                            document.getElementById("metric-cases");
-                        var btnIncidence =
-                            document.getElementById("metric-incidence");
-                        function setMetricBtn(active, inactive) {
-                            active.className =
-                                "rounded px-3 py-1 text-sm font-medium transition-colors bg-gray-500 text-white";
-                            inactive.className =
-                                "rounded px-3 py-1 text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100";
-                        }
-                        btnCases.addEventListener("click", function () {
-                            currentMetric = "MALARIA_EST_CASES";
-                            setMetricBtn(btnCases, btnIncidence);
-                            drawGlobe(allData);
-                        });
-                        btnIncidence.addEventListener("click", function () {
-                            currentMetric = "MALARIA_EST_INCIDENCE";
-                            setMetricBtn(btnIncidence, btnCases);
-                            drawGlobe(allData);
-                        });
-
-                        // Draw
-                        drawGlobe(allData);
-
-                        // Responsive redraw
-                        var resizeTimer;
-                        window.addEventListener("resize", function () {
-                            clearTimeout(resizeTimer);
-                            resizeTimer = setTimeout(function () {
-                                drawGlobe(allData);
-                            }, 200);
-                        });
-                    })
-                    .catch(function (err) {
-                        console.error("Malaria globe error:", err);
-                        var c = document.getElementById("globe-chart");
-                        if (c)
-                            c.innerHTML =
-                                '<p style="color:red;text-align:center;padding:2rem">Error loading data. Check console.</p>';
-                    });
+                sections.forEach((s) => {
+                    mapObserver.observe(s);
+                    revealObserver.observe(s);
+                });
             }
 
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", init);
-            } else {
-                init();
+            // --- Resize ---
+            let resizeTimer;
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (!worldGeo) return;
+                    const width = window.innerWidth;
+                    const height = window.innerHeight;
+                    svg.attr("viewBox", `0 0 ${width} ${height}`);
+                    applyProjection(width, height);
+                    pathGen = d3.geoPath().projection(projection);
+                    g.selectAll("path").attr("d", pathGen);
+                }, 200);
+            });
+
+            // --- Init ---
+            async function init() {
+                try {
+                    await loadData();
+                    initMap();
+                    updateMap(0);
+                    setupScrollObserver();
+                } catch (err) {
+                    console.error("Malaria visualization error:", err);
+                }
             }
+
+            // Load D3 and TopoJSON from CDN, then init
+            function loadScript(src) {
+                return new Promise((resolve, reject) => {
+                    const s = document.createElement("script");
+                    s.src = src;
+                    s.onload = resolve;
+                    s.onerror = reject;
+                    document.head.appendChild(s);
+                });
+            }
+
+            async function bootstrap() {
+                await loadScript(
+                    "https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js",
+                );
+                await loadScript(
+                    "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js",
+                );
+                if (document.readyState === "loading") {
+                    document.addEventListener("DOMContentLoaded", init);
+                } else {
+                    init();
+                }
+            }
+
+            bootstrap();
         })();
     </script>
 </BaseLayout>
