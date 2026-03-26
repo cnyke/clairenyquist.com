@@ -861,42 +861,47 @@ const description =
             function setupScrollObserver() {
                 const sections = document.querySelectorAll("[data-step]");
 
-                // Observer for map data transitions
-                const mapObserver = new IntersectionObserver(
+                const observer = new IntersectionObserver(
                     (entries) => {
                         for (const entry of entries) {
+                            const step = parseInt(
+                                entry.target.getAttribute("data-step"),
+                            );
+
                             if (entry.isIntersecting) {
-                                const step = parseInt(
-                                    entry.target.getAttribute("data-step"),
-                                );
+                                // Card entering — reveal it and show its data
+                                entry.target.classList.add("visible");
                                 if (step !== currentStep) {
                                     currentStep = step;
                                     updateMap(step);
                                 }
-                            }
-                        }
-                    },
-                    { threshold: 0.5 },
-                );
-
-                // Observer for card reveal animations
-                const revealObserver = new IntersectionObserver(
-                    (entries) => {
-                        for (const entry of entries) {
-                            if (entry.isIntersecting) {
-                                entry.target.classList.add("visible");
                             } else {
+                                // Card leaving — hide it and advance/rewind map
                                 entry.target.classList.remove("visible");
+
+                                const rect = entry.boundingClientRect;
+                                if (rect.bottom < 0) {
+                                    // Scrolled above viewport (scrolling down) — advance
+                                    const nextStep = step + 1;
+                                    if (STEPS[nextStep] && nextStep !== currentStep) {
+                                        currentStep = nextStep;
+                                        updateMap(nextStep);
+                                    }
+                                } else if (rect.top > 0) {
+                                    // Scrolled below viewport (scrolling up) — rewind
+                                    const prevStep = step - 1;
+                                    if (prevStep >= 0 && STEPS[prevStep] && prevStep !== currentStep) {
+                                        currentStep = prevStep;
+                                        updateMap(prevStep);
+                                    }
+                                }
                             }
                         }
                     },
-                    { threshold: 0.3 },
+                    { threshold: 0 },
                 );
 
-                sections.forEach((s) => {
-                    mapObserver.observe(s);
-                    revealObserver.observe(s);
-                });
+                sections.forEach((s) => observer.observe(s));
             }
 
             // --- Resize ---
