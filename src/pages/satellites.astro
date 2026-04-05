@@ -182,16 +182,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <!-- Legend -->
                     <div
                         id="version-legend"
-                        class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg max-w-xs"
+                        class="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg max-w-[10rem] sm:max-w-xs"
+                        style="z-index: 5;"
                     >
+                        <!-- Mobile: collapsible toggle -->
                         <button
                             id="legend-toggle"
-                            class="flex items-center justify-between w-full p-3 sm:hidden text-sm font-semibold text-gray-900"
+                            class="flex items-center justify-between w-full px-3 py-2 sm:hidden text-xs font-semibold text-gray-900"
                         >
-                            <span>Version Legend</span>
+                            <span>Legend</span>
                             <svg
                                 id="legend-chevron"
-                                class="w-4 h-4 text-gray-500 transition-transform"
+                                class="w-3 h-3 text-gray-500 transition-transform ml-2"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -203,14 +205,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                     d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
+                        <!-- Desktop: always-visible header -->
                         <h3
                             class="text-sm font-semibold text-gray-900 mb-2 px-4 pt-4 hidden sm:block"
                         >
                             Hardware Version
                         </h3>
+                        <!-- Content: hidden on mobile until toggled, always visible on desktop -->
                         <div
                             id="legend-content"
-                            class="space-y-1 text-xs hidden sm:block px-4 pb-4"
+                            class="space-y-1 text-xs px-3 pb-3 sm:px-4 sm:pb-4"
+                            data-collapsed="true"
                         >
                             <p class="text-gray-500">
                                 Loading satellite data...
@@ -1174,16 +1179,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             document.getElementById("legend-content");
                         var legendChevron =
                             document.getElementById("legend-chevron");
+
+                        // On mobile, start collapsed
+                        function isMobile() { return window.innerWidth < 640; }
+                        if (isMobile() && legendContent) {
+                            legendContent.style.display = "none";
+                        }
+
                         if (legendToggle && legendContent && legendChevron) {
                             legendToggle.addEventListener("click", function () {
-                                var isHidden =
-                                    legendContent.classList.contains("hidden");
-                                if (isHidden) {
-                                    legendContent.classList.remove("hidden");
-                                    legendChevron.style.transform =
-                                        "rotate(180deg)";
+                                var collapsed = legendContent.style.display === "none";
+                                if (collapsed) {
+                                    legendContent.style.display = "";
+                                    legendChevron.style.transform = "rotate(180deg)";
                                 } else {
-                                    legendContent.classList.add("hidden");
+                                    legendContent.style.display = "none";
                                     legendChevron.style.transform = "";
                                 }
                             });
