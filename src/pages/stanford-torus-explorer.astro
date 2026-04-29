@@ -1,0 +1,1457 @@
+---
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exploring the Stanford Torus - Claire Nyquist</title>
+  <meta name="description" content="Interactive 3D visualization of a Stanford Torus space habitat. Adjust radius, rotation, gravity, and more. Based on NASA SP-413 (1975)." />
+  <meta property="og:title" content="Exploring the Stanford Torus" />
+  <meta property="og:description" content="Interactive 3D visualization of a Stanford Torus space habitat based on NASA SP-413. Adjust parameters and explore the physics of artificial gravity." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://clairenyquist.com/stanford-torus-explorer" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="author" content="Claire Nyquist" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <a id="back-link" href="/">&larr; clairenyquist.com</a>
+  <div id="ui-title">
+    <h1>EXPLORING THE STANFORD TORUS</h1>
+    <p>NASA SP-413 &middot; Earth-Moon L5 Lagrange Point &middot; 384,400 km from Earth &amp; Moon</p>
+  </div>
+  <div id="ui-stats"></div>
+  <div id="ui-hint">Drag to orbit &middot; Scroll to zoom &middot; P to toggle parameters</div>
+  <div id="ui-credit">Claire Nyquist &middot; 2026</div>
+
+  <button id="panel-toggle" title="Toggle parameters (P)">&#9881;</button>
+  <div id="param-panel">
+    <p id="panel-intro">This experimental visualization explores new artforms with AI. Core specifications are drawn from NASA SP-413 (1975), but parameter extrapolations&mdash;population estimates, habitability commentary&mdash;are speculative. See citations for primary sources.</p>
+    <div class="panel-header">STATION PARAMETERS</div>
+    <div id="torus-info"></div>
+    <div class="param-row">
+      <div class="param-label"><span>Major Radius</span><span class="val" id="v-R">830 m</span></div>
+      <input type="range" id="p-R" min="200" max="2000" value="830" step="10">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span>Tube Radius</span><span class="val" id="v-r">65 m</span></div>
+      <input type="range" id="p-r" min="10" max="200" value="65" step="5">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span>Spokes</span><span class="val" id="v-spokes">6</span></div>
+      <input type="range" id="p-spokes" min="2" max="12" value="6" step="1">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span>Rotation</span><span class="val" id="v-rpm">1.0 RPM</span></div>
+      <input type="range" id="p-rpm" min="0.1" max="3.0" value="1.0" step="0.1">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span>Mirror Tilt</span><span class="val" id="v-tilt">45&deg;</span></div>
+      <input type="range" id="p-tilt" min="10" max="80" value="45" step="1">
+    </div>
+    <div class="computed-stats">
+      <div class="stat-row"><span class="stat-label">Diameter</span><span id="c-diam">1,790 m</span></div>
+      <div class="stat-row"><span class="stat-label">Gravity (outer rim)</span><span id="c-grav">1.00 g</span></div>
+      <div class="stat-row"><span class="stat-label">Rim Speed</span><span id="c-speed">93.7 m/s</span></div>
+    </div>
+    <button id="reset-btn">RESET TO STANDARD</button>
+  </div>
+
+  <button id="cite-btn">CITATIONS</button>
+  <div id="cite-modal" class="hidden">
+    <div class="cite-inner">
+      <div class="cite-header">
+        <span>REFERENCES</span>
+        <button id="cite-close">&times;</button>
+      </div>
+      <div class="cite-body">
+        <h3>Primary Sources</h3>
+        <ol>
+          <li><strong>NASA SP-413</strong>: <em>Space Settlements: A Design Study</em> (1977). Richard D. Johnson &amp; Charles Holbrow, eds. The foundational document for the Stanford Torus design. <a href="https://ntrs.nasa.gov/citations/19770014162" target="_blank">NASA NTRS</a> &middot; <a href="https://nss.org/settlement/nasa/75SummerStudy/index.html" target="_blank">NSS Full Text</a></li>
+          <li><strong>Gerard K. O&rsquo;Neill</strong>: <em>The High Frontier: Human Colonies in Space</em> (1976). William Morrow &amp; Co.</li>
+          <li><strong>Gerard K. O&rsquo;Neill</strong>: &ldquo;The Colonization of Space,&rdquo; <em>Physics Today</em> 27(9), September 1974, pp. 32&ndash;40.</li>
+        </ol>
+        <h3>Life Support &amp; Agriculture</h3>
+        <ol start="4">
+          <li><strong>Silverstone et al.</strong>: &ldquo;Food production and nutrition in Biosphere 2,&rdquo; <em>Ecological Engineering</em> 13 (1999). <a href="https://pubmed.ncbi.nlm.nih.gov/11538814/" target="_blank">PubMed</a></li>
+          <li><strong>Nelson et al.</strong>: &ldquo;Biosphere 2&rsquo;s Lessons about Living on Earth and in Space,&rdquo; <em>Space: Science &amp; Technology</em> (2021). <a href="https://spj.science.org/doi/10.34133/2021/8067539" target="_blank">Full Text</a></li>
+          <li><strong>NASA CELSS Program</strong>: NASA Conference Publication 2378, &ldquo;Controlled Ecological Life Support System&rdquo; (1985). <a href="https://ntrs.nasa.gov/citations/19930033435" target="_blank">NASA NTRS</a></li>
+          <li><strong>Wheeler et al.</strong>: &ldquo;Crop productivities and radiation use efficiencies for bioregenerative life support,&rdquo; <em>Advances in Space Research</em> (2008).</li>
+          <li><strong>ISS ECLSS</strong>: Environmental Control and Life Support Systems. <a href="https://www.nasa.gov/reference/environmental-control-and-life-support-systems-eclss/" target="_blank">NASA Reference</a></li>
+        </ol>
+        <h3>Population &amp; Artificial Gravity</h3>
+        <ol start="9">
+          <li><strong>Smith, Cameron M.</strong>: &ldquo;Estimation of a genetically viable population for multigenerational interstellar voyaging,&rdquo; <em>Acta Astronautica</em> 97 (2014). <a href="https://www.sciencedirect.com/science/article/abs/pii/S0094576513004669" target="_blank">ScienceDirect</a></li>
+          <li><strong>NASA Technical Report</strong>: &ldquo;Chapter 3: History of Artificial Gravity.&rdquo; <a href="https://ntrs.nasa.gov/api/citations/20070001009/downloads/20070001009.pdf" target="_blank">NASA NTRS</a></li>
+          <li><strong>Globus, Al</strong>: &ldquo;Space Settlement Population Rotation Tolerance.&rdquo; <a href="https://space.nss.org/wp-content/uploads/Space-Settlement-Population-Rotation-Tolerance-Globus.pdf" target="_blank">NSS</a></li>
+        </ol>
+        <h3>Generation Ships</h3>
+        <ol start="12">
+          <li><strong>Hein, Andreas M. et al.</strong>: &ldquo;World Ships &mdash; Architectures &amp; Feasibility Revisited,&rdquo; <em>Journal of the British Interplanetary Society</em> 65 (2012).</li>
+          <li><strong>T.A. Heppenheimer</strong>: <em>Colonies in Space</em> (1977). <a href="https://space.nss.org/colonies-in-space-chapter-9-up-on-the-farm/" target="_blank">NSS &mdash; Ch. 9: Up on the Farm</a></li>
+        </ol>
+        <p class="cite-note">Visualization parameters calibrated to the 1975 NASA Ames/Stanford Summer Study specifications. Population estimates extrapolated from NASA SP-413 baseline of 10,000 residents at R=830m, r=65m.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+<style>
+  #back-link {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 20;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(160,155,145,0.45);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  #back-link:hover { color: rgba(210,175,95,0.8); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #050608;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #c {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+  }
+  #ui-title {
+    position: fixed;
+    bottom: 48px; left: 44px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  #ui-title h1 {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 10px;
+    color: rgba(220,218,210,0.8);
+  }
+  #ui-title p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(160,155,145,0.5);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  #ui-stats {
+    position: fixed;
+    bottom: 48px; right: 44px;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(160,155,145,0.35);
+    letter-spacing: 0.5px;
+  }
+  .sep { margin: 0 8px; }
+  #ui-hint {
+    position: fixed;
+    top: 20px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(160,155,145,0.35);
+    letter-spacing: 0.5px;
+    opacity: 1;
+    transition: opacity 2s ease 4s;
+  }
+  #ui-hint.faded { opacity: 0; }
+  #ui-credit {
+    position: fixed;
+    bottom: 48px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 9;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(160,155,145,0.25);
+    letter-spacing: 0.5px;
+  }
+
+  /* Toggle button */
+  #panel-toggle {
+    position: fixed;
+    top: 20px; right: 20px;
+    z-index: 20;
+    background: rgba(30,28,25,0.7);
+    border: 1px solid rgba(100,98,92,0.3);
+    color: rgba(200,195,185,0.7);
+    font-size: 18px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #panel-toggle:hover {
+    background: rgba(50,48,42,0.85);
+    color: rgba(210,175,95,0.9);
+  }
+
+  /* Parameter panel */
+  #param-panel {
+    position: fixed;
+    top: 66px; right: 16px;
+    width: 256px;
+    max-height: calc(100vh - 82px);
+    overflow-y: auto;
+    background: rgba(15,14,12,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(100,98,92,0.2);
+    border-radius: 8px;
+    padding: 18px;
+    z-index: 15;
+    transform: translateX(calc(100% + 32px));
+    transition: transform 0.3s ease;
+  }
+  #param-panel.open {
+    transform: translateX(0);
+  }
+  .panel-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(160,155,145,0.5);
+    margin-bottom: 16px;
+  }
+  .param-row {
+    margin-bottom: 14px;
+  }
+  .param-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+  .param-label span:first-child {
+    font-size: 11px;
+    color: rgba(200,195,185,0.6);
+    font-weight: 300;
+  }
+  .param-label .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(210,175,95,0.8);
+  }
+
+  /* Range sliders */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: rgba(80,78,72,0.5);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: rgba(210,175,95,0.85);
+    cursor: pointer;
+    border: 1px solid rgba(180,150,80,0.4);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: rgba(210,175,95,0.85);
+    cursor: pointer;
+    border: 1px solid rgba(180,150,80,0.4);
+  }
+
+  /* Computed stats */
+  .computed-stats {
+    border-top: 1px solid rgba(100,98,92,0.15);
+    margin-top: 6px;
+    padding-top: 12px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 10px;
+  }
+  .stat-label {
+    color: rgba(160,155,145,0.4);
+  }
+  .stat-row span:last-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(200,195,185,0.6);
+  }
+
+  /* Reset button */
+  #reset-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px 0;
+    background: rgba(60,58,52,0.3);
+    border: 1px solid rgba(100,98,92,0.2);
+    border-radius: 4px;
+    color: rgba(160,155,145,0.5);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  #reset-btn:hover {
+    background: rgba(80,78,72,0.4);
+    color: rgba(200,195,185,0.7);
+  }
+
+  /* Torus info text */
+  #torus-info {
+    font-size: 10px;
+    line-height: 1.55;
+    color: rgba(180,175,165,0.5);
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(100,98,92,0.12);
+    font-weight: 300;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  #panel-intro {
+    font-size: 10px;
+    line-height: 1.5;
+    color: rgba(180,175,165,0.45);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(100,98,92,0.12);
+  }
+  #torus-info:empty { display: none; }
+  #torus-info strong {
+    color: rgba(210,175,95,0.65);
+    font-weight: 400;
+  }
+
+  /* Citations button */
+  #cite-btn {
+    position: fixed;
+    bottom: 20px; left: 44px;
+    z-index: 10;
+    background: rgba(30,28,25,0.6);
+    border: 1px solid rgba(100,98,92,0.25);
+    color: rgba(160,155,145,0.5);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 5px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #cite-btn:hover {
+    background: rgba(50,48,42,0.8);
+    color: rgba(210,175,95,0.8);
+    border-color: rgba(210,175,95,0.3);
+  }
+
+  /* Citations modal */
+  #cite-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(5,6,8,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+  }
+  #cite-modal.hidden {
+    display: none;
+  }
+  .cite-inner {
+    width: min(560px, 90vw);
+    max-height: 80vh;
+    background: rgba(18,17,15,0.95);
+    border: 1px solid rgba(100,98,92,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .cite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(100,98,92,0.15);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(160,155,145,0.5);
+  }
+  .cite-header button {
+    background: none;
+    border: none;
+    color: rgba(160,155,145,0.5);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .cite-header button:hover { color: rgba(210,175,95,0.8); }
+  .cite-body {
+    padding: 18px;
+    overflow-y: auto;
+    font-size: 11px;
+    line-height: 1.6;
+    color: rgba(200,195,185,0.65);
+  }
+  .cite-body h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: rgba(210,175,95,0.6);
+    margin: 16px 0 8px;
+    font-weight: 400;
+  }
+  .cite-body h3:first-child { margin-top: 0; }
+  .cite-body ol {
+    padding-left: 20px;
+    margin: 0 0 8px;
+  }
+  .cite-body li {
+    margin-bottom: 8px;
+  }
+  .cite-body strong { color: rgba(220,215,205,0.8); font-weight: 500; }
+  .cite-body em { color: rgba(200,195,185,0.55); }
+  .cite-body a {
+    color: rgba(120,180,240,0.7);
+    text-decoration: none;
+  }
+  .cite-body a:hover {
+    color: rgba(140,200,255,0.9);
+    text-decoration: underline;
+  }
+  .cite-note {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(100,98,92,0.12);
+    font-size: 10px;
+    color: rgba(160,155,145,0.4);
+    font-style: italic;
+  }
+</style>
+
+<script>
+  // ═══════════════════════════════════════════════════════
+  // PARAMETERS
+  // ═══════════════════════════════════════════════════════
+  const DEFAULTS = { R: 830, r: 65, spokes: 6, rpm: 1.0, mirrorTilt: 45 };
+  const params = { ...DEFAULTS };
+
+  // ═══════════════════════════════════════════════════════
+  // CONSTANTS
+  // ═══════════════════════════════════════════════════════
+  const TAU = Math.PI * 2;
+  const FOV_SCALE = 1200;
+  const U_SEG = 80;
+  const V_SEG = 22;
+  const SPOKE_HW = 7.5; // 15 m diameter / 2
+
+  // Directional sunlight from upper-right
+  const LIGHT = (() => {
+    const lx = 0.55, ly = -0.4, lz = 0.7;
+    const len = Math.sqrt(lx*lx + ly*ly + lz*lz);
+    return { x: lx/len, y: ly/len, z: lz/len };
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // PALETTE
+  // ═══════════════════════════════════════════════════════
+  const C_HULL = [155, 150, 142];
+  const C_WINDOW = [210, 175, 95];
+  const C_SIDE = [120, 118, 112];
+  const C_SPOKE = [95, 92, 88];
+  const C_HUB = [75, 73, 70];
+  const C_MIRROR_PANEL = [160, 175, 195];
+
+  // ═══════════════════════════════════════════════════════
+  // CANVAS
+  // ═══════════════════════════════════════════════════════
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  let W = 0, H = 0;
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ═══════════════════════════════════════════════════════
+  // CAMERA
+  // ═══════════════════════════════════════════════════════
+  let viewPitch = 0.52;
+  let viewYaw = 0;
+  let zoomFactor = 1;
+  function getCamDist() { return params.R * 3.13 * zoomFactor; }
+
+  // ═══════════════════════════════════════════════════════
+  // MOUSE / TOUCH / WHEEL
+  // ═══════════════════════════════════════════════════════
+  let isDragging = false;
+  let lastX = 0, lastY = 0;
+  canvas.style.cursor = 'grab';
+  const hint = document.getElementById('ui-hint');
+  const fadeHint = () => { if (hint) hint.classList.add('faded'); };
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    fadeHint();
+    lastX = e.clientX; lastY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    viewYaw   += (e.clientX - lastX) * 0.005;
+    viewPitch += (e.clientY - lastY) * 0.005;
+    viewPitch = Math.max(-1.2, Math.min(1.2, viewPitch));
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+  });
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    isDragging = true;
+    lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    viewYaw   += (e.touches[0].clientX - lastX) * 0.005;
+    viewPitch += (e.touches[0].clientY - lastY) * 0.005;
+    viewPitch = Math.max(-1.2, Math.min(1.2, viewPitch));
+    lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', () => { isDragging = false; });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    fadeHint();
+    zoomFactor *= (1 + e.deltaY * 0.001);
+    zoomFactor = Math.max(0.3, Math.min(5, zoomFactor));
+  }, { passive: false });
+
+  // ═══════════════════════════════════════════════════════
+  // 3D MATH
+  // ═══════════════════════════════════════════════════════
+  type V3 = { x: number; y: number; z: number };
+  type V2 = { x: number; y: number; z: number };
+
+  const rotZ = (p: V3, a: number): V3 => {
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x: p.x*c - p.y*s, y: p.x*s + p.y*c, z: p.z };
+  };
+  const rotX = (p: V3, a: number): V3 => {
+    const c = Math.cos(a), s = Math.sin(a);
+    return { x: p.x, y: p.y*c - p.z*s, z: p.y*s + p.z*c };
+  };
+  const xform = (p: V3, a: number): V3 => rotX(rotZ(p, a + viewYaw), viewPitch);
+  const xformStatic = (p: V3): V3 => rotX(rotZ(p, viewYaw), viewPitch);
+  const proj = (p: V3): V2 => {
+    const s = FOV_SCALE / (p.z + getCamDist());
+    return { x: p.x * s + W / 2, y: p.y * s + H / 2, z: p.z };
+  };
+
+  function faceNormal(a: V3, b: V3, c: V3): V3 {
+    const ux = b.x-a.x, uy = b.y-a.y, uz = b.z-a.z;
+    const vx = c.x-a.x, vy = c.y-a.y, vz = c.z-a.z;
+    const nx = uy*vz - uz*vy, ny = uz*vx - ux*vz, nz = ux*vy - uy*vx;
+    const len = Math.sqrt(nx*nx + ny*ny + nz*nz) || 1;
+    // Negate so front-facing surfaces have n.z > 0 (toward camera)
+    return { x: -nx/len, y: -ny/len, z: -nz/len };
+  }
+
+  function dot(a: V3, b: V3): number { return a.x*b.x + a.y*b.y + a.z*b.z; }
+
+  function lit(base: number[], intensity: number, alpha = 1): string {
+    return `rgba(${Math.floor(base[0]*intensity)},${Math.floor(base[1]*intensity)},${Math.floor(base[2]*intensity)},${alpha})`;
+  }
+
+  function lerpClamp(val: number, d0: number, d1: number, r0: number, r1: number): number {
+    const t = Math.max(0, Math.min(1, (val - d0) / (d1 - d0)));
+    return r0 + t * (r1 - r0);
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // CELESTIAL BODIES (L5 equilateral triangle)
+  // ═══════════════════════════════════════════════════════
+  // Earth and Moon at L5: equilateral triangle, 384,400 km sides
+  // Distance ratio: 384,400 km / 6,371 km ≈ 60.3 Earth radii
+  // Earth:Moon ratio = 6371:1737 = 3.67:1 (to scale)
+  const EARTH_R = 80;  // Earth radius in scene units
+  const MOON_R = 22;   // 80/22 ≈ 3.64 ≈ 6371/1737
+  const CELEST_D = EARTH_R * 60.3; // ~4824: 60.3 Earth radii (to scale!)
+  // Directions: 60° apart as seen from L5
+  const earthDir: V3 = { x: -0.504, y: 0.237, z: 0.830 };
+  const earthPos3: V3 = { x: earthDir.x * CELEST_D, y: earthDir.y * CELEST_D, z: earthDir.z * CELEST_D };
+
+  // Moon orbit around Earth (27.3-day period sped up to 90s)
+  const MOON_ORBIT_PERIOD = 90;
+  const MOON_ORBIT_R = CELEST_D; // Earth-Moon distance ≈ Earth-L5 distance
+  // Orbit plane basis vectors (tilted 15° from xy-plane for visibility)
+  const moonAx1: V3 = { x: 1, y: 0, z: 0 };
+  const moonAx2: V3 = { x: 0, y: 0.966, z: 0.259 };
+
+  // Sun direction (matches LIGHT direction)
+  const sunDir: V3 = { x: LIGHT.x, y: LIGHT.y, z: LIGHT.z };
+  const SUN_D = 15000;
+  const sunPos3: V3 = { x: sunDir.x * SUN_D, y: sunDir.y * SUN_D, z: sunDir.z * SUN_D };
+  const SUN_R = 300;
+
+  // ═══════════════════════════════════════════════════════
+  // GEOMETRY TYPES
+  // ═══════════════════════════════════════════════════════
+  interface TorusPatch { corners: V3[]; vMid: number; uMid: number; isEdge: boolean; }
+  interface SpokeQuad { corners: V3[]; }
+  interface MirrorPanel { corners: V3[]; }
+  interface Drawable { type: string; z: number; [k: string]: any; }
+
+  // ═══════════════════════════════════════════════════════
+  // GEOMETRY GENERATION
+  // ═══════════════════════════════════════════════════════
+  let torusPatches: TorusPatch[] = [];
+  let spokeQuads: SpokeQuad[] = [];
+  let mirrorPanels: MirrorPanel[] = [];
+  let mirrorInnerR = 0, mirrorZLow = 0;
+
+  function generateTorus(): TorusPatch[] {
+    const patches: TorusPatch[] = [];
+    const { R, r } = params;
+    for (let i = 0; i < U_SEG; i++) {
+      for (let j = 0; j < V_SEG; j++) {
+        const u0 = (i / U_SEG) * TAU, u1 = ((i+1) / U_SEG) * TAU;
+        const v0 = (j / V_SEG) * TAU, v1 = ((j+1) / V_SEG) * TAU;
+        const tp = (u: number, v: number): V3 => ({
+          x: (R + r * Math.cos(v)) * Math.cos(u),
+          y: (R + r * Math.cos(v)) * Math.sin(u),
+          z: r * Math.sin(v),
+        });
+        patches.push({
+          corners: [tp(u0,v0), tp(u1,v0), tp(u1,v1), tp(u0,v1)],
+          vMid: (v0+v1)/2, uMid: (u0+u1)/2,
+          isEdge: (i % 10 === 0),
+        });
+      }
+    }
+    return patches;
+  }
+
+  function generateSpokes(): SpokeQuad[] {
+    const quads: SpokeQuad[] = [];
+    const { R, r, spokes } = params;
+    const hw = SPOKE_HW;
+    const rStart = r * 1.15;
+    const rEnd = R - r - 10;
+    const segs = 6;
+    for (let s = 0; s < spokes; s++) {
+      const a = (s / spokes) * TAU;
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const px = -sa, py = ca;
+      for (let k = 0; k < segs; k++) {
+        const t0 = k / segs, t1 = (k+1) / segs;
+        const r0 = rStart + (rEnd - rStart) * t0;
+        const r1 = rStart + (rEnd - rStart) * t1;
+        const c = (rad: number, pSign: number, zSign: number): V3 => ({
+          x: rad * ca + pSign * hw * px,
+          y: rad * sa + pSign * hw * py,
+          z: zSign * hw,
+        });
+        quads.push({ corners: [c(r0,1,1), c(r1,1,1), c(r1,-1,1), c(r0,-1,1)] });
+        quads.push({ corners: [c(r0,-1,-1), c(r1,-1,-1), c(r1,1,-1), c(r0,1,-1)] });
+        quads.push({ corners: [c(r0,1,1), c(r1,1,1), c(r1,1,-1), c(r0,1,-1)] });
+        quads.push({ corners: [c(r0,-1,-1), c(r1,-1,-1), c(r1,-1,1), c(r0,-1,1)] });
+      }
+    }
+    return quads;
+  }
+
+  function generateMirror(): MirrorPanel[] {
+    const panels: MirrorPanel[] = [];
+    const { R, r, mirrorTilt } = params;
+    const tilt = mirrorTilt * Math.PI / 180;
+    const halfW = r * 3;
+    const centerR = R;
+    const elev = r * 3;
+    // Outer edge higher, inner edge lower → reflects axial sunlight inward
+    const rInner = centerR - halfW * Math.cos(tilt);
+    const rOuter = centerR + halfW * Math.cos(tilt);
+    const zLow = elev - halfW * Math.sin(tilt);
+    const zHigh = elev + halfW * Math.sin(tilt);
+    mirrorInnerR = rInner;
+    mirrorZLow = zLow;
+    const mSegs = 48, mStrips = 3;
+    for (let i = 0; i < mSegs; i++) {
+      const u0 = (i / mSegs) * TAU, u1 = ((i+1) / mSegs) * TAU;
+      for (let j = 0; j < mStrips; j++) {
+        const t0 = j / mStrips, t1 = (j+1) / mStrips;
+        const ri0 = rInner + (rOuter - rInner) * t0;
+        const ri1 = rInner + (rOuter - rInner) * t1;
+        const zi0 = zLow + (zHigh - zLow) * t0;
+        const zi1 = zLow + (zHigh - zLow) * t1;
+        panels.push({ corners: [
+          { x: ri0*Math.cos(u0), y: ri0*Math.sin(u0), z: zi0 },
+          { x: ri0*Math.cos(u1), y: ri0*Math.sin(u1), z: zi0 },
+          { x: ri1*Math.cos(u1), y: ri1*Math.sin(u1), z: zi1 },
+          { x: ri1*Math.cos(u0), y: ri1*Math.sin(u0), z: zi1 },
+        ]});
+      }
+    }
+    return panels;
+  }
+
+  function regenerate() {
+    torusPatches = generateTorus();
+    spokeQuads = generateSpokes();
+    mirrorPanels = generateMirror();
+    updateStats();
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // STARS
+  // ═══════════════════════════════════════════════════════
+  const stars: { x: number; y: number; s: number; b: number }[] = [];
+  for (let i = 0; i < 600; i++) {
+    stars.push({
+      x: Math.random(), y: Math.random(),
+      s: Math.random() < 0.05 ? 1.8 : Math.random() < 0.15 ? 1.2 : 0.6,
+      b: Math.random() * 0.45 + 0.08,
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // RENDER
+  // ═══════════════════════════════════════════════════════
+  const t0 = performance.now();
+
+  function render() {
+    const elapsed = (performance.now() - t0) / 1000;
+    const rotSpeed = TAU * params.rpm / 60;
+    const angle = elapsed * rotSpeed;
+    const camDist = getCamDist();
+
+    // ── Background ──
+    const bgGrad = ctx.createRadialGradient(W*0.85, H*0.1, 0, W*0.85, H*0.1, W*0.8);
+    bgGrad.addColorStop(0, '#141210');
+    bgGrad.addColorStop(0.3, '#0a0908');
+    bgGrad.addColorStop(1, '#050608');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Stars ──
+    for (const st of stars) {
+      ctx.fillStyle = `rgba(230,225,215,${st.b})`;
+      ctx.beginPath();
+      ctx.arc(st.x * W, st.y * H, st.s, 0, TAU);
+      ctx.fill();
+    }
+
+    // ── Sun ──
+    const sunT = xformStatic(sunPos3);
+    const sunP = proj(sunT);
+    const sunScreenR = SUN_R * FOV_SCALE / (sunT.z + camDist);
+    if (sunT.z + camDist > 100) {
+      // Core disc
+      const coreR = Math.max(4, sunScreenR * 0.08);
+      const sunGrad = ctx.createRadialGradient(sunP.x, sunP.y, 0, sunP.x, sunP.y, coreR * 3);
+      sunGrad.addColorStop(0, 'rgba(255,252,240,0.95)');
+      sunGrad.addColorStop(0.3, 'rgba(255,245,210,0.7)');
+      sunGrad.addColorStop(0.7, 'rgba(255,230,170,0.15)');
+      sunGrad.addColorStop(1, 'rgba(255,220,150,0)');
+      ctx.beginPath();
+      ctx.arc(sunP.x, sunP.y, coreR * 3, 0, TAU);
+      ctx.fillStyle = sunGrad;
+      ctx.fill();
+      // Bright core
+      ctx.beginPath();
+      ctx.arc(sunP.x, sunP.y, coreR, 0, TAU);
+      ctx.fillStyle = 'rgba(255,253,245,0.95)';
+      ctx.fill();
+    }
+
+    // ── Earth ──
+    const earthT = xformStatic(earthPos3);
+    const earthP = proj(earthT);
+    const eR = EARTH_R * FOV_SCALE / (earthT.z + camDist);
+    if (earthT.z + camDist > 100 && eR > 0.5) {
+      const eGrad = ctx.createRadialGradient(
+        earthP.x - eR*0.25, earthP.y - eR*0.25, eR*0.1,
+        earthP.x, earthP.y, eR
+      );
+      eGrad.addColorStop(0, 'rgb(100,170,230)');
+      eGrad.addColorStop(0.4, 'rgb(60,130,195)');
+      eGrad.addColorStop(0.75, 'rgb(35,80,140)');
+      eGrad.addColorStop(1, 'rgb(10,25,50)');
+      ctx.beginPath(); ctx.arc(earthP.x, earthP.y, eR, 0, TAU);
+      ctx.fillStyle = eGrad; ctx.fill();
+      // Atmosphere rim
+      ctx.strokeStyle = 'rgba(120,180,240,0.15)';
+      ctx.lineWidth = Math.max(1, eR * 0.06);
+      ctx.stroke();
+      // Label
+      if (eR > 8) {
+        ctx.font = '600 9px Inter, sans-serif';
+        ctx.fillStyle = `rgba(160,190,230,${Math.min(0.5, eR/50)})`;
+        ctx.textAlign = 'center';
+        ctx.fillText('EARTH', earthP.x, earthP.y + eR + 14);
+      }
+    }
+
+    // ── Moon (orbiting Earth) ──
+    const moonOrbitAngle = elapsed * TAU / MOON_ORBIT_PERIOD;
+    const moonCurrentPos: V3 = {
+      x: earthPos3.x + MOON_ORBIT_R * (Math.cos(moonOrbitAngle) * moonAx1.x + Math.sin(moonOrbitAngle) * moonAx2.x),
+      y: earthPos3.y + MOON_ORBIT_R * (Math.cos(moonOrbitAngle) * moonAx1.y + Math.sin(moonOrbitAngle) * moonAx2.y),
+      z: earthPos3.z + MOON_ORBIT_R * (Math.cos(moonOrbitAngle) * moonAx1.z + Math.sin(moonOrbitAngle) * moonAx2.z),
+    };
+
+    // Faint orbit trail
+    {
+      const trailSegs = 64;
+      ctx.beginPath();
+      for (let i = 0; i <= trailSegs; i++) {
+        const ta = (i / trailSegs) * TAU;
+        const tp: V3 = {
+          x: earthPos3.x + MOON_ORBIT_R * (Math.cos(ta) * moonAx1.x + Math.sin(ta) * moonAx2.x),
+          y: earthPos3.y + MOON_ORBIT_R * (Math.cos(ta) * moonAx1.y + Math.sin(ta) * moonAx2.y),
+          z: earthPos3.z + MOON_ORBIT_R * (Math.cos(ta) * moonAx1.z + Math.sin(ta) * moonAx2.z),
+        };
+        const tt = xformStatic(tp);
+        const tpp = proj(tt);
+        if (i === 0) ctx.moveTo(tpp.x, tpp.y);
+        else ctx.lineTo(tpp.x, tpp.y);
+      }
+      ctx.strokeStyle = 'rgba(160,155,145,0.06)';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([2, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    const moonT = xformStatic(moonCurrentPos);
+    const moonP = proj(moonT);
+    const mR = MOON_R * FOV_SCALE / (moonT.z + camDist);
+    if (moonT.z + camDist > 100 && mR > 0.5) {
+      const mGrad = ctx.createRadialGradient(
+        moonP.x - mR*0.2, moonP.y - mR*0.2, mR*0.05,
+        moonP.x, moonP.y, mR
+      );
+      mGrad.addColorStop(0, 'rgb(185,180,172)');
+      mGrad.addColorStop(0.7, 'rgb(140,136,130)');
+      mGrad.addColorStop(1, 'rgb(80,78,74)');
+      ctx.beginPath(); ctx.arc(moonP.x, moonP.y, mR, 0, TAU);
+      ctx.fillStyle = mGrad; ctx.fill();
+      if (mR > 5) {
+        ctx.font = '600 9px Inter, sans-serif';
+        ctx.fillStyle = `rgba(160,155,145,${Math.min(0.4, mR/30)})`;
+        ctx.textAlign = 'center';
+        ctx.fillText('MOON', moonP.x, moonP.y + mR + 12);
+      }
+    }
+
+    // ── Collect drawables ──
+    const drawables: Drawable[] = [];
+
+    // TORUS PATCHES
+    for (const patch of torusPatches) {
+      const tc = patch.corners.map(p => xform(p, angle));
+      const n = faceNormal(tc[0], tc[1], tc[3]);
+      if (n.z <= 0) continue;
+      const pp = tc.map(proj);
+      const avgZ = (tc[0].z + tc[1].z + tc[2].z + tc[3].z) / 4;
+      const diff = Math.max(0, dot(n, LIGHT));
+      const intensity = 0.15 + diff * 0.85;
+      let baseCol: number[];
+      const v = patch.vMid;
+      if (v < TAU * 0.15 || v > TAU * 0.85) {
+        // v~0: outermost surface (R+r) = exterior hull
+        baseCol = C_HULL;
+      } else if (v > TAU * 0.35 && v < TAU * 0.65) {
+        // v~π: innermost surface (R-r) = interior windows facing hub
+        baseCol = C_WINDOW;
+      } else {
+        baseCol = C_SIDE;
+      }
+      drawables.push({
+        type: 'torus', z: avgZ, pp, intensity, baseCol,
+        isEdge: patch.isEdge,
+        isWindow: v > TAU * 0.35 && v < TAU * 0.65,
+      });
+    }
+
+    // SPOKE QUADS
+    for (const sq of spokeQuads) {
+      const tc = sq.corners.map(p => xform(p, angle));
+      const n = faceNormal(tc[0], tc[1], tc[3]);
+      if (n.z <= 0) continue;
+      const pp = tc.map(proj);
+      const avgZ = (tc[0].z + tc[1].z + tc[2].z + tc[3].z) / 4;
+      const diff = Math.max(0, dot(n, LIGHT));
+      const intensity = 0.12 + diff * 0.88;
+      drawables.push({ type: 'spoke', z: avgZ, pp, intensity });
+    }
+
+    // HUB
+    {
+      const hs = params.r / 65;
+      const hubLayers = [
+        { z: 55*hs, r: 50*hs }, { z: 35*hs, r: 85*hs },
+        { z: 15*hs, r: 75*hs }, { z: 0, r: 68*hs },
+        { z: -20*hs, r: 60*hs }, { z: -50*hs, r: 40*hs },
+        { z: -80*hs, r: 25*hs },
+      ];
+      const hSegs = 24;
+      for (let li = 0; li < hubLayers.length - 1; li++) {
+        const top = hubLayers[li], bot = hubLayers[li + 1];
+        for (let si = 0; si < hSegs; si++) {
+          const a0 = (si / hSegs) * TAU, a1 = ((si+1) / hSegs) * TAU;
+          const corners: V3[] = [
+            { x: top.r*Math.cos(a0), y: top.r*Math.sin(a0), z: top.z },
+            { x: top.r*Math.cos(a1), y: top.r*Math.sin(a1), z: top.z },
+            { x: bot.r*Math.cos(a1), y: bot.r*Math.sin(a1), z: bot.z },
+            { x: bot.r*Math.cos(a0), y: bot.r*Math.sin(a0), z: bot.z },
+          ];
+          const tc = corners.map(p => xform(p, angle));
+          const n = faceNormal(tc[0], tc[1], tc[3]);
+          if (n.z <= 0) continue;
+          const pp = tc.map(proj);
+          const avgZ = (tc[0].z + tc[1].z + tc[2].z + tc[3].z) / 4;
+          const diff = Math.max(0, dot(n, LIGHT));
+          const intensity = 0.1 + diff * 0.9;
+          drawables.push({ type: 'hub', z: avgZ, pp, intensity, col: C_HUB });
+        }
+      }
+      // Hub ring accents
+      for (const layer of [hubLayers[1], hubLayers[3], hubLayers[5]]) {
+        const pts3d: V3[] = [];
+        for (let si = 0; si <= hSegs; si++) {
+          const a = (si / hSegs) * TAU;
+          pts3d.push({ x: (layer.r+3)*Math.cos(a), y: (layer.r+3)*Math.sin(a), z: layer.z });
+        }
+        const tc = pts3d.map(p => xform(p, angle));
+        const pp = tc.map(proj);
+        const avgZ = tc.reduce((s, p) => s + p.z, 0) / tc.length;
+        drawables.push({ type: 'hubring', z: avgZ, pp });
+      }
+    }
+
+    // MIRROR RING PANELS (non-rotating — environment-mapped reflections)
+    const camViewDir: V3 = { x: 0, y: 0, z: 1 };
+    const earthTDir = xformStatic(earthDir);
+    const sunTDir = xformStatic(sunDir);
+    for (const panel of mirrorPanels) {
+      const tc = panel.corners.map(p => xformStatic(p));
+      const n = faceNormal(tc[0], tc[1], tc[3]);
+      const pp = tc.map(proj);
+      const avgZ = (tc[0].z + tc[1].z + tc[2].z + tc[3].z) / 4;
+
+      // Reflected view direction: R = V - 2(V·N)N
+      const vDotN = dot(camViewDir, n);
+      const reflDir: V3 = {
+        x: camViewDir.x - 2 * vDotN * n.x,
+        y: camViewDir.y - 2 * vDotN * n.y,
+        z: camViewDir.z - 2 * vDotN * n.z,
+      };
+
+      // Sun specular: reflected view aligned with sun
+      const sunRefl = Math.max(0, dot(reflDir, sunTDir));
+      const sunSharp = Math.pow(sunRefl, 48) * 0.9;
+      const sunGlow = Math.pow(sunRefl, 8) * 0.4;
+
+      // Earth tint: reflected view aligned with Earth
+      const earthRefl = Math.max(0, dot(reflDir, earthTDir));
+      const earthTint = Math.pow(earthRefl, 6) * 0.35;
+
+      // Fresnel: more reflective at glancing angles
+      const fresnel = Math.pow(1 - Math.abs(vDotN), 2) * 0.3;
+
+      // Base mirror brightness from direct light
+      const absDiff = Math.abs(dot(n, LIGHT));
+      const baseLit = 0.08 + absDiff * 0.3;
+
+      drawables.push({
+        type: 'mirror', z: avgZ, pp,
+        baseLit, sunSharp, sunGlow, earthTint, fresnel,
+      });
+    }
+
+    // MIRROR SUPPORT STRUTS (hub to mirror inner ring)
+    {
+      const hs = params.r / 65;
+      const hubTopZ = 55 * hs;
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * TAU;
+        const from3 = xformStatic({ x: 0, y: 0, z: hubTopZ });
+        const to3 = xformStatic({
+          x: mirrorInnerR * Math.cos(a),
+          y: mirrorInnerR * Math.sin(a),
+          z: mirrorZLow,
+        });
+        drawables.push({
+          type: 'strut', z: (from3.z + to3.z) / 2,
+          from: proj(from3), to: proj(to3),
+        });
+      }
+    }
+
+    // Sort back-to-front
+    drawables.sort((a, b) => b.z - a.z);
+
+    // ── DRAW ALL ──
+    for (const d of drawables) {
+      const pp = d.pp as V2[] | undefined;
+
+      switch (d.type) {
+        case 'torus': {
+          ctx.beginPath();
+          ctx.moveTo(pp![0].x, pp![0].y);
+          for (let i = 1; i < 4; i++) ctx.lineTo(pp![i].x, pp![i].y);
+          ctx.closePath();
+          const li = d.intensity;
+          const [cr, cg, cb] = d.baseCol;
+          if (d.isWindow) {
+            const glow = 0.25;
+            ctx.fillStyle = `rgba(${Math.min(255,Math.floor(cr*li+40*glow))},${Math.min(255,Math.floor(cg*li+20*glow))},${Math.floor(cb*li)},0.88)`;
+          } else {
+            ctx.fillStyle = lit(d.baseCol, li, 0.94);
+          }
+          ctx.fill();
+          if (d.isEdge) {
+            ctx.strokeStyle = `rgba(60,58,52,${0.3 * li})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          } else {
+            ctx.strokeStyle = `rgba(90,88,82,${0.03 * li})`;
+            ctx.lineWidth = 0.3;
+            ctx.stroke();
+          }
+          break;
+        }
+        case 'spoke': {
+          ctx.beginPath();
+          ctx.moveTo(pp![0].x, pp![0].y);
+          for (let i = 1; i < 4; i++) ctx.lineTo(pp![i].x, pp![i].y);
+          ctx.closePath();
+          ctx.fillStyle = lit(C_SPOKE, d.intensity, 0.95);
+          ctx.fill();
+          ctx.strokeStyle = `rgba(50,48,44,${0.15 * d.intensity})`;
+          ctx.lineWidth = 0.4;
+          ctx.stroke();
+          break;
+        }
+        case 'hub': {
+          ctx.beginPath();
+          ctx.moveTo(pp![0].x, pp![0].y);
+          for (let i = 1; i < 4; i++) ctx.lineTo(pp![i].x, pp![i].y);
+          ctx.closePath();
+          ctx.fillStyle = lit(d.col, d.intensity, 0.92);
+          ctx.fill();
+          ctx.strokeStyle = `rgba(40,38,35,${0.08 * d.intensity})`;
+          ctx.lineWidth = 0.3;
+          ctx.stroke();
+          break;
+        }
+        case 'hubring': {
+          ctx.beginPath();
+          ctx.moveTo(pp![0].x, pp![0].y);
+          for (let i = 1; i < pp!.length; i++) ctx.lineTo(pp![i].x, pp![i].y);
+          ctx.strokeStyle = 'rgba(140,135,125,0.2)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          break;
+        }
+        case 'mirror': {
+          ctx.beginPath();
+          ctx.moveTo(pp![0].x, pp![0].y);
+          for (let i = 1; i < 4; i++) ctx.lineTo(pp![i].x, pp![i].y);
+          ctx.closePath();
+
+          const bl = d.baseLit;
+          const sg = d.sunGlow;
+          const et = d.earthTint;
+          const fr = d.fresnel;
+
+          // Mirror color with environment reflections
+          const mr = Math.min(255, Math.floor((C_MIRROR_PANEL[0] * bl + 60 * et + 255 * sg + 220 * fr) * 1.1));
+          const mg = Math.min(255, Math.floor((C_MIRROR_PANEL[1] * bl + 100 * et + 250 * sg + 230 * fr) * 1.1));
+          const mb = Math.min(255, Math.floor((C_MIRROR_PANEL[2] * bl + 180 * et + 230 * sg + 255 * fr) * 1.1));
+          const alpha = Math.min(0.55, bl * 0.25 + sg * 0.6 + et * 0.3 + fr * 0.4);
+
+          ctx.fillStyle = `rgba(${mr},${mg},${mb},${alpha})`;
+          ctx.fill();
+          ctx.strokeStyle = `rgba(100,98,92,${Math.min(0.25, bl * 0.15)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+
+          // Sun glint on panels catching sunlight
+          if (d.sunSharp > 0.1) {
+            const cx = (pp![0].x + pp![1].x + pp![2].x + pp![3].x) / 4;
+            const cy = (pp![0].y + pp![1].y + pp![2].y + pp![3].y) / 4;
+            const glintR = Math.max(2, d.sunSharp * 8);
+            const glintGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glintR);
+            glintGrad.addColorStop(0, `rgba(255,253,240,${d.sunSharp * 0.7})`);
+            glintGrad.addColorStop(1, `rgba(255,245,210,0)`);
+            ctx.fillStyle = glintGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, glintR, 0, TAU);
+            ctx.fill();
+          }
+          break;
+        }
+        case 'strut': {
+          ctx.beginPath();
+          ctx.moveTo(d.from.x, d.from.y);
+          ctx.lineTo(d.to.x, d.to.y);
+          ctx.strokeStyle = 'rgba(120,115,108,0.3)';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+          break;
+        }
+      }
+    }
+
+    // ── STANFORD TORUS text on outer rim ──
+    const nameStr = 'STANFORD TORUS';
+    const nameInstances = 4;
+    const nameSpan = TAU * 0.12;
+    for (let inst = 0; inst < nameInstances; inst++) {
+      const baseAngle = (inst / nameInstances) * TAU;
+      for (let i = 0; i < nameStr.length; i++) {
+        const ca = baseAngle - nameSpan/2 + (i / (nameStr.length - 1)) * nameSpan;
+        const outerR = params.R + params.r + 12;
+        const ct = xform({ x: outerR*Math.cos(ca), y: outerR*Math.sin(ca), z: 0 }, angle);
+        const depthAlpha = lerpClamp(ct.z, -params.R*1.1, -params.R*0.2, 0.55, 0);
+        if (depthAlpha > 0.03) {
+          const cp = proj(ct);
+          ctx.font = '600 12px Inter, sans-serif';
+          ctx.fillStyle = `rgba(200,195,185,${depthAlpha})`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(nameStr[i], cp.x, cp.y);
+        }
+      }
+    }
+
+    // ── Small spacecraft ──
+    const craftPositions: V3[] = [
+      { x: params.R * 0.3, y: -params.R * 0.6, z: params.r * 2 },
+      { x: -params.R * 0.7, y: params.R * 0.2, z: -params.r * 1.5 },
+      { x: params.R * 0.1, y: params.R * 0.8, z: params.r * 0.5 },
+    ];
+    for (const cp of craftPositions) {
+      const ct = xform(cp, angle * 0.05);
+      const cpp = proj(ct);
+      const craftAlpha = lerpClamp(-ct.z, -params.R, params.R, 0.15, 0.5);
+      ctx.fillStyle = `rgba(200,195,185,${craftAlpha})`;
+      ctx.beginPath();
+      ctx.moveTo(cpp.x, cpp.y - 2);
+      ctx.lineTo(cpp.x + 3, cpp.y + 1);
+      ctx.lineTo(cpp.x - 3, cpp.y + 1);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // ── Sun flare overlay ──
+    if (sunT.z + camDist > 100) {
+      const flareGrad = ctx.createRadialGradient(sunP.x, sunP.y, 0, sunP.x, sunP.y, W*0.35);
+      flareGrad.addColorStop(0, 'rgba(255,240,200,0.06)');
+      flareGrad.addColorStop(0.3, 'rgba(255,230,180,0.02)');
+      flareGrad.addColorStop(1, 'rgba(255,220,160,0)');
+      ctx.fillStyle = flareGrad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // ── Explainer annotations ──
+    const drawAnnotation = (
+      ax: number, ay: number,
+      tx: number, ty: number,
+      lines: string[],
+      alpha: number
+    ) => {
+      if (alpha < 0.04) return;
+      // Leader line
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(tx, ty);
+      ctx.strokeStyle = `rgba(160,155,145,${alpha * 0.25})`;
+      ctx.lineWidth = 0.7;
+      ctx.setLineDash([3, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Anchor dot
+      ctx.beginPath();
+      ctx.arc(ax, ay, 2.5, 0, TAU);
+      ctx.fillStyle = `rgba(210,175,95,${alpha * 0.5})`;
+      ctx.fill();
+      // Text
+      ctx.textAlign = tx > ax ? 'left' : 'right';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i < lines.length; i++) {
+        ctx.font = i === 0 ? '400 10px Inter, sans-serif' : '300 9px Inter, sans-serif';
+        ctx.fillStyle = i === 0
+          ? `rgba(255,255,255,${alpha * 0.9})`
+          : `rgba(240,240,240,${alpha * 0.7})`;
+        ctx.fillText(lines[i], tx, ty + i * 13);
+      }
+    };
+
+    const fmt = (n: number) => n.toLocaleString('en-US');
+    const omega = TAU * params.rpm / 60;
+    const outerR = params.R + params.r;
+    const grav = (omega * omega * outerR / 9.81).toFixed(2);
+    const speed = (omega * outerR).toFixed(0);
+
+    // 1. Outer hull — top of torus
+    // Population scales with floor area (∝ R×r). NASA baseline: 10,000 for R=830, r=65
+    const pop = Math.round(4 * Math.PI * params.R * params.r * 0.0147 / 100) * 100;
+    const hullAnchor3 = xform({ x: 0, y: -(params.R + params.r), z: 0 }, angle);
+    const hullP = proj(hullAnchor3);
+    const hullAlpha = lerpClamp(hullAnchor3.z, -params.R * 0.8, params.R * 0.3, 0.7, 0);
+    drawAnnotation(hullP.x, hullP.y, hullP.x + 90, hullP.y - 50, [
+      `Outer Hull`,
+      `${fmt(Math.round(2 * outerR))}m diameter \u00b7 Aluminum & steel`,
+      `Population capacity: ~${fmt(pop)}`,
+    ], hullAlpha);
+
+    // 2. Interior habitat — inner surface (window strip)
+    const intAnchor3 = xform({ x: params.R - params.r * 0.5, y: 0, z: 0 }, angle);
+    const intP = proj(intAnchor3);
+    const intAlpha = lerpClamp(intAnchor3.z, -params.R * 0.5, params.R * 0.5, 0.6, 0);
+    drawAnnotation(intP.x, intP.y, intP.x + 85, intP.y + 45, [
+      `Interior Habitat`,
+      `\u2153 window strips \u00b7 \u2154 aluminum hull`,
+      `${grav}g artificial gravity \u00b7 ${speed} m/s rim`,
+    ], intAlpha);
+
+    // 3. Hub
+    const hubAnchor3 = xform({ x: 0, y: 0, z: params.r * 0.8 }, angle);
+    const hubP = proj(hubAnchor3);
+    const hubAlpha = lerpClamp(hubAnchor3.z, -params.R * 0.3, params.R * 0.5, 0.55, 0);
+    drawAnnotation(hubP.x, hubP.y, hubP.x - 85, hubP.y - 40, [
+      `Central Hub`,
+      `130m diameter \u00b7 Zero-g docking`,
+      `Industrial & docking facilities`,
+    ], hubAlpha);
+
+    // 4. Mirror
+    const mirAnchorAngle = TAU * 0.25;
+    const mirAnchor3 = xformStatic({
+      x: params.R * Math.cos(mirAnchorAngle),
+      y: params.R * Math.sin(mirAnchorAngle),
+      z: params.r * 3,
+    });
+    const mirP = proj(mirAnchor3);
+    const mirAlpha = lerpClamp(mirAnchor3.z, -params.R * 0.5, params.R * 0.8, 0.6, 0);
+    drawAnnotation(mirP.x, mirP.y, mirP.x + 80, mirP.y - 35, [
+      `Primary Mirror`,
+      `Non-rotating \u00b7 ${params.mirrorTilt}\u00b0 tilt`,
+      `Redirects sunlight into habitat ring`,
+    ], mirAlpha);
+
+    // 5. Spoke
+    const spokeAngle = angle;
+    const spokeMidR = (params.R - params.r) * 0.5;
+    const spokeAnchor3 = xform({
+      x: spokeMidR * Math.cos(0),
+      y: spokeMidR * Math.sin(0),
+      z: 0,
+    }, angle);
+    const spokeP = proj(spokeAnchor3);
+    const spokeAlpha = lerpClamp(spokeAnchor3.z, -params.R * 0.5, params.R * 0.3, 0.55, 0);
+    drawAnnotation(spokeP.x, spokeP.y, spokeP.x - 80, spokeP.y + 35, [
+      `Access Spokes`,
+      `${params.spokes} spokes \u00b7 15m diameter each`,
+      `Transit between hub and rim`,
+    ], spokeAlpha);
+
+
+    requestAnimationFrame(render);
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // UI
+  // ═══════════════════════════════════════════════════════
+  function getTorusDescription(): string {
+    const { R, r, spokes, rpm, mirrorTilt } = params;
+    const omega = TAU * rpm / 60;
+    const outerR = R + r;
+    const grav = omega * omega * outerR / 9.81;
+    const parts: string[] = [];
+
+    // Size characterization
+    if (R < 400) {
+      parts.push(`At <strong>${R}m radius</strong>, this is a compact station &mdash; residents would feel the curvature underfoot. More space station than colony.`);
+    } else if (R < 700) {
+      parts.push(`A mid-scale torus at <strong>${R}m radius</strong>. The horizon curves visibly upward &mdash; you'd see your neighbor's roof above you.`);
+    } else if (R <= 900) {
+      parts.push(`The <strong>${R}m radius</strong> matches the 1975 NASA/Ames study: the sweet spot between structural feasibility and livable space. The interior would feel like a gently curving valley.`);
+    } else if (R <= 1300) {
+      parts.push(`At <strong>${R}m radius</strong>, this exceeds the original NASA study. The interior horizon stretches far enough to feel almost natural.`);
+    } else {
+      parts.push(`A <strong>${R}m mega-torus</strong> &mdash; beyond current materials science. The interior would feel nearly flat, like a very long, curved valley.`);
+    }
+
+    // Tube radius
+    if (r < 40) {
+      parts.push(`The <strong>${r}m tube</strong> creates tight quarters: low ceilings, no room for agriculture.`);
+    } else if (r < 60) {
+      parts.push(`With a <strong>${r}m tube</strong>, space is functional but constrained &mdash; corridors, not landscapes.`);
+    } else if (r <= 80) {
+      parts.push(`The <strong>${r}m tube</strong> allows multi-story buildings, parkland, and small-scale agriculture beneath the window strips.`);
+    } else if (r <= 130) {
+      parts.push(`A generous <strong>${r}m tube</strong> &mdash; room for terrain variation, trees, and a sense of vertical space.`);
+    } else {
+      parts.push(`At <strong>${r}m tube radius</strong>, the cross-section is enormous &mdash; enough for weather patterns and small ecosystems.`);
+    }
+
+    // Gravity / Coriolis
+    if (grav < 0.3) {
+      parts.push(`Gravity at <strong>${grav.toFixed(2)}g</strong> feels lunar. Water pours slowly; fire behaves strangely. Bone loss is a concern.`);
+    } else if (grav < 0.7) {
+      parts.push(`At <strong>${grav.toFixed(2)}g</strong>, residents feel noticeably lighter. Long-term health effects are unknown.`);
+    } else if (grav <= 1.1) {
+      parts.push(`<strong>${grav.toFixed(2)}g</strong> at the rim &mdash; ${grav > 0.95 && grav < 1.05 ? 'Earth-normal. The body wouldn\'t know the difference' : 'close to Earth-normal'}, though Coriolis forces remind you.`);
+    } else {
+      parts.push(`At <strong>${grav.toFixed(2)}g</strong>, gravity exceeds Earth-normal. Residents tire quickly; structural loads increase.`);
+    }
+
+    if (rpm > 2) {
+      parts.push(`At <strong>${rpm.toFixed(1)} RPM</strong>, Coriolis is disorienting &mdash; dropped objects curve visibly, and moving along the spin axis induces vertigo.`);
+    } else if (rpm > 1.5) {
+      parts.push(`<strong>${rpm.toFixed(1)} RPM</strong> produces noticeable Coriolis. Thrown balls curve; quick head movements cause mild nausea.`);
+    }
+
+    // Spokes
+    if (spokes <= 3) {
+      parts.push(`Only <strong>${spokes} spoke${spokes === 1 ? '' : 's'}</strong> &mdash; minimal redundancy. A single failure could isolate the hub.`);
+    } else if (spokes > 8) {
+      parts.push(`<strong>${spokes} spokes</strong> provide excellent redundancy but add significant mass.`);
+    }
+
+    // Mirror
+    if (Math.abs(mirrorTilt - 45) > 15) {
+      parts.push(`Mirror tilt at <strong>${mirrorTilt}&deg;</strong> deviates significantly from the optimal 45&deg; &mdash; light distribution would be uneven.`);
+    }
+
+    return parts.join(' ');
+  }
+
+  function updateStats() {
+    const omega = TAU * params.rpm / 60;
+    const outerR = params.R + params.r;
+    const diam = Math.round(2 * outerR);
+    const grav = omega * omega * outerR / 9.81;
+    const speed = omega * outerR;
+    const fmt = (n: number) => n.toLocaleString('en-US');
+
+    (document.getElementById('v-R') as HTMLElement).textContent = `${params.R} m`;
+    (document.getElementById('v-r') as HTMLElement).textContent = `${params.r} m`;
+    (document.getElementById('v-spokes') as HTMLElement).textContent = `${params.spokes}`;
+    (document.getElementById('v-rpm') as HTMLElement).textContent = `${params.rpm.toFixed(1)} RPM`;
+    (document.getElementById('v-tilt') as HTMLElement).textContent = `${params.mirrorTilt}\u00B0`;
+
+    (document.getElementById('c-diam') as HTMLElement).textContent = `${fmt(diam)} m`;
+    (document.getElementById('c-grav') as HTMLElement).textContent = `${grav.toFixed(2)} g`;
+    (document.getElementById('c-speed') as HTMLElement).textContent = `${speed.toFixed(1)} m/s`;
+
+    document.getElementById('ui-stats')!.innerHTML =
+      `<span>${fmt(diam)} m diameter</span><span class="sep">&middot;</span>` +
+      `<span>${grav.toFixed(2)} g</span><span class="sep">&middot;</span>` +
+      `<span>${params.rpm.toFixed(1)} RPM</span>`;
+
+    document.getElementById('torus-info')!.innerHTML = getTorusDescription();
+  }
+
+  function setupUI() {
+    const panel = document.getElementById('param-panel')!;
+    const toggle = document.getElementById('panel-toggle')!;
+
+    toggle.addEventListener('click', () => panel.classList.toggle('open'));
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'p' || e.key === 'P') {
+        if (document.activeElement?.tagName !== 'INPUT') {
+          panel.classList.toggle('open');
+        }
+      }
+    });
+
+    const bind = (id: string, key: keyof typeof params, fmt: (v: number) => string) => {
+      const el = document.getElementById(id) as HTMLInputElement;
+      el.addEventListener('input', () => {
+        (params as any)[key] = parseFloat(el.value);
+        regenerate();
+      });
+    };
+
+    bind('p-R', 'R', v => `${v} m`);
+    bind('p-r', 'r', v => `${v} m`);
+    bind('p-spokes', 'spokes', v => `${v}`);
+    bind('p-rpm', 'rpm', v => `${v.toFixed(1)} RPM`);
+    bind('p-tilt', 'mirrorTilt', v => `${v}\u00B0`);
+
+    document.getElementById('reset-btn')!.addEventListener('click', () => {
+      Object.assign(params, DEFAULTS);
+      (document.getElementById('p-R') as HTMLInputElement).value = String(DEFAULTS.R);
+      (document.getElementById('p-r') as HTMLInputElement).value = String(DEFAULTS.r);
+      (document.getElementById('p-spokes') as HTMLInputElement).value = String(DEFAULTS.spokes);
+      (document.getElementById('p-rpm') as HTMLInputElement).value = String(DEFAULTS.rpm);
+      (document.getElementById('p-tilt') as HTMLInputElement).value = String(DEFAULTS.mirrorTilt);
+      zoomFactor = 1;
+      regenerate();
+    });
+
+    // Citations modal
+    const citeModal = document.getElementById('cite-modal')!;
+    document.getElementById('cite-btn')!.addEventListener('click', () => citeModal.classList.remove('hidden'));
+    document.getElementById('cite-close')!.addEventListener('click', () => citeModal.classList.add('hidden'));
+    citeModal.addEventListener('click', (e) => {
+      if (e.target === citeModal) citeModal.classList.add('hidden');
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') citeModal.classList.add('hidden');
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════════════
+  regenerate();
+  setupUI();
+  requestAnimationFrame(render);
+</script>
