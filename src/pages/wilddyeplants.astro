@@ -1,0 +1,584 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Wild Dye Plants | Claire Nyquist"
+    description="An interactive radial visualization of wild dye plants and the colors they produce."
+>
+    <div class="px-4 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+                Wild Dye Plants
+            </h1>
+            <p class="text-xs text-gray-400 mb-4"></p>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Data assembled by Ri Zoldak.
+            </p>
+            <p
+                class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4"
+            >
+                This visualization shows 64 wild dye plants arranged in rainbow
+                order by the color they produce. Each plant is labeled with its
+                common name and a botanical symbol indicating which part of the
+                plant is used for dyeing. Drag the wheel to spin, or let it
+                drift. Hover over any plant for details including mordant, color
+                permanence, and notes.
+            </p>
+        </div>
+
+        <!-- Symbol Key -->
+        <div
+            class="flex flex-wrap justify-center gap-4 mb-4 text-sm text-gray-600"
+            id="symbol-key"
+        >
+        </div>
+
+        <!-- Visualization -->
+        <div
+            id="viz"
+            class="flex justify-center -mx-4"
+            style="position:relative; overflow:visible; -webkit-user-select:none; user-select:none;"
+        >
+        </div>
+    </div>
+
+    <script is:inline src="https://d3js.org/d3.v7.min.js"></script>
+    <script is:inline>
+        (function () {
+            // SVG symbol file mapping
+            const partSvgFiles = {
+                flower: "/images/symbols/flower.svg",
+                flowers: "/images/symbols/flower.svg",
+                fruit: "/images/symbols/fruit.svg",
+                fruits: "/images/symbols/fruit.svg",
+                berries: "/images/symbols/fruit.svg",
+                leaves: "/images/symbols/leaves.svg",
+                "red leaves": "/images/symbols/leaves.svg",
+                "first year leaves": "/images/symbols/leaves.svg",
+                roots: "/images/symbols/roots.svg",
+                twigs: "/images/symbols/twigs.svg",
+                bark: "/images/symbols/twigs.svg",
+                stem: "/images/symbols/stemstalk.svg",
+                stems: "/images/symbols/stemstalk.svg",
+                "whole plant": "/images/symbols/wholeplant.svg",
+                "whole plant tops": "/images/symbols/wholeplant.svg",
+                tops: "/images/symbols/wholeplant.svg",
+                shoots: "/images/symbols/shoots.svg",
+                stalks: "/images/symbols/stemstalk.svg",
+                hulls: "/images/symbols/fruit.svg",
+                skins: "/images/symbols/fruit.svg",
+                grounds: "/images/symbols/fruit.svg",
+                "heartwood shavings": "/images/symbols/twigs.svg",
+            };
+
+            const keyItems = [
+                { file: "/images/symbols/flower.svg", label: "flower" },
+                { file: "/images/symbols/fruit.svg", label: "fruit / berry" },
+                { file: "/images/symbols/leaves.svg", label: "leaves" },
+                { file: "/images/symbols/roots.svg", label: "roots" },
+                { file: "/images/symbols/twigs.svg", label: "bark / twigs" },
+                {
+                    file: "/images/symbols/stemstalk.svg",
+                    label: "stem / stalk",
+                },
+                { file: "/images/symbols/shoots.svg", label: "shoots" },
+                {
+                    file: "/images/symbols/wholeplant.svg",
+                    label: "whole plant",
+                },
+            ];
+
+            // Build key with SVG icons
+            const keyEl = document.getElementById("symbol-key");
+            keyItems.forEach((item) => {
+                const span = document.createElement("span");
+                span.className = "inline-flex items-center gap-2";
+                span.innerHTML = `<img src="${item.file}" alt="${item.label}" style="width:22px;height:22px;opacity:0.7;"> ${item.label}`;
+                keyEl.appendChild(span);
+            });
+
+            // Brighter color map
+            function colorNameToHex(colorStr) {
+                if (!colorStr) return "#aaaaaa";
+                const c = colorStr.toLowerCase().split(",")[0].trim();
+                const map = {
+                    pink: "#f472b6",
+                    "olive green": "#84cc16",
+                    green: "#34d399",
+                    "blue-purple": "#a78bfa",
+                    "yellow-green": "#a3e635",
+                    "yellow-gold": "#facc15",
+                    rose: "#fb7185",
+                    "bright yellow": "#fde047",
+                    "dark charcoal": "#6b7280",
+                    gold: "#f59e0b",
+                    "purple-blue": "#818cf8",
+                    orange: "#fb923c",
+                    "red-orange": "#f97316",
+                    "burnt orange": "#ea580c",
+                    yellow: "#facc15",
+                    "grey-blue": "#93c5fd",
+                    tan: "#d4a574",
+                    "teal-blue": "#2dd4bf",
+                    "orange-tan": "#e8a058",
+                    red: "#ef4444",
+                    "grey-green": "#86efac",
+                    rust: "#dc5828",
+                    brown: "#a67c52",
+                    "chartreuse yellow": "#bef264",
+                    "green-yellow": "#a3e635",
+                    olive: "#84cc16",
+                    "dark olive": "#65a30d",
+                    blue: "#60a5fa",
+                    "light yellow": "#fef08a",
+                    "light grey": "#d1d5db",
+                    grey: "#9ca3af",
+                    "pinkish brown": "#d4917a",
+                    "warm brown": "#b8885c",
+                    khaki: "#d4cc6a",
+                    "purple-grey": "#a78bfa",
+                    lavender: "#c084fc",
+                    "red-brown": "#b45c3a",
+                    "strong pink": "#ec4899",
+                };
+                if (map[c]) return map[c];
+                for (const [key, val] of Object.entries(map)) {
+                    if (c.includes(key)) return val;
+                }
+                return "#aaaaaa";
+            }
+
+            // Hue from hex for rainbow sorting
+            function hexToHue(hex) {
+                const r = parseInt(hex.slice(1, 3), 16) / 255;
+                const g = parseInt(hex.slice(3, 5), 16) / 255;
+                const b = parseInt(hex.slice(5, 7), 16) / 255;
+                const max = Math.max(r, g, b),
+                    min = Math.min(r, g, b);
+                const d = max - min;
+                let h = 0;
+                if (d === 0) h = 0;
+                else if (max === r) h = (((g - b) / d) % 6) * 60;
+                else if (max === g) h = ((b - r) / d + 2) * 60;
+                else h = ((r - g) / d + 4) * 60;
+                if (h < 0) h += 360;
+                const l = (max + min) / 2;
+                const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+                return { h, s, l };
+            }
+
+            function getPartFiles(partsStr) {
+                if (!partsStr) return [];
+                const parts = partsStr
+                    .split(",")
+                    .map((p) => p.trim().toLowerCase());
+                const files = [];
+                const seen = new Set();
+                parts.forEach((p) => {
+                    let file = partSvgFiles[p];
+                    if (!file) {
+                        for (const [key, f] of Object.entries(partSvgFiles)) {
+                            if (p.includes(key) || key.includes(p)) {
+                                file = f;
+                                break;
+                            }
+                        }
+                    }
+                    if (file && !seen.has(file)) {
+                        seen.add(file);
+                        files.push(file);
+                    }
+                });
+                return files;
+            }
+
+            function getShortName(name) {
+                return name.replace(/\s*\([^)]*\)/g, "").trim();
+            }
+
+            // Sizing — use a fixed internal coordinate system, scale via viewBox
+            const vbSize = 1000;
+            const cx = vbSize / 2;
+            const cy = vbSize / 2;
+            const innerRadius = vbSize * 0.22;
+            const baseFont = 18;
+            const symbolSize = 30;
+
+            function getDisplaySize() {
+                return window.innerWidth;
+            }
+
+            const svg = d3
+                .select("#viz")
+                .append("svg")
+                .attr("viewBox", `0 0 ${vbSize} ${vbSize}`)
+                .attr("width", getDisplaySize())
+                .attr("height", getDisplaySize())
+                .style("cursor", "grab")
+                .style("user-select", "none");
+
+            window.addEventListener("resize", () => {
+                const s = getDisplaySize();
+                svg.attr("width", s).attr("height", s);
+            });
+
+            const tooltip = d3
+                .select("#viz")
+                .append("div")
+                .style("position", "absolute")
+                .style("background", "white")
+                .style("border", "1px solid #ddd")
+                .style("border-radius", "8px")
+                .style("padding", "12px 16px")
+                .style("font-family", "Lexend, sans-serif")
+                .style("font-size", "14px")
+                .style("line-height", "1.5")
+                .style("max-width", "320px")
+                .style("pointer-events", "none")
+                .style("opacity", 0)
+                .style("z-index", 100)
+                .style("box-shadow", "0 4px 12px rgba(0,0,0,0.1)");
+
+            const g = svg
+                .append("g")
+                .attr("transform", `translate(${cx},${cy})`);
+
+            let rotation = 0;
+            let autoRotate = true;
+
+            // Preload and parse SVG symbol files
+            const svgCache = {};
+            async function loadSvg(url) {
+                if (svgCache[url]) return svgCache[url];
+                const resp = await fetch(url);
+                const text = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "image/svg+xml");
+                const svgEl = doc.querySelector("svg");
+                const vb = svgEl.getAttribute("viewBox").split(" ").map(Number);
+                const paths = [];
+                svgEl.querySelectorAll("path").forEach((p) => {
+                    paths.push({
+                        d: p.getAttribute("d"),
+                        isWhite: p.classList.contains("cls-1"),
+                    });
+                });
+                svgCache[url] = { vb, paths };
+                return svgCache[url];
+            }
+
+            // Get all unique SVG URLs, preload them, then load CSV
+            const allSvgUrls = [...new Set(Object.values(partSvgFiles))];
+            Promise.all(allSvgUrls.map((url) => loadSvg(url)))
+                .then(() => d3.csv("/data/wilddyeplants.csv"))
+                .then((data) => {
+                    data = data.filter(
+                        (d) => d["Dye source"] && d["Dye source"].trim(),
+                    );
+
+                    // Assign colors then sort by hue for rainbow order
+                    data.forEach((d) => {
+                        d._color = colorNameToHex(d["Resulting color"]);
+                        const hsl = hexToHue(d._color);
+                        d._hue = hsl.h;
+                        d._sat = hsl.s;
+                        d._light = hsl.l;
+                    });
+                    data.sort((a, b) => a._hue - b._hue || a._sat - b._sat);
+
+                    const n = data.length;
+                    const angleStep = (2 * Math.PI) / n;
+
+                    // Store text elements for magnification
+                    const textEls = [];
+                    const imgEls = [];
+                    const textData = [];
+
+                    data.forEach((d, i) => {
+                        const angle = i * angleStep - Math.PI / 2;
+                        const color = d._color;
+                        const shortName = getShortName(d["Dye source"]);
+                        const partFiles = getPartFiles(d["Parts used"]);
+
+                        const lineGroup = g
+                            .append("g")
+                            .attr("class", "plant-ray");
+
+                        // Text
+                        const textRadius = innerRadius + 5;
+                        const tx = Math.cos(angle) * textRadius;
+                        const ty = Math.sin(angle) * textRadius;
+                        const angleDeg = (angle * 180) / Math.PI;
+
+                        const rotAngle = angleDeg;
+
+                        const textEl = lineGroup
+                            .append("text")
+                            .attr(
+                                "transform",
+                                `translate(${tx},${ty}) rotate(${rotAngle})`,
+                            )
+                            .attr("text-anchor", "start")
+                            .attr("dominant-baseline", "middle")
+                            .attr("fill", color)
+                            .attr("font-size", baseFont)
+                            .attr("font-family", "Lexend, sans-serif")
+                            .attr("font-weight", 500)
+                            .text(shortName);
+
+                        // Inline colored SVG symbols next to text
+                        const symbolGroup = [];
+                        if (partFiles.length > 0) {
+                            partFiles.forEach((file, si) => {
+                                const svgData = svgCache[file];
+                                if (!svgData) return;
+                                const [vx, vy, vw, vh] = svgData.vb;
+                                const sc = symbolSize / vh;
+                                const symW = vw * sc;
+                                // Outer group for position/rotation, inner group for scale
+                                const outerG = lineGroup
+                                    .append("g")
+                                    .attr("opacity", 0.8);
+                                const innerG = outerG
+                                    .append("g")
+                                    .attr("transform", `scale(${sc})`);
+                                svgData.paths.forEach((p) => {
+                                    innerG
+                                        .append("path")
+                                        .attr("d", p.d)
+                                        .attr(
+                                            "fill",
+                                            p.isWhite ? "#ffffff" : color,
+                                        );
+                                });
+                                symbolGroup.push({ el: outerG, symW });
+                            });
+                        }
+
+                        // Defer symbol positioning to after text renders
+                        setTimeout(() => {
+                            try {
+                                const bbox = textEl.node().getBBox();
+                                const textW = bbox.width;
+                                let offsetX = textW + 6;
+                                symbolGroup.forEach((item) => {
+                                    item.el.attr(
+                                        "transform",
+                                        `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
+                                    );
+                                    offsetX += item.symW + 4;
+                                });
+                            } catch (e) {}
+                        }, 50);
+
+                        textEls.push(textEl);
+                        imgEls.push(symbolGroup);
+                        textData.push({ angle, i, d, color });
+
+                        // Hit area
+                        const hitRadius = innerRadius - 10;
+                        const hx1 = Math.cos(angle) * hitRadius;
+                        const hy1 = Math.sin(angle) * hitRadius;
+                        const hx2 = Math.cos(angle) * (vbSize * 0.46);
+                        const hy2 = Math.sin(angle) * (vbSize * 0.46);
+
+                        lineGroup
+                            .append("line")
+                            .attr("x1", hx1)
+                            .attr("y1", hy1)
+                            .attr("x2", hx2)
+                            .attr("y2", hy2)
+                            .attr("stroke", "transparent")
+                            .attr("stroke-width", 14)
+                            .style("cursor", "pointer")
+                            .on("mouseover", function (event) {
+                                textEl
+                                    .attr("font-weight", 700)
+                                    .attr("font-size", baseFont * 1.4);
+
+                                let html = `<strong style="color:${color}">${d["Dye source"]}</strong><br>`;
+                                if (d["Parts used"])
+                                    html += `<strong>Parts:</strong> ${d["Parts used"]}<br>`;
+                                if (d["Resulting color"])
+                                    html += `<strong>Color:</strong> ${d["Resulting color"]}<br>`;
+                                if (d["Mordant"])
+                                    html += `<strong>Mordant:</strong> ${d["Mordant"]}<br>`;
+                                if (d["permenant color?"])
+                                    html += `<strong>Permanent:</strong> ${d["permenant color?"]}<br>`;
+                                if (d["Other notes"])
+                                    html += `<div style="margin-top:4px;color:#666;font-style:italic">${d["Other notes"]}</div>`;
+
+                                tooltip.html(html).style("opacity", 1);
+                            })
+                            .on("mousemove", function (event) {
+                                const vizRect = document
+                                    .getElementById("viz")
+                                    .getBoundingClientRect();
+                                tooltip
+                                    .style(
+                                        "left",
+                                        event.clientX -
+                                            vizRect.left +
+                                            15 +
+                                            "px",
+                                    )
+                                    .style(
+                                        "top",
+                                        event.clientY - vizRect.top - 10 + "px",
+                                    );
+                            })
+                            .on("mouseout", function () {
+                                textEl
+                                    .attr("font-weight", 500)
+                                    .attr("font-size", baseFont);
+                                tooltip.style("opacity", 0);
+                            });
+                    });
+
+                    // Magnification: smooth interpolation toward the right side
+                    const currentScales = new Array(textEls.length).fill(1.0);
+                    function updateMagnification() {
+                        textEls.forEach((el, idx) => {
+                            const angleDeg =
+                                (textData[idx].angle * 180) / Math.PI +
+                                rotation;
+                            // Distance from 0° (right/east, where text reads right-side up)
+                            let norm = ((angleDeg % 360) + 360) % 360;
+                            if (norm > 180) norm = 360 - norm;
+                            // Target scale: smooth falloff from 1.8 at 0° to 1.0 at ~15°
+                            const targetScale = norm < 15 ? 1.0 + 0.8 * Math.pow(1 - norm / 15, 2) : 1.0;
+                            // Lerp toward target for smooth animation
+                            currentScales[idx] += (targetScale - currentScales[idx]) * 0.15;
+                            const scale = currentScales[idx];
+                            const weight = scale > 1.3 ? 700 : 500;
+                            el.attr("font-size", baseFont * scale).attr(
+                                "font-weight",
+                                weight,
+                            );
+
+                            // Reposition symbols after text width changes
+                            const syms = imgEls[idx];
+                            if (syms && syms.length > 0) {
+                                try {
+                                    const bbox = el.node().getBBox();
+                                    const td = textData[idx];
+                                    const textRadius = innerRadius + 5;
+                                    const tx = Math.cos(td.angle) * textRadius;
+                                    const ty = Math.sin(td.angle) * textRadius;
+                                    const rotAngle = (td.angle * 180) / Math.PI;
+                                    let offsetX = bbox.width + 6;
+                                    syms.forEach((item) => {
+                                        item.el.attr(
+                                            "transform",
+                                            `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
+                                        );
+                                        offsetX += item.symW + 4;
+                                    });
+                                } catch (e) {}
+                            }
+                        });
+                    }
+
+                    updateMagnification();
+
+                    // Slow auto-rotation
+                    function animate() {
+                        if (autoRotate && !dragging) {
+                            rotation += 0.03;
+                            g.attr(
+                                "transform",
+                                `translate(${cx},${cy}) rotate(${rotation})`,
+                            );
+                            updateMagnification();
+                        }
+                        requestAnimationFrame(animate);
+                    }
+                    requestAnimationFrame(animate);
+
+                    // Drag to spin
+                    let dragging = false;
+                    let lastAngle = 0;
+
+                    function getAngle(event) {
+                        const rect = svg.node().getBoundingClientRect();
+                        const x = event.clientX - rect.left - rect.width / 2;
+                        const y = event.clientY - rect.top - rect.height / 2;
+                        return Math.atan2(y, x);
+                    }
+
+                    svg.on("mousedown", function (event) {
+                        if (
+                            event.target.tagName === "line" &&
+                            event.target.getAttribute("stroke") ===
+                                "transparent"
+                        )
+                            return;
+                        dragging = true;
+                        autoRotate = false;
+                        lastAngle = getAngle(event);
+                        svg.style("cursor", "grabbing");
+                    });
+
+                    d3.select(window).on("mousemove.spin", function (event) {
+                        if (!dragging) return;
+                        const currentAngle = getAngle(event);
+                        const delta =
+                            ((currentAngle - lastAngle) * 180) / Math.PI;
+                        rotation += delta;
+                        g.attr(
+                            "transform",
+                            `translate(${cx},${cy}) rotate(${rotation})`,
+                        );
+                        lastAngle = currentAngle;
+                        updateMagnification();
+                    });
+
+                    d3.select(window).on("mouseup.spin", function () {
+                        if (dragging) {
+                            dragging = false;
+                            svg.style("cursor", "grab");
+                            autoRotate = true;
+                        }
+                    });
+
+                    // Touch support
+                    svg.on(
+                        "touchstart",
+                        function (event) {
+                            const touch = event.touches[0];
+                            dragging = true;
+                            autoRotate = false;
+                            lastAngle = getAngle(touch);
+                        },
+                        { passive: true },
+                    );
+
+                    d3.select(window).on(
+                        "touchmove.spin",
+                        function (event) {
+                            if (!dragging) return;
+                            const touch = event.touches[0];
+                            const currentAngle = getAngle(touch);
+                            const delta =
+                                ((currentAngle - lastAngle) * 180) / Math.PI;
+                            rotation += delta;
+                            g.attr(
+                                "transform",
+                                `translate(${cx},${cy}) rotate(${rotation})`,
+                            );
+                            lastAngle = currentAngle;
+                            updateMagnification();
+                        },
+                        { passive: true },
+                    );
+
+                    d3.select(window).on("touchend.spin", function () {
+                        dragging = false;
+                        autoRotate = true;
+                    });
+                });
+        })();
+    </script>
+</BaseLayout>
