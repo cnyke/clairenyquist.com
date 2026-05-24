@@ -19,12 +19,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p
                 class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4"
             >
-                This visualization shows 64 wild dye plants arranged in rainbow
-                order by the color they produce. Each plant is labeled with its
-                common name and a botanical symbol indicating which part of the
-                plant is used for dyeing. Drag the wheel to spin, or let it
-                drift. Hover over any plant for details including mordant, color
-                permanence, and notes.
+                This visualization shows 64 wild dye plants, used for coloring
+                yarn or fabric, arranged in rainbow order by the color they
+                produce. Each plant is labeled with its common name and a
+                botanical symbol indicating which part of the plant is used for
+                dyeing. Drag the wheel to spin, or let it drift. Hover over any
+                plant for details including mordant, color permanence, and
+                notes.
             </p>
         </div>
 
@@ -448,9 +449,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             let norm = ((angleDeg % 360) + 360) % 360;
                             if (norm > 180) norm = 360 - norm;
                             // Target scale: smooth falloff from 1.8 at 0° to 1.0 at ~15°
-                            const targetScale = norm < 15 ? 1.0 + 0.8 * Math.pow(1 - norm / 15, 2) : 1.0;
+                            const targetScale =
+                                norm < 15
+                                    ? 1.0 + 0.8 * Math.pow(1 - norm / 15, 2)
+                                    : 1.0;
                             // Lerp toward target for smooth animation
-                            currentScales[idx] += (targetScale - currentScales[idx]) * 0.15;
+                            currentScales[idx] +=
+                                (targetScale - currentScales[idx]) * 0.15;
                             const scale = currentScales[idx];
                             const weight = scale > 1.3 ? 700 : 500;
                             el.attr("font-size", baseFont * scale).attr(
