@@ -1,9 +1,0 @@
-# Allow all crawlers
-User-agent: *
-Allow: /
-
-# Sitemap location
-Sitemap: https://clairenyquist.com/sitemap-index.xml
-
-# Disallow specific paths if needed (currently none)
-
