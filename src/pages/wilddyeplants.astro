@@ -297,6 +297,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const imgEls = [];
                     const textData = [];
 
+                    // Pinned-tooltip state for touch devices
+                    let currentPinnedText = null;
+
+                    function buildTooltipHtml(d, color) {
+                        let html = `<strong style="color:${color}">${d["Dye source"]}</strong><br>`;
+                        if (d["Parts used"])
+                            html += `<strong>Parts:</strong> ${d["Parts used"]}<br>`;
+                        if (d["Resulting color"])
+                            html += `<strong>Color:</strong> ${d["Resulting color"]}<br>`;
+                        if (d["Mordant"])
+                            html += `<strong>Mordant:</strong> ${d["Mordant"]}<br>`;
+                        if (d["permenant color?"])
+                            html += `<strong>Permanent:</strong> ${d["permenant color?"]}<br>`;
+                        if (d["Other notes"])
+                            html += `<div style="margin-top:4px;color:#666;font-style:italic">${d["Other notes"]}</div>`;
+                        return html;
+                    }
+
+                    function positionTooltip(clientX, clientY) {
+                        const vizRect = document
+                            .getElementById("viz")
+                            .getBoundingClientRect();
+                        tooltip
+                            .style("left", clientX - vizRect.left + 15 + "px")
+                            .style("top", clientY - vizRect.top - 10 + "px");
+                    }
+
+                    function dismissPinned() {
+                        if (currentPinnedText) {
+                            currentPinnedText
+                                .attr("font-weight", 500)
+                                .attr("font-size", baseFont);
+                            currentPinnedText = null;
+                            tooltip.style("opacity", 0);
+                        }
+                    }
+
                     data.forEach((d, i) => {
                         const angle = i * angleStep - Math.PI / 2;
                         const color = d._color;
@@ -358,25 +395,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             });
                         }
 
-                        // Defer symbol positioning to after text renders
-                        setTimeout(() => {
-                            try {
-                                const bbox = textEl.node().getBBox();
-                                const textW = bbox.width;
-                                let offsetX = textW + 6;
-                                symbolGroup.forEach((item) => {
-                                    item.el.attr(
-                                        "transform",
-                                        `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
-                                    );
-                                    offsetX += item.symW + 4;
-                                });
-                            } catch (e) {}
-                        }, 50);
+                        // Measure once; cached for magnification re-positioning.
+                        const baseWidth = textEl.node().getBBox().width;
+                        {
+                            let offsetX = baseWidth + 6;
+                            symbolGroup.forEach((item) => {
+                                item.el.attr(
+                                    "transform",
+                                    `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
+                                );
+                                offsetX += item.symW + 4;
+                            });
+                        }
 
                         textEls.push(textEl);
                         imgEls.push(symbolGroup);
-                        textData.push({ angle, i, d, color });
+                        textData.push({ angle, i, d, color, baseWidth });
 
                         // Hit area
                         const hitRadius = innerRadius - 10;
@@ -394,48 +428,52 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             .attr("stroke", "transparent")
                             .attr("stroke-width", 14)
                             .style("cursor", "pointer")
-                            .on("mouseover", function (event) {
+                            .on("mouseover", function () {
                                 textEl
                                     .attr("font-weight", 700)
                                     .attr("font-size", baseFont * 1.4);
-
-                                let html = `<strong style="color:${color}">${d["Dye source"]}</strong><br>`;
-                                if (d["Parts used"])
-                                    html += `<strong>Parts:</strong> ${d["Parts used"]}<br>`;
-                                if (d["Resulting color"])
-                                    html += `<strong>Color:</strong> ${d["Resulting color"]}<br>`;
-                                if (d["Mordant"])
-                                    html += `<strong>Mordant:</strong> ${d["Mordant"]}<br>`;
-                                if (d["permenant color?"])
-                                    html += `<strong>Permanent:</strong> ${d["permenant color?"]}<br>`;
-                                if (d["Other notes"])
-                                    html += `<div style="margin-top:4px;color:#666;font-style:italic">${d["Other notes"]}</div>`;
-
-                                tooltip.html(html).style("opacity", 1);
+                                tooltip
+                                    .html(buildTooltipHtml(d, color))
+                                    .style("opacity", 1);
                             })
                             .on("mousemove", function (event) {
-                                const vizRect = document
-                                    .getElementById("viz")
-                                    .getBoundingClientRect();
-                                tooltip
-                                    .style(
-                                        "left",
-                                        event.clientX -
-                                            vizRect.left +
-                                            15 +
-                                            "px",
-                                    )
-                                    .style(
-                                        "top",
-                                        event.clientY - vizRect.top - 10 + "px",
-                                    );
+                                positionTooltip(event.clientX, event.clientY);
                             })
                             .on("mouseout", function () {
+                                if (currentPinnedText === textEl) return;
                                 textEl
                                     .attr("font-weight", 500)
                                     .attr("font-size", baseFont);
                                 tooltip.style("opacity", 0);
-                            });
+                            })
+                            .on(
+                                "touchstart",
+                                function (event) {
+                                    event.stopPropagation();
+                                    autoRotate = false;
+                                    if (
+                                        currentPinnedText &&
+                                        currentPinnedText !== textEl
+                                    ) {
+                                        currentPinnedText
+                                            .attr("font-weight", 500)
+                                            .attr("font-size", baseFont);
+                                    }
+                                    currentPinnedText = textEl;
+                                    textEl
+                                        .attr("font-weight", 700)
+                                        .attr("font-size", baseFont * 1.4);
+                                    const touch = event.touches[0];
+                                    tooltip
+                                        .html(buildTooltipHtml(d, color))
+                                        .style("opacity", 1);
+                                    positionTooltip(
+                                        touch.clientX,
+                                        touch.clientY,
+                                    );
+                                },
+                                { passive: true },
+                            );
                     });
 
                     // Magnification: smooth interpolation toward the right side
@@ -463,25 +501,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 weight,
                             );
 
-                            // Reposition symbols after text width changes
+                            // Reposition symbols from cached text width — no layout read.
                             const syms = imgEls[idx];
                             if (syms && syms.length > 0) {
-                                try {
-                                    const bbox = el.node().getBBox();
-                                    const td = textData[idx];
-                                    const textRadius = innerRadius + 5;
-                                    const tx = Math.cos(td.angle) * textRadius;
-                                    const ty = Math.sin(td.angle) * textRadius;
-                                    const rotAngle = (td.angle * 180) / Math.PI;
-                                    let offsetX = bbox.width + 6;
-                                    syms.forEach((item) => {
-                                        item.el.attr(
-                                            "transform",
-                                            `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
-                                        );
-                                        offsetX += item.symW + 4;
-                                    });
-                                } catch (e) {}
+                                const td = textData[idx];
+                                const textRadius = innerRadius + 5;
+                                const tx = Math.cos(td.angle) * textRadius;
+                                const ty = Math.sin(td.angle) * textRadius;
+                                const rotAngle = (td.angle * 180) / Math.PI;
+                                let offsetX = td.baseWidth * scale + 6;
+                                syms.forEach((item) => {
+                                    item.el.attr(
+                                        "transform",
+                                        `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
+                                    );
+                                    offsetX += item.symW + 4;
+                                });
                             }
                         });
                     }
@@ -552,6 +587,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     svg.on(
                         "touchstart",
                         function (event) {
+                            // Tap on empty wheel area dismisses any pinned tooltip.
+                            dismissPinned();
                             const touch = event.touches[0];
                             dragging = true;
                             autoRotate = false;
@@ -581,7 +618,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                     d3.select(window).on("touchend.spin", function () {
                         dragging = false;
-                        autoRotate = true;
+                        if (!currentPinnedText) autoRotate = true;
                     });
                 });
         })();

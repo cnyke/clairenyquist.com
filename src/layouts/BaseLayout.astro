@@ -7,10 +7,10 @@ export interface Props {
   author?: string;
 }
 
-const { 
-  title, 
+const {
+  title,
   description = "Claire Nyquist - Data Visualization and Design. Exploring biology, public health, and epidemiology through interactive data visualizations, science communication, and creative storytelling.",
-  image = "/images/headshot.jpeg",
+  image = "/images/headshot.png",
   type = "website",
   author = "Claire Nyquist"
 } = Astro.props;
@@ -21,6 +21,27 @@ const GA_MEASUREMENT_ID = "G-7PZ8NQ5JQD";
 // Get current URL for canonical and OG tags
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+const dataVizPages = [
+  { href: "/ai-models-timeline", label: "AI Models" },
+  { href: "/malaria", label: "Malaria" },
+  { href: "/meps", label: "Medical Expenditure Panel Survey" },
+  { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
+  { href: "/octopuses", label: "Octopuses" },
+  { href: "/respiratoryviruses", label: "Respiratory Viruses" },
+  { href: "/satellites", label: "Starlink Satellites" },
+  { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
+  { href: "/tuberculosis", label: "Tuberculosis" },
+  { href: "/themet", label: "The Met Collection" },
+  { href: "/wilddyeplants", label: "Wild Dye Plants" },
+];
+
+const topLevelPages = [
+  { href: "/graphic-design", label: "Graphic Design" },
+  { href: "/tcplot", label: "tcplot()" },
+  { href: "/resume", label: "Resumé" },
+  { href: "/about-contact", label: "About & Contact" },
+];
 ---
 
 <!DOCTYPE html>
@@ -62,14 +83,10 @@ const socialImageURL = new URL(image, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://unpkg.com">
-    
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
+
     <!-- Structured Data (Schema.org JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -119,66 +136,41 @@ const socialImageURL = new URL(image, Astro.site);
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-8">
             <!-- Data Visualizations Dropdown -->
-            <div class="relative group">
-              <button class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1">
+            <div class="relative">
+              <button
+                id="desktop-dataviz-toggle"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="desktop-dataviz-menu"
+                class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1"
+              >
                 <span>Data Visualizations</span>
-                <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg id="desktop-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="absolute left-0 top-full pt-2 w-56 hidden group-hover:block z-50">
+              <div
+                id="desktop-dataviz-menu"
+                class="absolute left-0 top-full pt-2 w-56 hidden z-50"
+              >
                 <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div class="py-1">
-                    <a href="/ai-models-timeline" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      AI Models
-                    </a>
-                    <a href="/malaria" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Malaria
-                    </a>
-                    <a href="/meps" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Medical Expenditure Panel Survey
-                    </a>
-                    <a href="/minnesota-bryophytes" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Minnesota Mosses
-                    </a>
-                    <a href="/octopuses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Octopuses
-                    </a>
-                    <a href="/respiratoryviruses" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Respiratory Viruses
-                    </a>
-                    <a href="/satellites" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Starlink Satellites
-                    </a>
-                    <a href="/stanford-torus-explorer" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Stanford Torus Explorer
-                    </a>
-                    <a href="/tuberculosis" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Tuberculosis
-                    </a>
-                    <a href="/themet" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      The Met Collection
-                    </a>
-                    <a href="/wilddyeplants" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                      Wild Dye Plants
-                    </a>
+                    {dataVizPages.map((p) => (
+                      <a href={p.href} class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                        {p.label}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              Graphic Design
-            </a>
-            <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              tcplot()
-            </a>
-            <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              Resumé
-            </a>
-            <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
-              About & Contact
-            </a>
+            {topLevelPages.map((p) => (
+              <a href={p.href} class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                {p.label}
+              </a>
+            ))}
           </nav>
 
           <!-- Mobile menu button -->
@@ -196,61 +188,32 @@ const socialImageURL = new URL(image, Astro.site);
           <div class="flex flex-col space-y-2">
             <!-- Data Visualizations Dropdown for Mobile -->
             <div>
-              <button id="mobile-dataviz-toggle" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full">
+              <button
+                id="mobile-dataviz-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="mobile-dataviz-menu"
+                class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full"
+              >
                 <span>Data Visualizations</span>
                 <svg id="mobile-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               <div id="mobile-dataviz-menu" class="hidden pl-4 space-y-2 mt-2">
-                <a href="/ai-models-timeline" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  AI Models
-                </a>
-                <a href="/malaria" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Malaria
-                </a>
-                <a href="/meps" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Medical Expenditure Panel Survey
-                </a>
-                <a href="/minnesota-bryophytes" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Minnesota Mosses
-                </a>
-                <a href="/octopuses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Octopuses
-                </a>
-                <a href="/respiratoryviruses" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Respiratory Viruses
-                </a>
-                <a href="/satellites" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Starlink Satellites
-                </a>
-                <a href="/stanford-torus-explorer" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Stanford Torus Explorer
-                </a>
-                <a href="/tuberculosis" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Tuberculosis
-                </a>
-                <a href="/themet" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  The Met Collection
-                </a>
-                <a href="/wilddyeplants" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                  Wild Dye Plants
-                </a>
+                {dataVizPages.map((p) => (
+                  <a href={p.href} class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+                    {p.label}
+                  </a>
+                ))}
               </div>
             </div>
 
-            <a href="/graphic-design" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
-              Graphic Design
-            </a>
-            <a href="/tcplot" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
-              tcplot()
-            </a>
-            <a href="/resume" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
-              Resumé
-            </a>
-            <a href="/about-contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
-              About & Contact
-            </a>
+            {topLevelPages.map((p) => (
+              <a href={p.href} class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+                {p.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -295,12 +258,49 @@ const socialImageURL = new URL(image, Astro.site);
 
       // Mobile data visualizations dropdown toggle
       document.getElementById('mobile-dataviz-toggle')?.addEventListener('click', () => {
+        const btn = document.getElementById('mobile-dataviz-toggle');
         const submenu = document.getElementById('mobile-dataviz-menu');
         const icon = document.getElementById('mobile-dataviz-icon');
+        const willOpen = submenu?.classList.contains('hidden');
         submenu?.classList.toggle('hidden');
         icon?.classList.toggle('rotate-180');
+        btn?.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       });
 
+      // Desktop data visualizations dropdown — click to toggle (works on touch)
+      {
+        const btn = document.getElementById('desktop-dataviz-toggle');
+        const menu = document.getElementById('desktop-dataviz-menu');
+        const icon = document.getElementById('desktop-dataviz-icon');
+
+        const closeMenu = () => {
+          menu?.classList.add('hidden');
+          icon?.classList.remove('rotate-180');
+          btn?.setAttribute('aria-expanded', 'false');
+        };
+
+        btn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const willOpen = menu?.classList.contains('hidden');
+          menu?.classList.toggle('hidden');
+          icon?.classList.toggle('rotate-180');
+          btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        // Close when clicking anywhere outside
+        document.addEventListener('click', (e) => {
+          if (!menu || menu.classList.contains('hidden')) return;
+          const target = e.target;
+          if (target instanceof Node && !menu.contains(target) && target !== btn) {
+            closeMenu();
+          }
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeMenu();
+        });
+      }
     </script>
   </body>
 </html>
