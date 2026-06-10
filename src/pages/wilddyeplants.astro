@@ -233,7 +233,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 .style("border", "1px solid #ddd")
                 .style("border-radius", "8px")
                 .style("padding", "12px 16px")
-                .style("font-family", "Lexend, sans-serif")
+                .style("font-family", "Helvetica Neue, Inter, sans-serif")
                 .style("font-size", "14px")
                 .style("line-height", "1.5")
                 .style("max-width", "320px")
@@ -326,9 +326,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
                     function dismissPinned() {
                         if (currentPinnedText) {
-                            currentPinnedText
-                                .attr("font-weight", 500)
-                                .attr("font-size", baseFont);
+                            currentPinnedText.attr("font-weight", 500);
                             currentPinnedText = null;
                             tooltip.style("opacity", 0);
                         }
@@ -362,7 +360,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             .attr("dominant-baseline", "middle")
                             .attr("fill", color)
                             .attr("font-size", baseFont)
-                            .attr("font-family", "Lexend, sans-serif")
+                            .attr("font-family", "Helvetica Neue, Inter, sans-serif")
                             .attr("font-weight", 500)
                             .text(shortName);
 
@@ -429,9 +427,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             .attr("stroke-width", 14)
                             .style("cursor", "pointer")
                             .on("mouseover", function () {
-                                textEl
-                                    .attr("font-weight", 700)
-                                    .attr("font-size", baseFont * 1.4);
+                                textEl.attr("font-weight", 700);
                                 tooltip
                                     .html(buildTooltipHtml(d, color))
                                     .style("opacity", 1);
@@ -441,9 +437,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             })
                             .on("mouseout", function () {
                                 if (currentPinnedText === textEl) return;
-                                textEl
-                                    .attr("font-weight", 500)
-                                    .attr("font-size", baseFont);
+                                textEl.attr("font-weight", 500);
                                 tooltip.style("opacity", 0);
                             })
                             .on(
@@ -455,14 +449,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                         currentPinnedText &&
                                         currentPinnedText !== textEl
                                     ) {
-                                        currentPinnedText
-                                            .attr("font-weight", 500)
-                                            .attr("font-size", baseFont);
+                                        currentPinnedText.attr(
+                                            "font-weight",
+                                            500,
+                                        );
                                     }
                                     currentPinnedText = textEl;
-                                    textEl
-                                        .attr("font-weight", 700)
-                                        .attr("font-size", baseFont * 1.4);
+                                    textEl.attr("font-weight", 700);
                                     const touch = event.touches[0];
                                     tooltip
                                         .html(buildTooltipHtml(d, color))
@@ -476,8 +469,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             );
                     });
 
-                    // Magnification: smooth interpolation toward the right side
-                    const currentScales = new Array(textEls.length).fill(1.0);
+                    // Emphasis toward the right side (0°): weight only — text
+                    // size stays constant for every plant.
                     function updateMagnification() {
                         textEls.forEach((el, idx) => {
                             const angleDeg =
@@ -486,38 +479,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             // Distance from 0° (right/east, where text reads right-side up)
                             let norm = ((angleDeg % 360) + 360) % 360;
                             if (norm > 180) norm = 360 - norm;
-                            // Target scale: smooth falloff from 1.8 at 0° to 1.0 at ~15°
-                            const targetScale =
-                                norm < 15
-                                    ? 1.0 + 0.8 * Math.pow(1 - norm / 15, 2)
-                                    : 1.0;
-                            // Lerp toward target for smooth animation
-                            currentScales[idx] +=
-                                (targetScale - currentScales[idx]) * 0.15;
-                            const scale = currentScales[idx];
-                            const weight = scale > 1.3 ? 700 : 500;
-                            el.attr("font-size", baseFont * scale).attr(
-                                "font-weight",
-                                weight,
-                            );
-
-                            // Reposition symbols from cached text width — no layout read.
-                            const syms = imgEls[idx];
-                            if (syms && syms.length > 0) {
-                                const td = textData[idx];
-                                const textRadius = innerRadius + 5;
-                                const tx = Math.cos(td.angle) * textRadius;
-                                const ty = Math.sin(td.angle) * textRadius;
-                                const rotAngle = (td.angle * 180) / Math.PI;
-                                let offsetX = td.baseWidth * scale + 6;
-                                syms.forEach((item) => {
-                                    item.el.attr(
-                                        "transform",
-                                        `translate(${tx},${ty}) rotate(${rotAngle}) translate(${offsetX},${-symbolSize / 2})`,
-                                    );
-                                    offsetX += item.symW + 4;
-                                });
-                            }
+                            el.attr("font-weight", norm < 15 ? 700 : 500);
                         });
                     }
 

@@ -1,288 +1,324 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const title = "The Met Collection | Claire Nyquist";
+const title = "Claire Nyquist | Health Data Visualization";
 const description =
-    "Every square is an artwork. Over 1,000 objects from the Metropolitan Museum of Art, colored by their dominant hue and rearranged as you scroll.";
+    "Claire Nyquist builds interactive data visualizations about public health. Master of Public Health + graphic design + R, Python, JavaScript, and D3. Based in Minneapolis.";
+
+// Cells for the MEPS card preview (static mini-heatmap)
+const heatRows = 5;
+const heatCols = 9;
+const heatCells = Array.from({ length: heatRows * heatCols }, (_, i) => {
+    const r = Math.floor(i / heatCols);
+    const c = i % heatCols;
+    // deterministic pseudo-pattern, darker toward one corner
+    const v =
+        ((r * 37 + c * 53) % 70) / 100 + (r + c) / (heatRows + heatCols) / 2.5;
+    return Math.min(0.95, v);
+});
+
+const moreViz = [
+    { href: "/malaria", label: "Malaria" },
+    { href: "/respiratoryviruses", label: "Respiratory Viruses" },
+    { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
+    { href: "/octopuses", label: "Octopuses" },
+    { href: "/wilddyeplants", label: "Wild Dye Plants" },
+    { href: "/ai-models-timeline", label: "AI Models Timeline" },
+    { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
+];
 ---
 
-<BaseLayout title={title} description={description}>
-    <!-- Fixed canvas behind everything -->
-    <canvas
-        id="met-canvas"
-        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;"
-    ></canvas>
+<script is:inline src="https://d3js.org/d3.v7.min.js"></script>
 
-    <!-- Tooltip -->
-    <div
-        id="tooltip"
-        style="position:fixed;z-index:100;pointer-events:none;display:none;
-    background:rgba(0,0,0,0.9);color:#fff;padding:0;border-radius:8px;
-    font-size:13px;max-width:300px;line-height:1.4;box-shadow:0 4px 20px rgba(0,0,0,0.4);overflow:hidden;"
-    >
-        <div
-            id="tooltip-img-wrap"
-            style="width:300px;background:#111;display:none;position:relative;"
-        >
-            <img
-                id="tooltip-img"
-                src=""
-                alt=""
-                style="width:100%;height:auto;display:block;"
-            />
-            <div
-                id="tooltip-img-loader"
-                style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"
-            >
-                <div
-                    style="width:20px;height:20px;border:2px solid #444;border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;"
-                >
+<BaseLayout title={title} description={description}>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hero -->
+        <section class="py-16 md:py-24">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 items-start">
+                <div class="md:col-span-3">
+                    <p
+                        class="text-5xl md:text-7xl mb-4 leading-tight name-gradient"
+                        style="font-weight: 400;"
+                    >
+                        Claire Nyquist
+                    </p>
+                    <h1
+                        class="text-2xl md:text-4xl text-gray-900 mb-6 leading-tight"
+                    >
+                        I build interactive data visualizations about health.
+                    </h1>
+                    <p class="text-xl text-gray-600 leading-relaxed mb-4">
+                        I have a Master of Public Health (University of
+                        Minnesota), a degree in graphic communication design
+                        (University of Westminster, First Class Honors), and
+                        expertise in R, Python, JavaScript, and D3.
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed mb-8">
+                        I've worked in public health consulting at ICF, vaccine
+                        distribution at the Minnesota Department of Health, and
+                        rapid diagnostic development at the University of
+                        Minnesota. I also founded
+                        <a
+                            href="/tcplot"
+                            class="text-blue-600 hover:text-blue-800 underline"
+                            >tcplot</a
+                        >, the Twin Cities data visualization community.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a
+                            href="#work"
+                            class="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+                            >See the work</a
+                        >
+                        <a
+                            href="/resume"
+                            class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
+                            >Resumé</a
+                        >
+                        <a
+                            href="mailto:clairenyquist@gmail.com"
+                            class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
+                            >Get in touch</a
+                        >
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <div
+                        id="hero-viz"
+                        class="w-full aspect-[4/3] rounded-md bg-white border border-gray-200 overflow-hidden cursor-crosshair touch-none"
+                        role="img"
+                        aria-label="Conway's Game of Life — click and drag to draw cells and watch them evolve through many colors"
+                    >
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                        <span class="text-gray-700"
+                            >Conway's Game of Life.</span
+                        > Each pixel lives or dies based on how many neighbors it
+                        has — order and chaos from three simple rules.
+                        <span class="text-gray-700"
+                            >Click and drag to draw your own cells</span
+                        > and watch them evolve.
+                    </p>
                 </div>
             </div>
-        </div>
-        <div id="tooltip-text" style="padding:8px 12px;"></div>
-    </div>
-
-    <!-- Scroll sections -->
-    <div
-        id="scroll-container"
-        style="position:relative;z-index:1;pointer-events:none;"
-    >
-        <!-- Section 0: Intro -->
-        <section
-            class="scroll-section"
-            data-sort="hue"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-left:5%;">
-                <h1
-                    style="font-size:clamp(1.8rem,4vw,3rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
-                >
-                    The Met Collection
-                </h1>
-                <p
-                    style="font-size:clamp(0.95rem,1.5vw,1.15rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    Every square you see is an artwork from the
-                    <a
-                        href="https://www.metmuseum.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:#1d4ed8;text-decoration:underline;"
-                        >Metropolitan Museum of Art</a
-                    >'s open-access collection, colored by its dominant hue.
-                    <br /><br />
-                    Scroll to see hundreds of objects sorted by hue, date, culture,
-                    and medium.
-                </p>
-                <h3
-                    style="font-size:clamp(1.1rem,2vw,1.5rem);font-weight:700;margin:1rem 0 0 0;color:#000;"
-                >
-                    <span class="speech-desktop">Hover to see the artworks!</span>
-                    <span class="speech-mobile">Click to see the artworks!</span>
-                </h3>
-            </div>
         </section>
 
-        <!-- Section 1: Hue -->
-        <section
-            class="scroll-section"
-            data-sort="hue"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-right:5%;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
-                >
-                    Color Spectrum
-                </h2>
-                <p
-                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    Each artwork's dominant color is extracted by sampling the most saturated tone from its image. Sorted by hue, with lightness as a tiebreaker.
-                </p>
-            </div>
-        </section>
+        <!-- Featured work -->
+        <section id="work" class="pb-16">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
+                Featured work
+            </h2>
+            <p class="text-gray-600 mb-8">
+                Interactive pieces created from public datasets — with the
+                methods shown.
+            </p>
 
-        <!-- Section 2: Chronological -->
-        <section
-            class="scroll-section"
-            data-sort="chronological"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-start;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-left:5%;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- MEPS card -->
+                <a
+                    href="/meps"
+                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                    5,000 Years of Art
-                </h2>
-                <p
-                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    Sorted by creation date, from ancient Egyptian artifacts to
-                    modern paintings. Each row reads left to right through time.
-                </p>
-            </div>
-        </section>
-
-        <!-- Section 3: Culture -->
-        <section
-            class="scroll-section"
-            data-sort="culture"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-right:5%;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
-                >
-                    Cultures & Nations
-                </h2>
-                <p
-                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    Grouped by culture of origin. Notice how color palettes
-                    differ.
-                </p>
-            </div>
-        </section>
-
-        <!-- Section 4: Medium -->
-        <section
-            class="scroll-section"
-            data-sort="medium"
-            style="height:100vh;display:flex;align-items:center;justify-content:flex-end;padding:2rem;"
-        >
-            <div class="glass-card" style="margin-right:5%;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.5rem 0;color:#000;"
-                >
-                    Materials & Media
-                </h2>
-                <p
-                    style="font-size:clamp(0.9rem,1.3vw,1.05rem);color:#000;line-height:1.6;margin:0;"
-                >
-                    Grouped by material&mdash;oil on canvas, woodblock print,
-                    silver, ceramic. The medium shapes the palette.
-                </p>
-            </div>
-        </section>
-
-        <!-- Section 6: Outro -->
-        <section
-            class="scroll-section"
-            data-sort="hue"
-            style="height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;"
-        >
-            <div class="glass-card" style="max-width:520px;text-align:center;">
-                <h2
-                    style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin:0 0 0.75rem 0;color:#000;"
-                >
-                    Data Sources
-                </h2>
-                <p
-                    style="font-size:clamp(0.85rem,1.2vw,1rem);color:#000;line-height:1.7;margin:0;"
-                >
-                    Artwork data from the
-                    <a
-                        href="https://metmuseum.github.io/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:#1d4ed8;text-decoration:underline;"
-                        >Met Museum Collection API</a
+                    <div
+                        class="h-40 bg-gray-50 flex items-center justify-center p-4"
                     >
-                    and
-                    <a
-                        href="https://github.com/metmuseum/openaccess"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:#1d4ed8;text-decoration:underline;"
-                        >Open Access CSV</a
-                    >.
-                    <br /><br />
-                    Dominant colors extracted with
-                    <a
-                        href="https://github.com/obskyr/colorgram.py"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style="color:#1d4ed8;text-decoration:underline;"
-                        >colorgram.py</a
-                    >.
+                        <svg
+                            viewBox={`0 0 ${heatCols * 20} ${heatRows * 20}`}
+                            class="w-full h-full"
+                            role="img"
+                            aria-label="Stylized heatmap preview"
+                        >
+                            {
+                                heatCells.map((v, i) => (
+                                    <rect
+                                        class="meps-cell"
+                                        data-v={v}
+                                        x={(i % heatCols) * 20 + 1}
+                                        y={Math.floor(i / heatCols) * 20 + 1}
+                                        width="18"
+                                        height="18"
+                                        rx="2"
+                                        fill={`rgba(79, 70, 229, ${v})`}
+                                    />
+                                ))
+                            }
+                        </svg>
+                    </div>
+                    <div class="p-5">
+                        <h3
+                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
+                        >
+                            Medical Expenditure Panel Survey
+                        </h3>
+                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
+                            U.S. healthcare use, spending, and insurance
+                            coverage by region and age — an animated D3 heatmap
+                            of AHRQ survey data.
+                        </p>
+                        <p class="text-xs text-gray-400 mt-3">
+                            D3 · AHRQ data · normalization methods included
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Tuberculosis card -->
+                <a
+                    href="/tuberculosis"
+                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                    <div
+                        id="tb-preview"
+                        class="h-40 bg-gray-50 flex items-center justify-center"
+                        role="img"
+                        aria-label="Concentric circles showing estimated tuberculosis incidence, notified cases, and deaths"
+                    >
+                    </div>
+                    <div class="p-5">
+                        <h3
+                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
+                        >
+                            Tuberculosis
+                        </h3>
+                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
+                            The world's deadliest infectious disease — estimated
+                            incidence and mortality by country, 2000–2024.
+                        </p>
+                        <p class="text-xs text-gray-400 mt-3">
+                            D3 · WHO Global Tuberculosis Programme data
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Met card -->
+                <a
+                    href="/themet"
+                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                    <div class="h-40 bg-gray-100 relative overflow-hidden">
+                        <img
+                            id="met-img-a"
+                            class="met-fade-img"
+                            src="/images/met-initial.jpg"
+                            style="opacity:1;"
+                            alt=""
+                            aria-hidden="true"
+                        />
+                        <img
+                            id="met-img-b"
+                            class="met-fade-img"
+                            alt=""
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <div class="p-5">
+                        <h3
+                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
+                        >
+                            The Met Collection
+                        </h3>
+                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
+                            1,000+ artworks from the Met's open-access
+                            collection, colored by dominant hue and re-sorted as
+                            you scroll.
+                        </p>
+                        <p class="text-xs text-gray-400 mt-3">
+                            Canvas animation · Met Museum API
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- More work -->
+            <div class="mt-10">
+                <p class="text-sm font-medium text-gray-500 mb-3">
+                    More visualizations
                 </p>
+                <div class="flex flex-wrap gap-2">
+                    {
+                        moreViz.map((p) => (
+                            <a
+                                href={p.href}
+                                class="px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
+                            >
+                                {p.label}
+                            </a>
+                        ))
+                    }
+                    <a
+                        href="/graphic-design"
+                        class="px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
+                    >
+                        Graphic Design
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- tcplot strip -->
+        <section class="pb-20">
+            <div
+                class="bg-gray-50 border border-gray-200 rounded-lg p-8 md:flex md:items-center md:justify-between"
+            >
+                <div class="md:max-w-2xl">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">
+                        tcplot — Twin Cities data visualization
+                    </h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        I founded and organize tcplot, a meetup for the Twin
+                        Cities creative coding and data visualization community.
+                        If you're local and you make charts, come say hi.
+                    </p>
+                </div>
+                <a
+                    href="/tcplot"
+                    class="inline-flex items-center mt-6 md:mt-0 px-6 py-3 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-700 transition-colors"
+                    >About tcplot</a
+                >
             </div>
         </section>
     </div>
 
     <style>
-        /* Glass card */
-        .glass-card {
-            pointer-events: auto;
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 12px;
-            padding: 1.5rem 2rem;
-            max-width: 420px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .glass-card a {
-            color: #1d4ed8;
-            text-decoration: underline;
-        }
-        .glass-card a:hover {
-            color: #1e40af;
-        }
-
-        /* Show/hide based on pointer capability */
-        .speech-mobile { display: none; }
-        .speech-desktop { display: inline; }
-        @media (hover: none) and (pointer: coarse) {
-            .speech-mobile { display: inline; }
-            .speech-desktop { display: none; }
-        }
-
-        /* Hide default page padding from BaseLayout main */
-        :global(main.flex-grow) {
-            padding: 0 !important;
-        }
-
-        /* Hide footer when on this page */
-        :global(footer) {
-            display: none;
-        }
-
-        /* Loading overlay */
-        #loading-overlay {
-            position: fixed;
+        .met-fade-img {
+            position: absolute;
             inset: 0;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            transition: opacity 0.5s;
-        }
-        #loading-overlay.hidden {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             opacity: 0;
-            pointer-events: none;
+            transition: opacity 1.2s ease;
         }
-    </style>
 
-    <!-- Loading overlay -->
-    <div id="loading-overlay">
-        <div style="text-align:center;">
-            <div
-                style="width:48px;height:48px;border:3px solid #e5e7eb;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"
-            >
-            </div>
-            <p style="color:#666;font-size:0.95rem;">Loading artworks...</p>
-        </div>
-    </div>
-    <style>
-        @keyframes spin {
+        /* Name in the same turbo spectrum as the Game of Life, gently shifting. */
+        .name-gradient {
+            background-image: linear-gradient(
+                90deg,
+                #4675ed,
+                #1bcfd4,
+                #2ff2a3,
+                #9bfc3a,
+                #f3c63a,
+                #fe8b2b,
+                #e84a16
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            animation: name-shift 7s ease-in-out infinite alternate;
+        }
+        @keyframes name-shift {
+            from {
+                background-position: 0% center;
+            }
             to {
-                transform: rotate(360deg);
+                background-position: 100% center;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .name-gradient {
+                animation: none;
             }
         }
     </style>
@@ -290,538 +326,260 @@ const description =
     <script is:inline>
         (function () {
             "use strict";
+            if (typeof d3 === "undefined") return;
 
-            // --- State ---
-            let artworks = [];
-            let N = 0;
-            let currentSort = "hue";
-            let targetSort = "hue";
-            let animProgress = 1; // 1 = done
-            let animStart = 0;
-            const ANIM_DURATION = 800;
-
-            // Position arrays: { [sortName]: Float32Array of [x0,y0,x1,y1,...] }
-            let positions = {};
-            // Colors as [r,g,b] arrays
-            let colors = [];
-
-            // Canvas
-            const canvas = document.getElementById("met-canvas");
-            const ctx = canvas.getContext("2d");
-            let canvasW = 0,
-                canvasH = 0,
-                cols = 0,
-                rows = 0,
-                pixelSize = 0;
-            const dpr = window.devicePixelRatio || 1;
-            const navH = 64; // height of sticky navbar
-
-            // Tooltip
-            const tooltip = document.getElementById("tooltip");
-
-            // --- CSV Parsing ---
-            function parseCSV(text) {
-                const lines = text.split("\n");
-                const headers = parseCSVLine(lines[0]);
-                const result = [];
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const vals = parseCSVLine(lines[i]);
-                    const obj = {};
-                    for (let j = 0; j < headers.length; j++) {
-                        obj[headers[j]] = vals[j] || "";
-                    }
-                    result.push(obj);
-                }
-                return result;
-            }
-
-            function parseCSVLine(line) {
-                const result = [];
-                let current = "";
-                let inQuotes = false;
-                for (let i = 0; i < line.length; i++) {
-                    const ch = line[i];
-                    if (inQuotes) {
-                        if (ch === '"') {
-                            if (i + 1 < line.length && line[i + 1] === '"') {
-                                current += '"';
-                                i++;
-                            } else {
-                                inQuotes = false;
-                            }
-                        } else {
-                            current += ch;
-                        }
-                    } else {
-                        if (ch === '"') {
-                            inQuotes = true;
-                        } else if (ch === ",") {
-                            result.push(current.trim());
-                            current = "";
-                        } else {
-                            current += ch;
-                        }
-                    }
-                }
-                result.push(current.trim());
-                return result;
-            }
-
-            // --- Hex to RGB ---
-            function hexToRGB(hex) {
-                hex = hex.replace("#", "");
-                return [
-                    parseInt(hex.substring(0, 2), 16),
-                    parseInt(hex.substring(2, 4), 16),
-                    parseInt(hex.substring(4, 6), 16),
-                ];
-            }
-
-            function hexToLightness(hex) {
-                const [r, g, b] = hexToRGB(hex || "#888888");
-                const max = Math.max(r, g, b) / 255;
-                const min = Math.min(r, g, b) / 255;
-                return (max + min) / 2;
-            }
-
-            // --- Grid Calculation ---
-            function computeGrid() {
-                canvasW = window.innerWidth;
-                canvasH = window.innerHeight;
-                canvas.width = canvasW * dpr;
-                canvas.height = canvasH * dpr;
-                canvas.style.width = canvasW + "px";
-                canvas.style.height = canvasH + "px";
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-                if (N === 0) return;
-
-                // Size squares to fill the available viewport (below navbar)
-                const availH = canvasH - navH;
-                cols = Math.ceil(Math.sqrt((N * canvasW) / availH));
-                rows = Math.ceil(N / cols);
-                pixelSize = Math.min(canvasW / cols, availH / rows);
-                cols = Math.floor(canvasW / pixelSize);
-                rows = Math.ceil(N / cols);
-                pixelSize = Math.min(canvasW / cols, availH / rows);
-
-                // Recompute all positions
-                computeAllPositions();
-            }
-
-            // --- Sort Helpers ---
-            function getSortedIndices(sortKey) {
-                const indices = Array.from({ length: N }, (_, i) => i);
-
-                switch (sortKey) {
-                    case "chronological":
-                        indices.sort((a, b) => {
-                            const da =
-                                parseInt(artworks[a].objectBeginDate) || 0;
-                            const db =
-                                parseInt(artworks[b].objectBeginDate) || 0;
-                            return da - db;
-                        });
-                        break;
-                    case "culture":
-                        indices.sort((a, b) => {
-                            const ca = (
-                                artworks[a].culture || "Unknown"
-                            ).toLowerCase();
-                            const cb = (
-                                artworks[b].culture || "Unknown"
-                            ).toLowerCase();
-                            return ca < cb ? -1 : ca > cb ? 1 : 0;
-                        });
-                        break;
-                    case "medium":
-                        indices.sort((a, b) => {
-                            const ma = simplifyMedium(
-                                artworks[a].medium || "Unknown",
-                            ).toLowerCase();
-                            const mb = simplifyMedium(
-                                artworks[b].medium || "Unknown",
-                            ).toLowerCase();
-                            return ma < mb ? -1 : ma > mb ? 1 : 0;
-                        });
-                        break;
-                    case "hue":
-                        indices.sort((a, b) => {
-                            const ha = parseFloat(artworks[a].hue) || 0;
-                            const hb = parseFloat(artworks[b].hue) || 0;
-                            if (Math.abs(ha - hb) > 0.5) return hb - ha;
-                            const la = hexToLightness(artworks[a].hex);
-                            const lb = hexToLightness(artworks[b].hex);
-                            return lb - la;
-                        });
-                        break;
-                }
-                return indices;
-            }
-
-            function simplifyMedium(medium) {
-                const lower = medium.toLowerCase();
-                if (lower.includes("oil")) return "Oil paint";
-                if (lower.includes("watercolor")) return "Watercolor";
-                if (lower.includes("woodblock") || lower.includes("woodcut"))
-                    return "Woodblock print";
-                if (lower.includes("photograph") || lower.includes("gelatin"))
-                    return "Photography";
-                if (lower.includes("silk")) return "Silk";
-                if (lower.includes("cotton")) return "Cotton";
-                if (lower.includes("wool")) return "Wool";
-                if (
-                    lower.includes("ceramic") ||
-                    lower.includes("terracotta") ||
-                    lower.includes("earthenware") ||
-                    lower.includes("stoneware") ||
-                    lower.includes("porcelain")
-                )
-                    return "Ceramics";
-                if (lower.includes("bronze")) return "Bronze";
-                if (lower.includes("silver")) return "Silver";
-                if (lower.includes("gold")) return "Gold";
-                if (lower.includes("iron") || lower.includes("steel"))
-                    return "Iron/Steel";
-                if (lower.includes("wood")) return "Wood";
-                if (
-                    lower.includes("stone") ||
-                    lower.includes("marble") ||
-                    lower.includes("limestone")
-                )
-                    return "Stone";
-                if (lower.includes("paper") || lower.includes("ink"))
-                    return "Ink on paper";
-                if (lower.includes("engraving") || lower.includes("etching"))
-                    return "Engraving";
-                if (lower.includes("lithograph")) return "Lithograph";
-                if (lower.includes("glass")) return "Glass";
-                if (lower.includes("ivory")) return "Ivory";
-                if (lower.includes("leather")) return "Leather";
-                const comma = medium.indexOf(",");
-                return comma > 0
-                    ? medium.substring(0, comma)
-                    : medium.substring(0, 30);
-            }
-
-            function computePositionsForSort(sortKey) {
-                const sorted = getSortedIndices(sortKey);
-                const posArr = new Float32Array(N * 2);
-
-                // Simple grid layout
-                for (let i = 0; i < sorted.length; i++) {
-                    const origIdx = sorted[i];
-                    const gridCol = i % cols;
-                    const gridRow = Math.floor(i / cols);
-                    posArr[origIdx * 2] = gridCol * pixelSize;
-                    posArr[origIdx * 2 + 1] = gridRow * pixelSize + navH;
-                }
-
-                return posArr;
-            }
-
-            function computeAllPositions() {
-                const sorts = ["chronological", "culture", "medium", "hue"];
-                for (const s of sorts) {
-                    positions[s] = computePositionsForSort(s);
-                }
-            }
-
-            // --- Easing ---
-            function easeInOutCubic(t) {
-                return t < 0.5
-                    ? 4 * t * t * t
-                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            }
-
-            // --- Render ---
-            function render(timestamp) {
-                if (animProgress < 1) {
-                    const elapsed = timestamp - animStart;
-                    animProgress = Math.min(1, elapsed / ANIM_DURATION);
-                }
-
-                const t = easeInOutCubic(animProgress);
-
-                ctx.clearRect(0, 0, canvasW, canvasH);
-
-                const fromPos = positions[currentSort];
-                const toPos = positions[targetSort];
-
-                if (!fromPos || !toPos) {
-                    requestAnimationFrame(render);
-                    return;
-                }
-
-                for (let i = 0; i < N; i++) {
-                    const fi = i * 2;
-                    let x, y;
-
-                    if (animProgress >= 1) {
-                        x = toPos[fi];
-                        y = toPos[fi + 1];
-                    } else {
-                        x = fromPos[fi] + (toPos[fi] - fromPos[fi]) * t;
-                        y =
-                            fromPos[fi + 1] +
-                            (toPos[fi + 1] - fromPos[fi + 1]) * t;
-                    }
-
-                    const c = colors[i];
-                    ctx.fillStyle = c;
-                    ctx.fillRect(x, y, pixelSize - 0.5, pixelSize - 0.5);
-                }
-
-                if (animProgress >= 1 && currentSort !== targetSort) {
-                    currentSort = targetSort;
-                }
-
-                requestAnimationFrame(render);
-            }
-
-            // --- Transition ---
-            function transitionTo(sortName) {
-                if (sortName === targetSort && animProgress >= 1) return;
-                if (!positions[sortName]) return;
-                targetSort = sortName;
-                animProgress = 0;
-                animStart = performance.now();
-            }
-
-            // --- Intersection Observer for scroll sections ---
-            function setupScrollObserver() {
-                const sections = document.querySelectorAll(".scroll-section");
-
-                const observer = new IntersectionObserver(
-                    (entries) => {
-                        for (const entry of entries) {
-                            if (entry.isIntersecting) {
-                                const sort =
-                                    entry.target.getAttribute("data-sort");
-                                if (sort) transitionTo(sort);
-                            }
-                        }
-                    },
-                    { threshold: 0.5 },
-                );
-
-                sections.forEach((s) => observer.observe(s));
-            }
-
-            // --- Tooltip on hover/tap ---
-            function setupTooltip() {
-                const tooltipText = document.getElementById("tooltip-text");
-                const tooltipImgWrap =
-                    document.getElementById("tooltip-img-wrap");
-                const tooltipImg = document.getElementById("tooltip-img");
-                const tooltipImgLoader =
-                    document.getElementById("tooltip-img-loader");
-                let currentTooltipIdx = -1;
-                let imgLoadedFor = -1;
-
-                tooltipImg.addEventListener("load", () => {
-                    tooltipImgLoader.style.display = "none";
-                    imgLoadedFor = currentTooltipIdx;
-                });
-                tooltipImg.addEventListener("error", () => {
-                    tooltipImgWrap.style.display = "none";
-                    imgLoadedFor = -1;
-                });
-
-                function showTooltipAt(mx, my) {
-                    if (N === 0 || animProgress < 1) {
-                        tooltip.style.display = "none";
-                        currentTooltipIdx = -1;
-                        return;
-                    }
-
-                    const pos = positions[currentSort];
-                    let found = -1;
-
-                    for (let i = 0; i < N; i++) {
-                        const px = pos[i * 2];
-                        const py = pos[i * 2 + 1];
-                        if (
-                            mx >= px &&
-                            mx < px + pixelSize &&
-                            my >= py &&
-                            my < py + pixelSize
-                        ) {
-                            found = i;
-                            break;
-                        }
-                    }
-
-                    if (found >= 0) {
-                        const a = artworks[found];
-                        const year = parseInt(a.objectBeginDate);
-                        const yearStr =
-                            year < 0 ? `${Math.abs(year)} BCE` : `${year} CE`;
-
-                        tooltipText.innerHTML = `
-            <strong style="color:${a.hex};">\u25A0</strong>
-            <strong>${a.objectName || "Untitled"}</strong><br>
-            <span style="color:#ccc;font-size:12px;">
-              ${a.culture || "Unknown culture"} &middot; ${yearStr}<br>
-              ${a.department ? "<b>Dept:</b> " + a.department + "<br>" : ""}
-              ${a.medium ? "<b>Medium:</b> " + a.medium + "<br>" : ""}
-              <b>Color:</b> <span style="color:${a.hex};">${a.hex}</span>
-            </span>
-          `;
-
-                        if (found !== currentTooltipIdx) {
-                            currentTooltipIdx = found;
-                            const imgUrl = a.imageUrl;
-                            if (imgUrl) {
-                                tooltipImgWrap.style.display = "block";
-                                tooltipImgLoader.style.display = "flex";
-                                tooltipImg.src = imgUrl;
-                            } else {
-                                tooltipImgWrap.style.display = "none";
-                            }
-                        }
-
-                        tooltip.style.display = "block";
-
-                        const tooltipH = tooltip.offsetHeight || 250;
-                        const tooltipW = 300;
-                        let tx = mx + 14;
-                        let ty = my + 14;
-                        if (tx + tooltipW > window.innerWidth)
-                            tx = mx - tooltipW - 10;
-                        if (ty + tooltipH > window.innerHeight)
-                            ty = my - tooltipH - 10;
-                        if (tx < 0) tx = 4;
-                        if (ty < 0) ty = 4;
-                        tooltip.style.left = tx + "px";
-                        tooltip.style.top = ty + "px";
-                    } else {
-                        tooltip.style.display = "none";
-                        currentTooltipIdx = -1;
-                    }
-                }
-
-                function hideTooltip() {
-                    tooltip.style.display = "none";
-                    currentTooltipIdx = -1;
-                }
-
-                // Track whether input is touch-based to avoid conflicts
-                let isTouch = false;
-
-                // Desktop: mouse events (skip if touch device)
-                canvas.addEventListener("mousemove", (e) => {
-                    if (isTouch) return;
-                    showTooltipAt(e.clientX, e.clientY);
-                });
-                canvas.addEventListener("mouseleave", () => {
-                    if (isTouch) return;
-                    hideTooltip();
-                });
-
-                // Mobile: tap to toggle tooltip
-                canvas.addEventListener(
-                    "touchstart",
-                    () => {
-                        isTouch = true;
-                    },
-                    { passive: true },
-                );
-
-                canvas.addEventListener("click", (e) => {
-                    if (!isTouch) return;
-                    if (N === 0 || animProgress < 1) return;
-
-                    // If a tooltip is currently showing, always close it first
-                    if (tooltip.style.display === "block") {
-                        hideTooltip();
-                        return;
-                    }
-
-                    const pos = positions[currentSort];
-                    let found = -1;
-                    for (let i = 0; i < N; i++) {
-                        const px = pos[i * 2];
-                        const py = pos[i * 2 + 1];
-                        if (
-                            e.clientX >= px &&
-                            e.clientX < px + pixelSize &&
-                            e.clientY >= py &&
-                            e.clientY < py + pixelSize
-                        ) {
-                            found = i;
-                            break;
-                        }
-                    }
-
-                    if (found >= 0) {
-                        showTooltipAt(e.clientX, e.clientY);
-                    }
-                });
-            }
-
-            // --- Resize handler ---
-            let resizeTimer;
-            window.addEventListener("resize", () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    computeGrid();
-                    animProgress = 1; // snap to current sort
-                }, 200);
+            // --- MEPS card: recolor cells with the page's viridis scale ---
+            d3.selectAll(".meps-cell").attr("fill", function () {
+                var v = parseFloat(this.getAttribute("data-v")) || 0;
+                return d3.interpolateViridis(v);
             });
 
-            // --- Load data and start ---
-            async function init() {
-                try {
-                    const resp = await fetch("/data/met_colors.csv");
-                    if (!resp.ok)
-                        throw new Error(
-                            "CSV not found. Run the Python script first.",
-                        );
-                    const text = await resp.text();
-                    artworks = parseCSV(text);
-                    N = artworks.length;
+            // --- Hero: Conway's Game of Life — color-morphing, click to play ---
+            (function heroViz() {
+                var el = document.getElementById("hero-viz");
+                if (!el) return;
+                var COLS = 32,
+                    ROWS = 24,
+                    CELL = 14,
+                    W = COLS * CELL,
+                    H = ROWS * CELL;
+                var svg = d3
+                    .select(el)
+                    .append("svg")
+                    .attr("viewBox", "0 0 " + W + " " + H)
+                    .attr("width", "100%")
+                    .attr("height", "100%")
+                    .style("display", "block")
+                    .style("touch-action", "none");
 
-                    // Pre-parse colors as hex strings
-                    colors = artworks.map((a) => a.hex || "#888888");
-
-                    // Setup canvas and positions
-                    computeGrid();
-
-                    // Start render loop
-                    requestAnimationFrame(render);
-
-                    // Setup interactions
-                    setupScrollObserver();
-                    setupTooltip();
-
-                    // Hide loading
-                    const overlay = document.getElementById("loading-overlay");
-                    if (overlay) overlay.classList.add("hidden");
-                    setTimeout(() => {
-                        if (overlay) overlay.remove();
-                    }, 600);
-                } catch (err) {
-                    console.error("Met visualization error:", err);
-                    const overlay = document.getElementById("loading-overlay");
-                    if (overlay) {
-                        overlay.innerHTML = `
-            <div style="text-align:center;padding:2rem;">
-              <p style="color:#ef4444;font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">Could not load artwork data</p>
-              <p style="color:#666;font-size:0.9rem;">Run <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;">python scripts/met_color_extract.py</code> to generate the dataset.</p>
-            </div>
-          `;
-                    }
+                function idx(x, y) {
+                    return y * COLS + x;
                 }
-            }
 
-            // Wait for DOM
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", init);
-            } else {
-                init();
-            }
+                // Life state (1 = alive) plus a build list for the rects.
+                var cells = new Array(COLS * ROWS),
+                    grid = [];
+                for (var y = 0; y < ROWS; y++)
+                    for (var x = 0; x < COLS; x++) {
+                        cells[idx(x, y)] = Math.random() < 0.3 ? 1 : 0;
+                        grid.push({ x: x, y: y });
+                    }
+
+                // Each cell's color rotates through the turbo scale over time,
+                // offset by position so the grid reads as a shifting spectrum.
+                var phase = 0;
+                function color(d) {
+                    var t =
+                        (phase + (d.x + d.y) / ((COLS + ROWS) * 0.8)) % 1;
+                    return d3.interpolateTurbo((t + 1) % 1);
+                }
+
+                var rects = svg
+                    .selectAll("rect")
+                    .data(grid)
+                    .enter()
+                    .append("rect")
+                    .attr("x", function (d) {
+                        return d.x * CELL + 0.5;
+                    })
+                    .attr("y", function (d) {
+                        return d.y * CELL + 0.5;
+                    })
+                    .attr("width", CELL - 1)
+                    .attr("height", CELL - 1)
+                    .attr("rx", 1.5);
+
+                // Paint the current state — instantly (dur 0) or gliding (dur>0).
+                function render(dur) {
+                    var sel = dur
+                        ? rects
+                              .transition()
+                              .duration(dur)
+                              .ease(d3.easeLinear)
+                        : rects.interrupt();
+                    sel.attr("fill", color).attr("opacity", function (d) {
+                        return cells[idx(d.x, d.y)] ? 0.9 : 0;
+                    });
+                }
+                render(0);
+
+                // Toroidal (wrap-around) neighbor count keeps gliders moving.
+                function neighbors(x, y) {
+                    var c = 0;
+                    for (var dy = -1; dy <= 1; dy++)
+                        for (var dx = -1; dx <= 1; dx++) {
+                            if (dx === 0 && dy === 0) continue;
+                            c +=
+                                cells[
+                                    idx(
+                                        (x + dx + COLS) % COLS,
+                                        (y + dy + ROWS) % ROWS
+                                    )
+                                ];
+                        }
+                    return c;
+                }
+
+                var drawing = false,
+                    paintVal = 1;
+
+                function step() {
+                    if (drawing) return; // hold still while the user draws
+                    var next = new Array(COLS * ROWS),
+                        pop = 0;
+                    for (var y = 0; y < ROWS; y++)
+                        for (var x = 0; x < COLS; x++) {
+                            var n = neighbors(x, y),
+                                live = cells[idx(x, y)]
+                                    ? n === 2 || n === 3
+                                    : n === 3;
+                            next[idx(x, y)] = live ? 1 : 0;
+                            pop += live ? 1 : 0;
+                        }
+                    cells = next;
+                    // Re-seed when the board thins out so it never stalls.
+                    if (pop < COLS * ROWS * 0.05)
+                        for (var s = 0; s < 40; s++)
+                            cells[
+                                Math.floor(Math.random() * COLS * ROWS)
+                            ] = 1;
+                    phase = (phase + 0.016) % 1;
+                    render(480);
+                }
+
+                // --- Click / drag to draw your own cells ---
+                function cellFromEvent(event) {
+                    var p = d3.pointer(event, svg.node());
+                    var cx = Math.floor(p[0] / CELL),
+                        cy = Math.floor(p[1] / CELL);
+                    if (cx < 0 || cy < 0 || cx >= COLS || cy >= ROWS)
+                        return null;
+                    return { x: cx, y: cy };
+                }
+                function paintAt(c) {
+                    if (!c) return;
+                    cells[idx(c.x, c.y)] = paintVal;
+                    render(0);
+                }
+                svg.on("pointerdown", function (event) {
+                    event.preventDefault();
+                    var c = cellFromEvent(event);
+                    if (!c) return;
+                    // First cell decides whether we're drawing or erasing.
+                    paintVal = cells[idx(c.x, c.y)] ? 0 : 1;
+                    drawing = true;
+                    paintAt(c);
+                });
+                svg.on("pointermove", function (event) {
+                    if (drawing) paintAt(cellFromEvent(event));
+                });
+                d3.select(window).on("pointerup.heroviz", function () {
+                    drawing = false;
+                });
+
+                // Reduced-motion: leave the seeded grid static (still drawable).
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                if (!reduce) setInterval(step, 520);
+            })();
+
+            // --- TB card: concentric circles from the TB viz, outer pulsing ---
+            (function tbPreview() {
+                var container = document.getElementById("tb-preview");
+                if (!container) return;
+                var W = 300,
+                    H = 160,
+                    cx = W / 2,
+                    cy = H / 2;
+                var svg = d3
+                    .select(container)
+                    .append("svg")
+                    .attr("viewBox", "0 0 " + W + " " + H)
+                    .attr("width", "100%")
+                    .attr("height", "100%");
+
+                // Same encoding and palette as /tuberculosis:
+                // outer = estimated incidence, middle = notified cases, inner = deaths
+                var R_INC = 54,
+                    R_NOT = 36,
+                    R_DTH = 16;
+                var incidence = svg
+                    .append("circle")
+                    .attr("cx", cx)
+                    .attr("cy", cy)
+                    .attr("r", R_INC)
+                    .attr("fill", "#f0d0e8");
+                svg.append("circle")
+                    .attr("cx", cx)
+                    .attr("cy", cy)
+                    .attr("r", R_NOT)
+                    .attr("fill", "#c054a0");
+                svg.append("circle")
+                    .attr("cx", cx)
+                    .attr("cy", cy)
+                    .attr("r", R_DTH)
+                    .attr("fill", "#7b2d6e");
+
+                function pulse() {
+                    incidence
+                        .transition()
+                        .duration(1400)
+                        .ease(d3.easeSinInOut)
+                        .attr("r", R_INC + 9)
+                        .transition()
+                        .duration(1400)
+                        .ease(d3.easeSinInOut)
+                        .attr("r", R_INC)
+                        .on("end", pulse);
+                }
+                pulse();
+            })();
+
+            // --- Met card: crossfade between random artworks every 2s ---
+            (function metFade() {
+                var imgA = document.getElementById("met-img-a");
+                var imgB = document.getElementById("met-img-b");
+                if (!imgA || !imgB) return;
+
+                d3.csv("/data/met_colors.csv")
+                    .then(function (rows) {
+                        var artworks = rows.filter(function (r) {
+                            return r.imageUrl;
+                        });
+                        if (artworks.length === 0) return;
+
+                        var layers = [imgA, imgB];
+                        var active = 0;
+
+                        function randomUrl() {
+                            return artworks[
+                                Math.floor(Math.random() * artworks.length)
+                            ].imageUrl;
+                        }
+
+                        function showNext() {
+                            var next = 1 - active;
+                            var loader = new Image();
+                            loader.onload = function () {
+                                layers[next].src = loader.src;
+                                layers[next].style.opacity = "1";
+                                layers[active].style.opacity = "0";
+                                active = next;
+                            };
+                            // Skip silently on a broken image; try again next tick
+                            loader.src = randomUrl();
+                        }
+
+                        // The static initial image (met-img-a) holds for the
+                        // first interval, then crossfades to random artworks.
+                        setInterval(showNext, 2000);
+                    })
+                    .catch(function () {
+                        // CSV unavailable — the static initial image remains.
+                    });
+            })();
         })();
     </script>
 </BaseLayout>

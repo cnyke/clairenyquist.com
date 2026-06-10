@@ -48,7 +48,7 @@ const description =
         >
             <div class="glass-card ml-0 md:ml-[5%]">
                 <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
-                    Malaria, Mosquitoes & Sickle Cell
+                    Mosquitoes, Malaria, & Sickle Cell
                 </h1>
                 <p class="text-sm md:text-base text-gray-700 leading-relaxed">
                     Scroll to see how Anopheles mosquito distribution, malaria
@@ -124,28 +124,29 @@ const description =
                 <p class="text-sm md:text-base text-gray-700 leading-relaxed">
                     WHO estimated number of malaria cases by country (2021).
                     Nigeria alone accounts for roughly 65 million cases &mdash;
-                    about 27% of the global total. Five species of <em>Plasmodium</em>
+                    about 27% of the global total. Five species of <em
+                        >Plasmodium</em
+                    >
                     infect humans, but <em>P. falciparum</em>
                     causes over 90% of deaths, concentrated in sub-Saharan Africa.
                     The parasite's complex life cycle &mdash; sexual reproduction
                     in the mosquito, asexual multiplication in human liver and red
                     blood cells &mdash; makes eradication exceptionally difficult.
-                    Notice how the case burden tracks the vector distribution:
-                    where <em>Anopheles</em> density is highest, malaria follows.
-                    Countries with zero cases in the tropics (e.g., Sri Lanka)
-                    represent hard-won elimination successes through vector control,
-                    surveillance, and treatment access. This map uses absolute case
-                    counts rather than per-capita rates to parallel the sickle cell
-                    data below &mdash; both show total burden, making the geographic
-                    overlap between the two diseases directly comparable. The tradeoff
-                    is that populous countries like Nigeria and the DRC dominate the
-                    color scale; a per-capita view would more evenly highlight
-                    smaller high-burden nations like Niger and Burkina Faso.
+                    Notice how the case burden tracks the vector distribution: where
+                    <em>Anopheles</em> density is highest, malaria follows. Countries
+                    with zero cases in the tropics (e.g., Sri Lanka) represent hard-won
+                    elimination successes through vector control, surveillance, and
+                    treatment access. This map uses absolute case counts rather than
+                    per-capita rates to parallel the sickle cell data below &mdash;
+                    both show total burden, making the geographic overlap between
+                    the two diseases directly comparable. The tradeoff is that populous
+                    countries like Nigeria and the DRC dominate the color scale; a
+                    per-capita view would more evenly highlight smaller high-burden
+                    nations like Niger and Burkina Faso.
                 </p>
                 <p class="text-xs text-gray-400 mt-3 leading-relaxed">
                     World Health Organization. Global Health Observatory —
-                    Estimated number of malaria cases,
-                    2021. <a
+                    Estimated number of malaria cases, 2021. <a
                         href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/malaria-incidence-(per-1-000-population-at-risk)"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -197,7 +198,6 @@ const description =
                 </p>
             </div>
         </section>
-
     </div>
 
     <style>
@@ -439,7 +439,8 @@ const description =
 
                 if (isMobile()) {
                     // Center on Africa, filling the mobile screen
-                    projection = d3.geoNaturalEarth1()
+                    projection = d3
+                        .geoNaturalEarth1()
                         .center([20, 5])
                         .scale(projection.scale() * 3.5)
                         .translate([width / 2, height / 2]);
@@ -883,14 +884,21 @@ const description =
                                 if (rect.bottom < 0) {
                                     // Scrolled above viewport (scrolling down) — advance
                                     const nextStep = step + 1;
-                                    if (STEPS[nextStep] && nextStep !== currentStep) {
+                                    if (
+                                        STEPS[nextStep] &&
+                                        nextStep !== currentStep
+                                    ) {
                                         currentStep = nextStep;
                                         updateMap(nextStep);
                                     }
                                 } else if (rect.top > 0) {
                                     // Scrolled below viewport (scrolling up) — rewind
                                     const prevStep = step - 1;
-                                    if (prevStep >= 0 && STEPS[prevStep] && prevStep !== currentStep) {
+                                    if (
+                                        prevStep >= 0 &&
+                                        STEPS[prevStep] &&
+                                        prevStep !== currentStep
+                                    ) {
                                         currentStep = prevStep;
                                         updateMap(prevStep);
                                     }

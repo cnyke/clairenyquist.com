@@ -66,9 +66,294 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
         </div>
 
-        <!-- Visualization placeholder -->
-        <div class="bg-white rounded-lg shadow-sm border overflow-hidden p-8 text-center text-gray-400 min-h-[400px] flex items-center justify-center">
-            <p class="text-lg">Visualization coming soon</p>
+        <!-- Scatterplot -->
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden p-4 sm:p-8">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">
+                GDP per Capita vs. R&D Investment
+            </h2>
+            <p class="text-sm text-gray-500 mb-6 text-center">
+                Circle size represents total NTD burden (DALYs) addressed by each country
+            </p>
+            <div id="scatter-chart" style="position: relative; width: 100%;"></div>
+            <div id="size-legend" class="flex justify-center items-end gap-6 mt-4"></div>
+        </div>
+
+        <!-- Citations -->
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg border">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Sources</h3>
+            <ul class="space-y-2 text-sm text-gray-600 list-disc list-inside">
+                <li>Policy Cures Research. (2023). <em>G-FINDER: Neglected disease research and development funding 2022</em>. <a href="https://gfinderdata.policycuresresearch.org/" class="text-blue-600 hover:underline" target="_blank" rel="noopener">gfinderdata.policycuresresearch.org</a></li>
+                <li>World Health Organization. (2020). <em>Global Health Estimates 2019: Disease burden by cause, age, sex, by country and by region, 2000–2019</em>. <a href="https://www.who.int/data/global-health-estimates" class="text-blue-600 hover:underline" target="_blank" rel="noopener">who.int/data/global-health-estimates</a></li>
+                <li>World Bank. (2023). <em>GDP per capita (current US$)</em> [Data set]. <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.CD" class="text-blue-600 hover:underline" target="_blank" rel="noopener">data.worldbank.org</a></li>
+            </ul>
         </div>
     </div>
+
+    <script is:inline src="https://d3js.org/d3.v7.min.js"></script>
+    <script is:inline>
+    (function() {
+        function init() {
+            d3.json('/data/NTDData/ntd_scatter.json').then(function(raw) {
+                var data = raw.filter(function(d) { return d.rd_funding_usd > 0; });
+
+                // Aggregate by country
+                var countryMap = {};
+                data.forEach(function(d) {
+                    if (!countryMap[d.country_code]) {
+                        countryMap[d.country_code] = {
+                            country: d.country,
+                            country_code: d.country_code,
+                            gdp_per_capita: d.gdp_per_capita,
+                            total_funding: 0,
+                            total_dalys: 0,
+                            diseases: []
+                        };
+                    }
+                    countryMap[d.country_code].total_funding += d.rd_funding_usd;
+                    countryMap[d.country_code].total_dalys += d.global_dalys;
+                    countryMap[d.country_code].diseases.push(d.disease);
+                });
+                var countries = Object.values(countryMap);
+
+                // Sort so bigger bubbles render behind smaller ones
+                countries.sort(function(a, b) { return b.total_dalys - a.total_dalys; });
+
+                // Dimensions
+                var container = document.getElementById('scatter-chart');
+                var containerWidth = container.clientWidth;
+                var margin = { top: 20, right: 40, bottom: 60, left: 80 };
+                var width = containerWidth - margin.left - margin.right;
+                var height = Math.max(360, Math.min(520, containerWidth * 0.55)) - margin.top - margin.bottom;
+
+                // Scales
+                var x = d3.scaleLog()
+                    .domain(d3.extent(countries, function(d) { return d.gdp_per_capita; })).nice()
+                    .range([0, width]);
+
+                var y = d3.scaleLog()
+                    .domain(d3.extent(countries, function(d) { return d.total_funding; })).nice()
+                    .range([height, 0]);
+
+                var r = d3.scaleSqrt()
+                    .domain(d3.extent(countries, function(d) { return d.total_dalys; }))
+                    .range([6, 42]);
+
+                // Formatters
+                function formatMoney(d) {
+                    if (d >= 1e9) return '$' + (d / 1e9).toFixed(1) + 'B';
+                    if (d >= 1e6) return '$' + (d / 1e6).toFixed(0) + 'M';
+                    if (d >= 1e3) return '$' + (d / 1e3).toFixed(0) + 'K';
+                    return '$' + d;
+                }
+
+                function formatGDP(d) {
+                    return '$' + d3.format(',')(Math.round(d));
+                }
+
+                // SVG
+                var svg = d3.select('#scatter-chart')
+                    .append('svg')
+                    .attr('viewBox', '0 0 ' + containerWidth + ' ' + (height + margin.top + margin.bottom))
+                    .attr('preserveAspectRatio', 'xMidYMid meet')
+                    .style('width', '100%')
+                    .style('height', 'auto')
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+                // Grid lines
+                svg.append('g')
+                    .attr('transform', 'translate(0,' + height + ')')
+                    .call(d3.axisBottom(x).tickSize(-height).tickFormat(''))
+                    .selectAll('line')
+                    .style('stroke', '#e5e7eb')
+                    .style('stroke-dasharray', '3,3');
+
+                svg.append('g')
+                    .call(d3.axisLeft(y).tickSize(-width).tickFormat(''))
+                    .selectAll('line')
+                    .style('stroke', '#e5e7eb')
+                    .style('stroke-dasharray', '3,3');
+
+                svg.selectAll('.domain').remove();
+
+                // X axis
+                svg.append('g')
+                    .attr('transform', 'translate(0,' + height + ')')
+                    .call(d3.axisBottom(x).ticks(6).tickFormat(function(d) {
+                        return '$' + (d >= 1e3 ? (d / 1e3).toFixed(0) + 'K' : d);
+                    }))
+                    .call(function(g) { g.select('.domain').style('stroke', '#9ca3af'); })
+                    .selectAll('text')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280');
+
+                // Y axis
+                svg.append('g')
+                    .call(d3.axisLeft(y).ticks(6).tickFormat(formatMoney))
+                    .call(function(g) { g.select('.domain').style('stroke', '#9ca3af'); })
+                    .selectAll('text')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280');
+
+                // Axis labels
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height + 48)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '13px')
+                    .style('fill', '#374151')
+                    .style('font-weight', '500')
+                    .text('GDP per Capita (USD)');
+
+                svg.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('x', -height / 2)
+                    .attr('y', -62)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '13px')
+                    .style('fill', '#374151')
+                    .style('font-weight', '500')
+                    .text('Total R&D Funding (USD)');
+
+                // Tooltip
+                var tooltip = d3.select('#scatter-chart')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('visibility', 'hidden')
+                    .style('background', 'white')
+                    .style('border', '1px solid #d1d5db')
+                    .style('border-radius', '8px')
+                    .style('padding', '10px 14px')
+                    .style('font-size', '13px')
+                    .style('line-height', '1.6')
+                    .style('box-shadow', '0 4px 12px rgba(0,0,0,0.1)')
+                    .style('pointer-events', 'none')
+                    .style('z-index', '20')
+                    .style('max-width', '280px');
+
+                // Bubbles
+                svg.selectAll('.bubble')
+                    .data(countries)
+                    .join('circle')
+                    .attr('class', 'bubble')
+                    .attr('cx', function(d) { return x(d.gdp_per_capita); })
+                    .attr('cy', function(d) { return y(d.total_funding); })
+                    .attr('r', 0)
+                    .attr('fill', '#3b82f6')
+                    .attr('fill-opacity', 0.4)
+                    .attr('stroke', '#2563eb')
+                    .attr('stroke-width', 1.5)
+                    .style('cursor', 'pointer')
+                    .transition()
+                    .duration(800)
+                    .delay(function(d, i) { return i * 30; })
+                    .attr('r', function(d) { return r(d.total_dalys); });
+
+                // Re-bindinteraction after transition
+                svg.selectAll('.bubble')
+                    .on('mouseover', function(event, d) {
+                        d3.select(this)
+                            .attr('fill-opacity', 0.7)
+                            .attr('stroke-width', 2.5);
+
+                        tooltip.style('visibility', 'visible')
+                            .html(
+                                '<strong style="font-size:14px;">' + d.country + '</strong><br/>' +
+                                'GDP per capita: ' + formatGDP(d.gdp_per_capita) + '<br/>' +
+                                'Total R&D funding: ' + formatMoney(d.total_funding) + '<br/>' +
+                                'NTD burden (DALYs): ' + (d.total_dalys / 1e6).toFixed(1) + 'M<br/>' +
+                                'Diseases funded: ' + d.diseases.length
+                            );
+                    })
+                    .on('mousemove', function(event) {
+                        var rect = container.getBoundingClientRect();
+                        var mouseX = event.clientX - rect.left;
+                        var mouseY = event.clientY - rect.top;
+                        var leftPos = mouseX + 15;
+                        if (leftPos + 280 > containerWidth) {
+                            leftPos = mouseX - 280 - 15;
+                        }
+                        tooltip
+                            .style('left', leftPos + 'px')
+                            .style('top', (mouseY - 10) + 'px');
+                    })
+                    .on('mouseout', function() {
+                        d3.select(this)
+                            .attr('fill-opacity', 0.4)
+                            .attr('stroke-width', 1.5);
+                        tooltip.style('visibility', 'hidden');
+                    });
+
+                // Country labels for notable funders
+                var labelSet = ['USA', 'GBR', 'DEU', 'FRA', 'IND', 'BRA', 'JPN', 'NLD', 'CHE'];
+                var labeled = countries.filter(function(d) {
+                    return labelSet.indexOf(d.country_code) !== -1;
+                });
+
+                svg.selectAll('.country-label')
+                    .data(labeled)
+                    .join('text')
+                    .attr('class', 'country-label')
+                    .attr('x', function(d) { return x(d.gdp_per_capita); })
+                    .attr('y', function(d) { return y(d.total_funding) - r(d.total_dalys) - 6; })
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '11px')
+                    .style('fill', '#4b5563')
+                    .style('font-weight', '500')
+                    .style('pointer-events', 'none')
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(400)
+                    .delay(900)
+                    .style('opacity', 1)
+                    .text(function(d) { return d.country; });
+
+                // Size legend
+                var legendData = [50e6, 200e6, 400e6];
+                var legendLabels = ['50M', '200M', '400M'];
+                var legendSvg = d3.select('#size-legend')
+                    .append('svg')
+                    .attr('width', 300)
+                    .attr('height', 90);
+
+                legendSvg.append('text')
+                    .attr('x', 150)
+                    .attr('y', 14)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280')
+                    .style('font-weight', '500')
+                    .text('NTD Burden (DALYs)');
+
+                var maxR = r(400e6);
+                var cx = 60;
+                legendData.forEach(function(val, i) {
+                    var radius = r(val);
+                    var cy = 25 + maxR + (maxR - radius);
+                    legendSvg.append('circle')
+                        .attr('cx', cx + i * 90)
+                        .attr('cy', cy)
+                        .attr('r', radius)
+                        .attr('fill', '#3b82f6')
+                        .attr('fill-opacity', 0.3)
+                        .attr('stroke', '#2563eb')
+                        .attr('stroke-width', 1);
+                    legendSvg.append('text')
+                        .attr('x', cx + i * 90)
+                        .attr('y', 25 + maxR * 2 + 16)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .style('fill', '#6b7280')
+                        .text(legendLabels[i]);
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
 </BaseLayout>

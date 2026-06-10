@@ -26,7 +26,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@300;400&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap"
             rel="stylesheet"
         />
     </head>
@@ -296,7 +296,7 @@
         top: 20px;
         left: 20px;
         z-index: 20;
-        font-family: "Inter", system-ui, sans-serif;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 14px;
         font-weight: 400;
         color: rgba(255, 255, 255, 0.85);
@@ -315,7 +315,7 @@
     body {
         background: #050608;
         overflow: hidden;
-        font-family: "Inter", system-ui, sans-serif;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
     }
     #c {
@@ -351,7 +351,7 @@
         right: 44px;
         z-index: 10;
         pointer-events: none;
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 13px;
         color: rgba(255, 255, 255, 0.85);
         letter-spacing: 0.5px;
@@ -366,7 +366,7 @@
         transform: translateX(-50%);
         z-index: 10;
         pointer-events: none;
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
         letter-spacing: 0.5px;
@@ -386,7 +386,7 @@
         background: rgba(30, 28, 25, 0.75);
         border: 1px solid rgba(255, 255, 255, 0.25);
         color: rgba(255, 255, 255, 0.95);
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 1.8px;
         padding: 9px 18px;
@@ -422,7 +422,7 @@
         transform: translateX(0);
     }
     .panel-header {
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 2px;
         color: rgba(255, 255, 255, 0.95);
@@ -443,7 +443,7 @@
         font-weight: 400;
     }
     .param-label .val {
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 13px;
         color: rgba(210, 175, 95, 1);
     }
@@ -494,7 +494,7 @@
         color: rgba(255, 255, 255, 0.75);
     }
     .stat-row span:last-child {
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         color: rgba(255, 255, 255, 0.95);
     }
 
@@ -507,7 +507,7 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: 4px;
         color: rgba(255, 255, 255, 0.95);
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 1.5px;
         cursor: pointer;
@@ -557,7 +557,7 @@
         background: rgba(30, 28, 25, 0.75);
         border: 1px solid rgba(255, 255, 255, 0.25);
         color: rgba(255, 255, 255, 0.95);
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 1.5px;
         padding: 8px 18px;
@@ -603,7 +603,7 @@
         align-items: center;
         padding: 14px 18px;
         border-bottom: 1px solid rgba(100, 98, 92, 0.15);
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 2px;
         color: rgba(255, 255, 255, 0.95);
@@ -628,7 +628,7 @@
         color: rgba(255, 255, 255, 0.9);
     }
     .cite-body h3 {
-        font-family: "JetBrains Mono", monospace;
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
         font-size: 12px;
         letter-spacing: 1.5px;
         color: rgba(210, 175, 95, 1);
@@ -1270,7 +1270,7 @@
             ctx.stroke();
             // Label
             if (eR > 8) {
-                ctx.font = "600 12px Inter, sans-serif";
+                ctx.font = "600 12px 'Helvetica Neue', sans-serif";
                 ctx.fillStyle = `rgba(255,255,255,${Math.min(0.95, eR / 30)})`;
                 ctx.textAlign = "center";
                 ctx.fillText("EARTH", earthP.x, earthP.y + eR + 16);
@@ -1352,7 +1352,7 @@
             ctx.fillStyle = mGrad;
             ctx.fill();
             if (mR > 5) {
-                ctx.font = "600 12px Inter, sans-serif";
+                ctx.font = "600 12px 'Helvetica Neue', sans-serif";
                 ctx.fillStyle = `rgba(255,255,255,${Math.min(0.95, mR / 20)})`;
                 ctx.textAlign = "center";
                 ctx.fillText("MOON", moonP.x, moonP.y + mR + 14);
@@ -1735,7 +1735,7 @@
                 );
                 if (depthAlpha > 0.03) {
                     const cp = proj(ct);
-                    ctx.font = "600 14px Inter, sans-serif";
+                    ctx.font = "600 14px 'Helvetica Neue', sans-serif";
                     ctx.fillStyle = `rgba(255,255,255,${depthAlpha * 1.6})`;
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
@@ -1810,8 +1810,8 @@
             for (let i = 0; i < lines.length; i++) {
                 ctx.font =
                     i === 0
-                        ? "600 13px Inter, sans-serif"
-                        : "400 12px Inter, sans-serif";
+                        ? "600 13px 'Helvetica Neue', sans-serif"
+                        : "400 12px 'Helvetica Neue', sans-serif";
                 ctx.fillStyle =
                     i === 0
                         ? `rgba(255,255,255,${Math.min(1, alpha * 1.6)})`

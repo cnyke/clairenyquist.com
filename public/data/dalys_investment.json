@@ -1,0 +1,272 @@
+[
+  {
+    "disease": "Ischemic heart disease",
+    "category": "Cardiovascular",
+    "global_dalys": 189218751,
+    "nih_funding_usd": 1883000000,
+    "global_deaths": 8672473,
+    "funding_per_daly": 9.95,
+    "rcdc_category": "Heart Disease"
+  },
+  {
+    "disease": "Neonatal disorders",
+    "category": "Maternal/Neonatal",
+    "global_dalys": 176559812,
+    "nih_funding_usd": 995000000,
+    "global_deaths": 1705853,
+    "funding_per_daly": 5.64,
+    "rcdc_category": "Perinatal Period - Conditions Originating in Perinatal Period"
+  },
+  {
+    "disease": "Stroke",
+    "category": "Cardiovascular",
+    "global_dalys": 155897618,
+    "nih_funding_usd": 443000000,
+    "global_deaths": 6717956,
+    "funding_per_daly": 2.84,
+    "rcdc_category": "Stroke"
+  },
+  {
+    "disease": "Diabetes mellitus",
+    "category": "Other NCD",
+    "global_dalys": 86723282,
+    "nih_funding_usd": 1187000000,
+    "global_deaths": 1912816,
+    "funding_per_daly": 13.69,
+    "rcdc_category": "Diabetes"
+  },
+  {
+    "disease": "Lower respiratory infections",
+    "category": "Infectious",
+    "global_dalys": 83391285,
+    "nih_funding_usd": 161000000,
+    "global_deaths": 2115916,
+    "funding_per_daly": 1.93,
+    "rcdc_category": "Pneumonia"
+  },
+  {
+    "disease": "Low back pain",
+    "category": "Musculoskeletal",
+    "global_dalys": 69604268,
+    "nih_funding_usd": 69000000,
+    "global_deaths": 0,
+    "funding_per_daly": 0.99,
+    "rcdc_category": "Back Pain"
+  },
+  {
+    "disease": "COPD",
+    "category": "Respiratory",
+    "global_dalys": 65347700,
+    "nih_funding_usd": 148000000,
+    "global_deaths": 2890393,
+    "funding_per_daly": 2.26,
+    "rcdc_category": "Chronic Obstructive Pulmonary Disease"
+  },
+  {
+    "disease": "Congenital birth defects",
+    "category": "Maternal/Neonatal",
+    "global_dalys": 56446389,
+    "nih_funding_usd": 636000000,
+    "global_deaths": 583040,
+    "funding_per_daly": 11.27,
+    "rcdc_category": "Congenital Structural Anomalies"
+  },
+  {
+    "disease": "Depressive disorders",
+    "category": "Mental/Neurological",
+    "global_dalys": 54526660,
+    "nih_funding_usd": 675000000,
+    "global_deaths": 0,
+    "funding_per_daly": 12.38,
+    "rcdc_category": "Depression"
+  },
+  {
+    "disease": "Malaria",
+    "category": "Infectious",
+    "global_dalys": 54509768,
+    "nih_funding_usd": 244000000,
+    "global_deaths": 706702,
+    "funding_per_daly": 4.48,
+    "rcdc_category": "Malaria"
+  },
+  {
+    "disease": "HIV/AIDS",
+    "category": "Infectious",
+    "global_dalys": 46396701,
+    "nih_funding_usd": 3294000000,
+    "global_deaths": 850952,
+    "funding_per_daly": 71.0,
+    "rcdc_category": "HIV/AIDS"
+  },
+  {
+    "disease": "Anxiety disorders",
+    "category": "Mental/Neurological",
+    "global_dalys": 45599147,
+    "nih_funding_usd": 267000000,
+    "global_deaths": 0,
+    "funding_per_daly": 5.86,
+    "rcdc_category": "Anxiety Disorders"
+  },
+  {
+    "disease": "Tuberculosis",
+    "category": "Infectious",
+    "global_dalys": 45106111,
+    "nih_funding_usd": 595000000,
+    "global_deaths": 1038377,
+    "funding_per_daly": 13.19,
+    "rcdc_category": "Tuberculosis"
+  },
+  {
+    "disease": "Headache disorders",
+    "category": "Mental/Neurological",
+    "global_dalys": 44505549,
+    "nih_funding_usd": 59000000,
+    "global_deaths": 0,
+    "funding_per_daly": 1.33,
+    "rcdc_category": "Headaches"
+  },
+  {
+    "disease": "Lung cancer",
+    "category": "Cancer",
+    "global_dalys": 44473457,
+    "nih_funding_usd": 504000000,
+    "global_deaths": 1921937,
+    "funding_per_daly": 11.33,
+    "rcdc_category": "Lung Cancer"
+  },
+  {
+    "disease": "Chronic kidney disease",
+    "category": "Other NCD",
+    "global_dalys": 44244804,
+    "nih_funding_usd": 703000000,
+    "global_deaths": 1425977,
+    "funding_per_daly": 15.89,
+    "rcdc_category": "Kidney Disease"
+  },
+  {
+    "disease": "Cirrhosis",
+    "category": "Other NCD",
+    "global_dalys": 43299764,
+    "nih_funding_usd": 447000000,
+    "global_deaths": 1282790,
+    "funding_per_daly": 10.32,
+    "rcdc_category": "Chronic Liver Disease and Cirrhosis"
+  },
+  {
+    "disease": "Alzheimer's and dementias",
+    "category": "Mental/Neurological",
+    "global_dalys": 37020158,
+    "nih_funding_usd": 3761000000,
+    "global_deaths": 2047333,
+    "funding_per_daly": 101.59,
+    "rcdc_category": "Alzheimer's Disease including AD/ADRD"
+  },
+  {
+    "disease": "Self-harm",
+    "category": "Injuries",
+    "global_dalys": 34897198,
+    "nih_funding_usd": 187000000,
+    "global_deaths": 759370,
+    "funding_per_daly": 5.36,
+    "rcdc_category": "Suicide"
+  },
+  {
+    "disease": "Substance use disorders",
+    "category": "Mental/Neurological",
+    "global_dalys": 34657097,
+    "nih_funding_usd": 2591000000,
+    "global_deaths": 334445,
+    "funding_per_daly": 74.76,
+    "rcdc_category": "Substance Misuse"
+  },
+  {
+    "disease": "Interpersonal violence",
+    "category": "Injuries",
+    "global_dalys": 30785928,
+    "nih_funding_usd": 180000000,
+    "global_deaths": 447752,
+    "funding_per_daly": 5.85,
+    "rcdc_category": "Violence Research"
+  },
+  {
+    "disease": "Hypertensive heart disease",
+    "category": "Cardiovascular",
+    "global_dalys": 27100369,
+    "nih_funding_usd": 462000000,
+    "global_deaths": 1405703,
+    "funding_per_daly": 17.05,
+    "rcdc_category": "Hypertension"
+  },
+  {
+    "disease": "Colorectal cancer",
+    "category": "Cancer",
+    "global_dalys": 24686193,
+    "nih_funding_usd": 360000000,
+    "global_deaths": 1037052,
+    "funding_per_daly": 14.58,
+    "rcdc_category": "Colorectal Cancer"
+  },
+  {
+    "disease": "Asthma",
+    "category": "Respiratory",
+    "global_dalys": 24141104,
+    "nih_funding_usd": 274000000,
+    "global_deaths": 395273,
+    "funding_per_daly": 11.35,
+    "rcdc_category": "Asthma"
+  },
+  {
+    "disease": "Breast cancer",
+    "category": "Cancer",
+    "global_dalys": 22533031,
+    "nih_funding_usd": 777000000,
+    "global_deaths": 716083,
+    "funding_per_daly": 34.48,
+    "rcdc_category": "Breast Cancer"
+  },
+  {
+    "disease": "Stomach cancer",
+    "category": "Cancer",
+    "global_dalys": 21733459,
+    "nih_funding_usd": 50000000,
+    "global_deaths": 893746,
+    "funding_per_daly": 2.3,
+    "rcdc_category": "Stomach Cancer"
+  },
+  {
+    "disease": "Maternal disorders",
+    "category": "Maternal/Neonatal",
+    "global_dalys": 16138956,
+    "nih_funding_usd": 665000000,
+    "global_deaths": 249533,
+    "funding_per_daly": 41.2,
+    "rcdc_category": "Maternal Health"
+  },
+  {
+    "disease": "Liver cancer",
+    "category": "Cancer",
+    "global_dalys": 12702417,
+    "nih_funding_usd": 189000000,
+    "global_deaths": 460714,
+    "funding_per_daly": 14.88,
+    "rcdc_category": "Liver Cancer"
+  },
+  {
+    "disease": "Pancreatic cancer",
+    "category": "Cancer",
+    "global_dalys": 11543325,
+    "nih_funding_usd": 280000000,
+    "global_deaths": 513690,
+    "funding_per_daly": 24.26,
+    "rcdc_category": "Pancreatic Cancer"
+  },
+  {
+    "disease": "Prostate cancer",
+    "category": "Cancer",
+    "global_dalys": 8445478,
+    "nih_funding_usd": 305000000,
+    "global_deaths": 446265,
+    "funding_per_daly": 36.11,
+    "rcdc_category": "Prostate Cancer"
+  }
+]

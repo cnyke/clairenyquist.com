@@ -1,0 +1,450 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="DALYs & NIH Investment | Claire Nyquist"
+    description="Interactive bubble chart comparing global disease burden (IHME DALYs) against US NIH research funding across 30 major disease categories."
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1
+                class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4 md:mb-6"
+            >
+                DALYs & NIH Investment
+            </h1>
+            <p
+                class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4"
+            >
+                Which diseases receive research funding proportional to their global health burden — and which don't?
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                This chart plots 30 disease categories by their global burden
+                (disability-adjusted life years) against US National Institutes of
+                Health research investment. Bubble size represents global deaths.
+                Diseases higher up receive more funding per DALY; those lower
+                receive less relative to their burden.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                <strong class="text-gray-700">Disease burden (DALYs and deaths)</strong> comes from the
+                <a href="https://vizhub.healthdata.org/gbd-results/" class="text-blue-600 hover:underline" target="_blank" rel="noopener">Institute for Health Metrics and Evaluation (IHME) Global Burden of Disease Study 2023</a>
+                (2021 estimates). One DALY represents one lost year of healthy life — either
+                through premature death or living with disability.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                <strong class="text-gray-700">NIH funding</strong> comes from the
+                <a href="https://report.nih.gov/funding/categorical-spending" class="text-blue-600 hover:underline" target="_blank" rel="noopener">NIH Research, Condition, and Disease Categorization (RCDC)</a>
+                system, FY2023 actual obligations. RCDC uses automated text mining to
+                categorize NIH-funded projects by disease area.
+            </p>
+        </div>
+
+        <!-- Category Legend -->
+        <div class="bg-white rounded-lg shadow-sm border p-4 mb-4">
+            <p class="text-sm text-gray-500 mb-3 text-center font-medium">Click a category to highlight</p>
+            <div id="category-legend" class="flex flex-wrap justify-center gap-2"></div>
+        </div>
+
+        <!-- Bubble Chart -->
+        <div class="bg-white rounded-lg shadow-sm border overflow-hidden p-4 sm:p-8">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">
+                Global Disease Burden vs. NIH Research Funding
+            </h2>
+            <p class="text-sm text-gray-500 mb-6 text-center">
+                Bubble size represents global deaths
+            </p>
+            <div id="bubble-chart" style="position: relative; width: 100%;"></div>
+            <div id="size-legend" class="flex justify-center items-end gap-6 mt-4"></div>
+        </div>
+
+        <!-- Citations -->
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg border">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Sources</h3>
+            <ul class="space-y-2 text-sm text-gray-600 list-disc list-inside">
+                <li>
+                    <strong>Disease burden:</strong> Global Burden of Disease Collaborative Network.
+                    <em>Global Burden of Disease Study 2023 (GBD 2023) Results</em>.
+                    Seattle, United States: Institute for Health Metrics and Evaluation (IHME), 2024.
+                    Available from <a href="https://vizhub.healthdata.org/gbd-results/" class="text-blue-600 hover:underline" target="_blank" rel="noopener">vizhub.healthdata.org/gbd-results</a>.
+                    Data shown: Global, Both sexes, All ages, 2021 estimates. Measures: DALYs (Disability-Adjusted Life Years) and Deaths, Number metric.
+                </li>
+                <li>
+                    <strong>NIH funding:</strong> National Institutes of Health, Office of Budget.
+                    <em>Estimates of Funding for Various Research, Condition, and Disease Categories (RCDC)</em>.
+                    FY2023 Actual Obligations (dollars in millions).
+                    Available from <a href="https://report.nih.gov/funding/categorical-spending" class="text-blue-600 hover:underline" target="_blank" rel="noopener">report.nih.gov/funding/categorical-spending</a>.
+                </li>
+                <li>
+                    <strong>Companion paper:</strong> GBD 2021 Diseases and Injuries Collaborators. (2024).
+                    Global incidence, prevalence, years lived with disability (YLDs), disability-adjusted life-years (DALYs),
+                    and healthy life expectancy (HALE) for 371 diseases and injuries in 204 countries and territories
+                    and 811 subnational locations, 1990–2021: a systematic analysis for the Global Burden of Disease Study 2021.
+                    <em>The Lancet</em>, 403(10440), 2133–2161.
+                    <a href="https://doi.org/10.1016/S0140-6736(24)00757-8" class="text-blue-600 hover:underline" target="_blank" rel="noopener">doi.org/10.1016/S0140-6736(24)00757-8</a>
+                </li>
+            </ul>
+            <p class="text-xs text-gray-400 mt-3">
+                Note: NIH RCDC categories do not map one-to-one with GBD cause categories.
+                RCDC uses automated text mining to assign projects to categories, and a single
+                project can appear under multiple disease areas, so category totals are not
+                mutually exclusive. GBD cause names were matched to the closest RCDC category;
+                the specific RCDC category used for each disease is included in the underlying
+                data file. This visualization is intended to reveal broad patterns in the
+                relationship between disease burden and research investment, not exact ratios.
+            </p>
+        </div>
+    </div>
+
+    <script is:inline src="https://d3js.org/d3.v7.min.js"></script>
+    <script is:inline>
+    (function() {
+        function init() {
+            d3.json('/data/dalys_investment.json').then(function(data) {
+                // Category color mapping
+                var categoryColors = {
+                    'Cardiovascular': '#ef4444',
+                    'Cancer': '#8b5cf6',
+                    'Infectious': '#f59e0b',
+                    'Mental/Neurological': '#3b82f6',
+                    'Respiratory': '#10b981',
+                    'Musculoskeletal': '#6366f1',
+                    'Other NCD': '#ec4899',
+                    'Injuries': '#64748b',
+                    'NTDs': '#f97316',
+                    'Maternal/Neonatal': '#14b8a6'
+                };
+
+                var categories = Object.keys(categoryColors);
+                var activeCategory = null;
+
+                // Sort so bigger bubbles render behind smaller ones
+                data.sort(function(a, b) { return b.global_deaths - a.global_deaths; });
+
+                // Dimensions
+                var container = document.getElementById('bubble-chart');
+                var containerWidth = container.clientWidth;
+                var margin = { top: 30, right: 50, bottom: 65, left: 90 };
+                var width = containerWidth - margin.left - margin.right;
+                var height = Math.max(400, Math.min(580, containerWidth * 0.6)) - margin.top - margin.bottom;
+
+                // Filter out zero-death entries for the death-size scale domain
+                var dataWithDeaths = data.filter(function(d) { return d.global_deaths > 0; });
+
+                // Scales
+                var x = d3.scaleLog()
+                    .domain(d3.extent(data, function(d) { return d.global_dalys; })).nice()
+                    .range([0, width]);
+
+                var y = d3.scaleLog()
+                    .domain(d3.extent(data, function(d) { return d.nih_funding_usd; })).nice()
+                    .range([height, 0]);
+
+                var r = d3.scaleSqrt()
+                    .domain([0, d3.max(data, function(d) { return d.global_deaths; })])
+                    .range([5, 44]);
+
+                // Formatters
+                function formatMoney(d) {
+                    if (d >= 1e9) return '$' + (d / 1e9).toFixed(1) + 'B';
+                    if (d >= 1e6) return '$' + (d / 1e6).toFixed(0) + 'M';
+                    if (d >= 1e3) return '$' + (d / 1e3).toFixed(0) + 'K';
+                    return '$' + d;
+                }
+
+                function formatDALYs(d) {
+                    if (d >= 1e6) return (d / 1e6).toFixed(1) + 'M';
+                    if (d >= 1e3) return (d / 1e3).toFixed(0) + 'K';
+                    return d;
+                }
+
+                function formatDeaths(d) {
+                    if (d >= 1e6) return (d / 1e6).toFixed(1) + 'M';
+                    if (d >= 1e3) return Math.round(d / 1e3) + 'K';
+                    return d;
+                }
+
+                // SVG
+                var svg = d3.select('#bubble-chart')
+                    .append('svg')
+                    .attr('viewBox', '0 0 ' + containerWidth + ' ' + (height + margin.top + margin.bottom))
+                    .attr('preserveAspectRatio', 'xMidYMid meet')
+                    .style('width', '100%')
+                    .style('height', 'auto')
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+                // Grid lines
+                svg.append('g')
+                    .attr('transform', 'translate(0,' + height + ')')
+                    .call(d3.axisBottom(x).tickSize(-height).tickFormat(''))
+                    .selectAll('line')
+                    .style('stroke', '#e5e7eb')
+                    .style('stroke-dasharray', 'none');
+
+                svg.append('g')
+                    .call(d3.axisLeft(y).tickSize(-width).tickFormat(''))
+                    .selectAll('line')
+                    .style('stroke', '#e5e7eb')
+                    .style('stroke-dasharray', 'none');
+
+                svg.selectAll('.domain').remove();
+
+                // X axis
+                svg.append('g')
+                    .attr('transform', 'translate(0,' + height + ')')
+                    .call(d3.axisBottom(x).ticks(6).tickFormat(function(d) {
+                        if (d >= 1e9) return (d / 1e9).toFixed(0) + 'B';
+                        if (d >= 1e6) return (d / 1e6).toFixed(0) + 'M';
+                        return (d / 1e3).toFixed(0) + 'K';
+                    }))
+                    .call(function(g) { g.select('.domain').style('stroke', '#9ca3af'); })
+                    .selectAll('text')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280');
+
+                // Y axis
+                svg.append('g')
+                    .call(d3.axisLeft(y).ticks(6).tickFormat(formatMoney))
+                    .call(function(g) { g.select('.domain').style('stroke', '#9ca3af'); })
+                    .selectAll('text')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280');
+
+                // Axis labels
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', height + 52)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '13px')
+                    .style('fill', '#374151')
+                    .style('font-weight', '500')
+                    .text('Global DALYs (IHME GBD 2023, 2021 estimates)');
+
+                svg.append('text')
+                    .attr('transform', 'rotate(-90)')
+                    .attr('x', -height / 2)
+                    .attr('y', -70)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '13px')
+                    .style('fill', '#374151')
+                    .style('font-weight', '500')
+                    .text('NIH Funding, FY2023 (USD)');
+
+                // Tooltip
+                var tooltip = d3.select('#bubble-chart')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('visibility', 'hidden')
+                    .style('background', 'white')
+                    .style('border', '1px solid #d1d5db')
+                    .style('border-radius', '8px')
+                    .style('padding', '10px 14px')
+                    .style('font-size', '13px')
+                    .style('line-height', '1.6')
+                    .style('box-shadow', '0 4px 12px rgba(0,0,0,0.1)')
+                    .style('pointer-events', 'none')
+                    .style('z-index', '20')
+                    .style('max-width', '300px');
+
+                // Bubbles
+                svg.selectAll('.bubble')
+                    .data(data)
+                    .join('circle')
+                    .attr('class', 'bubble')
+                    .attr('cx', function(d) { return x(d.global_dalys); })
+                    .attr('cy', function(d) { return y(d.nih_funding_usd); })
+                    .attr('r', 0)
+                    .attr('fill', function(d) { return categoryColors[d.category] || '#6b7280'; })
+                    .attr('fill-opacity', 0.5)
+                    .attr('stroke', function(d) { return categoryColors[d.category] || '#6b7280'; })
+                    .attr('stroke-width', 1.5)
+                    .style('cursor', 'pointer')
+                    .transition()
+                    .duration(800)
+                    .delay(function(d, i) { return i * 30; })
+                    .attr('r', function(d) {
+                        return d.global_deaths > 0 ? r(d.global_deaths) : 5;
+                    });
+
+                // Interaction
+                svg.selectAll('.bubble')
+                    .on('mouseover', function(event, d) {
+                        d3.select(this)
+                            .attr('fill-opacity', 0.8)
+                            .attr('stroke-width', 2.5);
+
+                        var deathsStr = d.global_deaths > 0 ? formatDeaths(d.global_deaths) : 'N/A (non-fatal)';
+                        var perDaly = (d.nih_funding_usd / d.global_dalys).toFixed(2);
+
+                        tooltip.style('visibility', 'visible')
+                            .html(
+                                '<strong style="font-size:14px;">' + d.disease + '</strong>' +
+                                '<span style="color:' + categoryColors[d.category] + '; font-size:11px; margin-left:6px;">\u25CF ' + d.category + '</span><br/>' +
+                                'Global DALYs: ' + formatDALYs(d.global_dalys) + '<br/>' +
+                                'NIH funding: ' + formatMoney(d.nih_funding_usd) + '<br/>' +
+                                'Global deaths: ' + deathsStr + '<br/>' +
+                                'Funding per DALY: <strong>$' + perDaly + '</strong>'
+                            );
+                    })
+                    .on('mousemove', function(event) {
+                        var rect = container.getBoundingClientRect();
+                        var mouseX = event.clientX - rect.left;
+                        var mouseY = event.clientY - rect.top;
+                        var leftPos = mouseX + 15;
+                        if (leftPos + 300 > containerWidth) {
+                            leftPos = mouseX - 300 - 15;
+                        }
+                        tooltip
+                            .style('left', leftPos + 'px')
+                            .style('top', (mouseY - 10) + 'px');
+                    })
+                    .on('mouseout', function(event, d) {
+                        var opacity = (activeCategory && d.category !== activeCategory) ? 0.1 : 0.5;
+                        d3.select(this)
+                            .attr('fill-opacity', opacity)
+                            .attr('stroke-width', 1.5);
+                        tooltip.style('visibility', 'hidden');
+                    });
+
+                // Disease labels for largest / most notable bubbles
+                var labelSet = [
+                    'Ischemic heart disease', 'Stroke', 'Neonatal disorders',
+                    'HIV/AIDS', 'Alzheimer\'s and dementias', 'Substance use disorders',
+                    'Breast cancer', 'Lung cancer', 'Low back pain',
+                    'Malaria', 'Diabetes mellitus', 'Headache disorders',
+                    'COPD', 'Prostate cancer'
+                ];
+                var labeled = data.filter(function(d) {
+                    return labelSet.indexOf(d.disease) !== -1;
+                });
+
+                svg.selectAll('.disease-label')
+                    .data(labeled)
+                    .join('text')
+                    .attr('class', 'disease-label')
+                    .attr('x', function(d) { return x(d.global_dalys); })
+                    .attr('y', function(d) {
+                        var radius = d.global_deaths > 0 ? r(d.global_deaths) : 5;
+                        return y(d.nih_funding_usd) - radius - 5;
+                    })
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '10px')
+                    .style('fill', '#4b5563')
+                    .style('font-weight', '500')
+                    .style('pointer-events', 'none')
+                    .style('opacity', 0)
+                    .transition()
+                    .duration(400)
+                    .delay(1000)
+                    .style('opacity', 1)
+                    .text(function(d) { return d.disease; });
+
+                // Category legend
+                var legendContainer = d3.select('#category-legend');
+                categories.forEach(function(cat) {
+                    var count = data.filter(function(d) { return d.category === cat; }).length;
+                    if (count === 0) return;
+
+                    var btn = legendContainer.append('button')
+                        .attr('class', 'legend-btn px-3 py-1.5 rounded-full text-sm font-medium border transition-all')
+                        .style('border-color', categoryColors[cat])
+                        .style('color', categoryColors[cat])
+                        .style('background', 'white')
+                        .style('cursor', 'pointer')
+                        .html('<span style="color:' + categoryColors[cat] + ';">\u25CF</span> ' + cat + ' (' + count + ')')
+                        .on('click', function() {
+                            if (activeCategory === cat) {
+                                // Deselect
+                                activeCategory = null;
+                                legendContainer.selectAll('.legend-btn')
+                                    .style('background', 'white')
+                                    .style('opacity', 1);
+                                svg.selectAll('.bubble')
+                                    .transition().duration(300)
+                                    .attr('fill-opacity', 0.5)
+                                    .attr('stroke-width', 1.5);
+                                svg.selectAll('.disease-label')
+                                    .transition().duration(300)
+                                    .style('opacity', 1);
+                            } else {
+                                // Select
+                                activeCategory = cat;
+                                legendContainer.selectAll('.legend-btn')
+                                    .style('opacity', 0.4)
+                                    .style('background', 'white');
+                                d3.select(this)
+                                    .style('opacity', 1)
+                                    .style('background', categoryColors[cat] + '18');
+
+                                svg.selectAll('.bubble')
+                                    .transition().duration(300)
+                                    .attr('fill-opacity', function(d) {
+                                        return d.category === cat ? 0.7 : 0.08;
+                                    })
+                                    .attr('stroke-width', function(d) {
+                                        return d.category === cat ? 2 : 0.5;
+                                    });
+                                svg.selectAll('.disease-label')
+                                    .transition().duration(300)
+                                    .style('opacity', function(d) {
+                                        return d.category === cat ? 1 : 0.15;
+                                    });
+                            }
+                        });
+                });
+
+                // Size legend
+                var legendValues = [100000, 1000000, 5000000];
+                var legendLabels = ['100K', '1M', '5M'];
+                var legendSvg = d3.select('#size-legend')
+                    .append('svg')
+                    .attr('width', 320)
+                    .attr('height', 100);
+
+                legendSvg.append('text')
+                    .attr('x', 160)
+                    .attr('y', 14)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .style('fill', '#6b7280')
+                    .style('font-weight', '500')
+                    .text('Global Deaths');
+
+                var maxLR = r(5000000);
+                legendValues.forEach(function(val, i) {
+                    var radius = r(val);
+                    var cy = 28 + maxLR + (maxLR - radius);
+                    legendSvg.append('circle')
+                        .attr('cx', 70 + i * 100)
+                        .attr('cy', cy)
+                        .attr('r', radius)
+                        .attr('fill', '#9ca3af')
+                        .attr('fill-opacity', 0.25)
+                        .attr('stroke', '#9ca3af')
+                        .attr('stroke-width', 1);
+                    legendSvg.append('text')
+                        .attr('x', 70 + i * 100)
+                        .attr('y', 28 + maxLR * 2 + 18)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '11px')
+                        .style('fill', '#6b7280')
+                        .text(legendLabels[i] + ' deaths');
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</BaseLayout>

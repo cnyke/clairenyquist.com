@@ -1,213 +1,396 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Resumé - Claire Nyquist | Data Visualization & Public Health Analyst" description="Data visualization analyst, developer, and designer with expertise in R, Python, JavaScript, D3.js, and public health communications. MPH from University of Minnesota with experience in epidemiology and science communication.">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Hero Section -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-        Resumé
-      </h1>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-        Experienced data visualization, public health, and communications analyst with a proven track record in design, data analysis, visualization, and strategic science communication. Proficient in R, Python, HTML, CSS, JavaScript, and D3.js. Skilled in graphic design and visual communication with a commitment to advancing science, health, and evidence-based policy.
+<BaseLayout
+    title="Resumé - Claire Nyquist | Public Health Data Visualization"
+    description="Public health data visualization analyst and designer. MPH from the University of Minnesota, design degree from the University of Westminster, working code in R, Python, JavaScript, and D3. Experience with HHS/ASPR, the Minnesota Department of Health, and ICF."
+>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                Resumé
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                I pair a Master of Public Health with a design degree and
+                creative code. I've analyzed, visualized, and communicated
+                health data for the U.S. Department of Health &amp; Human
+                Services, the Minnesota Department of Health, the Minneapolis
+                Health Department, and Robert Wood Johnson Foundation programs —
+                and I founded tcplot, the Twin Cities data visualization
+                community.
+            </p>
+        </div>
 
-      </p>
+        <!-- Experience -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">
+                Experience
+            </h2>
+
+            <div class="space-y-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Data Visualization Analyst, Developer, and
+                                Designer
+                            </h3>
+                            <p class="text-blue-600 font-medium">Independent</p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            January 2025 - Present
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Designed and built this site — 25+ interactive data
+                            visualization projects, created with JavaScript, D3,
+                            R, and Python on Astro.
+                        </li>
+                        <li>
+                            Built <a
+                                href="/themet"
+                                class="text-blue-600 hover:text-blue-800"
+                                >an interactive explorer of 1,000+ Met Museum
+                                artworks</a
+                            > with custom canvas rendering and scroll-driven animation.
+                        </li>
+                        <li>
+                            Built <a
+                                href="/meps"
+                                class="text-blue-600 hover:text-blue-800"
+                                >an animated D3 dashboard of the Medical
+                                Expenditure Panel Survey</a
+                            > (AHRQ), with documented normalization methods.
+                        </li>
+                        <li>
+                            Founded and organize <a
+                                href="/tcplot"
+                                class="text-blue-600 hover:text-blue-800"
+                                >tcplot</a
+                            >, the Twin Cities data visualization and creative
+                            coding meetup.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Public Health Preparedness & Communications
+                                Analyst
+                            </h3>
+                            <p class="text-blue-600 font-medium">ICF</p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            January 2022 - May 2025
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Compiled, cleaned, analyzed, and visualized data in
+                            R and Excel for the U.S. Department of Health &amp;
+                            Human Services' ASPR TRACIE program.
+                        </li>
+                        <li>
+                            Conducted literature reviews and integrated current
+                            research, policy updates, and best practices into
+                            emergency preparedness plans, training modules, and
+                            response strategies used by hospitals across the
+                            U.S.
+                        </li>
+                        <li>
+                            Wrote articles on vaccines, global health, and
+                            health equity for the Robert Wood Johnson
+                            Foundation/Tulane University Partners for Advancing
+                            Health Equity program.
+                        </li>
+                        <li>
+                            Organized online workshops and managed deliverables
+                            end to end.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Graduate Student Worker
+                            </h3>
+                            <p class="text-blue-600 font-medium">
+                                Minnesota Department of Health
+                            </p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            December 2020 - January 2022
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Coordinated operations for COVID-19 vaccine
+                            distribution across the state of Minnesota.
+                        </li>
+                        <li>
+                            Redistributed over 150,000 doses of COVID-19 vaccine
+                            from providers with excess to providers who could
+                            use them before expiration.
+                        </li>
+                        <li>
+                            Managed multiple databases for COVID-19 vaccine
+                            provider enrollment.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Graduate Student Intern
+                            </h3>
+                            <p class="text-blue-600 font-medium">
+                                Minneapolis Health Department
+                            </p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            June 2020 - November 2020
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Researched and designed <a
+                                href="/ppe-instructions"
+                                class="text-blue-600 hover:text-blue-800"
+                                >an information graphic on the correct procedure
+                                for donning PPE</a
+                            >.
+                        </li>
+                        <li>
+                            Interviewed long-term care facility administrators
+                            on barriers to PPE supply during COVID-19 and
+                            reported findings to the department.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Graduate Student Worker
+                            </h3>
+                            <p class="text-blue-600 font-medium">
+                                Healthy Eating Research, Robert Wood Johnson
+                                Foundation
+                            </p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            October 2019 - December 2020
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Created data visualizations from program metrics and
+                            scientific articles.
+                        </li>
+                        <li>
+                            Developed semi-annual communications reports on
+                            email and social media campaign performance.
+                        </li>
+                        <li>
+                            Researched, reviewed, and summarized journal
+                            articles for the program's website.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div
+                        class="flex flex-col md:flex-row md:justify-between md:items-start mb-4"
+                    >
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                Earlier: Clinical Research & Medical Scribe
+                                Roles
+                            </h3>
+                            <p class="text-blue-600 font-medium">
+                                Massachusetts General Hospital · Brigham and
+                                Women's Hospital · Children's Minnesota ·
+                                University of Minnesota
+                            </p>
+                        </div>
+                        <div class="text-gray-500 text-sm mt-2 md:mt-0">
+                            2016 - 2019
+                        </div>
+                    </div>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            Coordinated clinical research studies, including a
+                            study using children's cough recordings to diagnose
+                            respiratory illness; recruited and consented
+                            patients in English and Spanish.
+                        </li>
+                        <li>
+                            Documented patient encounters in a pediatric
+                            emergency room, interpreting laboratory and imaging
+                            data alongside physicians.
+                        </li>
+                        <li>
+                            Developed a PCR assay for a porcine respiratory
+                            virus at the University of Minnesota Veterinary
+                            Diagnostic Laboratory.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Awards -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Awards</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                    <li>
+                        ASPR Pledge to Excellence Award — U.S. Department of
+                        Health and Human Services.
+                    </li>
+                    <li>
+                        Partners for Advancing Health Equity 2024 Delivery
+                        Excellence Award — ICF.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Education</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        Master of Public Health
+                    </h3>
+                    <p class="text-blue-600 font-medium mb-2">
+                        Public Health Administration and Policy
+                    </p>
+                    <p class="text-gray-600 text-sm mb-2">
+                        University of Minnesota • December 2021 • GPA 3.96
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        Focused on global health security and infectious disease
+                        preparedness. Coursework included epidemiology,
+                        biostatistics, data visualization in R, surveillance of
+                        zoonotic pathogens, and public health policy. Master's
+                        thesis: a systematic review of COVID-19 disruptions to
+                        essential medicine supply chains.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        Bachelor of Arts
+                    </h3>
+                    <p class="text-blue-600 font-medium mb-2">
+                        Graphic Communication Design
+                    </p>
+                    <p class="text-gray-600 text-sm mb-2">
+                        University of Westminster • June 2015 • First Class
+                        Honors
+                    </p>
+                    <p class="text-gray-700 text-sm">
+                        Specialized in science communication through design:
+                        data visualization, user experience design, and
+                        typography. Built <a
+                            href="/gene-editing-perspectives"
+                            class="text-blue-600 hover:text-blue-800"
+                            >an interactive installation on public opinion about
+                            gene editing</a
+                        >.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Code &amp; Data
+                    </h3>
+                    <ul class="text-gray-700 space-y-1 text-sm">
+                        <li>• R and Python for analysis and visualization</li>
+                        <li>• JavaScript, D3.js, HTML, CSS</li>
+                        <li>• Web development and design</li>
+                        <li>• Data cleaning and statistical display</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Design
+                    </h3>
+                    <ul class="text-gray-700 space-y-1 text-sm">
+                        <li>• Graphic communication design</li>
+                        <li>
+                            • Adobe Creative Suite (Photoshop, Illustrator,
+                            InDesign, After Effects, Premiere Pro)
+                        </li>
+                        <li>• User experience design</li>
+                        <li>• Typography and information design</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Public Health
+                    </h3>
+                    <ul class="text-gray-700 space-y-1 text-sm">
+                        <li>• Epidemiology and infectious disease research</li>
+                        <li>• Literature reviews and research methods</li>
+                        <li>• Science and health communication</li>
+                        <li>• Emergency preparedness</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8">Community</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                    <li>
+                        <strong>Founder and Organizer, tcplot</strong> — data visualization
+                        and creative coding meetups for the Twin Cities (2026–present).
+                    </li>
+                    <li>
+                        <strong
+                            >Discovery Days Volunteer, Minneapolis Institute of
+                            Art</strong
+                        > — facilitated art discussions with elementary school groups
+                        (2025–2026).
+                    </li>
+                    <li>
+                        <strong
+                            >Inventors Club Volunteer, The Bakken Museum</strong
+                        > — supported children's hands-on engineering projects (2023–2024).
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <!-- Experience -->
-    <div class="mb-12">
-      <h2 class="text-2xl font-semibold text-gray-900 mb-8">Experience</h2>
-      
-      <div class="space-y-8">
-        <!-- Job 1 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Data Visualization Analyst, Developer, and Designer</h3>
-              <p class="text-blue-600 font-medium">Freelance</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              January 2025 - Present
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 2 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Brick Specialist</h3>
-              <p class="text-blue-600 font-medium">The LEGO Group</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              October 2025 - January 2026
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 3 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Public Health Preparedness & Communications Analyst</h3>
-              <p class="text-blue-600 font-medium">ICF</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              January 2022 - May 2025
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 3 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Graduate Student Worker</h3>
-              <p class="text-blue-600 font-medium">Minnesota Department of Health</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              December 2020 - January 2022
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 4 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Graduate Student Intern</h3>
-              <p class="text-blue-600 font-medium">Minneapolis Health Department</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              June 2020 - November 2020
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 5 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Graduate Student Worker</h3>
-              <p class="text-blue-600 font-medium">Healthy Eating Research, Robert Wood Johnson Foundation</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              October 2019 - December 2020
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 6 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Medical Scribe</h3>
-              <p class="text-blue-600 font-medium">Children's Hospital Minnesota</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              June 2018 - March 2019
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 7 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Medical Scribe</h3>
-              <p class="text-blue-600 font-medium">University of Minnesota</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              April 2018 - August 2019
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 8 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Clinical Research Coordinator</h3>
-              <p class="text-blue-600 font-medium">Massachusetts General Hospital</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              October 2017 - February 2018
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 9 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Research Assistant</h3>
-              <p class="text-blue-600 font-medium">Brigham and Women's Hospital</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              March 2017 - August 2017
-            </div>
-          </div>
-        </div>
-
-        <!-- Job 10 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-start">
-            <div>
-              <h3 class="text-xl font-semibold text-gray-900">Research Assistant</h3>
-              <p class="text-blue-600 font-medium">University of Minnesota Veterinary Diagnostic Laboratory</p>
-            </div>
-            <div class="text-gray-500 text-sm mt-2 md:mt-0">
-              June 2016 - January 2017
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Education -->
-    <div class="mb-12">
-      <h2 class="text-2xl font-semibold text-gray-900 mb-8">Education</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Master of Public Health</h3>
-          <p class="text-blue-600 font-medium mb-2">Public Health Administration and Policy</p>
-          <p class="text-gray-600 text-sm mb-2">University of Minnesota • December 2021</p>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Bachelor of Arts</h3>
-          <p class="text-blue-600 font-medium mb-2">Graphic Communication Design</p>
-          <p class="text-gray-600 text-sm mb-2">University of Westminster • June 2015</p>
-          <p class="text-gray-700 text-sm mb-2">First Class Honors</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Skills -->
-    <div class="mb-12">
-      <h2 class="text-2xl font-semibold text-gray-900 mb-8">Skills</h2>
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <ul class="text-gray-700 space-y-2">
-          <li>• Digital communications strategy and mass communications for public health</li>
-          <li>• Data analysis and visualization</li>
-          <li>• Paid digital media buying</li>
-          <li>• Editing and writing</li>
-          <li>• Display of quantitative information</li>
-          <li>• Science writing</li>
-          <li>• Infectious disease research</li>
-          <li>• HTML, CSS, JavaScript, R, and Python</li>
-          <li>• Web development and design</li>
-          <li>• Google Suite</li>
-          <li>• Adobe Creative Suite including Photoshop, Illustrator, InDesign, AfterEffects, and Premiere Pro</li>
-          <li>• Graphic communication design</li>
-          <li>• Public health research and literature reviews</li>
-          <li>• Program operations</li>
-          <li>• Multimedia storytelling</li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
 </BaseLayout>
-

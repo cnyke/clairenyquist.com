@@ -12,22 +12,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
                 About & Contact
             </h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            </p>
         </div>
 
         <div class="max-w-6xl mx-auto mb-16">
             <!-- About Section -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
                 <!-- Headshot Image -->
-                <div class="lg:col-span-1">
-                    <div class="relative">
-                        <img
-                            src="/images/headshot.png"
-                            alt="Painted portrait of Claire Nyquist"
-                            class="w-full h-auto object-contain rounded-lg shadow-lg"
-                        />
-                    </div>
+                <div class="lg:col-span-1 flex justify-center">
+                    <img
+                        src="/images/headshot2026.jpg"
+                        alt="Photo of Claire Nyquist"
+                        class="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 object-cover rounded-full shadow-lg"
+                    />
                 </div>
 
                 <!-- About Content -->
@@ -39,31 +35,72 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             I live at the intersection of <em
                                 >How does this virus work?</em
                             > and <em
-                                >How can I make this spreadsheet accessible?
-                            </em>
-                            <p></p> With a Master of Public Health from the University
-                            of Minnesota and First Class Honors in Graphic Communication
-                            Design from the University of Westminster in London, I've
-                            spent my career translating complex science into actionable
-                            insights.
+                                >How can I make this spreadsheet accessible?</em
+                            >
                         </p>
                         <p>
-                            I've worked in a pediatric ER, veterinary diagnostic
-                            lab, and as a federal consultant. From HTML/CSS to
-                            JavaScript and R, I build digital experiences that
-                            are accessible, functional, and statistically sound.
-                            I've also spent my free time volunteering at the
-                            Minneapolis Institute of Art and The Bakken Museum.
-                            I organize tcplot (our local Twin Cities data-viz
-                            community). I aim to spark curiosity&mdash;whether
-                            you are five years old or a federal policymaker.
+                            With a Master of Public Health from the University
+                            of Minnesota and First Class Honors in Graphic
+                            Communication Design from the University of
+                            Westminster in London, I've spent my career
+                            translating complex science into actionable insights
+                            — for ICF, the Minnesota Department of Health, the
+                            Minneapolis Health Department, and Robert Wood
+                            Johnson Foundation programs.
                         </p>
                         <p>
-                            Want to collaborate on a project that requires both
-                            a microscope and a paintbrush? Get in touch at
-                            clairenyquist@gmail.com.
+                            I've worked in a pediatric ER, a veterinary
+                            diagnostic lab, and as a federal consultant. From
+                            HTML/CSS to JavaScript and R, I build digital
+                            experiences that are accessible, functional, and
+                            statistically sound. I organize <a
+                                href="/tcplot"
+                                class="text-blue-600 hover:text-blue-800"
+                                >tcplot</a
+                            >, our local Twin Cities data visualization
+                            community, and I've spent my free time volunteering
+                            at the Minneapolis Institute of Art and The Bakken
+                            Museum. I aim to spark curiosity&mdash;whether you
+                            are five years old or a federal policymaker.
+                        </p>
+                        <p>
+                            I'm based in Minneapolis and currently available for
+                            data visualization, science communication, and
+                            design work.
                         </p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="max-w-3xl mx-auto mb-16">
+            <div
+                class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center"
+            >
+                <h2 class="text-2xl font-semibold text-gray-900 mb-3">
+                    Get in touch
+                </h2>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    Want to collaborate on a project that requires both a
+                    microscope and a paintbrush?
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a
+                        href="mailto:clairenyquist@gmail.com"
+                        class="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+                        >clairenyquist@gmail.com</a
+                    >
+                    <a
+                        href="/resume"
+                        class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
+                        >Resumé</a
+                    >
+                    <a
+                        href="/tcplot"
+                        class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
+                        >tcplot meetup</a
+                    >
                 </div>
             </div>
         </div>

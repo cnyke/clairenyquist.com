@@ -22,17 +22,32 @@ const GA_MEASUREMENT_ID = "G-7PZ8NQ5JQD";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
 
-const dataVizPages = [
-  { href: "/ai-models-timeline", label: "AI Models" },
-  { href: "/malaria", label: "Malaria" },
-  { href: "/meps", label: "Medical Expenditure Panel Survey" },
-  { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
-  { href: "/octopuses", label: "Octopuses" },
-  { href: "/respiratoryviruses", label: "Respiratory Viruses" },
-  { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
-  { href: "/tuberculosis", label: "Tuberculosis" },
-  { href: "/themet", label: "The Met Collection" },
-  { href: "/wilddyeplants", label: "Wild Dye Plants" },
+const dataVizGroups = [
+  {
+    heading: "Public Health",
+    pages: [
+      { href: "/malaria", label: "Malaria" },
+      { href: "/meps", label: "Medical Expenditure Panel Survey" },
+      { href: "/respiratoryviruses", label: "Respiratory Viruses" },
+      { href: "/tuberculosis", label: "Tuberculosis" },
+    ],
+  },
+  {
+    heading: "Science & Nature",
+    pages: [
+      { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
+      { href: "/octopuses", label: "Octopuses" },
+      { href: "/wilddyeplants", label: "Wild Dye Plants" },
+    ],
+  },
+  {
+    heading: "Speculative",
+    pages: [
+      { href: "/ai-models-timeline", label: "AI Models" },
+      { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
+      { href: "/themet", label: "The Met Collection" },
+    ],
+  },
 ];
 
 const topLevelPages = [
@@ -83,8 +98,28 @@ const topLevelPages = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts: Helvetica Neue (system) with Inter as the cross-platform fallback; Silkscreen kept for the tcplot wordmark -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <style is:global>
+      /* Neutral, uniform Helvetica Neue across the whole site. Silkscreen is the one exception (tcplot). */
+      *:not(.font-silkscreen) {
+        font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif !important;
+      }
+      .font-silkscreen {
+        font-family: "Silkscreen", cursive !important;
+      }
+      /* Flatten weight so headings, body, and bold all read as one regular/neutral weight. */
+      body,
+      h1, h2, h3, h4, h5, h6,
+      b, strong,
+      .font-thin, .font-extralight, .font-light, .font-normal,
+      .font-medium, .font-semibold, .font-bold, .font-extrabold, .font-black {
+        font-weight: 400 !important;
+      }
+      /* Primary text in a neutral dark gray rather than near-black. */
+      body { color: #374151; }
+      .text-gray-900 { color: #374151 !important; }
+    </style>
 
     <!-- Structured Data (Schema.org JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -127,7 +162,7 @@ const topLevelPages = [
         <div class="flex justify-between items-center h-16">
           <!-- Logo/Title -->
           <div class="flex-shrink-0">
-            <a href="/" class="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+            <a href="/" class="text-xl font-light text-gray-900 hover:text-blue-600 transition-colors">
               Claire Nyquist
             </a>
           </div>
@@ -155,10 +190,17 @@ const topLevelPages = [
               >
                 <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div class="py-1">
-                    {dataVizPages.map((p) => (
-                      <a href={p.href} class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                        {p.label}
-                      </a>
+                    {dataVizGroups.map((g) => (
+                      <div>
+                        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                          {g.heading}
+                        </p>
+                        {g.pages.map((p) => (
+                          <a href={p.href} class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            {p.label}
+                          </a>
+                        ))}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -166,7 +208,7 @@ const topLevelPages = [
             </div>
 
             {topLevelPages.map((p) => (
-              <a href={p.href} class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors ${p.href === "/tcplot" ? "font-silkscreen font-normal" : "font-medium"}`}>
                 {p.label}
               </a>
             ))}
@@ -200,16 +242,23 @@ const topLevelPages = [
                 </svg>
               </button>
               <div id="mobile-dataviz-menu" class="hidden pl-4 space-y-2 mt-2">
-                {dataVizPages.map((p) => (
-                  <a href={p.href} class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                    {p.label}
-                  </a>
+                {dataVizGroups.map((g) => (
+                  <div>
+                    <p class="pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      {g.heading}
+                    </p>
+                    {g.pages.map((p) => (
+                      <a href={p.href} class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+                        {p.label}
+                      </a>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
 
             {topLevelPages.map((p) => (
-              <a href={p.href} class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2">
+              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors py-2 ${p.href === "/tcplot" ? "font-silkscreen font-normal" : "font-medium"}`}>
                 {p.label}
               </a>
             ))}
