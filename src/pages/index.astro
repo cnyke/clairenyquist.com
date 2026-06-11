@@ -440,7 +440,7 @@ const moreViz = [
                         for (var s = 0; s < 40; s++)
                             cells[Math.floor(Math.random() * COLS * ROWS)] = 1;
                     phase = (phase + 0.016) % 1;
-                    render(480);
+                    render(0); // snap each generation — no fade
                 }
 
                 // --- Click / drag to draw your own cells ---
