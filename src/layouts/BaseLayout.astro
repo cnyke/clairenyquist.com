@@ -102,11 +102,15 @@ const topLevelPages = [
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style is:global>
       /* Neutral, uniform Helvetica Neue across the whole site. Silkscreen is the one exception (tcplot). */
-      *:not(.font-silkscreen):not(.name-gradient) {
+      *:not(.font-silkscreen):not(.name-gradient):not(.font-space-grotesk) {
         font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif !important;
       }
       .font-silkscreen {
         font-family: "Silkscreen", cursive !important;
+      }
+      /* Space Grotesk — matches the "Claire Nyquist" wordmark on the home page. */
+      .font-space-grotesk {
+        font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif !important;
       }
       /* Flatten weight so headings, body, and bold all read as one regular/neutral weight. */
       body,
@@ -190,7 +194,7 @@ const topLevelPages = [
         <div class="flex justify-between items-center h-16">
           <!-- Logo/Title -->
           <div class="flex-shrink-0">
-            <a href="/" class="text-xl font-light text-gray-900 hover:text-blue-600 transition-colors">
+            <a href="/" class="font-space-grotesk text-xl font-light text-gray-900 hover:text-blue-600 transition-colors">
               Claire Nyquist
             </a>
           </div>
