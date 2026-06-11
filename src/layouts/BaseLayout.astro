@@ -119,6 +119,34 @@ const topLevelPages = [
       /* Primary text in a neutral dark gray rather than near-black. */
       body { color: #374151; }
       .text-gray-900 { color: #374151 !important; }
+
+      /* Page titles in the same animated blue gradient as the "Claire Nyquist"
+         wordmark on the home page (turbo-scale blues, Space Grotesk). */
+      .name-gradient {
+        font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif !important;
+        line-height: 1.15;
+        padding-bottom: 0.12em;
+        background-image: linear-gradient(
+          90deg,
+          #1e3a8a,
+          #2563eb,
+          #4675ed,
+          #38bdf8
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: name-shift 9s ease-in-out infinite alternate;
+      }
+      @keyframes name-shift {
+        from { background-position: 0% center; }
+        to { background-position: 100% center; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .name-gradient { animation: none; }
+      }
     </style>
 
     <!-- Structured Data (Schema.org JSON-LD) -->

@@ -9,7 +9,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="px-4 py-8">
         <!-- Hero Section -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+            <h1 class="text-4xl md:text-6xl name-gradient mb-4">
                 Wild Dye Plants
             </h1>
             <p class="text-xs text-gray-400 mb-4"></p>
@@ -469,19 +469,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             );
                     });
 
-                    // Emphasis toward the right side (0°): weight only — text
-                    // size stays constant for every plant.
-                    function updateMagnification() {
-                        textEls.forEach((el, idx) => {
-                            const angleDeg =
-                                (textData[idx].angle * 180) / Math.PI +
-                                rotation;
-                            // Distance from 0° (right/east, where text reads right-side up)
-                            let norm = ((angleDeg % 360) + 360) % 360;
-                            if (norm > 180) norm = 360 - norm;
-                            el.attr("font-weight", norm < 15 ? 700 : 500);
-                        });
-                    }
+                    // Words stay completely constant as the wheel spins — no
+                    // rotation-based emphasis or zoom.
+                    function updateMagnification() {}
 
                     updateMagnification();
 

@@ -290,39 +290,7 @@ const moreViz = [
             opacity: 0;
             transition: opacity 1.2s ease;
         }
-
-        /* Name in a blue gradient drawn from the Game of Life's turbo scale. */
-        .name-gradient {
-            font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif !important;
-            line-height: 1.15;
-            padding-bottom: 0.12em;
-            background-image: linear-gradient(
-                90deg,
-                #1e3a8a,
-                #2563eb,
-                #4675ed,
-                #38bdf8
-            );
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            -webkit-text-fill-color: transparent;
-            animation: name-shift 9s ease-in-out infinite alternate;
-        }
-        @keyframes name-shift {
-            from {
-                background-position: 0% center;
-            }
-            to {
-                background-position: 100% center;
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .name-gradient {
-                animation: none;
-            }
-        }
+        /* .name-gradient now lives in BaseLayout's global styles. */
     </style>
 
     <script is:inline>
