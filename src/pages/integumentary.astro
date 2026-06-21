@@ -1,0 +1,356 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Number-the-diagram quiz. The image already has numbers 1–22 printed on it;
+// the user types the structure for each number into the fields below.
+// `display` is the canonical answer shown on reveal; `answers` are the
+// loosely-matched accepted spellings/synonyms.
+const items = [
+    { n: 1,  display: "Epidermis",          answers: ["epidermis"] },
+    { n: 2,  display: "Dermis",             answers: ["dermis"] },
+    { n: 3,  display: "Stratum corneum",    answers: ["stratum corneum", "corneum"] },
+    { n: 4,  display: "Stratum lucidum",    answers: ["stratum lucidum", "lucidum"] },
+    { n: 5,  display: "Stratum granulosum", answers: ["stratum granulosum", "granulosum"] },
+    { n: 6,  display: "Stratum spinosum",   answers: ["stratum spinosum", "spinosum"] },
+    { n: 7,  display: "Stratum basale",     answers: ["stratum basale", "basale", "stratum germinativum"] },
+    { n: 8,  display: "Basement membrane",  answers: ["basement membrane", "dermoepidermal junction", "dermo epidermal junction", "epidermal dermal junction"] },
+    { n: 9,  display: "Papillary region",   answers: ["papillary region", "papillary layer", "papillary"] },
+    { n: 10, display: "Reticular region",   answers: ["reticular region", "reticular layer", "reticular"] },
+    { n: 11, display: "Tactile (Meissner's) corpuscle", answers: ["tactile corpuscle", "tactile meissners corpuscle", "meissner corpuscle", "meissners corpuscle", "meissner", "tactile"] },
+    { n: 12, display: "Eccrine sweat gland", answers: ["eccrine sweat gland", "eccrine gland", "eccrine", "merocrine sweat gland", "merocrine gland"] },
+    { n: 13, display: "Lamellar (Pacinian) corpuscle", answers: ["lamellar corpuscle", "lamellar pacinian corpuscle", "pacinian corpuscle", "pacini corpuscle", "pacinian", "lamellar"] },
+    { n: 14, display: "Dermal papillae",    answers: ["dermal papillae", "dermal papilla", "papillae"] },
+    { n: 15, display: "Apocrine sweat gland", answers: ["apocrine sweat gland", "apocrine gland", "apocrine"] },
+    { n: 16, display: "Hair shaft",         answers: ["hair shaft", "shaft"] },
+    { n: 17, display: "Hair follicle",      answers: ["hair follicle", "follicle", "hair root", "root"] },
+    { n: 18, display: "Sebaceous gland",    answers: ["sebaceous gland", "sebaceous", "oil gland"] },
+    { n: 19, display: "Arrector pili muscle", answers: ["arrector pili muscle", "arrector pili", "erector pili", "arrector pilli muscle", "arrector pilli"] },
+    { n: 20, display: "Hair root",          answers: ["hair root", "root", "hair follicle", "follicle"] },
+    { n: 21, display: "Hair bulb",          answers: ["hair bulb", "bulb"] },
+    { n: 22, display: "Hair papilla",       answers: ["hair papilla", "papilla of hair", "hair papila"] },
+];
+---
+
+<BaseLayout
+    title="Anatomy & Physiology — Integumentary System Diagram Quiz - Claire Nyquist"
+    description="An interactive number-the-diagram study tool for the integumentary system: type the structure beside each numbered field — the epidermal strata, dermal regions, glands, hair structures, and sensory corpuscles — and check your answers."
+>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8 md:mb-10">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl name-gradient mb-4">
+                Integumentary System
+            </h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                I am taking an anatomy course this summer. I am creating study
+                tools each week.
+            </p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mt-4">
+                Each structure on the cross-section of skin is numbered.
+                Type what each number points to into its field below, then press
+                <b>Check answers</b> to mark them right or wrong. Spelling counts
+                loosely &mdash; capitalization, punctuation, and either name for a
+                structure are all accepted.
+            </p>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="max-w-3xl mx-auto mb-8 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4">
+            <p class="text-sm text-amber-900 leading-relaxed">
+                <span class="font-medium">Please note:</span> This is a
+                student-made study aid built with AI &mdash; not an
+                authoritative reference. Always verify against your lab atlas,
+                lecture notes, and instructor.
+            </p>
+        </div>
+
+        <!-- ===== Interactive quiz (scoped under .ig) ===== -->
+        <div class="ig">
+            <!-- Controls -->
+            <div class="ig-controls">
+                <button id="ig-check" type="button" class="ig-btn ig-btn-primary">Check answers</button>
+                <button id="ig-reveal" type="button" class="ig-btn">Reveal answers</button>
+                <button id="ig-reset" type="button" class="ig-btn">Reset</button>
+                <span id="ig-score" class="ig-score" aria-live="polite"></span>
+            </div>
+
+            <!-- Numbered diagram -->
+            <div class="ig-figure">
+                <img
+                    src="/images/integumentary-quiz.png"
+                    alt="Numbered cross-section of skin showing the epidermis and its strata, the dermis with its papillary and reticular regions, sweat glands, sensory corpuscles, and a hair follicle. Each structure is labeled with a number from 1 to 22."
+                    loading="eager"
+                />
+            </div>
+
+            <!-- Fill-in fields, one per number -->
+            <div class="ig-grid">
+                {items.map((it) => (
+                    <div class="ig-field">
+                        <span class="ig-num">{it.n}</span>
+                        <input
+                            type="text"
+                            class="ig-input"
+                            autocomplete="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            data-answers={it.answers.join("|")}
+                            data-display={it.display}
+                            aria-label={`Structure ${it.n}`}
+                            placeholder="type structure&hellip;"
+                        />
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        <!-- Citation / colophon -->
+        <div class="mt-12 bg-white rounded-lg shadow-sm border p-6">
+            <h3 class="text-lg text-gray-900 mb-3">AI Use Citation</h3>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                Diagram of a cross-section of skin (epidermis and dermis),
+                generated with Google Gemini and then edited and numbered by me
+                for self-quizzing.
+            </p>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                I built this study tool by prompting Claude (Anthropic&rsquo;s
+                Claude Code, model Opus 4.8), directing the design, the diagram
+                choice, and revisions in natural language. My prompts, in order:
+            </p>
+            <ol class="list-decimal pl-5 space-y-2 text-sm text-gray-600">
+                <li>
+                    &ldquo;add a new page, integumentary.astro for the
+                    integumentary system. create boxes where I can type the
+                    following terms on this image diagram. clean up and color the
+                    diagram. create functionality so that the program will mark
+                    the answers correct or incorrect on submit. [diagram +
+                    term list: epidermis and its five strata; dermis with
+                    papillary and reticular regions, dermal papillae, tactile
+                    (Meissner&rsquo;s) and lamellar (Pacinian) corpuscles,
+                    eccrine and apocrine sweat glands, hair follicle, bulb,
+                    papilla, root and shaft, arrector pili muscle, sebaceous
+                    gland; and the subcutaneous layer (hypodermis)]. also add
+                    this prompt and all my future prompts to an &lsquo;AI Use
+                    Citation&rsquo; at the bottom of the page. please add the new
+                    page to the Studying Anatomy dropdown.&rdquo;
+                </li>
+                <li>&ldquo;[shared a photo of my hand-drawn integumentary diagram].&rdquo;</li>
+                <li>&ldquo;use this svg [integumentary.svg].&rdquo;</li>
+                <li>
+                    &ldquo;please start over on the diagram, basing it on what i
+                    gave you. please draw each of the structures, ensure the
+                    lines labeling them are parallel/all horizontal. make each
+                    color as realistic as possible.&rdquo;
+                </li>
+                <li>
+                    &ldquo;[shared the NCI skin diagram] use this image instead
+                    with the citation [National Cancer Institute, NIH, ID 1785,
+                    via Wikimedia Commons].&rdquo;
+                </li>
+                <li>&ldquo;please color the image.&rdquo;</li>
+                <li>
+                    &ldquo;use the second image integumentarydiagram.png in this
+                    page and you can use the other image as the key.&rdquo;
+                </li>
+                <li>
+                    &ldquo;[shared a numbered version of the diagram] use this,
+                    don&rsquo;t worry about placing lines, just have places to
+                    fill in the numbers below the diagram, for the user to type
+                    their answers.&rdquo;
+                </li>
+                <li>
+                    &ldquo;clean up the code if there is any vestigial code you
+                    need to remove. remove this section [the strata mnemonic and
+                    study-note block]. Have the numbers go in columns instead of
+                    rows. update the AI Use Citation with all my prompts.&rdquo;
+                </li>
+            </ol>
+            <p class="text-xs text-gray-400 mt-4">
+                Future prompts I use to revise this page will be added here.
+            </p>
+        </div>
+    </div>
+
+    <style is:global>
+        /* All rules scoped under .ig so nothing leaks into the rest of the site. */
+        .ig {
+            --ink: #374151;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --line: #e5e7eb;
+            --good: #16a34a;
+            --bad: #dc2626;
+            color: var(--ink);
+        }
+
+        /* controls */
+        .ig-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .ig-btn {
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--line);
+            padding: 8px 18px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .ig-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .ig-btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .ig-btn-primary:hover { color: #fff; opacity: 0.92; }
+        .ig-score { font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+
+        /* diagram */
+        .ig-figure {
+            max-width: 980px;
+            margin: 0 auto;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .ig-figure img { display: block; width: 100%; height: auto; }
+
+        /* fill-in grid */
+        /* Column-major flow: numbers run down each column, then across.
+           22 items / 2 columns = 11 rows; / 3 columns = 8 rows. */
+        .ig-grid {
+            max-width: 980px;
+            margin: 22px auto 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(11, auto);
+            grid-auto-flow: column;
+            gap: 10px 22px;
+        }
+        @media (min-width: 700px) {
+            .ig-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-rows: repeat(8, auto);
+            }
+        }
+        .ig-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ig-num {
+            flex: 0 0 auto;
+            width: 26px;
+            height: 26px;
+            border-radius: 9999px;
+            background: #475063;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .ig-input {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 100%;
+            border: 1.5px solid #cbd2db;
+            border-radius: 6px;
+            background: #fff;
+            padding: 7px 10px;
+            font-size: 14px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .ig-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+        .ig-input::placeholder { color: #aab2bd; }
+        .ig-input.correct { border-color: var(--good); background: #f0fdf4; color: #166534; font-weight: 600; }
+        .ig-input.incorrect { border-color: var(--bad); background: #fef2f2; color: #991b1b; }
+        .ig-input.revealed { border-color: var(--accent); background: #eff6ff; color: #1e40af; font-weight: 600; }
+    </style>
+
+    <script is:inline>
+        (function () {
+            function norm(s) {
+                return (s || "")
+                    .toLowerCase()
+                    .replace(/[‘’']/g, "")
+                    .replace(/[^a-z0-9]+/g, " ")
+                    .replace(/\b(the|a|an|of)\b/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+            var inputs = Array.prototype.slice.call(document.querySelectorAll(".ig-input"));
+            var scoreEl = document.getElementById("ig-score");
+
+            function accepted(input) {
+                return (input.getAttribute("data-answers") || "").split("|").map(norm).filter(Boolean);
+            }
+
+            function check() {
+                var correct = 0, answered = 0;
+                inputs.forEach(function (input) {
+                    input.classList.remove("correct", "incorrect", "revealed");
+                    var val = norm(input.value);
+                    if (!val) return;
+                    answered++;
+                    if (accepted(input).indexOf(val) !== -1) { input.classList.add("correct"); correct++; }
+                    else { input.classList.add("incorrect"); }
+                });
+                if (scoreEl) {
+                    scoreEl.textContent = answered === 0
+                        ? "Type your labels, then check."
+                        : correct + " / " + inputs.length + " correct";
+                }
+            }
+
+            function reveal() {
+                var yours = 0;
+                inputs.forEach(function (input) {
+                    var val = norm(input.value);
+                    if (val && accepted(input).indexOf(val) !== -1) {
+                        input.classList.remove("incorrect", "revealed");
+                        input.classList.add("correct");
+                        yours++;
+                        return;
+                    }
+                    input.value = input.getAttribute("data-display") || "";
+                    input.classList.remove("correct", "incorrect");
+                    input.classList.add("revealed");
+                });
+                if (scoreEl) scoreEl.textContent = "Answers revealed (" + yours + " / " + inputs.length + " were yours).";
+            }
+
+            function reset() {
+                inputs.forEach(function (input) {
+                    input.value = "";
+                    input.classList.remove("correct", "incorrect", "revealed");
+                });
+                if (scoreEl) scoreEl.textContent = "";
+            }
+
+            var c = document.getElementById("ig-check");
+            var r = document.getElementById("ig-reveal");
+            var z = document.getElementById("ig-reset");
+            if (c) c.addEventListener("click", check);
+            if (r) r.addEventListener("click", reveal);
+            if (z) z.addEventListener("click", reset);
+
+            inputs.forEach(function (input) {
+                input.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") { e.preventDefault(); check(); }
+                });
+                input.addEventListener("input", function () {
+                    input.classList.remove("correct", "incorrect", "revealed");
+                });
+            });
+        })();
+    </script>
+</BaseLayout>
