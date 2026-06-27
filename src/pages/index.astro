@@ -34,8 +34,8 @@ const moreViz = [
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Hero -->
         <section class="py-16 md:py-24">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 items-start">
-                <div class="md:col-span-3">
+            <div class="grid grid-cols-1 gap-10 items-start">
+                <div class="max-w-3xl">
                     <p
                         class="text-5xl md:text-7xl mb-4 leading-tight name-gradient"
                         style="font-weight: 400;"
@@ -81,26 +81,6 @@ const moreViz = [
                             >Get in touch</a
                         >
                     </div>
-                </div>
-                <div class="md:col-span-2">
-                    <p class="text-sm text-gray-700 mb-2">
-                        Draw below to play Conway's Game of Life
-                    </p>
-                    <div
-                        id="hero-viz"
-                        class="w-full aspect-[4/3] rounded-md bg-white border border-gray-200 overflow-hidden cursor-crosshair touch-none"
-                        role="img"
-                        aria-label="Conway's Game of Life — click and drag to draw cells and watch them evolve through many colors"
-                    >
-                    </div>
-                    <p class="text-xs text-gray-500 mt-2 leading-relaxed">
-                        <span class="text-gray-700">Conway's Game of Life.</span
-                        > Each pixel lives or dies based on how many neighbors it
-                        has — order and chaos from three simple rules.
-                        <span class="text-gray-700"
-                            >Click and drag to draw your own cells</span
-                        > and watch them evolve.
-                    </p>
                 </div>
             </div>
         </section>
@@ -303,151 +283,6 @@ const moreViz = [
                 var v = parseFloat(this.getAttribute("data-v")) || 0;
                 return d3.interpolateViridis(v);
             });
-
-            // --- Hero: Conway's Game of Life — color-morphing, click to play ---
-            (function heroViz() {
-                var el = document.getElementById("hero-viz");
-                if (!el) return;
-                var COLS = 32,
-                    ROWS = 24,
-                    CELL = 14,
-                    W = COLS * CELL,
-                    H = ROWS * CELL;
-                var svg = d3
-                    .select(el)
-                    .append("svg")
-                    .attr("viewBox", "0 0 " + W + " " + H)
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .style("display", "block")
-                    .style("touch-action", "none");
-
-                function idx(x, y) {
-                    return y * COLS + x;
-                }
-
-                // Life state (1 = alive) plus a build list for the rects.
-                var cells = new Array(COLS * ROWS),
-                    grid = [];
-                for (var y = 0; y < ROWS; y++)
-                    for (var x = 0; x < COLS; x++) {
-                        cells[idx(x, y)] = Math.random() < 0.15 ? 1 : 0;
-                        grid.push({ x: x, y: y });
-                    }
-
-                // Each cell's color rotates through the turbo scale over time,
-                // offset by position so the grid reads as a shifting spectrum.
-                var phase = 0;
-                function color(d) {
-                    var t = (phase + (d.x + d.y) / ((COLS + ROWS) * 0.8)) % 1;
-                    return d3.interpolateTurbo((t + 1) % 1);
-                }
-
-                var rects = svg
-                    .selectAll("rect")
-                    .data(grid)
-                    .enter()
-                    .append("rect")
-                    .attr("x", function (d) {
-                        return d.x * CELL + 0.5;
-                    })
-                    .attr("y", function (d) {
-                        return d.y * CELL + 0.5;
-                    })
-                    .attr("width", CELL - 1)
-                    .attr("height", CELL - 1)
-                    .attr("rx", 1.5);
-
-                // Paint the current state — instantly (dur 0) or gliding (dur>0).
-                function render(dur) {
-                    var sel = dur
-                        ? rects.transition().duration(dur).ease(d3.easeLinear)
-                        : rects.interrupt();
-                    sel.attr("fill", color).attr("opacity", function (d) {
-                        return cells[idx(d.x, d.y)] ? 0.9 : 0;
-                    });
-                }
-                render(0);
-
-                // Toroidal (wrap-around) neighbor count keeps gliders moving.
-                function neighbors(x, y) {
-                    var c = 0;
-                    for (var dy = -1; dy <= 1; dy++)
-                        for (var dx = -1; dx <= 1; dx++) {
-                            if (dx === 0 && dy === 0) continue;
-                            c +=
-                                cells[
-                                    idx(
-                                        (x + dx + COLS) % COLS,
-                                        (y + dy + ROWS) % ROWS,
-                                    )
-                                ];
-                        }
-                    return c;
-                }
-
-                var drawing = false,
-                    paintVal = 1;
-
-                function step() {
-                    if (drawing) return; // hold still while the user draws
-                    var next = new Array(COLS * ROWS),
-                        pop = 0;
-                    for (var y = 0; y < ROWS; y++)
-                        for (var x = 0; x < COLS; x++) {
-                            var n = neighbors(x, y),
-                                live = cells[idx(x, y)]
-                                    ? n === 2 || n === 3
-                                    : n === 3;
-                            next[idx(x, y)] = live ? 1 : 0;
-                            pop += live ? 1 : 0;
-                        }
-                    cells = next;
-                    // Re-seed when the board thins out so it never stalls.
-                    if (pop < COLS * ROWS * 0.05)
-                        for (var s = 0; s < 40; s++)
-                            cells[Math.floor(Math.random() * COLS * ROWS)] = 1;
-                    phase = (phase + 0.016) % 1;
-                    render(0); // snap each generation — no fade
-                }
-
-                // --- Click / drag to draw your own cells ---
-                function cellFromEvent(event) {
-                    var p = d3.pointer(event, svg.node());
-                    var cx = Math.floor(p[0] / CELL),
-                        cy = Math.floor(p[1] / CELL);
-                    if (cx < 0 || cy < 0 || cx >= COLS || cy >= ROWS)
-                        return null;
-                    return { x: cx, y: cy };
-                }
-                function paintAt(c) {
-                    if (!c) return;
-                    cells[idx(c.x, c.y)] = paintVal;
-                    render(0);
-                }
-                svg.on("pointerdown", function (event) {
-                    event.preventDefault();
-                    var c = cellFromEvent(event);
-                    if (!c) return;
-                    // First cell decides whether we're drawing or erasing.
-                    paintVal = cells[idx(c.x, c.y)] ? 0 : 1;
-                    drawing = true;
-                    paintAt(c);
-                });
-                svg.on("pointermove", function (event) {
-                    if (drawing) paintAt(cellFromEvent(event));
-                });
-                d3.select(window).on("pointerup.heroviz", function () {
-                    drawing = false;
-                });
-
-                // Reduced-motion: leave the seeded grid static (still drawable).
-                var reduce =
-                    window.matchMedia &&
-                    window.matchMedia("(prefers-reduced-motion: reduce)")
-                        .matches;
-                if (!reduce) setInterval(step, 520);
-            })();
 
             // --- TB card: concentric circles from the TB viz, outer pulsing ---
             (function tbPreview() {
