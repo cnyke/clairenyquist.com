@@ -50,12 +50,6 @@ const dataVizGroups = [
   },
 ];
 
-// Anatomy & Physiology study tools (dropdown). Add new tools here.
-const anatomyPages = [
-  { href: "/histology", label: "Histology" },
-  { href: "/integumentary", label: "Integumentary System" },
-];
-
 const topLevelPages = [
   { href: "/graphic-design", label: "Graphic Design" },
   { href: "/tcplot", label: "tcplot" },
@@ -245,37 +239,6 @@ const topLevelPages = [
               </div>
             </div>
 
-            <!-- Anatomy Dropdown -->
-            <div class="relative">
-              <button
-                id="desktop-anatomy-toggle"
-                type="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                aria-controls="desktop-anatomy-menu"
-                class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1"
-              >
-                <span>Studying Anatomy</span>
-                <svg id="desktop-anatomy-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="desktop-anatomy-menu"
-                class="absolute left-0 top-full pt-2 w-56 hidden z-50"
-              >
-                <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div class="py-1">
-                    {anatomyPages.map((p) => (
-                      <a href={p.href} class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                        {p.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {topLevelPages.map((p) => (
               <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors ${p.href === "/tcplot" ? "font-silkscreen font-normal" : "font-medium"}`}>
                 {p.label}
@@ -322,29 +285,6 @@ const topLevelPages = [
                       </a>
                     ))}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <!-- Anatomy Dropdown for Mobile -->
-            <div>
-              <button
-                id="mobile-anatomy-toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="mobile-anatomy-menu"
-                class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full"
-              >
-                <span>Studying Anatomy</span>
-                <svg id="mobile-anatomy-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div id="mobile-anatomy-menu" class="hidden pl-4 space-y-2 mt-2">
-                {anatomyPages.map((p) => (
-                  <a href={p.href} class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                    {p.label}
-                  </a>
                 ))}
               </div>
             </div>
@@ -445,7 +385,7 @@ const topLevelPages = [
       }
 
       // Wire up every nav dropdown. Add a prefix here when you add another.
-      ['dataviz', 'anatomy'].forEach((prefix) => {
+      ['dataviz'].forEach((prefix) => {
         setupMobileDropdown(prefix);
         setupDesktopDropdown(prefix);
       });
