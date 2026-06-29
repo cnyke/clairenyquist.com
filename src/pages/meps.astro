@@ -1121,7 +1121,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .style("fill", "#374151")
                     .style("cursor", "pointer")
                     .attr("dx", "-6")
-                    .each(function (_d: any, i: number) {
+                    .each(function (this: any, _d: any, i: number) {
                         const el = d3.select(this);
                         if (variables[i] === "Excellent/Very Good Health") {
                             el.text(null);
