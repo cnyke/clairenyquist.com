@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Music | Claire Nyquist"
+  description="A whole YouTube Music library — 6,497 songs by 1,473 artists, A→Z — turned into a bar chart you can hear: each artist a beat, its pitch and color mapped to how many songs are by them."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero -->
+    <div class="text-center mb-8 md:mb-12">
+      <h1 class="text-3xl sm:text-4xl md:text-6xl name-gradient mb-4 md:mb-6">
+        Music
+      </h1>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        A whole YouTube Music library from a <strong class="text-gray-900">Google Takeout</strong>
+        export &mdash; 6,497 songs by 1,473 artists, listed A&rarr;Z. Each bar is an artist; its
+        length and color show how many songs are by them
+        (<span class="font-semibold" style="color:#d6263a">red = the most</span>,
+        <span class="font-semibold" style="color:#7b3fb0">violet = the fewest</span>).
+        Press play and turn your sound on: one steady beat per artist, and the <em>pitch</em>
+        is mapped to the count just like the color &mdash; a run of one-song artists ticks along
+        at the same low pitch, and the pitch jumps up when an artist has more songs. Or grab the
+        list (or the handle on the right) and drag to scrub the play position anywhere in the A&rarr;Z.
+      </p>
+    </div>
+
+    <!-- ===== Music visualization ===== -->
+    <section class="my-8" style="font-family: Helvetica, Arial, sans-serif;">
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div class="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-gray-100 bg-gray-50">
+          <button
+            id="yiyd-play"
+            class="px-4 py-1.5 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 transition"
+            >Play ▶</button
+          >
+          <button
+            id="yiyd-restart"
+            class="px-3 py-1.5 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 transition"
+            >Restart</button
+          >
+          <span class="mx-1 text-gray-300">|</span>
+          <span class="text-sm text-gray-500">Speed:</span>
+          <button
+            id="yiyd-sp-1"
+            data-active="true"
+            class="yiyd-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+            >1×</button
+          >
+          <button
+            id="yiyd-sp-2"
+            class="yiyd-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+            >2×</button
+          >
+          <button
+            id="yiyd-sp-3"
+            class="yiyd-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+            >4×</button
+          >
+          <span class="ml-auto text-xs text-gray-400">🔊 sound on</span>
+        </div>
+        <div id="yiyd-canvas" class="w-full"></div>
+      </div>
+      <p class="text-sm text-gray-400 mt-2">
+        Built with p5.js from a <strong class="text-gray-500">Google Takeout</strong> export.
+        The same dataset could just as easily be a map, a calendar, or a string of beads.
+      </p>
+    </section>
+
+    <!-- p5 + sketch (loaded inline, in document order) -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/addons/p5.sound.min.js"></script>
+    <script is:inline src="/yiyd-music-sketch.js"></script>
+  </div>
+</BaseLayout>

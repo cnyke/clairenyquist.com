@@ -1,0 +1,698 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Audiobooks | Claire Nyquist"
+  description="An Audible library as one 355-title bookshelf, as of August 17th, 2026 — every spine colored from its cover art, its thickness the book's length and its height the release year — shelvable by author, genre, spine color, date added, length, or reading progress."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-8 md:mb-12">
+      <h1 class="text-3xl sm:text-4xl md:text-6xl name-gradient mb-4 md:mb-6">
+        Audiobooks
+      </h1>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        This is my Audible library, extracted and visualized as 355 distinct titles: a
+        primary collection built around hard science fiction and nature science. Spine
+        color is extracted from the cover artwork, width corresponds to audiobook
+        length, and height is determined by publication year.
+      </p>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="audiobooks-loading" class="p-8 text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+      <p class="text-gray-600">Loading library data...</p>
+    </div>
+
+    <div id="audiobooks-content" class="hidden">
+      <!-- Every title: the bookshelf -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Every title</h2>
+        <p class="text-sm text-gray-500 mb-3" id="grid-caption"></p>
+        <div class="flex flex-wrap items-center gap-2 mb-5" id="shelf-controls" role="group" aria-label="Arrange the bookshelf">
+        </div>
+        <div id="books-grid"></div>
+      </div>
+
+      <!-- Data source -->
+      <div class="mt-8 bg-white rounded-lg shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">About this data</h3>
+        <div class="text-sm text-gray-600 space-y-2">
+          <p>
+            Exported from Audible's library tools on August 17th, 2026 (main library)
+            and July 25th, 2026 (UK library), then merged and de-duplicated by title: 40
+            of the 41 UK titles are duplicate regional editions of books already in the
+            main library, so each distinct title is counted once. Genres and release
+            years come from Audible&rsquo;s catalog, and each spine&rsquo;s color is
+            extracted from its cover art. A spine&rsquo;s height follows the release
+            year of the audiobook edition (not the original work &mdash; Darwin shelves
+            as 2006), kept within a book-shaped range.
+          </p>
+          <p>
+            This project was completed during the <span class="font-silkscreen">tcplot</span>
+            event &ldquo;A Year In Your Own Data.&rdquo;
+          </p>
+        </div>
+      </div>
+
+      <!-- The analog shelf -->
+      <div class="mt-8 bg-white rounded-lg shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">The analog edition</h3>
+        <div class="max-w-2xl mx-auto rounded-lg overflow-hidden">
+          <img
+            src="/images/physicalbookshelf.webp"
+            alt="Two tall bookcases of paper books arranged by spine color — black shelves flowing into red, orange, yellow, green, blue, purple, and white — dotted with LEGO flowers and small skull planters"
+            class="w-full h-auto object-contain"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Ordinal blue ramp — reading progress is genuinely ordered (unread < in
+    // progress < finished), so it earns one hue rather than three categorical ones.
+    const STATUS_COLORS: Record<string, string> = {
+      'Not Started': '#86b6ef',
+      'In Progress': '#3987e5',
+      'Finished': '#184f95',
+    };
+    const STATUS_ORDER = ['Not Started', 'In Progress', 'Finished'];
+
+    interface Book {
+      title: string;
+      authors: string[];
+      narrators: string[];
+      asin: string;
+      status: string;
+      lengthMin: number | null;
+      // Per-library acquisition rank (null if not owned in that library), used
+      // only to order the growth chart. The two libraries are otherwise merged.
+      addedMain: number | null;
+      addedUK: number | null;
+      // Filled after load from the cover-color / category sidecar files.
+      color: string;
+      darkCover: boolean;
+      genre: string;
+      year: number | null;
+    }
+
+    let allBooks: Book[] = [];
+    let shelfMode: 'author' | 'genre' | 'color' | 'added' | 'length' | 'status' | 'year' = 'author';
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        await loadData();
+      } catch (error) {
+        console.error('Failed to load audiobook data:', error);
+        showError();
+      }
+    });
+
+    async function loadData() {
+      const [csvText, coverColors, categories] = await Promise.all([
+        fetch('/data/AudibleLibraryCombined.csv').then((r) => r.text()),
+        fetch('/data/audible-cover-colors.json').then((r) => (r.ok ? r.json() : {})),
+        fetch('/data/audible-categories.json').then((r) => (r.ok ? r.json() : {})),
+      ]);
+      const rows = parseCSV(csvText);
+
+      // One object per raw CSV row (a single Audible edition).
+      const editions = rows
+        .map((row) => {
+          const title = (row['Title Short'] || row['Title'] || '').trim();
+          if (!title) return null;
+          const authors = splitAuthors(row['Authors'] || '');
+          const narrators = splitAuthors(row['Narrators'] || '');
+          const library = row['Library Source'] === 'UK' ? 'UK' : 'Main';
+          const status = classifyStatus(row['Progress'] || '');
+          // Finished titles record no duration; in-progress ones expose it via
+          // "Xh Ym left", so fall back to Progress when Length is blank.
+          const lengthMin = parseDuration(row['Length'] || '') ?? parseDuration(row['Progress'] || '');
+          // "Added" is a per-library acquisition rank (1 = first added). The
+          // export carries no dates, so this ordinal is the only acquisition axis.
+          const added = parseInt(row['Added'] || '0', 10) || 0;
+          const asin = (row['ASIN'] || '').trim();
+          return { title, authors, narrators, library, status, lengthMin, added, asin };
+        })
+        .filter((e): e is NonNullable<typeof e> => e !== null && e.authors.length > 0);
+
+      allBooks = dedupeByTitle(editions);
+
+      // Attach cover color and primary genre from the sidecar files (both
+      // generated by scripts/ from the same export's ASINs).
+      allBooks.forEach((b) => {
+        const cc = coverColors[b.asin];
+        b.color = cc?.color || '#c3c2b7';
+        b.darkCover = cc?.dark ?? false;
+        const ladders = categories[b.asin]?.ladders;
+        b.genre = ladders?.[0]?.[0] || 'Uncategorized';
+        // Clamp placeholder far-future dates (a periodical claims 2200) so one
+        // outlier can't flatten the height scale for every real book.
+        const rawYear = categories[b.asin]?.year ?? null;
+        b.year = rawYear != null ? Math.min(rawYear, new Date().getFullYear()) : null;
+      });
+
+      // Height maps the audiobook's release year across the library's actual
+      // span (kept to a book-shaped band; see spineHeight).
+      const years = allBooks.map((b) => b.year).filter((y): y is number => y != null);
+      if (years.length > 0) {
+        yearMin = Math.min(...years);
+        yearMax = Math.max(...years);
+      }
+
+      // Unhide first: the bookshelf packs rows against its container's real
+      // width, which measures 0 while the content div is display:none.
+      hideLoading();
+      renderShelfControls();
+      renderBooksGrid();
+    }
+
+    // Strips translator/editor/foreword/etc. credits so "Author" reflects the
+    // person whose voice defines the book, not every contributor listed.
+    function splitAuthors(raw: string): string[] {
+      return raw
+        .split(',')
+        .map((a) =>
+          a
+            .replace(/\s*-\s*(translator|editor|adapter|foreword|introduction|contributor|illustrator)\b.*$/i, '')
+            .trim()
+        )
+        .filter(Boolean);
+    }
+
+    function classifyStatus(progress: string): string {
+      const p = progress.trim();
+      if (p === 'Finished') return 'Finished';
+      if (p.endsWith('left')) return 'In Progress';
+      return 'Not Started';
+    }
+
+    // Parses "12h 34m" or "12h 34m left" → minutes. Returns null for anything
+    // without an hour/minute component ("Finished", empty).
+    function parseDuration(raw: string): number | null {
+      const s = raw.replace(/\s*left\s*$/i, '').trim();
+      const m = s.match(/^(?:(\d+)h)?\s*(?:(\d+)m)?$/);
+      if (!m || (!m[1] && !m[2])) return null;
+      const mins = (parseInt(m[1] || '0', 10) * 60) + parseInt(m[2] || '0', 10);
+      return mins > 0 ? mins : null;
+    }
+
+    // Collapses editions that share a title into one Book. 40 UK titles are
+    // duplicate regional editions of Main-library books; this keeps each
+    // distinct title once, tagged with the libraries it's owned in.
+    const STATUS_RANK: Record<string, number> = { 'Not Started': 0, 'In Progress': 1, Finished: 2 };
+    type Edition = {
+      title: string;
+      authors: string[];
+      narrators: string[];
+      library: 'Main' | 'UK';
+      status: string;
+      lengthMin: number | null;
+      added: number;
+      asin: string;
+    };
+    function dedupeByTitle(editions: Edition[]): Book[] {
+      const map = new Map<string, Book>();
+      editions.forEach((e) => {
+        const existing = map.get(e.title);
+        if (!existing) {
+          map.set(e.title, {
+            title: e.title,
+            authors: e.authors,
+            narrators: e.narrators.slice(),
+            asin: e.asin,
+            status: e.status,
+            lengthMin: e.lengthMin,
+            addedMain: e.library === 'Main' ? e.added : null,
+            addedUK: e.library === 'UK' ? e.added : null,
+            color: '',
+            darkCover: false,
+            genre: '',
+          });
+          return;
+        }
+        // Merge a second edition of the same title.
+        if (e.library === 'Main') existing.addedMain = e.added;
+        else existing.addedUK = e.added;
+        if (!existing.asin) existing.asin = e.asin;
+        // Keep the furthest-along status and any known duration.
+        if ((STATUS_RANK[e.status] ?? 0) > (STATUS_RANK[existing.status] ?? 0)) existing.status = e.status;
+        if (existing.lengthMin == null && e.lengthMin != null) existing.lengthMin = e.lengthMin;
+        else if (existing.lengthMin != null && e.lengthMin != null) existing.lengthMin = Math.max(existing.lengthMin, e.lengthMin);
+        // Union narrators (editions can differ).
+        e.narrators.forEach((n) => {
+          if (!existing.narrators.includes(n)) existing.narrators.push(n);
+        });
+      });
+      return Array.from(map.values());
+    }
+
+    function parseCSV(csvText: string): Record<string, string>[] {
+      const lines = csvText.split('\n');
+      if (lines.length < 2) return [];
+      const headers = parseCSVLine(lines[0]);
+      const data: Record<string, string>[] = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const values = parseCSVLine(lines[i]);
+        const row: Record<string, string> = {};
+        headers.forEach((header, index) => {
+          row[header.trim()] = (values[index] ?? '').trim();
+        });
+        data.push(row);
+      }
+      return data;
+    }
+
+    function parseCSVLine(line: string): string[] {
+      const result: string[] = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    // Arrange-the-shelf controls: pick which order the spines line up in.
+    const SHELF_MODES: { key: typeof shelfMode; label: string }[] = [
+      { key: 'author', label: 'Author' },
+      { key: 'genre', label: 'Genre' },
+      { key: 'color', label: 'Spine color' },
+      { key: 'added', label: 'Date added' },
+      { key: 'length', label: 'Length' },
+      { key: 'year', label: 'Release year' },
+      { key: 'status', label: 'Progress' },
+    ];
+
+    function renderShelfControls() {
+      const container = document.getElementById('shelf-controls');
+      if (!container) return;
+      container.innerHTML = '';
+      const label = document.createElement('span');
+      label.className = 'text-sm text-gray-500 mr-1';
+      label.textContent = 'Shelve by:';
+      container.appendChild(label);
+      SHELF_MODES.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = opt.label;
+        btn.dataset.key = opt.key;
+        btn.className = filterButtonClass(opt.key === shelfMode);
+        btn.addEventListener('click', () => {
+          shelfMode = opt.key;
+          Array.from(container.querySelectorAll('button')).forEach((el) => {
+            el.className = filterButtonClass((el as HTMLButtonElement).dataset.key === shelfMode);
+          });
+          renderBooksGrid();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function filterButtonClass(active: boolean): string {
+      return active
+        ? 'px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white transition-colors'
+        : 'px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors';
+    }
+
+    // ---- The bookshelf ----
+    // One spine per title: color extracted from the cover art, thickness from
+    // the book's length, height jittered per-title so the shelf reads as a
+    // real one. Spines are plain DOM; rows are packed against the container
+    // width so each row can carry its own shelf board.
+
+    const SPINE_GAP = 3;
+
+    // Width is proportional to the book's length: ~1.1px per listening hour.
+    // The floor stays above the author label's 9px line height so even the
+    // thinnest spine can carry a readable name; the cap keeps doorstops shelvable.
+    function spineWidth(b: Book): number {
+      if (b.lengthMin == null) return 13;
+      return Math.round(Math.min(56, Math.max(13, (b.lengthMin / 60) * 1.1)));
+    }
+
+    // Height encodes the audiobook edition's release year — older = shorter,
+    // newer = taller — squeezed into a band (122–158px) so every spine still
+    // reads as a book. Titles with no known year sit at the band's middle.
+    let yearMin = 1990;
+    let yearMax = 2026;
+    function spineHeight(b: Book): number {
+      if (b.year == null || yearMax === yearMin) return 140;
+      const t = (b.year - yearMin) / (yearMax - yearMin);
+      return Math.round(122 + t * 36);
+    }
+
+    function hexToHsl(hex: string): [number, number, number] {
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const l = (max + min) / 2;
+      if (max === min) return [0, 0, l];
+      const d = max - min;
+      const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      let h;
+      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      else if (max === g) h = ((b - r) / d + 2) / 6;
+      else h = ((r - g) / d + 4) / 6;
+      return [h * 360, s, l];
+    }
+
+    function surname(name: string): string {
+      const parts = name.replace(/\s+(Jr\.?|Sr\.?|III|II|MD|PhD)$/i, '').trim().split(/\s+/);
+      return parts[parts.length - 1] || name;
+    }
+
+    const byAuthor = (a: Book, b: Book) =>
+      surname(a.authors[0]).localeCompare(surname(b.authors[0])) ||
+      a.authors[0].localeCompare(b.authors[0]) ||
+      a.title.localeCompare(b.title);
+
+    // "Added" is a per-library acquisition rank (1 = first added); the export
+    // has no dates. The UK account is the older one, so its titles shelve
+    // first, then the main library in its own order.
+    const addedKey = (b: Book) =>
+      b.addedUK != null ? b.addedUK : 100000 + (b.addedMain ?? 99999);
+
+    // groups of [label, books]; label '' means no header row
+    function shelfGroups(books: Book[]): [string, Book[]][] {
+      const sorted = books.slice();
+      if (shelfMode === 'author') {
+        sorted.sort(byAuthor);
+        return [['', sorted]];
+      }
+      if (shelfMode === 'color') {
+        sorted.sort((a, b) => {
+          const ha = hexToHsl(a.color), hb = hexToHsl(b.color);
+          // Near-gray spines sort by lightness at the end; the rest by hue.
+          const grayA = ha[1] < 0.14 ? 1 : 0, grayB = hb[1] < 0.14 ? 1 : 0;
+          return grayA - grayB || (grayA ? ha[2] - hb[2] : ha[0] - hb[0] || ha[2] - hb[2]);
+        });
+        return [['', sorted]];
+      }
+      if (shelfMode === 'added') {
+        sorted.sort((a, b) => addedKey(a) - addedKey(b));
+        return [['', sorted]];
+      }
+      if (shelfMode === 'year') {
+        sorted.sort((a, b) => (a.year ?? Infinity) - (b.year ?? Infinity) || byAuthor(a, b));
+        return [['', sorted]];
+      }
+      if (shelfMode === 'length') {
+        sorted.sort(
+          (a, b) => (a.lengthMin ?? Infinity) - (b.lengthMin ?? Infinity) || byAuthor(a, b)
+        );
+        return [['', sorted]];
+      }
+      if (shelfMode === 'status') {
+        return ['Finished', 'In Progress', 'Not Started'].map((s) => {
+          const group = sorted.filter((b) => b.status === s).sort(byAuthor);
+          return [`${s} (${group.length})`, group] as [string, Book[]];
+        });
+      }
+      // genre: group by primary genre, biggest sections first, authors A→Z inside
+      const map = new Map<string, Book[]>();
+      sorted.forEach((b) => {
+        if (!map.has(b.genre)) map.set(b.genre, []);
+        map.get(b.genre)!.push(b);
+      });
+      return Array.from(map.entries())
+        .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
+        .map(([g, bks]) => [`${g} (${bks.length})`, bks.sort(byAuthor)] as [string, Book[]]);
+    }
+
+    const SHELF_CAPTIONS: Record<string, string> = {
+      author: 'alphabetical by author',
+      genre: 'grouped by primary Audible genre, biggest sections first',
+      color: 'arranged by spine color',
+      added: 'in the order they were added (the export has no dates — the older UK account shelves first)',
+      length: 'from shortest to longest (books with no recorded duration shelve last)',
+      year: 'from oldest to newest audiobook release — height rises with the year',
+      status: 'grouped by reading progress',
+    };
+
+    function renderBooksGrid() {
+      const grid = document.getElementById('books-grid');
+      const caption = document.getElementById('grid-caption');
+      if (!grid || !caption) return;
+
+      const books = allBooks;
+      const authorCount = new Set(books.flatMap((b) => b.authors)).size;
+      const totalHours = Math.round(books.reduce((sum, b) => sum + (b.lengthMin || 0), 0) / 60);
+      caption.textContent =
+        `All ${books.length} titles by ${authorCount.toLocaleString()} authors — about ${totalHours.toLocaleString()} hours of listening — ${SHELF_CAPTIONS[shelfMode]}. ` +
+        'Each spine takes its color from the cover art, thickness is the length of the book, and height is the audiobook’s release year (taller = newer). Hover a spine for details.';
+
+      grid.innerHTML = '';
+      const containerWidth = grid.clientWidth || grid.offsetWidth || 600;
+
+      shelfGroups(books).forEach(([label, groupBooks]) => {
+        if (label) {
+          const header = document.createElement('h3');
+          header.className = 'text-xs font-semibold uppercase tracking-wide text-gray-500 mt-5 mb-2';
+          header.textContent = label;
+          grid.appendChild(header);
+        }
+
+        // Pack spines into rows against the container width so every row can
+        // carry its own shelf board underneath.
+        let row: HTMLElement | null = null;
+        let used = 0;
+        groupBooks.forEach((book) => {
+          const w = spineWidth(book);
+          if (!row || used + w + SPINE_GAP > containerWidth - 8) {
+            row = document.createElement('div');
+            row.className = 'shelf-row';
+            grid.appendChild(row);
+            used = 0;
+          }
+          used += w + SPINE_GAP;
+
+          const spine = document.createElement('button');
+          spine.type = 'button';
+          spine.className = 'book-spine';
+          spine.style.width = w + 'px';
+          spine.style.height = spineHeight(book) + 'px';
+          spine.style.background = book.color;
+          spine.setAttribute(
+            'aria-label',
+            `${book.title} — ${book.authors.join(', ')} — ${book.genre} — ${book.status}`
+          );
+
+          const author = document.createElement('span');
+          author.className = 'book-spine-author';
+          author.style.color = book.darkCover ? 'rgba(255,255,255,0.92)' : 'rgba(20,20,20,0.8)';
+          author.textContent = book.authors[0];
+          spine.appendChild(author);
+
+          spine.addEventListener('mouseover', (e) => showBookTooltip(e as MouseEvent, book));
+          spine.addEventListener('focus', (e) => showBookTooltip(e as unknown as MouseEvent, book, spine));
+          spine.addEventListener('mouseout', hideTooltip);
+          spine.addEventListener('blur', hideTooltip);
+          row.appendChild(spine);
+        });
+      });
+    }
+
+    function showBookTooltip(event: MouseEvent, book: Book, focusEl?: HTMLElement) {
+      hideTooltip();
+      const tooltip = document.createElement('div');
+      tooltip.className = 'audiobooks-tooltip';
+      tooltip.style.position = 'absolute';
+      tooltip.style.background = 'rgba(17, 24, 39, 0.97)';
+      tooltip.style.color = 'white';
+      tooltip.style.padding = '10px 14px';
+      tooltip.style.borderRadius = '8px';
+      tooltip.style.fontSize = '12px';
+      tooltip.style.lineHeight = '1.5';
+      tooltip.style.zIndex = '1000';
+      tooltip.style.maxWidth = '280px';
+      tooltip.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+      tooltip.style.pointerEvents = 'none';
+
+      const head = document.createElement('div');
+      head.style.display = 'flex';
+      head.style.alignItems = 'flex-start';
+      head.style.gap = '10px';
+
+      // Teeny self-hosted cover thumbnail; drops out silently if missing.
+      const cover = document.createElement('img');
+      cover.src = `/images/covers/${book.asin}.webp`;
+      cover.alt = '';
+      cover.style.width = '38px';
+      cover.style.height = 'auto';
+      cover.style.borderRadius = '3px';
+      cover.style.flexShrink = '0';
+      cover.onerror = () => cover.remove();
+      head.appendChild(cover);
+
+      const textCol = document.createElement('div');
+      const title = document.createElement('div');
+      title.style.fontWeight = '600';
+      title.style.fontSize = '13px';
+      title.style.marginBottom = '2px';
+      title.textContent = book.title;
+      textCol.appendChild(title);
+
+      const author = document.createElement('div');
+      author.style.color = '#9ca3af';
+      author.textContent = book.authors.join(', ');
+      textCol.appendChild(author);
+
+      const genreLine = document.createElement('div');
+      genreLine.style.color = '#9ca3af';
+      genreLine.style.fontSize = '11px';
+      genreLine.textContent = book.genre;
+      textCol.appendChild(genreLine);
+
+      head.appendChild(textCol);
+      tooltip.appendChild(head);
+
+      const meta = document.createElement('div');
+      meta.style.marginTop = '6px';
+      meta.style.display = 'flex';
+      meta.style.alignItems = 'center';
+      meta.style.gap = '6px';
+      const dot = document.createElement('span');
+      dot.style.display = 'inline-block';
+      dot.style.width = '8px';
+      dot.style.height = '8px';
+      dot.style.borderRadius = '2px';
+      dot.style.background = STATUS_COLORS[book.status];
+      const metaText = document.createElement('span');
+      const hours = book.lengthMin != null ? ` · ${Math.round(book.lengthMin / 60)}h` : '';
+      const year = book.year != null ? ` · ${book.year}` : '';
+      metaText.textContent = `${book.status}${hours}${year}`;
+      meta.appendChild(dot);
+      meta.appendChild(metaText);
+      tooltip.appendChild(meta);
+
+      document.body.appendChild(tooltip);
+
+      const rect = tooltip.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+      const scrollX = window.scrollX;
+      const padding = 10;
+
+      let pageX: number;
+      let pageY: number;
+      if (focusEl) {
+        const b = focusEl.getBoundingClientRect();
+        pageX = b.left + scrollX + b.width / 2;
+        pageY = b.top + scrollY;
+      } else {
+        pageX = event.pageX;
+        pageY = event.pageY;
+      }
+
+      let left = pageX + 15;
+      let top = pageY - 10;
+      if (left + rect.width > scrollX + viewportWidth - padding) left = pageX - rect.width - 15;
+      if (left < scrollX + padding) left = scrollX + padding;
+      if (top + rect.height > scrollY + viewportHeight - padding) top = pageY - rect.height - 10;
+      if (top < scrollY + padding) top = scrollY + padding;
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }
+
+    function hideTooltip() {
+      document.querySelectorAll('.audiobooks-tooltip').forEach((el) => el.remove());
+    }
+
+    function hideLoading() {
+      document.getElementById('audiobooks-loading')?.classList.add('hidden');
+      document.getElementById('audiobooks-content')?.classList.remove('hidden');
+    }
+
+    function showError() {
+      const loading = document.getElementById('audiobooks-loading');
+      if (loading) {
+        loading.innerHTML = `
+          <div class="text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <p class="text-red-600">Error loading audiobook data</p>
+          </div>
+        `;
+      }
+    }
+
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      const currentWidth = window.innerWidth;
+      if (currentWidth !== lastWidth) {
+        lastWidth = currentWidth;
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          renderBooksGrid();
+        }, 250);
+      }
+    });
+  </script>
+
+  <!-- is:global — these elements are created in JS, so Astro's scoped-style
+       attribute never lands on them and scoped selectors would not match. -->
+  <style is:global>
+    .audiobooks-tooltip {
+      font-family: 'Helvetica Neue', Inter, system-ui, sans-serif;
+    }
+    .shelf-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      margin-bottom: 18px;
+    }
+    .book-spine {
+      border: none;
+      border-radius: 2px 2px 0 0;
+      padding: 8px 0 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.18), inset 1px 0 2px rgba(255, 255, 255, 0.12);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .book-spine:hover,
+    .book-spine:focus {
+      transform: translateY(-6px);
+      outline: none;
+      box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+    .book-spine-author {
+      display: block;
+      writing-mode: vertical-rl;
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</BaseLayout>
