@@ -331,7 +331,21 @@
 
     async function ensureAudio() {
       if (audioReady) return;
+      // iOS routes Web Audio as "ambient" sound, which the hardware
+      // ring/silent switch mutes even after a user-gesture unlock. Declaring
+      // the session as media playback (Safari 16.4+) keeps it audible with
+      // the switch on silent — the same category music apps use.
+      try {
+        if (navigator.audioSession) navigator.audioSession.type = "playback";
+      } catch (e) {}
       await p.userStartAudio();
+      // Belt and braces: userStartAudio can resolve with the context still
+      // suspended on some mobile browsers; resume explicitly while we are
+      // inside the user gesture.
+      const ctx = p.getAudioContext && p.getAudioContext();
+      if (ctx && ctx.state !== "running") {
+        try { await ctx.resume(); } catch (e) {}
+      }
       synth = new p5.MonoSynth();
       synth.setADSR(0.004, 0.06, 0.2, 0.12);
       audioReady = true;
