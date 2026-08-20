@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Exoplanet Discoveries - Claire Nyquist" description="Data visualization exploring exoplanet discoveries, showing distance from Earth and discovery methods over time.">
+<BaseLayout title="Exoplanet Discoveries - Claire Nyquist" description="Interactive data visualization of confirmed exoplanet discoveries: distance from Earth, discovery method, and planet mass over time.">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Project Header -->
     <div class="text-center mb-12">
@@ -13,86 +13,378 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         Exoplanets are planets orbiting stars that are not our sun.
       </p>
       <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4">
-        They help us understand possible environments for other forms of life. These two visualizations, built using R, show how exoplanet detection has changed since scientists discovered the first planets orbiting other star systems in the mid-1990s. Each point represents a confirmed exoplanet, with colors indicating the discovery method used and point size representing planet mass. As detection methods have become more sensitive, we are able to detect exoplanets farther and farther away, especially via the transit method (light dims as exoplanets pass in front of their star) or the microlensing method (where light from extrasolar stars and planets is bent due to gravity of objects in space). These two images show the same data with different scales.
+        They help us understand possible environments for other forms of life. This interactive visualization shows how exoplanet detection has changed since scientists discovered the first planets orbiting other star systems in the early 1990s. Each point represents a confirmed exoplanet, with colors indicating the discovery method used and point size representing planet mass; hover over a point to see the planet's name, distance, and discovery facility. As detection methods have become more sensitive, we are able to detect exoplanets farther and farther away, especially via the transit method (light dims as exoplanets pass in front of their star) or the microlensing method (where light from extrasolar stars and planets is bent due to gravity of objects in space).
       </p>
     </div>
 
-    <!-- Project Gallery -->
-    <div class="mb-16">
-      <div class="masonry-container">
-
-        <!-- Gallery Item 1 - All Exoplanet Discoveries -->
-        <div class="masonry-item bg-white rounded-lg overflow-hidden mb-6">
-          <img
-            src="/images/exoHighRes1.png"
-            alt="Exoplanet Discoveries - scatter plot showing all confirmed exoplanet discoveries up to 30,000 light-years"
-            class="w-full h-auto object-contain"
-          />
-        </div>
-
-        <!-- Gallery Item 2 - Near Earth Exoplanets -->
-        <div class="masonry-item bg-white rounded-lg overflow-hidden mb-6">
-          <img
-            src="/images/exoHighRes2.png"
-            alt="Near Earth Exoplanets - scatter plot showing exoplanet discoveries within 4000 light-years"
-            class="w-full h-auto object-contain"
-          />
-        </div>
-
-      </div>
+    <!-- Interactive visualization -->
+    <div class="max-w-4xl mx-auto mb-6">
+      <div class="w-full rounded-xl overflow-hidden ring-1 ring-black/10 bg-white p-4">
+          <div class="flex items-stretch gap-1">
+                    <div
+                        class="flex flex-col items-center shrink-0"
+                        style="padding-top: 42px; padding-bottom: 48px;"
+                    >
+                        <input
+                            id="exo-ymax"
+                            type="range"
+                            min="500"
+                            max="27500"
+                            step="100"
+                            value="4000"
+                                                        style="writing-mode: vertical-lr; direction: rtl; width: 1.2rem; flex: 1;"
+                            aria-label="y-axis scale in light-years"
+                        />
+                        <span
+                            id="exo-ymax-label"
+                            class="text-[10px] text-gray-400 tabular-nums whitespace-nowrap mt-2"
+                            >4,000 ly</span
+                        >
+                    </div>
+                    <div id="exo-chart" class="flex-1 min-w-0"></div>
+                </div>
+                <div id="exo-legend" class="flex flex-wrap gap-x-4 gap-y-1 mt-3 px-2"></div>
+                <div
+                    id="exo-size-legend"
+                    class="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2 px-2"
+                ></div>
+            </div>
+      <p class="mt-3 text-sm text-gray-400 text-center italic">
+        drag the slider to travel between the neighborhood and the galaxy —
+        point size is planet mass
+      </p>
     </div>
 
     <!-- Data Sources -->
-    <div class="bg-white rounded-lg shadow-sm border p-6 mb-8">
+    <div class="bg-white rounded-lg shadow-sm border p-6 mb-8 max-w-4xl mx-auto">
       <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Sources</h3>
       <div class="text-sm text-gray-600 space-y-2">
         <p>
-          This 2021 visualization has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
+          This visualization has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
         </p>
         <p>
-          R Core Team (2022). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. <a href="https://www.R-project.org/" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener">https://www.R-project.org/</a>
+          Data retrieved from the archive on August 19th, 2026. Only planets with a published mass estimate appear — about 38% of confirmed planets — and mass is measured more often for some discovery methods than others, so the mix of colors reflects what has been measured, not everything that is out there. Where the archive lists multiple parameter sets for a planet, one representative value is shown.
+        </p>
+        <p>
+          Interactive version built with <a href="https://d3js.org/" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener">D3.js</a>.
         </p>
       </div>
     </div>
   </div>
 
-  <style>
-    /* Single column layout */
-    .masonry-container {
-      width: 100%;
-      max-width: 100%;
-    }
+  
+    <style is:global>
+        #exo-ymax {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            --exo-fill: 13%;
+        }
+        #exo-ymax::-webkit-slider-runnable-track {
+            background: linear-gradient(
+                to top,
+                #9ca3af 0%,
+                #9ca3af var(--exo-fill),
+                #e5e7eb var(--exo-fill),
+                #e5e7eb 100%
+            );
+            border-radius: 9999px;
+        }
+        #exo-ymax::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 24px;
+            border-radius: 7px;
+            background: #fff;
+            border: 0.5px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        #exo-ymax::-moz-range-track {
+            background: linear-gradient(
+                to top,
+                #9ca3af 0%,
+                #9ca3af var(--exo-fill),
+                #e5e7eb var(--exo-fill),
+                #e5e7eb 100%
+            );
+            border-radius: 9999px;
+            width: 8px;
+        }
+        #exo-ymax::-moz-range-thumb {
+            width: 13px;
+            height: 24px;
+            border-radius: 7px;
+            background: #fff;
+            border: 0.5px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 
-    /* Masonry items */
-    .masonry-item {
-      display: block;
-      width: 100%;
-      margin-bottom: 2rem;
-      background: white;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      position: relative;
-    }
+    <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"
+    ></script>
+    <script is:inline>
+        (function () {
+            const mount = document.getElementById("exo-chart");
+            if (!mount || typeof window.d3 === "undefined") return;
+            const d3 = window.d3;
 
-    /* Natural image sizing - no cropping */
-    .masonry-item img {
-      display: block;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-    }
+            d3.csv("/data/exoplanets.csv", (r) => ({
+                name: r.name,
+                year: +r.year,
+                dist: +r.dist_ly,
+                mass: r.mass_e === "" ? null : +r.mass_e,
+                method: r.method,
+                facility: r.facility,
+            })).then((data) => {
+                // match the R original: points without a measured mass are dropped
+                data = data.filter((d) => d.mass !== null);
+                const slider = document.getElementById("exo-ymax");
+                const label = document.getElementById("exo-ymax-label");
+                const legendBox = document.getElementById("exo-legend");
 
-    /* Ensure image container doesn't show overflow */
-    .masonry-item .relative {
-      overflow: hidden;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
+                const methods = Array.from(
+                    new Set(data.map((d) => d.method)),
+                ).sort();
+                // ggplot2's default hue palette: evenly spaced HCL, C=100, L=65
+                const color = new Map(
+                    methods.map((m, i) => [
+                        m,
+                        d3.hcl(15 + (i * 360) / methods.length, 100, 65).toString(),
+                    ]),
+                );
 
-    /* Text container stability */
-    .masonry-item .p-6 {
-      background: white;
-      position: relative;
-      z-index: 10;
-    }
-  </style>
+                const size = d3
+                    .scaleSqrt()
+                    .domain([0, 25000])
+                    .range([2, 13])
+                    .clamp(true);
+                const rOf = (d) => size(d.mass);
+
+                const margin = { top: 42, right: 16, bottom: 48, left: 68 };
+                let W, H, svg, gGrid, gX, gY, gDots, title, x, y;
+
+                function build() {
+                    mount.innerHTML = "";
+                    W = mount.clientWidth || 640;
+                    H = Math.max(380, Math.min(520, Math.round(window.innerHeight * 0.6)));
+                    svg = d3
+                        .select(mount)
+                        .append("svg")
+                        .attr("width", W)
+                        .attr("height", H)
+                        .attr("viewBox", [0, 0, W, H]);
+
+                    svg.append("clipPath")
+                        .attr("id", "exo-clip")
+                        .append("rect")
+                        .attr("x", margin.left)
+                        .attr("y", margin.top)
+                        .attr("width", W - margin.left - margin.right)
+                        .attr("height", H - margin.top - margin.bottom);
+
+                    x = d3
+                        .scaleLinear()
+                        .domain([
+                            d3.min(data, (d) => d.year) - 1,
+                            d3.max(data, (d) => d.year) + 1,
+                        ])
+                        .range([margin.left, W - margin.right]);
+                    y = d3.scaleLinear().range([H - margin.bottom, margin.top]);
+
+                    gGrid = svg.append("g");
+                    gX = svg
+                        .append("g")
+                        .attr("transform", `translate(0,${H - margin.bottom})`);
+                    gY = svg
+                        .append("g")
+                        .attr("transform", `translate(${margin.left},0)`);
+                    gDots = svg.append("g").attr("clip-path", "url(#exo-clip)");
+
+                    title = svg
+                        .append("text")
+                        .attr("x", margin.left)
+                        .attr("y", 24)
+                        .attr("font-size", 17)
+                        .attr("font-weight", 600)
+                        .attr("fill", "#111827");
+
+                    svg.append("text")
+                        .attr("x", (margin.left + W - margin.right) / 2)
+                        .attr("y", H - 10)
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", 13)
+                        .attr("fill", "#6b7280")
+                        .text("Discovery Year");
+                    svg.append("text")
+                        .attr(
+                            "transform",
+                            `translate(16,${(margin.top + H - margin.bottom) / 2}) rotate(-90)`,
+                        )
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", 13)
+                        .attr("fill", "#6b7280")
+                        .text("Distance from Earth in Light-Years");
+
+                    mount.style.position = "relative";
+                    const tip = d3
+                        .select(mount)
+                        .append("div")
+                        .style("position", "absolute")
+                        .style("pointer-events", "none")
+                        .style("display", "none")
+                        .style("background", "rgba(255,255,255,0.97)")
+                        .style("border", "1px solid #e5e7eb")
+                        .style("border-radius", "6px")
+                        .style("box-shadow", "0 2px 8px rgba(0,0,0,0.12)")
+                        .style("padding", "6px 9px")
+                        .style("font-size", "12px")
+                        .style("line-height", "1.45")
+                        .style("color", "#374151")
+                        .style("z-index", "10")
+                        .style("max-width", "230px");
+
+                    gDots
+                        .selectAll("circle")
+                        .data(data)
+                        .join("circle")
+                        .attr("cx", (d) => x(d.year))
+                        .attr("r", rOf)
+                        .attr("fill", (d) => color.get(d.method))
+                        .attr("opacity", 0.5)
+                        .on("mouseover", function (event, d) {
+                            d3.select(this)
+                                .attr("opacity", 1)
+                                .attr("stroke", "#111827")
+                                .attr("stroke-width", 1);
+                            tip.style("display", "block").html(
+                                "<strong>" + d.name + "</strong><br>" +
+                                '<span style="color:' + color.get(d.method) + '">&#9679;</span> ' +
+                                d.method + " &middot; " + d.year + "<br>" +
+                                d3.format(",")(Math.round(d.dist)) + " light-years<br>" +
+                                d3.format(",")(Math.round(d.mass)) + " Earth masses<br>" +
+                                '<span style="color:#9ca3af">' + d.facility + "</span>",
+                            );
+                        })
+                        .on("mousemove", (event) => {
+                            const [mx, my] = d3.pointer(event, mount);
+                            const tw = tip.node().offsetWidth;
+                            const left =
+                                mx + 14 + tw > W ? mx - tw - 14 : mx + 14;
+                            tip.style("left", left + "px").style(
+                                "top",
+                                my - 10 + "px",
+                            );
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this)
+                                .attr("opacity", 0.5)
+                                .attr("stroke", "none");
+                            tip.style("display", "none");
+                        });
+
+                    update(+slider.value);
+                }
+
+                function update(yMax) {
+                    y.domain([0, yMax]);
+                    label.textContent = d3.format(",")(yMax) + " ly";
+                    slider.style.setProperty(
+                        "--exo-fill",
+                        ((yMax - +slider.min) / (+slider.max - +slider.min)) * 100 + "%",
+                    );
+                    title.text(
+                        yMax <= 6000
+                            ? "Near Earth Exoplanets"
+                            : "Exoplanet Discoveries",
+                    );
+
+                    gGrid.selectAll("*").remove();
+                    gGrid
+                        .selectAll("line.h")
+                        .data(y.ticks(5))
+                        .join("line")
+                        .attr("x1", margin.left)
+                        .attr("x2", W - margin.right)
+                        .attr("y1", (t) => y(t))
+                        .attr("y2", (t) => y(t))
+                        .attr("stroke", "#e5e7eb");
+                    gGrid
+                        .selectAll("line.v")
+                        .data(x.ticks(4))
+                        .join("line")
+                        .attr("y1", margin.top)
+                        .attr("y2", H - margin.bottom)
+                        .attr("x1", (t) => x(t))
+                        .attr("x2", (t) => x(t))
+                        .attr("stroke", "#e5e7eb");
+
+                    gX.call(
+                        d3
+                            .axisBottom(x)
+                            .ticks(4)
+                            .tickFormat(d3.format("d"))
+                            .tickSize(0)
+                            .tickPadding(10),
+                    ).call((g) => g.select(".domain").remove());
+                    gY.call(
+                        d3
+                            .axisLeft(y)
+                            .ticks(5)
+                            .tickFormat(d3.format(","))
+                            .tickSize(0)
+                            .tickPadding(8),
+                    ).call((g) => g.select(".domain").remove());
+                    svg.selectAll(".tick text")
+                        .attr("fill", "#6b7280")
+                        .attr("font-size", 12);
+
+                    gDots.selectAll("circle").attr("cy", (d) => y(d.dist));
+                }
+
+                slider.addEventListener("input", () => update(+slider.value));
+
+                legendBox.innerHTML = "";
+                for (const m of methods) {
+                    const chip = document.createElement("span");
+                    chip.className =
+                        "inline-flex items-center gap-1.5 text-xs text-gray-500";
+                    chip.innerHTML =
+                        '<span style="display:inline-block;width:10px;height:10px;border-radius:9999px;background:' +
+                        color.get(m) +
+                        '"></span>' +
+                        m;
+                    legendBox.appendChild(chip);
+                }
+
+                const sizeBox = document.getElementById("exo-size-legend");
+                sizeBox.innerHTML = "";
+                const sizeTitle = document.createElement("span");
+                sizeTitle.className = "text-xs text-gray-500 font-medium mr-1";
+                sizeTitle.textContent = "Planet mass (Earth masses):";
+                sizeBox.appendChild(sizeTitle);
+                for (const m of [1, 100, 1000, 10000, 25000]) {
+                    const item = document.createElement("span");
+                    item.className =
+                        "inline-flex items-center gap-1 text-xs text-gray-500";
+                    const r = size(m);
+                    const box = Math.ceil(r * 2) + 2;
+                    item.innerHTML =
+                        '<svg width="' + box + '" height="' + box + '">' +
+                        '<circle cx="' + box / 2 + '" cy="' + box / 2 +
+                        '" r="' + r + '" fill="#9ca3af" opacity="0.55"></circle></svg>' +
+                        d3.format(",")(m);
+                    sizeBox.appendChild(item);
+                }
+
+                let resizeTimer;
+                window.addEventListener("resize", () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(build, 150);
+                });
+                build();
+            });
+        })();
+    </script>
 </BaseLayout>
