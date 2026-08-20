@@ -20,9 +20,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <!-- Interactive visualization -->
     <div class="max-w-4xl mx-auto mb-6">
       <div class="w-full rounded-xl overflow-hidden ring-1 ring-black/10 bg-white p-4">
-          <div class="flex items-stretch gap-1">
+          <div id="exo-presets" class="flex sm:hidden flex-wrap gap-2 mb-3 px-1">
+                    <button type="button" data-ymax="1000" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">1,000 ly</button>
+                    <button type="button" data-ymax="4000" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">4,000 ly</button>
+                    <button type="button" data-ymax="27500" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">Full galaxy</button>
+                </div>
+                <div class="flex items-stretch gap-1">
                     <div
-                        class="flex flex-col items-center shrink-0"
+                        class="hidden sm:flex flex-col items-center shrink-0"
                         style="padding-top: 42px; padding-bottom: 48px;"
                     >
                         <input
@@ -50,8 +55,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 ></div>
             </div>
       <p class="mt-3 text-sm text-gray-400 text-center italic">
-        drag the slider to travel between the neighborhood and the galaxy —
-        point size is planet mass
+        zoom between the neighborhood and the galaxy — tap or hover any planet for its story
       </p>
     </div>
 
@@ -143,6 +147,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 const slider = document.getElementById("exo-ymax");
                 const label = document.getElementById("exo-ymax-label");
                 const legendBox = document.getElementById("exo-legend");
+                const presetBox = document.getElementById("exo-presets");
 
                 const methods = Array.from(
                     new Set(data.map((d) => d.method)),
@@ -162,13 +167,73 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     .clamp(true);
                 const rOf = (d) => size(d.mass);
 
-                const margin = { top: 42, right: 16, bottom: 48, left: 68 };
-                let W, H, svg, gGrid, gX, gY, gDots, title, x, y;
+                let W, H, svg, gGrid, gX, gY, gDots, title, x, y, margin;
+                let tip, circles, delaunay, visible, narrow;
+                let selected = null;
+
+                function tipHtml(d) {
+                    return (
+                        "<strong>" + d.name + "</strong><br>" +
+                        '<span style="color:' + color.get(d.method) + '">&#9679;</span> ' +
+                        d.method + " &middot; " + d.year + "<br>" +
+                        d3.format(",")(Math.round(d.dist)) + " light-years<br>" +
+                        d3.format(",")(Math.round(d.mass)) + " Earth masses<br>" +
+                        '<span style="color:#9ca3af">' + d.facility + "</span>"
+                    );
+                }
+
+                function clearSel() {
+                    selected = null;
+                    if (circles) circles.attr("opacity", 0.5).attr("stroke", null);
+                    if (tip) tip.style("display", "none");
+                }
+
+                function pick(event) {
+                    if (!delaunay || !visible.length) return;
+                    const [mx, my] = d3.pointer(event, svg.node());
+                    const i = delaunay.find(mx, my);
+                    const d = visible[i];
+                    if (!d) return clearSel();
+                    const dx = x(d.year) - mx;
+                    const dy = y(d.dist) - my;
+                    const thresh = event.pointerType === "touch" ? 28 : 20;
+                    if (dx * dx + dy * dy > thresh * thresh) return clearSel();
+                    if (selected !== d) {
+                        selected = d;
+                        circles
+                            .attr("opacity", (p) => (p === d ? 1 : 0.5))
+                            .attr("stroke", (p) => (p === d ? "#111827" : null))
+                            .attr("stroke-width", 1);
+                        circles.filter((p) => p === d).raise();
+                    }
+                    tip.style("display", "block").html(tipHtml(d));
+                    const tw = tip.node().offsetWidth;
+                    if (event.pointerType === "touch") {
+                        // dock in the top-right corner; a finger covers anything beside it
+                        tip.style("left", W - tw - 10 + "px").style(
+                            "top",
+                            margin.top + 6 + "px",
+                        );
+                    } else {
+                        const left = mx + 14 + tw > W ? mx - tw - 14 : mx + 14;
+                        tip.style("left", left + "px").style("top", my - 10 + "px");
+                    }
+                }
 
                 function build() {
                     mount.innerHTML = "";
                     W = mount.clientWidth || 640;
-                    H = Math.max(380, Math.min(520, Math.round(window.innerHeight * 0.6)));
+                    narrow = W < 480;
+                    margin = {
+                        top: 42,
+                        right: narrow ? 10 : 16,
+                        bottom: narrow ? 42 : 48,
+                        left: narrow ? 46 : 68,
+                    };
+                    H = Math.max(
+                        360,
+                        Math.min(520, Math.round(window.innerHeight * 0.6)),
+                    );
                     svg = d3
                         .select(mount)
                         .append("svg")
@@ -206,29 +271,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                         .append("text")
                         .attr("x", margin.left)
                         .attr("y", 24)
-                        .attr("font-size", 17)
+                        .attr("font-size", narrow ? 15 : 17)
                         .attr("font-weight", 600)
                         .attr("fill", "#111827");
 
                     svg.append("text")
                         .attr("x", (margin.left + W - margin.right) / 2)
-                        .attr("y", H - 10)
+                        .attr("y", H - 8)
                         .attr("text-anchor", "middle")
-                        .attr("font-size", 13)
+                        .attr("font-size", narrow ? 11 : 13)
                         .attr("fill", "#6b7280")
                         .text("Discovery Year");
                     svg.append("text")
                         .attr(
                             "transform",
-                            `translate(16,${(margin.top + H - margin.bottom) / 2}) rotate(-90)`,
+                            `translate(${narrow ? 12 : 16},${(margin.top + H - margin.bottom) / 2}) rotate(-90)`,
                         )
                         .attr("text-anchor", "middle")
-                        .attr("font-size", 13)
+                        .attr("font-size", narrow ? 11 : 13)
                         .attr("fill", "#6b7280")
-                        .text("Distance from Earth in Light-Years");
+                        .text(
+                            narrow
+                                ? "Distance (light-years)"
+                                : "Distance from Earth in Light-Years",
+                        );
 
                     mount.style.position = "relative";
-                    const tip = d3
+                    tip = d3
                         .select(mount)
                         .append("div")
                         .style("position", "absolute")
@@ -245,7 +314,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                         .style("z-index", "10")
                         .style("max-width", "230px");
 
-                    gDots
+                    circles = gDots
                         .selectAll("circle")
                         .data(data)
                         .join("circle")
@@ -253,36 +322,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                         .attr("r", rOf)
                         .attr("fill", (d) => color.get(d.method))
                         .attr("opacity", 0.5)
-                        .on("mouseover", function (event, d) {
-                            d3.select(this)
-                                .attr("opacity", 1)
-                                .attr("stroke", "#111827")
-                                .attr("stroke-width", 1);
-                            tip.style("display", "block").html(
-                                "<strong>" + d.name + "</strong><br>" +
-                                '<span style="color:' + color.get(d.method) + '">&#9679;</span> ' +
-                                d.method + " &middot; " + d.year + "<br>" +
-                                d3.format(",")(Math.round(d.dist)) + " light-years<br>" +
-                                d3.format(",")(Math.round(d.mass)) + " Earth masses<br>" +
-                                '<span style="color:#9ca3af">' + d.facility + "</span>",
-                            );
+                        .attr("pointer-events", "none");
+
+                    // one forgiving hit surface instead of 2,000 tiny targets
+                    svg.append("rect")
+                        .attr("x", margin.left)
+                        .attr("y", margin.top)
+                        .attr("width", W - margin.left - margin.right)
+                        .attr("height", H - margin.top - margin.bottom)
+                        .attr("fill", "transparent")
+                        .on("pointermove", (event) => {
+                            if (event.pointerType === "mouse") pick(event);
                         })
-                        .on("mousemove", (event) => {
-                            const [mx, my] = d3.pointer(event, mount);
-                            const tw = tip.node().offsetWidth;
-                            const left =
-                                mx + 14 + tw > W ? mx - tw - 14 : mx + 14;
-                            tip.style("left", left + "px").style(
-                                "top",
-                                my - 10 + "px",
-                            );
+                        .on("pointerleave", (event) => {
+                            if (event.pointerType === "mouse") clearSel();
                         })
-                        .on("mouseout", function () {
-                            d3.select(this)
-                                .attr("opacity", 0.5)
-                                .attr("stroke", "none");
-                            tip.style("display", "none");
-                        });
+                        .on("click", (event) => pick(event));
 
                     update(+slider.value);
                 }
@@ -303,7 +358,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     gGrid.selectAll("*").remove();
                     gGrid
                         .selectAll("line.h")
-                        .data(y.ticks(5))
+                        .data(y.ticks(narrow ? 4 : 5))
                         .join("line")
                         .attr("x1", margin.left)
                         .attr("x2", W - margin.right)
@@ -312,7 +367,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                         .attr("stroke", "#e5e7eb");
                     gGrid
                         .selectAll("line.v")
-                        .data(x.ticks(4))
+                        .data(x.ticks(narrow ? 3 : 4))
                         .join("line")
                         .attr("y1", margin.top)
                         .attr("y2", H - margin.bottom)
@@ -323,7 +378,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     gX.call(
                         d3
                             .axisBottom(x)
-                            .ticks(4)
+                            .ticks(narrow ? 3 : 4)
                             .tickFormat(d3.format("d"))
                             .tickSize(0)
                             .tickPadding(10),
@@ -331,19 +386,45 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     gY.call(
                         d3
                             .axisLeft(y)
-                            .ticks(5)
+                            .ticks(narrow ? 4 : 5)
                             .tickFormat(d3.format(","))
                             .tickSize(0)
-                            .tickPadding(8),
+                            .tickPadding(narrow ? 5 : 8),
                     ).call((g) => g.select(".domain").remove());
                     svg.selectAll(".tick text")
                         .attr("fill", "#6b7280")
-                        .attr("font-size", 12);
+                        .attr("font-size", narrow ? 10.5 : 12);
 
-                    gDots.selectAll("circle").attr("cy", (d) => y(d.dist));
+                    circles.attr("cy", (d) => y(d.dist));
+
+                    visible = data.filter((d) => d.dist <= yMax);
+                    delaunay = d3.Delaunay.from(
+                        visible,
+                        (d) => x(d.year),
+                        (d) => y(d.dist),
+                    );
+                    clearSel();
+
+                    if (presetBox) {
+                        presetBox.querySelectorAll("button").forEach((b) => {
+                            const active = +b.dataset.ymax === yMax;
+                            b.classList.toggle("bg-gray-900", active);
+                            b.classList.toggle("text-white", active);
+                            b.classList.toggle("border-gray-900", active);
+                            b.classList.toggle("text-gray-600", !active);
+                        });
+                    }
                 }
 
                 slider.addEventListener("input", () => update(+slider.value));
+                if (presetBox) {
+                    presetBox.querySelectorAll("button").forEach((b) => {
+                        b.addEventListener("click", () => {
+                            slider.value = b.dataset.ymax;
+                            update(+b.dataset.ymax);
+                        });
+                    });
+                }
 
                 legendBox.innerHTML = "";
                 for (const m of methods) {
