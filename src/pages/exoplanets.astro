@@ -23,7 +23,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <div id="exo-presets" class="flex sm:hidden flex-wrap gap-2 mb-3 px-1">
                     <button type="button" data-ymax="1000" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">1,000 ly</button>
                     <button type="button" data-ymax="4000" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">4,000 ly</button>
-                    <button type="button" data-ymax="27500" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">Full galaxy</button>
+                    <button type="button" data-ymax="27500" class="rounded-full border border-gray-300 px-3 py-1.5 text-xs text-gray-600">27,500 ly</button>
                 </div>
                 <div class="flex items-stretch gap-1">
                     <div
@@ -259,6 +259,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     y = d3.scaleLinear().range([H - margin.bottom, margin.top]);
 
                     gGrid = svg.append("g");
+                    const gGridV = svg.append("g");
+                    gGridV
+                        .selectAll("line")
+                        .data(x.ticks(narrow ? 3 : 4))
+                        .join("line")
+                        .attr("y1", margin.top)
+                        .attr("y2", H - margin.bottom)
+                        .attr("x1", (v) => x(v))
+                        .attr("x2", (v) => x(v))
+                        .attr("stroke", "#e5e7eb");
                     gX = svg
                         .append("g")
                         .attr("transform", `translate(0,${H - margin.bottom})`);
@@ -342,7 +352,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     update(+slider.value);
                 }
 
-                function update(yMax) {
+                function update(yMax, animate) {
                     y.domain([0, yMax]);
                     label.textContent = d3.format(",")(yMax) + " ly";
                     slider.style.setProperty(
@@ -355,25 +365,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                             : "Exoplanet Discoveries",
                     );
 
-                    gGrid.selectAll("*").remove();
-                    gGrid
-                        .selectAll("line.h")
-                        .data(y.ticks(narrow ? 4 : 5))
-                        .join("line")
-                        .attr("x1", margin.left)
-                        .attr("x2", W - margin.right)
-                        .attr("y1", (t) => y(t))
-                        .attr("y2", (t) => y(t))
-                        .attr("stroke", "#e5e7eb");
-                    gGrid
-                        .selectAll("line.v")
-                        .data(x.ticks(narrow ? 3 : 4))
-                        .join("line")
-                        .attr("y1", margin.top)
-                        .attr("y2", H - margin.bottom)
-                        .attr("x1", (t) => x(t))
-                        .attr("x2", (t) => x(t))
-                        .attr("stroke", "#e5e7eb");
+                    const t = animate
+                        ? svg.transition().duration(650).ease(d3.easeCubicInOut)
+                        : null;
+
+                    const lines = gGrid
+                        .selectAll("line")
+                        .data(y.ticks(narrow ? 4 : 5), (d) => d)
+                        .join(
+                            (enter) =>
+                                enter
+                                    .append("line")
+                                    .attr("x1", margin.left)
+                                    .attr("x2", W - margin.right)
+                                    .attr("y1", (d) => y(d))
+                                    .attr("y2", (d) => y(d))
+                                    .attr("stroke", "#e5e7eb")
+                                    .attr("opacity", animate ? 0 : 1),
+                            (u) => u,
+                            (exit) =>
+                                animate
+                                    ? exit.transition(t).attr("opacity", 0).remove()
+                                    : exit.remove(),
+                        );
+                    (animate ? lines.transition(t) : lines)
+                        .attr("y1", (d) => y(d))
+                        .attr("y2", (d) => y(d))
+                        .attr("opacity", 1);
 
                     gX.call(
                         d3
@@ -383,19 +401,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                             .tickSize(0)
                             .tickPadding(10),
                     ).call((g) => g.select(".domain").remove());
-                    gY.call(
-                        d3
-                            .axisLeft(y)
-                            .ticks(narrow ? 4 : 5)
-                            .tickFormat(d3.format(","))
-                            .tickSize(0)
-                            .tickPadding(narrow ? 5 : 8),
-                    ).call((g) => g.select(".domain").remove());
+                    const yAxis = d3
+                        .axisLeft(y)
+                        .ticks(narrow ? 4 : 5)
+                        .tickFormat(d3.format(","))
+                        .tickSize(0)
+                        .tickPadding(narrow ? 5 : 8);
+                    (animate ? gY.transition(t) : gY).call(yAxis);
+                    gY.call((g) => g.select(".domain").remove());
                     svg.selectAll(".tick text")
                         .attr("fill", "#6b7280")
                         .attr("font-size", narrow ? 10.5 : 12);
 
-                    circles.attr("cy", (d) => y(d.dist));
+                    (animate ? circles.transition(t) : circles).attr(
+                        "cy",
+                        (d) => y(d.dist),
+                    );
 
                     visible = data.filter((d) => d.dist <= yMax);
                     delaunay = d3.Delaunay.from(
@@ -421,7 +442,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     presetBox.querySelectorAll("button").forEach((b) => {
                         b.addEventListener("click", () => {
                             slider.value = b.dataset.ymax;
-                            update(+b.dataset.ymax);
+                            update(+b.dataset.ymax, true);
                         });
                     });
                 }
