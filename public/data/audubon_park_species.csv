@@ -1,0 +1,68 @@
+species,common,kingdom,class,records,years,lat,lon
+Poecile atricapillus,Black-capped Chickadee,Animalia,Aves,20,2014-2024,45.019736,-93.240028
+Cardinalis cardinalis,Northern Cardinal,Animalia,Aves,16,2019-2024,45.019742,-93.240058
+Spinus tristis,American Goldfinch,Animalia,Aves,15,2023-2024,45.019734,-93.240021
+Corvus brachyrhynchos,American Crow,Animalia,Aves,15,2014-2024,45.01988,-93.239986
+Cyanocitta cristata,Blue Jay,Animalia,Aves,14,2019-2024,45.019783,-93.240039
+Sitta carolinensis,White-breasted Nuthatch,Animalia,Aves,12,2023-2024,45.019668,-93.240062
+Passer domesticus,House Sparrow,Animalia,Aves,12,2019-2024,45.019837,-93.240013
+Melanerpes carolinus,Red-bellied Woodpecker,Animalia,Aves,9,2023-2024,45.019718,-93.240031
+Turdus migratorius,American Robin,Animalia,Aves,8,2014-2024,45.019777,-93.240097
+Haemorhous mexicanus,House Finch,Animalia,Aves,7,2023-2024,45.019689,-93.240049
+Leuconotopicus villosus,Hairy Woodpecker,Animalia,Aves,6,2023-2024,45.019758,-93.240007
+Junco hyemalis,Dark-eyed Junco,Animalia,Aves,5,2023-2024,45.01971,-93.240036
+Dryobates pubescens,Downy Woodpecker,Animalia,Aves,5,2023-2024,45.019782,-93.239992
+Spizella passerina,Chipping Sparrow,Animalia,Aves,5,2023-2024,45.019638,-93.24008
+Falco columbarius,Merlin,Animalia,Aves,5,2024-2024,45.019925,-93.239904
+Archilochus colubris,Ruby-throated Hummingbird,Animalia,Aves,4,2023-2024,45.019728,-93.240025
+Dumetella carolinensis,Gray Catbird,Animalia,Aves,4,2023-2024,45.019728,-93.240025
+Chaetura pelagica,Chimney Swift,Animalia,Aves,4,2024-2024,45.019907,-93.239915
+Myiarchus crinitus,Great Crested Flycatcher,Animalia,Aves,4,2023-2024,45.019638,-93.24008
+Sturnus vulgaris,European Starling,Animalia,Aves,3,2014-2024,45.020008,-93.240125
+Ardea herodias,Great Blue Heron,Animalia,Aves,3,2023-2024,45.019638,-93.24008
+Leiothlypis peregrina,Tennessee Warbler,Animalia,Aves,3,2023-2024,45.019758,-93.240007
+Colaptes auratus,Northern Flicker,Animalia,Aves,3,2022-2023,45.019638,-93.24008
+Leiothlypis ruficapilla,Nashville Warbler,Animalia,Aves,2,2024-2024,45.019818,-93.23997
+Molothrus ater,Brown-headed Cowbird,Animalia,Aves,2,2024-2024,45.019638,-93.24008
+Anas platyrhynchos,Mallard,Animalia,Aves,2,2023-2024,45.019638,-93.24008
+Larus delawarensis,Ring-billed Gull,Animalia,Aves,2,2024-2024,45.019997,-93.23986
+Phalacrocorax auritus,Double-crested Cormorant,Animalia,Aves,2,2024-2024,45.019818,-93.23997
+Tyrannus tyrannus,Eastern Kingbird,Animalia,Aves,2,2024-2024,45.019638,-93.24008
+Zonotrichia albicollis,White-throated Sparrow,Animalia,Aves,2,2023-2024,45.019818,-93.23997
+Haliaeetus leucocephalus,Bald Eagle,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Falco sparverius,American Kestrel,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Setophaga coronata,Yellow-rumped Warbler,Animalia,Aves,1,2024-2024,45.019638,-93.24008
+Catharus ustulatus,Swainson's Thrush,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Zonotrichia leucophrys,White-crowned Sparrow,Animalia,Aves,1,2024-2024,45.019638,-93.24008
+Ardea alba,Great Egret,Animalia,Aves,1,2024-2024,45.019638,-93.24008
+Buteo platypterus,Broad-winged Hawk,Animalia,Aves,1,2024-2024,45.019638,-93.24008
+Spizelloides arborea,American Tree Sparrow,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Pelecanus erythrorhynchos,American White Pelican,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Leiothlypis celata,Orange-crowned Warbler,Animalia,Aves,1,2024-2024,45.019997,-93.23986
+Dryocopus pileatus,Pileated Woodpecker,Animalia,Aves,1,2024-2024,45.019638,-93.24008
+Setophaga striata,Blackpoll Warbler,Animalia,Aves,1,2023-2023,45.019638,-93.24008
+Troglodytes aedon,Northern House Wren,Animalia,Aves,1,2023-2023,45.019638,-93.24008
+Buteo jamaicensis,Red-tailed Hawk,Animalia,Aves,1,2023-2023,45.019638,-93.24008
+Quiscalus quiscula,Common Grackle,Animalia,Aves,1,2023-2023,45.019638,-93.24008
+Bombus impatiens,,Animalia,Insecta,64,2015-2018,45.019783,-93.239989
+Andrena wilkella,,Animalia,Insecta,31,2015-2018,45.019704,-93.239824
+Calliopsis andreniformis,,Animalia,Insecta,17,2015-2015,45.019758,-93.239228
+Bombus rufocinctus,,Animalia,Insecta,4,2015-2018,45.01977,-93.239949
+Bombus fervidus,,Animalia,Insecta,3,2015-2018,45.019805,-93.2402
+Andrena wilmattae,,Animalia,Insecta,2,2016-2016,45.019788,-93.240211
+Agapostemon virescens,,Animalia,Insecta,1,2022-2022,45.019705,-93.241472
+Elkalyce comyntas,,Animalia,Insecta,1,2021-2021,45.019609,-93.240017
+Chauliognathus pensylvanicus,,Animalia,Insecta,1,2020-2020,45.019832,-93.238819
+Colletes kincaidii,,Animalia,Insecta,1,2018-2018,45.0196,-93.2396
+Coelioxys rufitarsis,,Animalia,Insecta,1,2018-2018,45.0196,-93.2396
+Andrena dunningi,,Animalia,Insecta,1,2017-2017,45.019788,-93.240211
+Megachile frigida,,Animalia,Insecta,1,2017-2017,45.01969,-93.239648
+Melissodes bimaculatus,,Animalia,Insecta,1,2017-2017,45.01969,-93.239648
+Andrena commoda,,Animalia,Insecta,1,2016-2016,45.019788,-93.240211
+Bombus bimaculatus,,Animalia,Insecta,1,2015-2015,45.019858,-93.23904
+Anthidium oblongatum,,Animalia,Insecta,1,2015-2015,45.019958,-93.241959
+Megachile latimanus,,Animalia,Insecta,1,2015-2015,45.019858,-93.23904
+Leonurus cardiaca,,Plantae,Magnoliopsida,1,2026-2026,45.019386,-93.239328
+Ageratina altissima,,Plantae,Magnoliopsida,1,2025-2025,45.019556,-93.241448
+Arctium minus,,Plantae,Magnoliopsida,1,2025-2025,45.019845,-93.240629
+Celtis occidentalis,,Plantae,Magnoliopsida,1,2019-2019,45.019906,-93.239932
