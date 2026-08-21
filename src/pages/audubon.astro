@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout
     title="Audubon Park | Claire Nyquist"
-    description="A map of every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, drawn as lifeform icons on a minimalist basemap."
+    description="Every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism itself — chickadees to slime molds — colored by lifeform on a minimalist basemap, with filters per group."
 >
     <div class="px-4 py-8">
         <!-- Hero Section -->
@@ -20,27 +20,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p
                 class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4"
             >
-                Each icon marks a spot where a species was recorded — a sparrow
-                for birds, a butterfly for insects, a fern for plants. Click
+                Each icon marks a spot where a species was recorded, drawn as
+                what it is — chickadees, bumble bees, milkweed, and some
+                seventy other shapes — and tinted with the species&rsquo;
+                estimated dominant color: cardinal red, blue-jay blue,
+                goldfinch gold, monarch orange. Click
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
-                are fanned out into a small spiral so each one stays visible.
+                are scattered with a little jitter so each one stays visible.
+                Click a group in the legend to show only that group; click it
+                again to bring everything back.
             </p>
         </div>
 
         <!-- Legend -->
         <div
             id="legend"
-            class="flex flex-wrap justify-center gap-x-5 gap-y-2 mb-4 text-sm text-gray-700"
+            class="flex flex-wrap justify-center gap-2 mb-4 text-sm text-gray-700"
         >
         </div>
 
-        <!-- Map -->
-        <div class="max-w-6xl mx-auto">
+        <!-- Map: full-bleed across the browser window -->
+        <div style="width:100vw; margin-left:calc(50% - 50vw);">
             <div
                 id="map"
-                class="w-full rounded-lg border border-gray-200"
-                style="height: 640px; background:#fafafa;"
+                class="w-full border-y border-gray-200"
+                style="height: 90vh; min-height: 600px; background:#fafafa;"
             >
             </div>
             <p id="stat-line" class="text-sm text-gray-500 mt-2 text-center"></p>
@@ -68,6 +73,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600">gbif.org</a
                 >.
+            </p>
+            <p>
+                <strong class="text-gray-500">Photos:</strong> where an
+                observer shared a photo with their record, the first
+                available one is shown in that species&rsquo; popup &mdash;
+                mostly iNaturalist observation photos distributed through
+                GBIF. Each is credited to its photographer with its Creative
+                Commons license; photos remain the work of their observers.
+                Not every record has one &mdash; eBird checklists, for
+                example, are usually photo-free.
             </p>
             <p id="icon-citations">
                 <strong class="text-gray-500">Icons:</strong>
@@ -106,46 +121,284 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             align-items: center;
             justify-content: center;
         }
-        .species-icon svg {
-            width: 100%;
-            height: 100%;
+        .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
         }
-        .leaflet-popup-content {
+        #species-popup {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            z-index: 1100;
+            width: 250px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            padding: 10px 12px;
             font-family: "Helvetica Neue", Inter, sans-serif;
             font-size: 13px;
             line-height: 1.5;
+        }
+        #species-popup-close {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 16px;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #species-popup-close:hover {
+            color: #374151;
         }
     </style>
 
     <script is:inline>
         (function () {
-            // One icon + one color per lifeform. Icons are game-icons.net
-            // (CC BY 3.0), recolored via currentColor; colors are a
-            // CVD-validated categorical palette.
+            // One icon shape per lifeform (Claude-cropped line art, stored
+            // as black-on-transparent masks); color marks the lifeform
+            // group — Claire's palette, deep enough to read on the pale
+            // basemap. Marker sizes preserve each drawing's aspect ratio.
             const GROUPS = [
-                { key: "Birds", color: "#2a78d6", icon: "sparrow", iconName: "Sparrow", author: "Lorc", match: (d) => d.class === "Aves" },
-                { key: "Insects", color: "#eb6834", icon: "butterfly", iconName: "Butterfly", author: "Lorc", match: (d) => d.class === "Insecta" },
-                { key: "Plants", color: "#1baf7a", icon: "fern", iconName: "Fern", author: "Delapouite", match: (d) => d.kingdom === "Plantae" },
-                { key: "Arachnids", color: "#eda100", icon: "hanging-spider", iconName: "Hanging spider", author: "Lorc", match: (d) => d.class === "Arachnida" },
-                { key: "Mammals", color: "#e87ba4", icon: "paw-print", iconName: "Paw print", author: "Lorc", match: (d) => d.class === "Mammalia" },
-                { key: "Fungi", color: "#008300", icon: "mushrooms", iconName: "Mushrooms", author: "Delapouite", match: (d) => d.kingdom === "Fungi" },
-                { key: "Other", color: "#4a3aa7", icon: "snail", iconName: "Snail", author: "Lorc", match: () => true },
+                { key: "Birds", color: "#e13c30", icon: "birds", size: [22, 20], match: (d) => d.class === "Aves" },
+                { key: "Insects", color: "#f2601a", icon: "insects", size: [22, 20], match: (d) => d.class === "Insecta" },
+                { key: "Plants", color: "#2fae57", icon: "plants", size: [16, 20], match: (d) => d.kingdom === "Plantae" },
+                { key: "Arachnids", color: "#d64fc4", icon: "arachnids", size: [20, 20], match: (d) => d.class === "Arachnida" },
+                { key: "Mammals", color: "#c9a70a", icon: "mammals", size: [35, 16], match: (d) => d.class === "Mammalia" },
+                { key: "Fungi", color: "#3186e0", icon: "fungi", size: [18, 20], match: (d) => d.kingdom === "Fungi" },
+                { key: "Other", color: "#6d28d9", icon: "other", size: [26, 16], match: () => true },
             ];
             const groupOf = (d) => GROUPS.find((g) => g.match(d));
 
-            // Icon citations (CC BY 3.0 requires attribution)
-            const cit = document.getElementById("icon-citations");
-            GROUPS.forEach((g, i) => {
-                cit.innerHTML +=
-                    `${g.key}: “${g.iconName}” by ${g.author}` +
-                    (i < GROUPS.length - 1 ? " · " : "");
+            // Species-specific icons: genus → drawing, from Claire's larger
+            // Gemini line-art set. Anything unmatched falls back to its
+            // lifeform's default icon above. Entries: [icon, [w,h], genera].
+            const SUBICONS = {
+                Birds: [
+                    ["chickadee", [26, 20], "Poecile"],
+                    ["cardinal", [15, 20], "Cardinalis"],
+                    ["house-sparrow", [21, 20], "Passer Melospiza Spizella Spizelloides Zonotrichia Passerella Pipilo"],
+                    ["crow", [20, 20], "Corvus"],
+                    ["blackbird", [26, 20], "Agelaius Quiscalus Molothrus Sturnus"],
+                    ["goldfinch", [25, 20], "Spinus Haemorhous Acanthis Passerina Pheucticus"],
+                    ["woodpecker", [12, 20], "Dryobates Melanerpes Colaptes Dryocopus Sphyrapicus Leuconotopicus"],
+                    ["robin", [25, 20], "Turdus Catharus Sialia Toxostoma Dumetella"],
+                    ["blue-jay", [29, 20], "Cyanocitta"],
+                    ["nuthatch", [20, 20], "Sitta Certhia"],
+                    ["wren", [20, 20], "Troglodytes Thryothorus"],
+                    ["swift", [27, 20], "Chaetura Hirundo Petrochelidon Riparia Tachycineta Chordeiles"],
+                    ["mallard", [35, 16], "Anas Aix Spatula Lophodytes Gavia Phalacrocorax"],
+                    ["dove", [24, 20], "Zenaida Columba"],
+                    ["junco", [28, 20], "Junco"],
+                    ["warbler", [28, 20], "Setophaga Leiothlypis Geothlypis Cardellina Mniotilta Seiurus Regulus Vireo Polioptila Empidonax Contopus Sayornis Myiarchus Tyrannus"],
+                    ["hawk", [22, 24], "Accipiter Astur Buteo Falco Circus Haliaeetus Pandion Cathartes"],
+                    ["turkey", [21, 24], "Meleagris"],
+                    ["heron", [19, 28], "Ardea Butorides"],
+                    ["hummingbird", [20, 14], "Archilochus"],
+                    ["gull", [22, 20], "Larus Hydroprogne"],
+                    ["killdeer", [24, 20], "Charadrius"],
+                    ["oriole", [26, 20], "Icterus"],
+                    ["waxwing", [20, 20], "Bombycilla"],
+                    ["goose", [22, 22], "Branta Anser Cygnus"],
+                    ["owl", [15, 22], "Bubo Strix"],
+                    ["kingfisher", [14, 20], "Megaceryle"],
+                    ["crane", [17, 28], "Grus"],
+                ],
+                Insects: [
+                    ["bumblebee", [22, 16], "Bombus Pyrobombus"],
+                    ["sweat-bee", [13, 16], "Agapostemon Halictus Melissodes Megachile Anthidium Colletes Coelioxys"],
+                    ["miner-bee", [21, 16], "Andrena Calliopsis"],
+                    ["monarch", [25, 18], "Danaus Vanessa Nymphalis Polygonia Speyeria Euptoieta Pieris Cyaniris Elkalyce Polites Epargyreus"],
+                    ["swallowtail", [20, 18], "Papilio"],
+                    ["ladybug", [12, 14], "Harmonia Hippodamia Coleomegilla"],
+                    ["beetle", [14, 16], "Tetraopes Megacyllene Lucanus Chauliognathus Popillia Pelidnota Trirhabda Blepharida Labidomera Lilioceris Anthrenus Calomycterus Polydrusus Amphimallon Atalantycha Lucidota Creophilus Calymmaderus"],
+                    ["grasshopper", [25, 14], "Melanoplus Dichromorpha Microcentrum Roeseliana"],
+                    ["wasp", [17, 16], "Polistes Vespula Dolichovespula Eumenes Parazumia Philanthus Megarhyssa Pelecinus Tremex"],
+                    ["hoverfly", [18, 14], "Toxomerus Eristalis Helophilus Sericomyia Delphinia Laphria Machimus Phytomyza Gnophomyia"],
+                    ["dragonfly", [22, 16], "Aeshna Anax Libellula Sympetrum Argia"],
+                    ["moth", [20, 18], "Agrochola Antheraea Halysidota Hypoprepia Pyrrharctia Cucullia Caenurgina Idia Lacinipolia Mythimna Orthonama Phaeoura Galgula Udea Pyrausta Pyralis Microcrambus Psyche Emmelina Hemaris"],
+                    ["honey-bee", [15, 16], "Apis"],
+                    ["boxelder-bug", [21, 14], "Boisea Arocatus Oncopeltus Leptopterna Poecilocapsus Orius"],
+                    ["leafhopper", [11, 14], "Graphocephala Jikradia Orientus Acanalonia Metcalfa Cyrtolobus Pachypsylla Daktulosphaira"],
+                    ["stink-bug", [12, 14], "Halyomorpha Cosmopepla Acholla"],
+                    ["ant", [19, 10], "Camponotus Lasius Prenolepis"],
+                ],
+                Plants: [
+                    ["milkweed", [15, 20], "Asclepias"],
+                    ["aster", [11, 20], "Achillea Ageratina Ambrosia Arctium Artemisia Cichorium Cirsium Cosmos Echinacea Erechtites Erigeron Eutrochium Gaillardia Heliopsis Heterotheca Nabalus Ratibida Rudbeckia Silphium Solidago Tanacetum Tragopogon"],
+                    ["grapevine", [22, 20], "Vitis Parthenocissus Sicyos Campsis Convolvulus"],
+                    ["tree-leaf", [12, 20], "Acer Amelanchier Berberis Catalpa Celtis Fraxinus Juglans Morus Ostrya Philadelphus Physocarpus Populus Prunus Rhamnus Sorbaria Sorbus Ulmus"],
+                    ["bellflower", [15, 20], "Campanula Scilla Convallaria Aquilegia Mertensia"],
+                    ["mint", [16, 20], "Leonurus Nepeta Melissa Agastache Monarda Blephilia Lamium Ajuga Verbena"],
+                    ["clover", [10, 20], "Trifolium Melilotus Lotus Coronilla Chamaecrista"],
+                    ["mullein", [8, 22], "Verbascum"],
+                    ["violet", [15, 18], "Viola"],
+                    ["creeping-charlie", [22, 16], "Glechoma"],
+                    ["conifer", [10, 22], "Juniperus Larix"],
+                    ["berry-branch", [19, 20], "Sambucus Lonicera"],
+                ],
+                Arachnids: [
+                    ["orb-weaver", [20, 20], "Argiope Neoscona"],
+                    ["jumping-spider", [21, 14], "Phidippus Salticus Attulus Eris"],
+                    ["tick", [13, 14], "Dermacentor Amblyomma"],
+                    ["harvestman", [25, 18], "Phalangium"],
+                    ["grass-spider", [17, 18], "Agelenopsis"],
+                ],
+                Mammals: [
+                    ["squirrel", [19, 20], "Sciurus"],
+                    ["rabbit", [18, 20], "Sylvilagus"],
+                    ["chipmunk", [19, 18], "Tamias"],
+                    ["raccoon", [28, 18], "Procyon"],
+                    ["shrew", [28, 12], "Blarina"],
+                ],
+                Fungi: [
+                    ["bracket-fungus", [17, 18], "Trametes Laetiporus"],
+                    ["lichen", [17, 16], "Oxneria"],
+                ],
+                Other: [
+                    ["pillbug", [14, 14], "Porcellio Porcellionides Armadillidium"],
+                    ["turtle", [32, 16], "Chrysemys"],
+                    ["millipede", [22, 14], "Oxidus"],
+                    ["slime-mold", [14, 14], "Fuligo"],
+                ],
+            };
+            const iconDefByGenus = {};
+            const defByIconName = {};
+            GROUPS.forEach((g) => (defByIconName[g.icon] = g));
+            Object.entries(SUBICONS).forEach(([groupKey, list]) => {
+                iconDefByGenus[groupKey] = {};
+                list.forEach(([icon, size, genera]) => {
+                    const def = { icon, size };
+                    defByIconName[icon] = def;
+                    genera.split(" ").forEach(
+                        (genus) => (iconDefByGenus[groupKey][genus] = def),
+                    );
+                });
             });
-            cit.innerHTML +=
-                ` — all from <a href="https://game-icons.net" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">game-icons.net</a>, licensed <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">CC BY 3.0</a>.`;
+            function iconDefFor(groupKey, species) {
+                const genus = (species || "").split(" ")[0];
+                return (
+                    iconDefByGenus[groupKey][genus] ||
+                    GROUPS.find((g) => g.key === groupKey)
+                );
+            }
+
+            // Estimated dominant color per genus — the color you'd name if
+            // asked "what color is a cardinal?" — with species overrides
+            // where one genus spans very different looks. Anything unlisted
+            // falls back to its lifeform's color. Very-pale species are
+            // nudged toward a readable gray so they survive a white map.
+            const SPECIES_COLOR = {
+                "Spinus pinus": "#9b8455", // pine siskin: streaky brown, not goldfinch gold
+            };
+            const GENUS_COLOR = {
+                // Birds
+                Poecile: "#8a9099", Cardinalis: "#d21f26", Passer: "#8a6f4b",
+                Corvus: "#23272e", Haemorhous: "#c8506b", Spinus: "#e6b90c",
+                Dryobates: "#454a52", Leuconotopicus: "#454a52", Dryocopus: "#2e2b2b",
+                Melanerpes: "#b3503c", Colaptes: "#a8763f", Sphyrapicus: "#9c5748",
+                Turdus: "#c25e28", Cyanocitta: "#3f7fd6", Sitta: "#6e87a8",
+                Troglodytes: "#a3743f", Thryothorus: "#a3743f", Chaetura: "#6d625a",
+                Anas: "#2e7d4f", Aix: "#916044", Spatula: "#5b7f68",
+                Lophodytes: "#3c3f45", Gavia: "#2f3438", Zenaida: "#b09a86",
+                Columba: "#9aa0a8", Junco: "#5c6370", Spizella: "#8f7a58",
+                Spizelloides: "#8f7a58", Melospiza: "#8f7a58", Zonotrichia: "#8f7a58",
+                Passerella: "#8f7a58", Pipilo: "#5a4238", Setophaga: "#ddc31b",
+                Leiothlypis: "#c9b23a", Geothlypis: "#d1b520", Cardellina: "#c9b23a",
+                Mniotilta: "#45494f", Seiurus: "#8f7a55", Regulus: "#b9c24a",
+                Vireo: "#8a9a5b", Polioptila: "#7d8ba0", Accipiter: "#8a6a48",
+                Astur: "#8a6a48", Buteo: "#8a6a48", Falco: "#7a5f4a",
+                Circus: "#7d7469", Haliaeetus: "#5a4c3c", Pandion: "#5a4c3c",
+                Cathartes: "#4a3f3c", Bubo: "#8a7355", Strix: "#8a7355",
+                Agelaius: "#322a28", Quiscalus: "#3d3a55", Molothrus: "#4a3c33",
+                Sturnus: "#3c4440", Sturnella: "#dcb320", Icterus: "#e87d1b",
+                Bombycilla: "#b8a26a", Charadrius: "#a58a5f", Larus: "#a9aeb5",
+                Hydroprogne: "#a9aeb5", Ardea: "#7b8fa3", Butorides: "#4f6455",
+                Meleagris: "#6b4c33", Archilochus: "#2f8f5b", Branta: "#4d4a44",
+                Anser: "#b5b2a8", Cygnus: "#b5b2a8", Pelecanus: "#b5b2a8",
+                Megaceryle: "#4f7391", Grus: "#96938c", Pheucticus: "#b8352f",
+                Passerina: "#3b4fd8", Piranga: "#d92b1e", Sialia: "#3a6fd8",
+                Catharus: "#96725a", Dumetella: "#6a7076", Toxostoma: "#a06a3d",
+                Hirundo: "#3b5bd0", Tachycineta: "#2f7fb8", Petrochelidon: "#6b6257",
+                Riparia: "#6b6257", Chordeiles: "#71655a", Certhia: "#8b7a5e",
+                Empidonax: "#6f7568", Contopus: "#6f7568", Sayornis: "#6f7568",
+                Myiarchus: "#6f7568", Tyrannus: "#6f7568", Anthus: "#857a60",
+                Phalacrocorax: "#26292e",
+                // Insects
+                Bombus: "#d8a012", Pyrobombus: "#d8a012", Apis: "#c98f1b",
+                Andrena: "#8a7355", Calliopsis: "#8a7355", Agapostemon: "#2fa66a",
+                Halictus: "#7a6a4a", Melissodes: "#8a7a50", Megachile: "#8a7350",
+                Anthidium: "#c2a52c", Colletes: "#8a7a5c", Coelioxys: "#7a6a55",
+                Danaus: "#e07514", Papilio: "#e3c322", Vanessa: "#b0562a",
+                Pieris: "#c9c2ad", Nymphalis: "#7a4526", Polygonia: "#c07a35",
+                Speyeria: "#c9822d", Euptoieta: "#c9822d", Polites: "#b5822d",
+                Epargyreus: "#7a5b38", Harmonia: "#d4442a", Hippodamia: "#cf3b28",
+                Coleomegilla: "#c53b2c", Tetraopes: "#c8352b", Chauliognathus: "#d9a725",
+                Popillia: "#4c7345", Lucanus: "#5b3f2e", Lucidota: "#4a3b30",
+                Melanoplus: "#7c8250", Dichromorpha: "#7c8250", Microcentrum: "#5f9a45",
+                Roeseliana: "#7c8250", Polistes: "#8a6222", Vespula: "#d9b31c",
+                Dolichovespula: "#43403a", Boisea: "#63302e", Halyomorpha: "#7a6b5c",
+                Cosmopepla: "#3d3a45", Oncopeltus: "#d4581f", Graphocephala: "#38a457",
+                Jikradia: "#8a7a5c", Libellula: "#4f7fae", Aeshna: "#2f7f7a",
+                Anax: "#2e8f66", Sympetrum: "#c04a30", Argia: "#3b7fd0",
+                Toxomerus: "#c2a02c", Eristalis: "#8a6a35", Helophilus: "#b1912c",
+                Sericomyia: "#a5892e", Camponotus: "#3a3230", Lasius: "#6b4b2f",
+                Prenolepis: "#7a5a3a", Tipula: "#9a8a70", Antheraea: "#b57f3f",
+                Pyrrharctia: "#c78f3a", Hypoprepia: "#c14a58", Hemaris: "#8a6f3f",
+                // Plants that aren't dominantly green
+                Asclepias: "#cf7a5f", Solidago: "#dcb50f", Rudbeckia: "#dfa50f",
+                Heliopsis: "#dfaf12", Heterotheca: "#dcb015", Gaillardia: "#d97a2a",
+                Ratibida: "#dca818", Silphium: "#dcb012", Echinacea: "#b65fa0",
+                Cirsium: "#b05fa8", Arctium: "#9a5f9a", Cosmos: "#c9679a",
+                Cichorium: "#6f8fd8", Campanula: "#6f7fd8", Scilla: "#4a5fd0",
+                Mertensia: "#5b6fd0", Aquilegia: "#b0507a", Viola: "#7a4fd0",
+                Verbena: "#7a5fd0", Monarda: "#b05f8a", Nepeta: "#8a7fd0",
+                Leonurus: "#b08ab0", Agastache: "#8a7fd8", Blephilia: "#a58ac0",
+                Ajuga: "#6a5fd0", Tradescantia: "#6a5fc9", Phlox: "#b06fc0",
+                Dianthus: "#cf4f7a", Saponaria: "#cf9ab0", Persicaria: "#c97a9a",
+                Chelone: "#cf9ab8", Geum: "#b56a6a", Crocus: "#9a6fd0",
+                Hackelia: "#8a92c9", Borago: "#4f7fd8", Eryngium: "#7a8fc0",
+                Hydrophyllum: "#8a92c9", Verbascum: "#d9c520", Oxalis: "#dcc520",
+                Ranunculus: "#e0c318", Lotus: "#d9b520", Lamium: "#cfc030",
+                Linaria: "#dcc030", Lysimachia: "#dcb818", Zizia: "#dcbf1c",
+                Tanacetum: "#dcc020", Lithospermum: "#dcaf1c", Chamaecrista: "#dcb51c",
+                Impatiens: "#e08a2f", Hemerocallis: "#e0812f", Campsis: "#d05f2a",
+                Trifolium: "#a2597b", Melilotus: "#d9cf9a", Coronilla: "#c987a5",
+                Sambucus: "#4f3f5f", Lonicera: "#b5584a", Artemisia: "#9aa383",
+                Mirabilis: "#c05f9a", Portulaca: "#d9a02f",
+                // Mammals
+                Sciurus: "#8a8d92", Tamias: "#a5623a", Sylvilagus: "#96826d",
+                Procyon: "#6f6f74", Blarina: "#4f5257", Vulpes: "#c2542a",
+                // Fungi & lichen
+                Trametes: "#a58a5f", Laetiporus: "#e0912a", Oxneria: "#d9a025",
+                Xylaria: "#3a3734", Puccinia: "#c9701c", Agaricaceae: "#b5a487",
+                // Arachnids
+                Argiope: "#c8a51c", Neoscona: "#8a6a45", Agelenopsis: "#8a7050",
+                Phidippus: "#4a3f3d", Salticus: "#5a5a58", Attulus: "#6a6258",
+                Eris: "#5f4f42", Dermacentor: "#6b4032", Amblyomma: "#7a4f35",
+                Phalangium: "#8a7a5f", Theridion: "#8a7562", Misumessus: "#7ec253",
+                // Other
+                Chrysemys: "#4f6b4a", Porcellio: "#6a6f76", Porcellionides: "#6a6f76",
+                Armadillidium: "#5f646b", Oxidus: "#6b5b45", Fuligo: "#e3c318",
+                Ladislavella: "#8a7355",
+            };
+            function colorFor(s) {
+                return (
+                    SPECIES_COLOR[s.species] ||
+                    GENUS_COLOR[(s.species || "").split(" ")[0]] ||
+                    s.group.color
+                );
+            }
+
+            document.getElementById("icon-citations").innerHTML =
+                `<strong class="text-gray-500">Icons:</strong> custom line-art icon set made for this page.`;
 
             // Minimalist white & gray basemap
-            const map = L.map("map", { scrollWheelZoom: false });
+            // zoomSnap 0 allows an exact fractional starting zoom, so the
+            // boundary's edges can sit right at the frame instead of
+            // snapping a whole level out.
+            const map = L.map("map", { scrollWheelZoom: false, zoomSnap: 0 });
             L.tileLayer(
                 "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
                 {
@@ -155,25 +408,63 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 },
             ).addTo(map);
 
-            const svgCache = {};
-            function loadIcons() {
-                return Promise.all(
-                    GROUPS.map((g) =>
-                        fetch(`/images/species-icons/${g.icon}.svg`)
-                            .then((r) => r.text())
-                            .then((t) => (svgCache[g.icon] = t)),
-                    ),
-                );
+            function iconImg(def, h, src) {
+                const w = Math.round((def.size[0] / def.size[1]) * h);
+                return `<img src="${src || `/images/species-icons/${def.icon}.png`}" alt="" style="width:${w}px;height:${h}px;object-fit:contain">`;
             }
 
-            function makeIcon(g) {
+            // One knob for overall marker size; sizes in the tables above
+            // stay proportional to each drawing.
+            const ICON_SCALE = 1.6;
+            function makeIcon(def, src) {
+                const w = Math.round(def.size[0] * ICON_SCALE);
+                const h = Math.round(def.size[1] * ICON_SCALE);
                 return L.divIcon({
                     className: "species-icon",
-                    html: `<span style="color:${g.color};display:block;width:20px;height:20px">${svgCache[g.icon]}</span>`,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10],
-                    popupAnchor: [0, -10],
+                    html: iconImg(def, h, src),
+                    iconSize: [w, h],
+                    iconAnchor: [w / 2, h / 2],
+                    popupAnchor: [0, -h / 2],
                 });
+            }
+
+            // The icon files are black line art on transparency; markers get
+            // their viridis color painted in at runtime via canvas.
+            const baseImgs = {};
+            function preloadIcon(name) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                    img.src = `/images/species-icons/${name}.png`;
+                    baseImgs[name] = img;
+                });
+            }
+
+            const srcCache = {};
+            function tintedSrc(iconName, color) {
+                const key = iconName + "|" + color;
+                if (!srcCache[key]) {
+                    const img = baseImgs[iconName];
+                    const c = document.createElement("canvas");
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    const ctx = c.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    ctx.globalCompositeOperation = "source-in";
+                    ctx.fillStyle = color;
+                    ctx.fillRect(0, 0, c.width, c.height);
+                    srcCache[key] = c.toDataURL();
+                }
+                return srcCache[key];
+            }
+
+            const tintCache = {};
+            function tintedIcon(def, color) {
+                const key = def.icon + "|" + color;
+                if (!tintCache[key])
+                    tintCache[key] = makeIcon(def, tintedSrc(def.icon, color));
+                return tintCache[key];
             }
 
             function yearsLabel(a, b) {
@@ -181,15 +472,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             }
 
             Promise.all([
-                loadIcons(),
                 fetch("/data/audubon_neighborhood_occurrences.csv").then((r) =>
                     r.text(),
                 ),
                 fetch("/data/audubon_neighborhood_boundary.geojson").then((r) =>
                     r.json(),
                 ),
-            ]).then(([, csvText, boundary]) => {
+                Promise.all(Object.keys(defByIconName).map(preloadIcon)),
+            ]).then(([csvText, boundary]) => {
                 const rows = d3.csvParse(csvText);
+
+                // Total records per species, shown in the popups
+                const speciesTotal = {};
+                rows.forEach((d) => {
+                    if (d.species)
+                        speciesTotal[d.species] =
+                            (speciesTotal[d.species] || 0) + 1;
+                });
 
                 // Any record of a species may carry its common name — share
                 // them so every popup can show one where it exists.
@@ -244,14 +543,38 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     (g) => (speciesPerGroup[g.key] = (speciesSeen[g.key] || new Set()).size),
                 );
 
-                // Legend
+                // Legend — a row of pill buttons: click one to show only
+                // that group, click it again (or "Show all") to reset.
+                // Selection is kept in the URL hash so a filtered view is
+                // linkable.
                 const legend = document.getElementById("legend");
+                const legendSpans = {};
+                const PILL =
+                    "inline-flex items-center gap-1.5 cursor-pointer select-none rounded-full border px-3 py-1 transition hover:bg-gray-100";
+                function makePill(label, title, onclick) {
+                    const b = document.createElement("button");
+                    b.type = "button";
+                    b.className = PILL + " border-gray-300";
+                    b.title = title;
+                    b.innerHTML = label;
+                    b.addEventListener("click", onclick);
+                    return b;
+                }
+                const showAllBtn = makePill(
+                    "Show all",
+                    "Show every group",
+                    () => setFilter(null),
+                );
+                legend.appendChild(showAllBtn);
                 GROUPS.forEach((g) => {
                     if (!speciesPerGroup[g.key]) return;
-                    const span = document.createElement("span");
-                    span.className = "inline-flex items-center gap-1.5";
-                    span.innerHTML = `<span style="color:${g.color};display:inline-block;width:18px;height:18px">${svgCache[g.icon]}</span>${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`;
-                    legend.appendChild(span);
+                    const b = makePill(
+                        `${iconImg(g, 18, tintedSrc(g.icon, g.color))}${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`,
+                        `Show only ${g.key.toLowerCase()}`,
+                        () => setFilter(activeKey === g.key ? null : g.key),
+                    );
+                    legendSpans[g.key] = b;
+                    legend.appendChild(b);
                 });
 
                 // Neighborhood boundary
@@ -263,30 +586,50 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         fill: false,
                     },
                 }).addTo(map);
-                map.fitBounds(boundaryLayer.getBounds().pad(0.05));
+                // Start zoomed so the boundary's left and right edges sit
+                // just inside the window edges; the neighborhood's top and
+                // bottom may run past the frame.
+                const b = boundaryLayer.getBounds();
+                map.setView(
+                    b.getCenter(),
+                    map.getBoundsZoom(b, true) - 0.05,
+                );
 
                 // Markers: icons only, no clustering. Species stacked at the
-                // exact same coordinate (eBird hotspots) are dodged into a
-                // small golden-angle spiral so every icon stays visible.
+                // exact same coordinate (eBird hotspots) get a generous
+                // random-looking jitter so every icon stays visible. The
+                // offsets are hashed from the species name, so the scatter
+                // is stable across reloads.
                 const byCoord = new Map();
                 spots.forEach((s) => {
                     const k = `${s.lat}|${s.lon}`;
                     (byCoord.get(k) || byCoord.set(k, []).get(k)).push(s);
                 });
-                const STEP = 0.000055; // ~6 m per spiral step
                 const cosLat = Math.cos((45.02 * Math.PI) / 180);
+                function hash01(str) {
+                    let h = 2166136261;
+                    for (let i = 0; i < str.length; i++) {
+                        h ^= str.charCodeAt(i);
+                        h = Math.imul(h, 16777619);
+                    }
+                    return ((h >>> 0) % 100000) / 100000;
+                }
                 byCoord.forEach((group) => {
                     if (group.length === 1) return;
-                    group.forEach((s, i) => {
-                        const r = STEP * Math.sqrt(i);
-                        const a = i * 2.39996;
+                    // ~33 m base radius, growing with the size of the stack
+                    const R = 0.0003 + 0.00007 * Math.sqrt(group.length);
+                    group.forEach((s) => {
+                        const r = R * Math.sqrt(hash01(s.species + "|r"));
+                        const a = hash01(s.species + "|a") * 2 * Math.PI;
                         s.lat += r * Math.cos(a);
                         s.lon += (r * Math.sin(a)) / cosLat;
                     });
                 });
 
-                const icons = {};
-                GROUPS.forEach((g) => (icons[g.key] = makeIcon(g)));
+                const layers = {};
+                GROUPS.forEach(
+                    (g) => (layers[g.key] = L.layerGroup().addTo(map)),
+                );
 
                 function licenseShort(url) {
                     const m = (url || "").match(
@@ -295,9 +638,70 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     return m ? `CC ${m[1].toUpperCase()} ${m[2]}` : "";
                 }
 
+                // Popup anchored in page space rather than inside Leaflet's
+                // clipped container, so a tall photo can extend past the
+                // map's edge instead of being cut off.
+                const mapEl = document.getElementById("map");
+                const mapWrap = mapEl.parentElement;
+                mapWrap.style.position = "relative";
+                const pop = document.createElement("div");
+                pop.id = "species-popup";
+                pop.style.display = "none";
+                mapWrap.appendChild(pop);
+                let popLatLng = null;
+                function positionPopup() {
+                    if (!popLatLng) return;
+                    const pt = map.latLngToContainerPoint(popLatLng);
+                    // Clamp horizontally so the card never leaves the
+                    // browser window, and flip below the marker when there
+                    // is no room above it in the viewport.
+                    const half = pop.offsetWidth / 2 || 125;
+                    const x = Math.max(
+                        half + 8,
+                        Math.min(
+                            window.innerWidth - half - 8,
+                            mapEl.offsetLeft + pt.x,
+                        ),
+                    );
+                    const spaceAbove =
+                        mapEl.getBoundingClientRect().top + pt.y;
+                    const below = spaceAbove - pop.offsetHeight - 22 < 8;
+                    pop.style.transform = below
+                        ? "translate(-50%, 0)"
+                        : "translate(-50%, -100%)";
+                    pop.style.left = x + "px";
+                    pop.style.top =
+                        mapEl.offsetTop + pt.y + (below ? 14 : -14) + "px";
+                }
+                function hidePopup() {
+                    popLatLng = null;
+                    pop.style.display = "none";
+                }
+                function showPopup(latlng, html) {
+                    pop.innerHTML =
+                        `<button id="species-popup-close" aria-label="Close">×</button>` +
+                        html;
+                    pop.querySelector("#species-popup-close").addEventListener(
+                        "click",
+                        hidePopup,
+                    );
+                    popLatLng = latlng;
+                    pop.style.display = "block";
+                    positionPopup();
+                    // A photo loading changes the card's height — re-anchor
+                    pop.querySelectorAll("img").forEach((img) =>
+                        img.addEventListener("load", positionPopup),
+                    );
+                }
+                map.on("move zoomend", positionPopup);
+                map.on("click", hidePopup);
+
                 spots.forEach((s) => {
                     const m = L.marker([s.lat, s.lon], {
-                        icon: icons[s.group.key],
+                        icon: tintedIcon(
+                            iconDefFor(s.group.key, s.species),
+                            colorFor(s),
+                        ),
                     });
                     const common = commonOf[s.species];
                     let html = "";
@@ -314,16 +718,72 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     html += `<br>${s.count.toLocaleString()} observation${s.count === 1 ? "" : "s"} here`;
                     if (s.minYear !== Infinity)
                         html += ` · ${yearsLabel(s.minYear, s.maxYear)}`;
+                    const total = speciesTotal[s.species] || 0;
+                    if (total > s.count)
+                        html += `<br>${total.toLocaleString()} record${total === 1 ? "" : "s"} of this species in the neighborhood`;
                     if (s.photo && (s.photoBy || s.photoLicense))
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${licenseShort(s.photoLicense) ? ", " + licenseShort(s.photoLicense) : ""}, via iNaturalist/GBIF</span>`;
-                    m.bindPopup(html, { maxWidth: 240 });
-                    m.addTo(map);
+                    m.on("click", () => showPopup([s.lat, s.lon], html));
+                    m.addTo(layers[s.group.key]);
+                });
+
+                // Per-group totals for the stat line when filtered
+                const obsPerGroup = {};
+                const spotsPerGroup = {};
+                rows.forEach((d) => {
+                    const k = groupOf(d).key;
+                    obsPerGroup[k] = (obsPerGroup[k] || 0) + 1;
+                });
+                spots.forEach((s) => {
+                    const k = s.group.key;
+                    spotsPerGroup[k] = (spotsPerGroup[k] || 0) + 1;
                 });
 
                 const totalObs = rows.length;
                 const totalSpecies = new Set(rows.map((d) => d.species)).size;
-                document.getElementById("stat-line").textContent =
-                    `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ${spots.size.toLocaleString()} mapped locations`;
+                const statLine = document.getElementById("stat-line");
+                let activeKey = null;
+
+                function setFilter(key) {
+                    activeKey = key;
+                    showAllBtn.className =
+                        PILL +
+                        (key
+                            ? " border-gray-300"
+                            : " border-gray-800 bg-gray-100 font-medium");
+                    GROUPS.forEach((g) => {
+                        const span = legendSpans[g.key];
+                        if (!span) return;
+                        const on = !key || g.key === key;
+                        if (on) map.addLayer(layers[g.key]);
+                        else map.removeLayer(layers[g.key]);
+                        span.style.opacity = on ? "" : "0.4";
+                        span.className =
+                            PILL +
+                            (key === g.key
+                                ? " border-gray-800 bg-gray-100 font-medium"
+                                : " border-gray-300");
+                        span.title =
+                            key === g.key
+                                ? "Show all groups"
+                                : `Show only ${g.key.toLowerCase()}`;
+                    });
+                    statLine.textContent = key
+                        ? `${key}: ${speciesPerGroup[key]} species · ${(obsPerGroup[key] || 0).toLocaleString()} observations · ${(spotsPerGroup[key] || 0).toLocaleString()} mapped locations`
+                        : `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ${spots.size.toLocaleString()} mapped locations`;
+                    history.replaceState(
+                        null,
+                        "",
+                        key ? `#${key.toLowerCase()}` : location.pathname,
+                    );
+                }
+
+                const fromHash = GROUPS.find(
+                    (g) =>
+                        g.key.toLowerCase() ===
+                        decodeURIComponent(location.hash.slice(1)).toLowerCase(),
+                );
+                setFilter(fromHash ? fromHash.key : null);
             });
         })();
     </script>
