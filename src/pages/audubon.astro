@@ -673,6 +673,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 const clusters = L.markerClusterGroup({
                     maxClusterRadius: 44,
                     showCoverageOnHover: false,
+                    // Click behavior is custom: drawn creatures open their
+                    // tooltip, only count bubbles zoom/expand
+                    zoomToBoundsOnClick: false,
                     // No spider legs when a small cluster fans open, and a
                     // wider, taller fan so the icons breathe
                     spiderLegPolylineOptions: { weight: 0, opacity: 0 },
@@ -778,6 +781,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 map.on("move zoomend", positionPopup);
                 map.on("click", hidePopup);
 
+                // Pairs drawn as creatures reveal a combined tooltip on
+                // click; count bubbles zoom in (or fan out once zooming
+                // can't separate them further)
+                clusters.on("clusterclick", (e) => {
+                    const kids = e.layer.getAllChildMarkers();
+                    if (kids.length <= 2) {
+                        const ll = e.layer.getLatLng();
+                        showPopup(
+                            [ll.lat, ll.lng],
+                            kids
+                                .map((k) => k.options.popupHtml)
+                                .join(
+                                    '<hr style="margin:8px 0;border:none;border-top:1px solid #e5e7eb">',
+                                ),
+                        );
+                    } else if (
+                        map.getBoundsZoom(e.layer.getBounds()) <=
+                        map.getZoom()
+                    ) {
+                        e.layer.spiderfy();
+                    } else {
+                        e.layer.zoomToBounds({ padding: [20, 20] });
+                    }
+                });
+
                 spots.forEach((s) => {
                     // Half the birds face the other way (stable per spot),
                     // so flocks don't all march in one direction
@@ -812,6 +840,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         html += `<br>${total.toLocaleString()} record${total === 1 ? "" : "s"} of this species in the neighborhood`;
                     if (s.photo && (s.photoBy || s.photoLicense))
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${licenseShort(s.photoLicense) ? ", " + licenseShort(s.photoLicense) : ""}, via iNaturalist/GBIF</span>`;
+                    m.options.popupHtml = html;
                     m.on("click", () => showPopup([s.lat, s.lon], html));
                     markersByGroup[s.group.key].push(m);
                 });
