@@ -633,17 +633,46 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     },
                 }).addTo(map);
                 // Start zoomed so the boundary spans almost the width of
-                // the screen, in any orientation; on wide screens the top
-                // and bottom may run past the frame, on phones the whole
-                // neighborhood fits with room above and below.
+                // the screen. On phones, start deeper still, anchored so
+                // the Saint Anthony Parkway curve (the boundary's
+                // northeast corner) just appears in the top right corner.
                 const b = boundaryLayer.getBounds();
                 const boundsPxW =
                     map.project(b.getNorthEast(), 0).x -
                     map.project(b.getNorthWest(), 0).x;
-                map.setView(
-                    b.getCenter(),
-                    Math.log2(map.getSize().x / boundsPxW) - 0.05,
-                );
+                const size = map.getSize();
+                let z0 = Math.log2(size.x / boundsPxW) - 0.05;
+                if (size.x < 640) {
+                    z0 += 0.75;
+                    // The curve is the boundary's most-northeast actual
+                    // vertex (the bbox corner is a phantom point the
+                    // parkway arc cuts off)
+                    const ring = boundaryLayer
+                        .getLayers()[0]
+                        .getLatLngs()
+                        .flat(2);
+                    let curve = ring[0];
+                    let best = -Infinity;
+                    ring.forEach((p) => {
+                        const score =
+                            (p.lat - b.getSouth()) /
+                                (b.getNorth() - b.getSouth()) +
+                            (p.lng - b.getWest()) /
+                                (b.getEast() - b.getWest());
+                        if (score > best) {
+                            best = score;
+                            curve = p;
+                        }
+                    });
+                    const cPt = map.project(curve, z0);
+                    const centerPt = L.point(
+                        cPt.x - (size.x / 2 - 44),
+                        cPt.y + (size.y / 2 - 44),
+                    );
+                    map.setView(map.unproject(centerPt, z0), z0);
+                } else {
+                    map.setView(b.getCenter(), z0);
+                }
 
                 // Markers: icons only, no clustering. Species stacked at the
                 // exact same coordinate (eBird hotspots) get a generous
@@ -744,7 +773,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 // shrinks the cells' ground coverage until everything in
                 // view is shown. Every species gets a high-priority spot
                 // before any species gets a second.
-                const CELL_PX = 100;
+                // Slightly denser on phones
+                const CELL_PX = window.innerWidth < 640 ? 78 : 100;
                 const PER_CELL = 2;
                 const FULL_ZOOM = 18;
                 let startZoom = null;
