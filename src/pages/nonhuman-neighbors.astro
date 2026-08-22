@@ -31,10 +31,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
                 are scattered with a little jitter so each one stays visible.
-                The map shows a random sample of the records, freshly drawn
-                on every visit, and zooming in reveals more until everything
-                in view is shown; the resample button deals a new set of
-                neighbors.
+                Where records are sparse, everyone appears exactly where
+                they were seen; where they crowd, the map shows a random
+                sample, freshly drawn on every visit, and zooming in
+                reveals more until everything is shown. The resample button
+                redeals the crowded spots.
             </p>
         </div>
 
@@ -737,13 +738,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     }
                 }
 
-                // Sampling: the viewport gets a budget of ~110 markers at
-                // any zoom, drawn by a random priority order that changes
-                // on every page load (and on Resample). Every species gets
-                // a high-priority spot before any species gets a second,
-                // and zooming in reveals more until everything in view is
-                // shown.
-                const MAX_VISIBLE = 110;
+                // Sampling: only crowded places are sampled. The screen is
+                // divided into ~100 px cells and each cell shows at most a
+                // couple of markers, picked by a random priority order that
+                // changes on every page load (and on Resample). Sparse
+                // records always show, exactly where they are; zooming in
+                // shrinks the cells' ground coverage until everything in
+                // view is shown. Every species gets a high-priority spot
+                // before any species gets a second.
+                const CELL_PX = 100;
+                const PER_CELL = 2;
+                const FULL_ZOOM = 17;
                 function shuffle(a) {
                     for (let i = a.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
@@ -895,13 +900,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 const totalSpecies = new Set(rows.map((d) => d.species)).size;
                 const statLine = document.getElementById("stat-line");
 
-                // ~30 px between icon centers, expressed in degrees
-                // latitude at the current zoom
-                function minDegForZoom() {
+                // Pixels expressed in degrees latitude at the current zoom
+                function pxToDeg(px) {
                     const mpp =
                         (156543.03392 * Math.cos((45.02 * Math.PI) / 180)) /
                         Math.pow(2, map.getZoom());
-                    return Math.min((30 * mpp) / 111320, 0.0011);
+                    return (px * mpp) / 111320;
                 }
 
                 function render() {
@@ -910,14 +914,34 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         bounds.contains([s.baseLat, s.baseLon]),
                     );
                     inView.sort((a, b) => a.pri - b.pri);
-                    const shown = inView.slice(0, MAX_VISIBLE);
+                    // Past FULL_ZOOM the sampling switches off and the
+                    // full density is displayed
+                    let shown;
+                    if (map.getZoom() >= FULL_ZOOM) {
+                        shown = inView;
+                    } else {
+                        const degCell = pxToDeg(CELL_PX);
+                        const cells = new Map();
+                        shown = [];
+                        inView.forEach((s) => {
+                            const k =
+                                Math.floor((s.baseLon * cosLat) / degCell) +
+                                "|" +
+                                Math.floor(s.baseLat / degCell);
+                            const n = cells.get(k) || 0;
+                            if (n < PER_CELL) {
+                                cells.set(k, n + 1);
+                                shown.push(s);
+                            }
+                        });
+                    }
                     const shownSet = new Set(shown);
                     if (popSpot && !shownSet.has(popSpot)) hidePopup();
                     shown.forEach((s) => {
                         s.lat = s.baseLat;
                         s.lon = s.baseLon;
                     });
-                    relax(shown, minDegForZoom());
+                    relax(shown, Math.min(pxToDeg(30), 0.0011));
                     activeLayer.clearLayers();
                     shown.forEach((s) => {
                         s.marker.setLatLng([s.lat, s.lon]);
@@ -926,7 +950,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     statLine.textContent =
                         `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ` +
                         (inView.length > shown.length
-                            ? `showing ${shown.length} of ${inView.length.toLocaleString()} recorded spots in view; zoom in or resample to see more`
+                            ? `showing ${shown.length.toLocaleString()} of ${inView.length.toLocaleString()} recorded spots in view, sampled where crowded; zoom in or resample to see more`
                             : `showing all ${inView.length.toLocaleString()} recorded spots in view`);
                 }
                 map.on("moveend", render);
