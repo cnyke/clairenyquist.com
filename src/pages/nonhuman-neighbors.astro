@@ -664,12 +664,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             curve = p;
                         }
                     });
+                    // Center on the neighborhood, shifting only as much
+                    // as needed to keep the curve inside the top right
                     const cPt = map.project(curve, z0);
-                    const centerPt = L.point(
+                    const bCenterPt = map.project(b.getCenter(), z0);
+                    const cx = Math.max(
+                        bCenterPt.x,
                         cPt.x - (size.x / 2 - 44),
-                        cPt.y + (size.y / 2 - 44),
                     );
-                    map.setView(map.unproject(centerPt, z0), z0);
+                    const cy = cPt.y + (size.y / 2 - 44);
+                    map.setView(map.unproject(L.point(cx, cy), z0), z0);
                 } else {
                     map.setView(b.getCenter(), z0);
                 }
