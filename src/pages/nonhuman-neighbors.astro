@@ -31,21 +31,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
                 are scattered with a little jitter so each one stays visible.
-                The map shows one kind of life at a time, starting with the
-                mammals; click a group in the legend to switch. Birds and
-                insects, too numerous for a single view, are split into
-                smaller clades, and the busiest clades appear as a random
-                sample of their records, freshly drawn on every visit; the
-                resample button on the map deals a new set.
+                The map shows a random sample of the records, freshly drawn
+                on every visit, and zooming in reveals more until everything
+                in view is shown; the resample button deals a new set of
+                neighbors.
             </p>
         </div>
 
-        <!-- Legend -->
-        <div
-            id="legend"
-            class="flex flex-wrap justify-center gap-2 mb-4 text-sm text-gray-700"
-        >
-        </div>
 
         <!-- Map: full-bleed across the browser window -->
         <div style="width:100vw; margin-left:calc(50% - 50vw);">
@@ -493,62 +485,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 );
             }
 
-            // The legend shows one clade at a time. Birds and insects are
-            // too numerous for a single view, so they split into smaller
-            // clades by genus; the other lifeforms are one filter each.
-            // Entries: [key, label, legend icon, genera] (empty genera =
-            // the catch-all for that lifeform).
-            const BIRD_CLADES = [
-                ["chickadees-wrens", "Chickadees, nuthatches & wrens", "chickadee", "Poecile Sitta Certhia Troglodytes Thryothorus Regulus Polioptila"],
-                ["cardinals-finches", "Cardinals & finches", "cardinal", "Cardinalis Haemorhous Spinus Acanthis Passerina Pheucticus Piranga"],
-                ["sparrows", "Sparrows", "house-sparrow", "Passer Spizella Spizelloides Melospiza Zonotrichia Passerella Junco Pipilo"],
-                ["crows-jays", "Crows & jays", "crow", "Corvus Cyanocitta"],
-                ["woodpeckers", "Woodpeckers", "woodpecker", "Dryobates Leuconotopicus Melanerpes Colaptes Dryocopus Sphyrapicus"],
-                ["robins-warblers", "Robins, warblers & blackbirds", "robin", "Turdus Catharus Sialia Dumetella Toxostoma Setophaga Leiothlypis Geothlypis Cardellina Mniotilta Seiurus Vireo Bombycilla Sturnus Agelaius Quiscalus Molothrus Sturnella Icterus"],
-                ["other-birds", "Other birds", "mallard", ""],
-            ];
-            const INSECT_CLADES = [
-                ["bees", "Bees", "bumblebee", "Bombus Pyrobombus Apis Andrena Calliopsis Agapostemon Halictus Melissodes Megachile Anthidium Colletes Coelioxys"],
-                ["butterflies-moths", "Butterflies & moths", "monarch", "Danaus Vanessa Nymphalis Polygonia Speyeria Euptoieta Pieris Cyaniris Elkalyce Polites Epargyreus Papilio Agrochola Antheraea Halysidota Hypoprepia Pyrrharctia Cucullia Caenurgina Idia Lacinipolia Mythimna Orthonama Phaeoura Galgula Udea Pyrausta Pyralis Microcrambus Psyche Emmelina Hemaris"],
-                ["beetles", "Beetles", "beetle", "Harmonia Hippodamia Coleomegilla Tetraopes Megacyllene Lucanus Chauliognathus Popillia Pelidnota Trirhabda Blepharida Labidomera Lilioceris Anthrenus Calomycterus Polydrusus Amphimallon Atalantycha Lucidota Creophilus Calymmaderus"],
-                ["wasps-flies", "Wasps, ants, flies & dragonflies", "dragonfly", "Polistes Vespula Dolichovespula Eumenes Parazumia Philanthus Megarhyssa Pelecinus Tremex Toxomerus Eristalis Helophilus Sericomyia Delphinia Laphria Machimus Phytomyza Gnophomyia Tipula Aeshna Anax Libellula Sympetrum Argia Camponotus Lasius Prenolepis"],
-                ["other-insects", "Bugs & other insects", "boxelder-bug", ""],
-            ];
-            const FILTERS = [
-                { key: "mammals", label: "Mammals", icon: "mammals", group: "Mammals" },
-            ];
-            const cladeByGenus = { Birds: {}, Insects: {} };
-            BIRD_CLADES.forEach(([key, label, icon, genera]) => {
-                FILTERS.push({ key, label, icon, group: "Birds" });
-                genera.split(" ").forEach(
-                    (g) => g && (cladeByGenus.Birds[g] = key),
-                );
-            });
-            INSECT_CLADES.forEach(([key, label, icon, genera]) => {
-                FILTERS.push({ key, label, icon, group: "Insects" });
-                genera.split(" ").forEach(
-                    (g) => g && (cladeByGenus.Insects[g] = key),
-                );
-            });
-            FILTERS.push(
-                { key: "plants", label: "Plants", icon: "plants", group: "Plants" },
-                { key: "arachnids", label: "Arachnids", icon: "arachnids", group: "Arachnids" },
-                { key: "fungi", label: "Fungi", icon: "fungi", group: "Fungi" },
-                { key: "other", label: "Other", icon: "other", group: "Other" },
-            );
-            const SIMPLE_FILTER = {
-                Mammals: "mammals", Plants: "plants", Arachnids: "arachnids",
-                Fungi: "fungi", Other: "other",
-            };
-            function filterKeyOf(groupKey, species) {
-                const table = cladeByGenus[groupKey];
-                if (!table) return SIMPLE_FILTER[groupKey];
-                const genus = (species || "").split(" ")[0];
-                return (
-                    table[genus] ||
-                    (groupKey === "Birds" ? "other-birds" : "other-insects")
-                );
-            }
 
             document.getElementById("icon-citations").innerHTML =
                 `<strong class="text-gray-500">Icons:</strong> line-art icon set generated with Google Gemini for this page, then cropped, recolored, and matched to species for the map.`;
@@ -666,22 +602,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 // Aggregate: one marker per species per exact spot, so a
                 // hotspot's 1,400 checklists become one icon with a count.
                 const spots = new Map();
-                const speciesPerFilter = {};
-                const speciesSeen = {};
                 rows.forEach((d) => {
                     if (!d.lat || !d.lon) return;
                     const g = groupOf(d);
-                    const fkey = filterKeyOf(g.key, d.species);
-                    (speciesSeen[fkey] = speciesSeen[fkey] || new Set()).add(
-                        d.species,
-                    );
                     const key = `${d.species}|${d.lat}|${d.lon}`;
                     let s = spots.get(key);
                     if (!s) {
                         s = {
                             species: d.species,
                             group: g,
-                            filterKey: fkey,
                             lat: +d.lat,
                             lon: +d.lon,
                             count: 0,
@@ -704,41 +633,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         s.minYear = Math.min(s.minYear, y);
                         s.maxYear = Math.max(s.maxYear, y);
                     }
-                });
-
-                FILTERS.forEach(
-                    (f) =>
-                        (speciesPerFilter[f.key] = (
-                            speciesSeen[f.key] || new Set()
-                        ).size),
-                );
-
-                // Legend — a row of pill buttons showing one kind of life
-                // at a time. The selection is kept in the URL hash so a
-                // view is linkable.
-                const legend = document.getElementById("legend");
-                const legendSpans = {};
-                const PILL =
-                    "inline-flex items-center gap-1.5 cursor-pointer select-none rounded-full border px-3 py-1 transition hover:bg-gray-100";
-                function makePill(label, title, onclick) {
-                    const b = document.createElement("button");
-                    b.type = "button";
-                    b.className = PILL + " border-gray-300";
-                    b.title = title;
-                    b.innerHTML = label;
-                    b.addEventListener("click", onclick);
-                    return b;
-                }
-                FILTERS.forEach((f) => {
-                    if (!speciesPerFilter[f.key]) return;
-                    const def = defByIconName[f.icon];
-                    const b = makePill(
-                        `${iconImg(def, 18)}${f.label} <span class="text-gray-400">(${speciesPerFilter[f.key]})</span>`,
-                        `Show ${f.label.toLowerCase()}`,
-                        () => setFilter(f.key),
-                    );
-                    legendSpans[f.key] = b;
-                    legend.appendChild(b);
                 });
 
                 // Neighborhood boundary
@@ -790,24 +684,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     });
                 });
 
-                // Base positions after jitter; every sample redraw starts
-                // over from these
+                // Base positions after jitter; every redraw starts over
+                // from these
                 spots.forEach((s) => {
                     s.baseLat = s.lat;
                     s.baseLon = s.lon;
                 });
-                const byFilter = new Map();
-                spots.forEach((s) => {
-                    (
-                        byFilter.get(s.filterKey) ||
-                        byFilter.set(s.filterKey, []).get(s.filterKey)
-                    ).push(s);
-                });
+                const allSpots = [...spots.values()];
 
                 // Relaxation: nudge apart any two shown markers closer
-                // than ~60 m until the icons stop piling on each other
-                const MIN = 0.00055; // degrees latitude, ~60 m
-                function relax(arr) {
+                // than ~30 px at the current zoom until the icons stop
+                // piling on each other
+                function relax(arr, MIN) {
                     for (let pass = 0; pass < 6; pass++) {
                         const grid = new Map();
                         arr.forEach((s) => {
@@ -849,12 +737,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     }
                 }
 
-                // Dense clades show a random sample of their records, a
-                // fresh draw on every page load, keeping the map lively
-                // without being overwhelming. Every species gets a spot
-                // before any species appears twice.
-                const MAX_SPOTS = 110;
-                const sampleCache = {};
+                // Sampling: the viewport gets a budget of ~110 markers at
+                // any zoom, drawn by a random priority order that changes
+                // on every page load (and on Resample). Every species gets
+                // a high-priority spot before any species gets a second,
+                // and zooming in reveals more until everything in view is
+                // shown.
+                const MAX_VISIBLE = 110;
                 function shuffle(a) {
                     for (let i = a.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
@@ -862,52 +751,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     }
                     return a;
                 }
-                function drawSample(key, fresh) {
-                    const all = byFilter.get(key) || [];
-                    let sample;
-                    if (all.length <= MAX_SPOTS) {
-                        sample = all;
-                    } else if (!fresh && sampleCache[key]) {
-                        sample = sampleCache[key];
-                    } else {
-                        const bySpecies = new Map();
-                        all.forEach((s) => {
-                            (
-                                bySpecies.get(s.species) ||
-                                bySpecies
-                                    .set(s.species, [])
-                                    .get(s.species)
-                            ).push(s);
-                        });
-                        const picks = [];
-                        bySpecies.forEach((list) =>
-                            picks.push(
-                                list[
-                                    Math.floor(Math.random() * list.length)
-                                ],
-                            ),
-                        );
-                        shuffle(picks);
-                        if (picks.length >= MAX_SPOTS) {
-                            sample = picks.slice(0, MAX_SPOTS);
-                        } else {
-                            const chosen = new Set(picks);
-                            const rest = shuffle(
-                                all.filter((s) => !chosen.has(s)),
-                            );
-                            sample = picks.concat(
-                                rest.slice(0, MAX_SPOTS - picks.length),
-                            );
-                        }
-                    }
-                    sampleCache[key] = sample;
-                    sample.forEach((s) => {
-                        s.lat = s.baseLat;
-                        s.lon = s.baseLon;
+                function assignPriorities() {
+                    const bySpecies = new Map();
+                    allSpots.forEach((s) => {
+                        (
+                            bySpecies.get(s.species) ||
+                            bySpecies.set(s.species, []).get(s.species)
+                        ).push(s);
                     });
-                    relax(sample);
-                    return sample;
+                    const firsts = [];
+                    const rest = [];
+                    bySpecies.forEach((list) => {
+                        const i = Math.floor(Math.random() * list.length);
+                        list.forEach((s, j) =>
+                            (j === i ? firsts : rest).push(s),
+                        );
+                    });
+                    shuffle(firsts);
+                    shuffle(rest);
+                    firsts.concat(rest).forEach((s, i) => (s.pri = i));
                 }
+                assignPriorities();
 
                 // No clustering: with one clade shown at a time, every
                 // creature draws individually. The active clade's markers
@@ -932,6 +796,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 pop.style.display = "none";
                 mapWrap.appendChild(pop);
                 let popLatLng = null;
+                let popSpot = null;
                 function positionPopup() {
                     if (!popLatLng) return;
                     const pt = map.latLngToContainerPoint(popLatLng);
@@ -958,6 +823,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 }
                 function hidePopup() {
                     popLatLng = null;
+                    popSpot = null;
                     pop.style.display = "none";
                 }
                 function showPopup(latlng, html) {
@@ -1018,64 +884,54 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             : "";
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${lic}, via iNaturalist/GBIF</span>`;
                     }
-                    m.on("click", () => showPopup([s.lat, s.lon], html));
+                    m.on("click", () => {
+                        showPopup([s.lat, s.lon], html);
+                        popSpot = s;
+                    });
                     s.marker = m;
                 });
 
-                // Per-clade totals for the stat line
-                const obsPerFilter = {};
-                const spotsPerFilter = {};
-                rows.forEach((d) => {
-                    const k = filterKeyOf(groupOf(d).key, d.species);
-                    obsPerFilter[k] = (obsPerFilter[k] || 0) + 1;
-                });
-                spots.forEach((s) => {
-                    spotsPerFilter[s.filterKey] =
-                        (spotsPerFilter[s.filterKey] || 0) + 1;
-                });
-
+                const totalObs = rows.length;
                 const totalSpecies = new Set(rows.map((d) => d.species)).size;
                 const statLine = document.getElementById("stat-line");
-                let activeKey = null;
 
-                function setFilter(key) {
-                    if (key === activeKey) return;
-                    activeKey = key;
-                    FILTERS.forEach((f) => {
-                        const span = legendSpans[f.key];
-                        if (!span) return;
-                        span.className =
-                            PILL +
-                            (key === f.key
-                                ? " border-gray-800 bg-gray-100 font-medium"
-                                : " border-gray-300");
-                    });
-                    renderSample(drawSample(key, false));
-                    const label = FILTERS.find((f) => f.key === key).label;
-                    const nAll = (byFilter.get(key) || []).length;
-                    const sampleNote =
-                        nAll > MAX_SPOTS
-                            ? ` · showing a random ${MAX_SPOTS} of them`
-                            : "";
-                    statLine.textContent = `${label}: ${speciesPerFilter[key]} species · ${(obsPerFilter[key] || 0).toLocaleString()} observations · ${(spotsPerFilter[key] || 0).toLocaleString()} mapped locations${sampleNote} (${totalSpecies} species recorded in all)`;
-                    history.replaceState(null, "", `#${key}`);
+                // ~30 px between icon centers, expressed in degrees
+                // latitude at the current zoom
+                function minDegForZoom() {
+                    const mpp =
+                        (156543.03392 * Math.cos((45.02 * Math.PI) / 180)) /
+                        Math.pow(2, map.getZoom());
+                    return Math.min((30 * mpp) / 111320, 0.0011);
                 }
 
-                function renderSample(sample) {
-                    hidePopup();
+                function render() {
+                    const bounds = map.getBounds().pad(0.05);
+                    const inView = allSpots.filter((s) =>
+                        bounds.contains([s.baseLat, s.baseLon]),
+                    );
+                    inView.sort((a, b) => a.pri - b.pri);
+                    const shown = inView.slice(0, MAX_VISIBLE);
+                    const shownSet = new Set(shown);
+                    if (popSpot && !shownSet.has(popSpot)) hidePopup();
+                    shown.forEach((s) => {
+                        s.lat = s.baseLat;
+                        s.lon = s.baseLon;
+                    });
+                    relax(shown, minDegForZoom());
                     activeLayer.clearLayers();
-                    sample.forEach((s) => {
+                    shown.forEach((s) => {
                         s.marker.setLatLng([s.lat, s.lon]);
                         activeLayer.addLayer(s.marker);
                     });
-                    resampleBtn.style.display =
-                        (byFilter.get(activeKey) || []).length > MAX_SPOTS
-                            ? ""
-                            : "none";
+                    statLine.textContent =
+                        `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ` +
+                        (inView.length > shown.length
+                            ? `showing ${shown.length} of ${inView.length.toLocaleString()} recorded spots in view; zoom in or resample to see more`
+                            : `showing all ${inView.length.toLocaleString()} recorded spots in view`);
                 }
+                map.on("moveend", render);
 
-                // Resample control: deal a different random hand of the
-                // active clade
+                // Resample control: deal a different random hand
                 const ResampleControl = L.Control.extend({
                     options: { position: "topright" },
                     onAdd: () => {
@@ -1086,23 +942,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         btn.type = "button";
                         btn.innerHTML = "&#8635; Resample";
                         btn.title =
-                            "Show a different random sample of this clade";
+                            "Show a different random sample of the neighbors";
                         L.DomEvent.disableClickPropagation(btn);
-                        btn.addEventListener("click", () =>
-                            renderSample(drawSample(activeKey, true)),
-                        );
+                        btn.addEventListener("click", () => {
+                            assignPriorities();
+                            render();
+                        });
                         return btn;
                     },
                 });
                 map.addControl(new ResampleControl());
-                const resampleBtn = document.querySelector(".resample-btn");
 
-                const fromHash = FILTERS.find(
-                    (f) =>
-                        f.key ===
-                        decodeURIComponent(location.hash.slice(1)).toLowerCase(),
-                );
-                setFilter(fromHash ? fromHash.key : "mammals");
+                render();
             });
         })();
     </script>
