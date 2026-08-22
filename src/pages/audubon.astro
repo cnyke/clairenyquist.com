@@ -3,14 +3,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-    title="Audubon Park | Claire Nyquist"
-    description="Every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism itself, chickadees to slime molds, colored by lifeform on a minimalist basemap, with filters per group."
+    title="Nonhuman Neighbors | Claire Nyquist"
+    description="Every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism itself, chickadees to slime molds, tinted its own dominant color on a minimalist basemap."
 >
     <div class="px-4 py-8">
         <!-- Hero Section -->
         <div class="text-center mb-8">
             <h1 class="text-4xl md:text-6xl name-gradient mb-4">
-                Audubon Park
+                Nonhuman Neighbors
             </h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Every species occurrence recorded in the Global Biodiversity
@@ -24,17 +24,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 examining a small sampling of the creatures in my own
                 backyard. Each icon marks a spot where a species was recorded, drawn as
                 what it is, from chickadees and bumble bees to milkweed and
-                some seventy other shapes, and tinted with the species&rsquo;
+                some seventy other shapes, and tinted with the
+                species&rsquo;
                 estimated dominant color: cardinal red, blue-jay blue,
                 goldfinch gold, monarch orange. Click
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
                 are scattered with a little jitter so each one stays visible,
-                and where too many crowd together they gather into a light
-                gray circle showing the number of species; click it or zoom
-                in to spread them out.
-                Click a group in the legend to show only that group; click it
-                again to bring everything back.
+                and where too many crowd together they gather into a small
+                pile with a count of the species inside; click the pile or
+                zoom in to spread them out.
+                The map shows one kind of life at a time, starting with the
+                mammals; click a group in the legend to switch.
             </p>
         </div>
 
@@ -206,15 +207,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
         }
-        .cluster-badge {
-            border-radius: 50%;
-            background: rgba(243, 244, 246, 0.92);
+        .cluster-count {
+            position: absolute;
+            top: -9px;
+            right: -9px;
+            background: rgba(243, 244, 246, 0.95);
             border: 1px solid #d1d5db;
             color: #4b5563;
-            text-align: center;
+            border-radius: 999px;
+            padding: 1px 6px;
             font-family: "Helvetica Neue", Inter, sans-serif;
-            font-size: 12px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            font-size: 10px;
+            line-height: 1.4;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         /* Shorter map on phones so the page still scrolls comfortably */
         @media (max-width: 640px) {
@@ -653,10 +658,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     (g) => (speciesPerGroup[g.key] = (speciesSeen[g.key] || new Set()).size),
                 );
 
-                // Legend — a row of pill buttons: click one to show only
-                // that group, click it again (or "Show all") to reset.
-                // Selection is kept in the URL hash so a filtered view is
-                // linkable.
+                // Legend — a row of pill buttons showing one kind of life
+                // at a time. The selection is kept in the URL hash so a
+                // view is linkable.
                 const legend = document.getElementById("legend");
                 const legendSpans = {};
                 const PILL =
@@ -670,18 +674,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     b.addEventListener("click", onclick);
                     return b;
                 }
-                const showAllBtn = makePill(
-                    "Show all",
-                    "Show every group",
-                    () => setFilter(null),
-                );
-                legend.appendChild(showAllBtn);
                 GROUPS.forEach((g) => {
                     if (!speciesPerGroup[g.key]) return;
                     const b = makePill(
                         `${iconImg(g, 18)}${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`,
-                        `Show only ${g.key.toLowerCase()}`,
-                        () => setFilter(activeKey === g.key ? null : g.key),
+                        `Show the ${g.key.toLowerCase()}`,
+                        () => setFilter(g.key),
                     );
                     legendSpans[g.key] = b;
                     legend.appendChild(b);
@@ -770,14 +768,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 iconAnchor: [w / 2, h / 2],
                             });
                         }
+                        // Bigger stacks draw as a little pile of up to
+                        // three of the creatures inside, with a gray count
+                        // badge, so clusters speak the same illustrated
+                        // language as everything else on the map
                         const species = new Set();
                         kids.forEach((m) => species.add(m.options.species));
                         const n = species.size;
-                        const d = n < 10 ? 30 : n < 50 ? 38 : 46;
+                        const picks = [];
+                        const seenIcons = new Set();
+                        for (const k of kids) {
+                            if (seenIcons.has(k.options.iconDef.icon))
+                                continue;
+                            seenIcons.add(k.options.iconDef.icon);
+                            picks.push(k);
+                            if (picks.length === 3) break;
+                        }
+                        // Pile creatures render at the same scale as every
+                        // other marker on the map
+                        const yOff = [12, 0, 16];
+                        let maxRight = 0;
+                        let maxBottom = 0;
+                        const parts = picks.map((k, i) => {
+                            const def = k.options.iconDef;
+                            const w = Math.round(def.size[0] * ICON_SCALE);
+                            const h = Math.round(def.size[1] * ICON_SCALE);
+                            const x = i * 22;
+                            maxRight = Math.max(maxRight, x + w);
+                            maxBottom = Math.max(maxBottom, yOff[i] + h);
+                            return `<span style="position:absolute;left:${x}px;top:${yOff[i]}px">${iconImg(def, h, tintedSrc(def.icon, k.options.iconColor), k.options.iconFlip)}</span>`;
+                        });
+                        const W = maxRight;
+                        const H = maxBottom;
                         return L.divIcon({
-                            html: `<div class="cluster-badge" style="width:${d}px;height:${d}px;line-height:${d - 2}px">${n}</div>`,
+                            html: `<div class="species-icon" style="position:relative;width:${W}px;height:${H}px">${parts.join("")}<span class="cluster-count">${n}</span></div>`,
                             className: "",
-                            iconSize: [d, d],
+                            iconSize: [W, H],
+                            iconAnchor: [W / 2, H / 2],
                         });
                     },
                 }).addTo(map);
@@ -880,13 +907,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const flip =
                         s.group.key === "Birds" &&
                         hash01(`${s.species}|${s.lat}|flip`) < 0.5;
+                    const def = iconDefFor(s.group.key, s.species);
+                    const color = colorFor(s);
                     const m = L.marker([s.lat, s.lon], {
-                        icon: tintedIcon(
-                            iconDefFor(s.group.key, s.species),
-                            colorFor(s),
-                            flip,
-                        ),
+                        icon: tintedIcon(def, color, flip),
                         species: s.species,
+                        iconDef: def,
+                        iconColor: color,
+                        iconFlip: flip,
                     });
                     const common = commonOf[s.species];
                     let html = "";
@@ -935,39 +963,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 let activeKey = null;
 
                 function setFilter(key) {
+                    if (key === activeKey) return;
                     activeKey = key;
-                    showAllBtn.className =
-                        PILL +
-                        (key
-                            ? " border-gray-300"
-                            : " border-gray-800 bg-gray-100 font-medium");
-                    const visible = [];
                     GROUPS.forEach((g) => {
-                        const on = !key || g.key === key;
-                        if (on) visible.push(...markersByGroup[g.key]);
                         const span = legendSpans[g.key];
                         if (!span) return;
-                        span.style.opacity = on ? "" : "0.4";
                         span.className =
                             PILL +
                             (key === g.key
                                 ? " border-gray-800 bg-gray-100 font-medium"
                                 : " border-gray-300");
-                        span.title =
-                            key === g.key
-                                ? "Show all groups"
-                                : `Show only ${g.key.toLowerCase()}`;
                     });
                     clusters.clearLayers();
-                    clusters.addLayers(visible);
-                    statLine.textContent = key
-                        ? `${key}: ${speciesPerGroup[key]} species · ${(obsPerGroup[key] || 0).toLocaleString()} observations · ${(spotsPerGroup[key] || 0).toLocaleString()} mapped locations`
-                        : `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ${spots.size.toLocaleString()} mapped locations`;
-                    history.replaceState(
-                        null,
-                        "",
-                        key ? `#${key.toLowerCase()}` : location.pathname,
-                    );
+                    clusters.addLayers(markersByGroup[key]);
+                    statLine.textContent = `${key}: ${speciesPerGroup[key]} species · ${(obsPerGroup[key] || 0).toLocaleString()} observations · ${(spotsPerGroup[key] || 0).toLocaleString()} mapped locations (${totalSpecies} species recorded in all)`;
+                    history.replaceState(null, "", `#${key.toLowerCase()}`);
                 }
 
                 const fromHash = GROUPS.find(
@@ -975,7 +985,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         g.key.toLowerCase() ===
                         decodeURIComponent(location.hash.slice(1)).toLowerCase(),
                 );
-                setFilter(fromHash ? fromHash.key : null);
+                setFilter(fromHash ? fromHash.key : "Mammals");
             });
         })();
     </script>
