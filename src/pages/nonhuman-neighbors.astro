@@ -198,11 +198,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         .resample-btn:hover {
             background: #f3f4f6;
         }
-        /* Shorter map on phones so the page still scrolls comfortably */
+        /* Taller canvas on phones */
         @media (max-width: 640px) {
             #map {
-                height: 65vh !important;
-                min-height: 420px !important;
+                height: 85vh !important;
+                min-height: 480px !important;
             }
         }
         /* The two-finger hint lives below the map instead of flashing
@@ -632,13 +632,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         fill: false,
                     },
                 }).addTo(map);
-                // Start zoomed so the boundary's left and right edges sit
-                // just inside the window edges; the neighborhood's top and
-                // bottom may run past the frame.
+                // Start zoomed so the boundary spans almost the width of
+                // the screen, in any orientation; on wide screens the top
+                // and bottom may run past the frame, on phones the whole
+                // neighborhood fits with room above and below.
                 const b = boundaryLayer.getBounds();
+                const boundsPxW =
+                    map.project(b.getNorthEast(), 0).x -
+                    map.project(b.getNorthWest(), 0).x;
                 map.setView(
                     b.getCenter(),
-                    map.getBoundsZoom(b, true) - 0.05,
+                    Math.log2(map.getSize().x / boundsPxW) - 0.05,
                 );
 
                 // Markers: icons only, no clustering. Species stacked at the
