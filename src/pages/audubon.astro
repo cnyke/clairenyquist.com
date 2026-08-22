@@ -61,11 +61,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p>
                 <strong class="text-gray-500">Data:</strong> GBIF occurrence
                 records queried within the OpenStreetMap boundary of the
-                Audubon Park neighborhood, Minneapolis, mostly eBird and
-                iNaturalist observations plus a 2015&ndash;2018 wild-bee
-                survey. GBIF reflects what observers have recorded and shared,
-                not a complete inventory. Citation: GBIF.org (21 August 2026),
-                GBIF Occurrence Search, retrieved via the
+                Audubon Park neighborhood, Minneapolis. Contributing datasets:
+                the eBird Observation Dataset and the Great Backyard Bird
+                Count (Cornell Lab of Ornithology), iNaturalist
+                Research-grade Observations, and 2015&ndash;2018 wild-bee
+                survey records from the University of Minnesota Insect
+                Collection (UMSP). GBIF reflects what observers have recorded
+                and shared, not a complete inventory. Citation: GBIF.org (21
+                August 2026), GBIF Occurrence Search, retrieved via the
                 <a
                     href="https://techdocs.gbif.org/en/openapi/v1/occurrence"
                     target="_blank"
@@ -106,6 +109,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600">CARTO</a
                 >. Neighborhood boundary from OpenStreetMap.
+            </p>
+            <p>
+                <strong class="text-gray-500">Built with:</strong>
+                <a
+                    href="https://leafletjs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600">Leaflet</a
+                > with the Leaflet.markercluster and leaflet-gesture-handling
+                plugins, and d3-dsv for CSV parsing.
             </p>
         </div>
     </div>
@@ -429,7 +442,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             }
 
             document.getElementById("icon-citations").innerHTML =
-                `<strong class="text-gray-500">Icons:</strong> custom line-art icon set made for this page.`;
+                `<strong class="text-gray-500">Icons:</strong> line-art icon set generated with Google Gemini for this page, then cropped, recolored, and matched to species for the map.`;
 
             // Minimalist white & gray basemap
             // zoomSnap 0 allows an exact fractional starting zoom, so the
