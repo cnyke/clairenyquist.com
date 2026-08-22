@@ -641,8 +641,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     map.project(b.getNorthWest(), 0).x;
                 const size = map.getSize();
                 let z0 = Math.log2(size.x / boundsPxW) - 0.05;
-                if (size.x < 640) z0 += 0.75;
-                map.setView(b.getCenter(), z0);
+                if (size.x < 640) {
+                    z0 += 0.95;
+                    // Nudge the field of view up a little
+                    const cPt = map
+                        .project(b.getCenter(), z0)
+                        .subtract([0, size.y * 0.07]);
+                    map.setView(map.unproject(cPt, z0), z0);
+                } else {
+                    map.setView(b.getCenter(), z0);
+                }
 
                 // Markers: icons only, no clustering. Species stacked at the
                 // exact same coordinate (eBird hotspots) get a generous
