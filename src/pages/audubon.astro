@@ -117,11 +117,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         rel="stylesheet"
         href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
     />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css"
+    />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
     <script
         is:inline
         src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    ></script>
+    <script
+        is:inline
+        src="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js"
     ></script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/d3-dsv@3/dist/d3-dsv.min.js"
     ></script>
@@ -425,8 +433,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // Minimalist white & gray basemap
             // zoomSnap 0 allows an exact fractional starting zoom, so the
             // boundary's edges can sit right at the frame instead of
-            // snapping a whole level out.
-            const map = L.map("map", { scrollWheelZoom: false, zoomSnap: 0 });
+            // snapping a whole level out. gestureHandling makes touch
+            // friendly: one finger scrolls the page, two fingers move the
+            // map (and desktop wheel zoom needs ctrl/cmd).
+            const map = L.map("map", { zoomSnap: 0, gestureHandling: true });
             L.tileLayer(
                 "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
                 {
