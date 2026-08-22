@@ -680,7 +680,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 // Relaxation: nudge apart any two shown markers closer
                 // than ~30 px at the current zoom until the icons stop
                 // piling on each other
-                function relax(arr, MIN) {
+                function relax(arr, MIN, frozen) {
                     for (let pass = 0; pass < 6; pass++) {
                         const grid = new Map();
                         arr.forEach((s) => {
@@ -707,12 +707,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                         const ay = t.lat - s.lat;
                                         const d = Math.hypot(ax, ay);
                                         if (d >= MIN || d === 0) return;
-                                        const push =
-                                            (MIN - d) / 2 / d;
-                                        s.lat -= ay * push;
-                                        s.lon -= (ax * push) / cosLat;
-                                        t.lat += ay * push;
-                                        t.lon += (ax * push) / cosLat;
+                                        // Frozen spots repel but never
+                                        // move; their neighbor takes the
+                                        // whole push
+                                        const sF = frozen && frozen.has(s);
+                                        const tF = frozen && frozen.has(t);
+                                        if (sF && tF) return;
+                                        const sMove = sF ? 0 : tF ? 1 : 0.5;
+                                        const tMove = tF ? 0 : sF ? 1 : 0.5;
+                                        const over = (MIN - d) / d;
+                                        s.lat -= ay * over * sMove;
+                                        s.lon -= (ax * over * sMove) / cosLat;
+                                        t.lat += ay * over * tMove;
+                                        t.lon += (ax * over * tMove) / cosLat;
                                         moved++;
                                     });
                                 }
@@ -935,6 +942,36 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     allSpots.forEach((s) => {
                         if (!visible.has(s)) s.minZ = FULL_ZOOM;
                     });
+
+                    // Positions settle once per deal, level by level:
+                    // earlier arrivals are frozen so later ones slot in
+                    // around them, and nothing moves again while zooming.
+                    // Markers then ride the map's own smooth animation.
+                    const levels = [];
+                    for (let z = startZoom; z < FULL_ZOOM; z++)
+                        levels.push(z);
+                    levels.push(FULL_ZOOM);
+                    const frozen = new Set();
+                    levels.forEach((z) => {
+                        const levelSpots = allSpots.filter(
+                            (s) => s.minZ <= z,
+                        );
+                        levelSpots.forEach((s) => {
+                            if (!frozen.has(s)) {
+                                s.lat = s.baseLat;
+                                s.lon = s.baseLon;
+                            }
+                        });
+                        relax(
+                            levelSpots,
+                            Math.min(pxToDegAt(30, z), 0.0011),
+                            frozen,
+                        );
+                        levelSpots.forEach((s) => frozen.add(s));
+                    });
+                    allSpots.forEach((s) =>
+                        s.marker.setLatLng([s.lat, s.lon]),
+                    );
                 }
 
                 function render() {
@@ -960,16 +997,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                               );
                     const shownSet = new Set(shown);
                     if (popSpot && !shownSet.has(popSpot)) hidePopup();
-                    shown.forEach((s) => {
-                        s.lat = s.baseLat;
-                        s.lon = s.baseLon;
-                    });
-                    relax(shown, Math.min(pxToDeg(30), 0.0011));
                     activeLayer.clearLayers();
-                    shown.forEach((s) => {
-                        s.marker.setLatLng([s.lat, s.lon]);
-                        activeLayer.addLayer(s.marker);
-                    });
+                    shown.forEach((s) => activeLayer.addLayer(s.marker));
                     statLine.textContent =
                         `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ` +
                         (inView.length > shown.length
