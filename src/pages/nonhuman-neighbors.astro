@@ -34,7 +34,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 The map shows one kind of life at a time, starting with the
                 mammals; click a group in the legend to switch. Birds and
                 insects, too numerous for a single view, are split into
-                smaller clades.
+                smaller clades, and the busiest clades appear as a random
+                sample of their records, freshly drawn on every visit; the
+                resample button on the map deals a new set.
             </p>
         </div>
 
@@ -197,6 +199,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
+        }
+        .resample-btn {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-family: "Helvetica Neue", Inter, sans-serif;
+            font-size: 12px;
+            color: #374151;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+        }
+        .resample-btn:hover {
+            background: #f3f4f6;
         }
         /* Shorter map on phones so the page still scrolls comfortably */
         @media (max-width: 640px) {
@@ -774,11 +790,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     });
                 });
 
-                // Relaxation: within each clade (markers that are shown
-                // together), nudge apart any two spots closer than ~60 m
-                // until the icons stop piling on each other. Deterministic,
-                // so the layout is stable across reloads.
-                const MIN = 0.00055; // degrees latitude, ~60 m
+                // Base positions after jitter; every sample redraw starts
+                // over from these
+                spots.forEach((s) => {
+                    s.baseLat = s.lat;
+                    s.baseLon = s.lon;
+                });
                 const byFilter = new Map();
                 spots.forEach((s) => {
                     (
@@ -786,15 +803,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         byFilter.set(s.filterKey, []).get(s.filterKey)
                     ).push(s);
                 });
-                byFilter.forEach((arr) => {
+
+                // Relaxation: nudge apart any two shown markers closer
+                // than ~60 m until the icons stop piling on each other
+                const MIN = 0.00055; // degrees latitude, ~60 m
+                function relax(arr) {
                     for (let pass = 0; pass < 6; pass++) {
                         const grid = new Map();
-                        const cellOf = (s) =>
-                            Math.floor((s.lon * cosLat) / MIN) +
-                            "|" +
-                            Math.floor(s.lat / MIN);
                         arr.forEach((s) => {
-                            const k = cellOf(s);
+                            const k =
+                                Math.floor((s.lon * cosLat) / MIN) +
+                                "|" +
+                                Math.floor(s.lat / MIN);
                             (grid.get(k) || grid.set(k, []).get(k)).push(s);
                         });
                         let moved = 0;
@@ -827,14 +847,72 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         });
                         if (!moved) break;
                     }
-                });
+                }
+
+                // Dense clades show a random sample of their records, a
+                // fresh draw on every page load, keeping the map lively
+                // without being overwhelming. Every species gets a spot
+                // before any species appears twice.
+                const MAX_SPOTS = 110;
+                const sampleCache = {};
+                function shuffle(a) {
+                    for (let i = a.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [a[i], a[j]] = [a[j], a[i]];
+                    }
+                    return a;
+                }
+                function drawSample(key, fresh) {
+                    const all = byFilter.get(key) || [];
+                    let sample;
+                    if (all.length <= MAX_SPOTS) {
+                        sample = all;
+                    } else if (!fresh && sampleCache[key]) {
+                        sample = sampleCache[key];
+                    } else {
+                        const bySpecies = new Map();
+                        all.forEach((s) => {
+                            (
+                                bySpecies.get(s.species) ||
+                                bySpecies
+                                    .set(s.species, [])
+                                    .get(s.species)
+                            ).push(s);
+                        });
+                        const picks = [];
+                        bySpecies.forEach((list) =>
+                            picks.push(
+                                list[
+                                    Math.floor(Math.random() * list.length)
+                                ],
+                            ),
+                        );
+                        shuffle(picks);
+                        if (picks.length >= MAX_SPOTS) {
+                            sample = picks.slice(0, MAX_SPOTS);
+                        } else {
+                            const chosen = new Set(picks);
+                            const rest = shuffle(
+                                all.filter((s) => !chosen.has(s)),
+                            );
+                            sample = picks.concat(
+                                rest.slice(0, MAX_SPOTS - picks.length),
+                            );
+                        }
+                    }
+                    sampleCache[key] = sample;
+                    sample.forEach((s) => {
+                        s.lat = s.baseLat;
+                        s.lon = s.baseLon;
+                    });
+                    relax(sample);
+                    return sample;
+                }
 
                 // No clustering: with one clade shown at a time, every
                 // creature draws individually. The active clade's markers
                 // live in one layer group.
                 const activeLayer = L.layerGroup().addTo(map);
-                const markersByFilter = {};
-                FILTERS.forEach((f) => (markersByFilter[f.key] = []));
 
                 function licenseShort(url) {
                     const m = (url || "").match(
@@ -941,7 +1019,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${lic}, via iNaturalist/GBIF</span>`;
                     }
                     m.on("click", () => showPopup([s.lat, s.lon], html));
-                    markersByFilter[s.filterKey].push(m);
+                    s.marker = m;
                 });
 
                 // Per-clade totals for the stat line
@@ -972,14 +1050,52 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 ? " border-gray-800 bg-gray-100 font-medium"
                                 : " border-gray-300");
                     });
-                    activeLayer.clearLayers();
-                    markersByFilter[key].forEach((m) =>
-                        activeLayer.addLayer(m),
-                    );
+                    renderSample(drawSample(key, false));
                     const label = FILTERS.find((f) => f.key === key).label;
-                    statLine.textContent = `${label}: ${speciesPerFilter[key]} species · ${(obsPerFilter[key] || 0).toLocaleString()} observations · ${(spotsPerFilter[key] || 0).toLocaleString()} mapped locations (${totalSpecies} species recorded in all)`;
+                    const nAll = (byFilter.get(key) || []).length;
+                    const sampleNote =
+                        nAll > MAX_SPOTS
+                            ? ` · showing a random ${MAX_SPOTS} of them`
+                            : "";
+                    statLine.textContent = `${label}: ${speciesPerFilter[key]} species · ${(obsPerFilter[key] || 0).toLocaleString()} observations · ${(spotsPerFilter[key] || 0).toLocaleString()} mapped locations${sampleNote} (${totalSpecies} species recorded in all)`;
                     history.replaceState(null, "", `#${key}`);
                 }
+
+                function renderSample(sample) {
+                    hidePopup();
+                    activeLayer.clearLayers();
+                    sample.forEach((s) => {
+                        s.marker.setLatLng([s.lat, s.lon]);
+                        activeLayer.addLayer(s.marker);
+                    });
+                    resampleBtn.style.display =
+                        (byFilter.get(activeKey) || []).length > MAX_SPOTS
+                            ? ""
+                            : "none";
+                }
+
+                // Resample control: deal a different random hand of the
+                // active clade
+                const ResampleControl = L.Control.extend({
+                    options: { position: "topright" },
+                    onAdd: () => {
+                        const btn = L.DomUtil.create(
+                            "button",
+                            "resample-btn",
+                        );
+                        btn.type = "button";
+                        btn.innerHTML = "&#8635; Resample";
+                        btn.title =
+                            "Show a different random sample of this clade";
+                        L.DomEvent.disableClickPropagation(btn);
+                        btn.addEventListener("click", () =>
+                            renderSample(drawSample(activeKey, true)),
+                        );
+                        return btn;
+                    },
+                });
+                map.addControl(new ResampleControl());
+                const resampleBtn = document.querySelector(".resample-btn");
 
                 const fromHash = FILTERS.find(
                     (f) =>
