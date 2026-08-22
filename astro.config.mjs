@@ -7,6 +7,9 @@ export default defineConfig({
     tailwind(),
     sitemap()
   ],
+  redirects: {
+    '/audubon': '/nonhuman-neighbors'
+  },
   output: 'static',
   site: 'https://clairenyquist.com'
 });
