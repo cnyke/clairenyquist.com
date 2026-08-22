@@ -213,25 +213,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             const SUBICONS = {
                 Birds: [
                     ["chickadee", [26, 20], "Poecile"],
-                    ["cardinal", [15, 20], "Cardinalis"],
-                    ["house-sparrow", [21, 20], "Passer Melospiza Spizella Spizelloides Zonotrichia Passerella Pipilo"],
-                    ["crow", [20, 20], "Corvus"],
-                    ["blackbird", [26, 20], "Agelaius Quiscalus Molothrus Sturnus"],
+                    ["cardinal", [16, 20], "Cardinalis"],
+                    ["house-sparrow", [29, 20], "Passer Melospiza Spizella Spizelloides Zonotrichia Passerella Pipilo"],
+                    ["crow", [23, 20], "Corvus"],
+                    ["blackbird", [25, 20], "Agelaius Quiscalus Molothrus Sturnus"],
                     ["goldfinch", [25, 20], "Spinus Haemorhous Acanthis Passerina Pheucticus"],
-                    ["woodpecker", [12, 20], "Dryobates Melanerpes Colaptes Dryocopus Sphyrapicus Leuconotopicus"],
-                    ["robin", [25, 20], "Turdus Catharus Sialia Toxostoma Dumetella"],
+                    ["woodpecker", [11, 20], "Dryobates Melanerpes Colaptes Dryocopus Sphyrapicus Leuconotopicus"],
+                    ["robin", [23, 20], "Turdus Catharus Sialia Toxostoma Dumetella"],
                     ["blue-jay", [29, 20], "Cyanocitta"],
-                    ["nuthatch", [20, 20], "Sitta Certhia"],
-                    ["wren", [20, 20], "Troglodytes Thryothorus"],
+                    ["nuthatch", [19, 20], "Sitta Certhia"],
+                    ["wren", [18, 20], "Troglodytes Thryothorus"],
                     ["swift", [27, 20], "Chaetura Hirundo Petrochelidon Riparia Tachycineta Chordeiles"],
                     ["mallard", [35, 16], "Anas Aix Spatula Lophodytes Gavia Phalacrocorax"],
                     ["dove", [24, 20], "Zenaida Columba"],
                     ["junco", [28, 20], "Junco"],
                     ["warbler", [28, 20], "Setophaga Leiothlypis Geothlypis Cardellina Mniotilta Seiurus Regulus Vireo Polioptila Empidonax Contopus Sayornis Myiarchus Tyrannus"],
-                    ["hawk", [22, 24], "Accipiter Astur Buteo Falco Circus Haliaeetus Pandion Cathartes"],
+                    ["hawk", [20, 24], "Accipiter Astur Buteo Falco Circus Haliaeetus Pandion Cathartes"],
                     ["turkey", [21, 24], "Meleagris"],
                     ["heron", [19, 28], "Ardea Butorides"],
-                    ["hummingbird", [20, 14], "Archilochus"],
+                    ["hummingbird", [17, 14], "Archilochus"],
                     ["gull", [22, 20], "Larus Hydroprogne"],
                     ["killdeer", [24, 20], "Charadrius"],
                     ["oriole", [26, 20], "Icterus"],
@@ -244,10 +244,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 Insects: [
                     ["bumblebee", [22, 16], "Bombus Pyrobombus"],
                     ["sweat-bee", [13, 16], "Agapostemon Halictus Melissodes Megachile Anthidium Colletes Coelioxys"],
-                    ["miner-bee", [21, 16], "Andrena Calliopsis"],
+                    ["miner-bee", [23, 16], "Andrena Calliopsis"],
                     ["monarch", [25, 18], "Danaus Vanessa Nymphalis Polygonia Speyeria Euptoieta Pieris Cyaniris Elkalyce Polites Epargyreus"],
                     ["swallowtail", [20, 18], "Papilio"],
-                    ["ladybug", [12, 14], "Harmonia Hippodamia Coleomegilla"],
+                    ["ladybug", [13, 14], "Harmonia Hippodamia Coleomegilla"],
                     ["beetle", [14, 16], "Tetraopes Megacyllene Lucanus Chauliognathus Popillia Pelidnota Trirhabda Blepharida Labidomera Lilioceris Anthrenus Calomycterus Polydrusus Amphimallon Atalantycha Lucidota Creophilus Calymmaderus"],
                     ["grasshopper", [25, 14], "Melanoplus Dichromorpha Microcentrum Roeseliana"],
                     ["wasp", [17, 16], "Polistes Vespula Dolichovespula Eumenes Parazumia Philanthus Megarhyssa Pelecinus Tremex"],
@@ -269,8 +269,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     ["mint", [16, 20], "Leonurus Nepeta Melissa Agastache Monarda Blephilia Lamium Ajuga Verbena"],
                     ["clover", [10, 20], "Trifolium Melilotus Lotus Coronilla Chamaecrista"],
                     ["mullein", [8, 22], "Verbascum"],
-                    ["violet", [15, 18], "Viola"],
-                    ["creeping-charlie", [22, 16], "Glechoma"],
+                    ["violet", [16, 18], "Viola"],
+                    ["creeping-charlie", [19, 16], "Glechoma"],
                     ["conifer", [10, 22], "Juniperus Larix"],
                     ["berry-branch", [19, 20], "Sambucus Lonicera"],
                 ],
@@ -278,7 +278,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     ["orb-weaver", [20, 20], "Argiope Neoscona"],
                     ["jumping-spider", [21, 14], "Phidippus Salticus Attulus Eris"],
                     ["tick", [13, 14], "Dermacentor Amblyomma"],
-                    ["harvestman", [25, 18], "Phalangium"],
+                    ["harvestman", [27, 18], "Phalangium"],
                     ["grass-spider", [17, 18], "Agelenopsis"],
                 ],
                 Mammals: [
@@ -674,10 +674,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     spiderLegPolylineOptions: { weight: 0, opacity: 0 },
                     spiderfyDistanceMultiplier: 2.2,
                     iconCreateFunction: (cluster) => {
+                        const kids = cluster.getAllChildMarkers();
+                        // A stack of just 2–3 lifeforms draws the creatures
+                        // themselves, side by side, instead of a bubble
+                        if (kids.length <= 3) {
+                            let w = 0;
+                            let h = 0;
+                            const html = kids
+                                .map((k) => {
+                                    const s = k.options.icon.options.iconSize;
+                                    w += s[0] + 2;
+                                    h = Math.max(h, s[1]);
+                                    return k.options.icon.options.html;
+                                })
+                                .join("");
+                            return L.divIcon({
+                                html: `<div style="display:flex;align-items:flex-end;gap:2px">${html}</div>`,
+                                className: "species-icon",
+                                iconSize: [w, h],
+                                iconAnchor: [w / 2, h / 2],
+                            });
+                        }
                         const species = new Set();
-                        cluster
-                            .getAllChildMarkers()
-                            .forEach((m) => species.add(m.options.species));
+                        kids.forEach((m) => species.add(m.options.species));
                         const n = species.size;
                         const d = n < 10 ? 30 : n < 50 ? 38 : 46;
                         return L.divIcon({
