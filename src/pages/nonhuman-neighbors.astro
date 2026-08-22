@@ -48,9 +48,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 style="height: 90vh; min-height: 600px; background:#fafafa;"
             >
             </div>
-            <p class="text-xs text-gray-400 mt-1 text-center sm:hidden">
-                Use two fingers to move the map.
-            </p>
             <p id="stat-line" class="text-sm text-gray-500 mt-2 text-center"></p>
         </div>
 
@@ -161,8 +158,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     target="_blank"
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600">Leaflet</a
-                > with the Leaflet.markercluster and leaflet-gesture-handling
-                plugins, and d3-dsv for CSV parsing.
+                > and d3-dsv for CSV parsing.
             </p>
         </div>
     </div>
@@ -171,15 +167,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css"
-    />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    ></script>
-    <script
-        is:inline
-        src="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js"
     ></script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/d3-dsv@3/dist/d3-dsv.min.js"
     ></script>
@@ -216,9 +204,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         /* The two-finger hint lives below the map instead of flashing
            over it on every one-finger swipe */
-        .leaflet-gesture-handling-touch-warning:after {
-            opacity: 0 !important;
-        }
         #species-popup {
             position: absolute;
             transform: translate(-50%, -100%);
@@ -493,10 +478,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // Minimalist white & gray basemap
             // zoomSnap 0 allows an exact fractional starting zoom, so the
             // boundary's edges can sit right at the frame instead of
-            // snapping a whole level out. gestureHandling makes touch
-            // friendly: one finger scrolls the page, two fingers move the
-            // map (and desktop wheel zoom needs ctrl/cmd).
-            const map = L.map("map", { zoomSnap: 0, gestureHandling: true });
+            // snapping a whole level out. One finger drags the map on
+            // touch; the wheel is left to page scrolling on desktop.
+            const map = L.map("map", { zoomSnap: 0, scrollWheelZoom: false });
             L.tileLayer(
                 "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
                 {
