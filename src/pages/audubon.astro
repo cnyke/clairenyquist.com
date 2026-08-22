@@ -30,12 +30,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 goldfinch gold, monarch orange. Click
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
-                are scattered with a little jitter so each one stays visible,
-                and where too many crowd together they gather into a small
-                pile with a count of the species inside; click the pile or
-                zoom in to spread them out.
+                are scattered with a little jitter so each one stays visible.
                 The map shows one kind of life at a time, starting with the
-                mammals; click a group in the legend to switch.
+                mammals; click a group in the legend to switch. Birds and
+                insects, too numerous for a single view, are split into
+                smaller clades.
             </p>
         </div>
 
@@ -179,17 +178,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     />
     <link
         rel="stylesheet"
-        href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    />
-    <link
-        rel="stylesheet"
         href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css"
     />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    ></script>
-    <script
-        is:inline
-        src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
     ></script>
     <script
         is:inline
@@ -206,20 +197,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
-        }
-        .cluster-count {
-            position: absolute;
-            top: -9px;
-            right: -9px;
-            background: rgba(243, 244, 246, 0.95);
-            border: 1px solid #d1d5db;
-            color: #4b5563;
-            border-radius: 999px;
-            padding: 1px 6px;
-            font-family: "Helvetica Neue", Inter, sans-serif;
-            font-size: 10px;
-            line-height: 1.4;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         /* Shorter map on phones so the page still scrolls comfortably */
         @media (max-width: 640px) {
@@ -500,6 +477,63 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 );
             }
 
+            // The legend shows one clade at a time. Birds and insects are
+            // too numerous for a single view, so they split into smaller
+            // clades by genus; the other lifeforms are one filter each.
+            // Entries: [key, label, legend icon, genera] (empty genera =
+            // the catch-all for that lifeform).
+            const BIRD_CLADES = [
+                ["chickadees-wrens", "Chickadees, nuthatches & wrens", "chickadee", "Poecile Sitta Certhia Troglodytes Thryothorus Regulus Polioptila"],
+                ["cardinals-finches", "Cardinals & finches", "cardinal", "Cardinalis Haemorhous Spinus Acanthis Passerina Pheucticus Piranga"],
+                ["sparrows", "Sparrows", "house-sparrow", "Passer Spizella Spizelloides Melospiza Zonotrichia Passerella Junco Pipilo"],
+                ["crows-jays", "Crows & jays", "crow", "Corvus Cyanocitta"],
+                ["woodpeckers", "Woodpeckers", "woodpecker", "Dryobates Leuconotopicus Melanerpes Colaptes Dryocopus Sphyrapicus"],
+                ["robins-warblers", "Robins, warblers & blackbirds", "robin", "Turdus Catharus Sialia Dumetella Toxostoma Setophaga Leiothlypis Geothlypis Cardellina Mniotilta Seiurus Vireo Bombycilla Sturnus Agelaius Quiscalus Molothrus Sturnella Icterus"],
+                ["other-birds", "Other birds", "mallard", ""],
+            ];
+            const INSECT_CLADES = [
+                ["bees", "Bees", "bumblebee", "Bombus Pyrobombus Apis Andrena Calliopsis Agapostemon Halictus Melissodes Megachile Anthidium Colletes Coelioxys"],
+                ["butterflies-moths", "Butterflies & moths", "monarch", "Danaus Vanessa Nymphalis Polygonia Speyeria Euptoieta Pieris Cyaniris Elkalyce Polites Epargyreus Papilio Agrochola Antheraea Halysidota Hypoprepia Pyrrharctia Cucullia Caenurgina Idia Lacinipolia Mythimna Orthonama Phaeoura Galgula Udea Pyrausta Pyralis Microcrambus Psyche Emmelina Hemaris"],
+                ["beetles", "Beetles", "beetle", "Harmonia Hippodamia Coleomegilla Tetraopes Megacyllene Lucanus Chauliognathus Popillia Pelidnota Trirhabda Blepharida Labidomera Lilioceris Anthrenus Calomycterus Polydrusus Amphimallon Atalantycha Lucidota Creophilus Calymmaderus"],
+                ["wasps-flies", "Wasps, ants, flies & dragonflies", "dragonfly", "Polistes Vespula Dolichovespula Eumenes Parazumia Philanthus Megarhyssa Pelecinus Tremex Toxomerus Eristalis Helophilus Sericomyia Delphinia Laphria Machimus Phytomyza Gnophomyia Tipula Aeshna Anax Libellula Sympetrum Argia Camponotus Lasius Prenolepis"],
+                ["other-insects", "Bugs & other insects", "boxelder-bug", ""],
+            ];
+            const FILTERS = [
+                { key: "mammals", label: "Mammals", icon: "mammals", group: "Mammals" },
+            ];
+            const cladeByGenus = { Birds: {}, Insects: {} };
+            BIRD_CLADES.forEach(([key, label, icon, genera]) => {
+                FILTERS.push({ key, label, icon, group: "Birds" });
+                genera.split(" ").forEach(
+                    (g) => g && (cladeByGenus.Birds[g] = key),
+                );
+            });
+            INSECT_CLADES.forEach(([key, label, icon, genera]) => {
+                FILTERS.push({ key, label, icon, group: "Insects" });
+                genera.split(" ").forEach(
+                    (g) => g && (cladeByGenus.Insects[g] = key),
+                );
+            });
+            FILTERS.push(
+                { key: "plants", label: "Plants", icon: "plants", group: "Plants" },
+                { key: "arachnids", label: "Arachnids", icon: "arachnids", group: "Arachnids" },
+                { key: "fungi", label: "Fungi", icon: "fungi", group: "Fungi" },
+                { key: "other", label: "Other", icon: "other", group: "Other" },
+            );
+            const SIMPLE_FILTER = {
+                Mammals: "mammals", Plants: "plants", Arachnids: "arachnids",
+                Fungi: "fungi", Other: "other",
+            };
+            function filterKeyOf(groupKey, species) {
+                const table = cladeByGenus[groupKey];
+                if (!table) return SIMPLE_FILTER[groupKey];
+                const genus = (species || "").split(" ")[0];
+                return (
+                    table[genus] ||
+                    (groupKey === "Birds" ? "other-birds" : "other-insects")
+                );
+            }
+
             document.getElementById("icon-citations").innerHTML =
                 `<strong class="text-gray-500">Icons:</strong> line-art icon set generated with Google Gemini for this page, then cropped, recolored, and matched to species for the map.`;
 
@@ -616,12 +650,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 // Aggregate: one marker per species per exact spot, so a
                 // hotspot's 1,400 checklists become one icon with a count.
                 const spots = new Map();
-                const speciesPerGroup = {};
+                const speciesPerFilter = {};
                 const speciesSeen = {};
                 rows.forEach((d) => {
                     if (!d.lat || !d.lon) return;
                     const g = groupOf(d);
-                    (speciesSeen[g.key] = speciesSeen[g.key] || new Set()).add(
+                    const fkey = filterKeyOf(g.key, d.species);
+                    (speciesSeen[fkey] = speciesSeen[fkey] || new Set()).add(
                         d.species,
                     );
                     const key = `${d.species}|${d.lat}|${d.lon}`;
@@ -630,6 +665,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         s = {
                             species: d.species,
                             group: g,
+                            filterKey: fkey,
                             lat: +d.lat,
                             lon: +d.lon,
                             count: 0,
@@ -654,8 +690,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     }
                 });
 
-                GROUPS.forEach(
-                    (g) => (speciesPerGroup[g.key] = (speciesSeen[g.key] || new Set()).size),
+                FILTERS.forEach(
+                    (f) =>
+                        (speciesPerFilter[f.key] = (
+                            speciesSeen[f.key] || new Set()
+                        ).size),
                 );
 
                 // Legend — a row of pill buttons showing one kind of life
@@ -674,14 +713,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     b.addEventListener("click", onclick);
                     return b;
                 }
-                GROUPS.forEach((g) => {
-                    if (!speciesPerGroup[g.key]) return;
+                FILTERS.forEach((f) => {
+                    if (!speciesPerFilter[f.key]) return;
+                    const def = defByIconName[f.icon];
                     const b = makePill(
-                        `${iconImg(g, 18)}${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`,
-                        `Show the ${g.key.toLowerCase()}`,
-                        () => setFilter(g.key),
+                        `${iconImg(def, 18)}${f.label} <span class="text-gray-400">(${speciesPerFilter[f.key]})</span>`,
+                        `Show ${f.label.toLowerCase()}`,
+                        () => setFilter(f.key),
                     );
-                    legendSpans[g.key] = b;
+                    legendSpans[f.key] = b;
                     legend.appendChild(b);
                 });
 
@@ -734,82 +774,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     });
                 });
 
-                // Crowded spots collapse into a light gray circle counting
-                // the species inside; clicking or zooming opens them up.
-                const clusters = L.markerClusterGroup({
-                    maxClusterRadius: 44,
-                    showCoverageOnHover: false,
-                    // Click behavior is custom: drawn creatures open their
-                    // tooltip, only count bubbles zoom/expand
-                    zoomToBoundsOnClick: false,
-                    // No spider legs when a small cluster fans open, and a
-                    // wider, taller fan so the icons breathe
-                    spiderLegPolylineOptions: { weight: 0, opacity: 0 },
-                    spiderfyDistanceMultiplier: 2.2,
-                    iconCreateFunction: (cluster) => {
-                        const kids = cluster.getAllChildMarkers();
-                        // A stack of just 2 lifeforms draws the creatures
-                        // themselves, side by side, instead of a bubble
-                        if (kids.length <= 2) {
-                            let w = 0;
-                            let h = 0;
-                            const html = kids
-                                .map((k) => {
-                                    const s = k.options.icon.options.iconSize;
-                                    w += s[0] + 2;
-                                    h = Math.max(h, s[1]);
-                                    return k.options.icon.options.html;
-                                })
-                                .join("");
-                            return L.divIcon({
-                                html: `<div style="display:flex;align-items:flex-end;gap:2px">${html}</div>`,
-                                className: "species-icon",
-                                iconSize: [w, h],
-                                iconAnchor: [w / 2, h / 2],
-                            });
-                        }
-                        // Bigger stacks draw as a little pile of up to
-                        // three of the creatures inside, with a gray count
-                        // badge, so clusters speak the same illustrated
-                        // language as everything else on the map
-                        const species = new Set();
-                        kids.forEach((m) => species.add(m.options.species));
-                        const n = species.size;
-                        const picks = [];
-                        const seenIcons = new Set();
-                        for (const k of kids) {
-                            if (seenIcons.has(k.options.iconDef.icon))
-                                continue;
-                            seenIcons.add(k.options.iconDef.icon);
-                            picks.push(k);
-                            if (picks.length === 3) break;
-                        }
-                        // Pile creatures render at the same scale as every
-                        // other marker on the map
-                        const yOff = [12, 0, 16];
-                        let maxRight = 0;
-                        let maxBottom = 0;
-                        const parts = picks.map((k, i) => {
-                            const def = k.options.iconDef;
-                            const w = Math.round(def.size[0] * ICON_SCALE);
-                            const h = Math.round(def.size[1] * ICON_SCALE);
-                            const x = i * 22;
-                            maxRight = Math.max(maxRight, x + w);
-                            maxBottom = Math.max(maxBottom, yOff[i] + h);
-                            return `<span style="position:absolute;left:${x}px;top:${yOff[i]}px">${iconImg(def, h, tintedSrc(def.icon, k.options.iconColor), k.options.iconFlip)}</span>`;
-                        });
-                        const W = maxRight;
-                        const H = maxBottom;
-                        return L.divIcon({
-                            html: `<div class="species-icon" style="position:relative;width:${W}px;height:${H}px">${parts.join("")}<span class="cluster-count">${n}</span></div>`,
-                            className: "",
-                            iconSize: [W, H],
-                            iconAnchor: [W / 2, H / 2],
-                        });
-                    },
-                }).addTo(map);
-                const markersByGroup = {};
-                GROUPS.forEach((g) => (markersByGroup[g.key] = []));
+                // No clustering: with one clade shown at a time, every
+                // creature draws individually. The active clade's markers
+                // live in one layer group.
+                const activeLayer = L.layerGroup().addTo(map);
+                const markersByFilter = {};
+                FILTERS.forEach((f) => (markersByFilter[f.key] = []));
 
                 function licenseShort(url) {
                     const m = (url || "").match(
@@ -876,31 +846,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 map.on("move zoomend", positionPopup);
                 map.on("click", hidePopup);
 
-                // Pairs drawn as creatures reveal a combined tooltip on
-                // click; count bubbles zoom in (or fan out once zooming
-                // can't separate them further)
-                clusters.on("clusterclick", (e) => {
-                    const kids = e.layer.getAllChildMarkers();
-                    if (kids.length <= 2) {
-                        const ll = e.layer.getLatLng();
-                        showPopup(
-                            [ll.lat, ll.lng],
-                            kids
-                                .map((k) => k.options.popupHtml)
-                                .join(
-                                    '<hr style="margin:8px 0;border:none;border-top:1px solid #e5e7eb">',
-                                ),
-                        );
-                    } else if (
-                        map.getBoundsZoom(e.layer.getBounds()) <=
-                        map.getZoom()
-                    ) {
-                        e.layer.spiderfy();
-                    } else {
-                        e.layer.zoomToBounds({ padding: [20, 20] });
-                    }
-                });
-
                 spots.forEach((s) => {
                     // Half the birds face the other way (stable per spot),
                     // so flocks don't all march in one direction
@@ -940,24 +885,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             : "";
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${lic}, via iNaturalist/GBIF</span>`;
                     }
-                    m.options.popupHtml = html;
                     m.on("click", () => showPopup([s.lat, s.lon], html));
-                    markersByGroup[s.group.key].push(m);
+                    markersByFilter[s.filterKey].push(m);
                 });
 
-                // Per-group totals for the stat line when filtered
-                const obsPerGroup = {};
-                const spotsPerGroup = {};
+                // Per-clade totals for the stat line
+                const obsPerFilter = {};
+                const spotsPerFilter = {};
                 rows.forEach((d) => {
-                    const k = groupOf(d).key;
-                    obsPerGroup[k] = (obsPerGroup[k] || 0) + 1;
+                    const k = filterKeyOf(groupOf(d).key, d.species);
+                    obsPerFilter[k] = (obsPerFilter[k] || 0) + 1;
                 });
                 spots.forEach((s) => {
-                    const k = s.group.key;
-                    spotsPerGroup[k] = (spotsPerGroup[k] || 0) + 1;
+                    spotsPerFilter[s.filterKey] =
+                        (spotsPerFilter[s.filterKey] || 0) + 1;
                 });
 
-                const totalObs = rows.length;
                 const totalSpecies = new Set(rows.map((d) => d.species)).size;
                 const statLine = document.getElementById("stat-line");
                 let activeKey = null;
@@ -965,27 +908,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 function setFilter(key) {
                     if (key === activeKey) return;
                     activeKey = key;
-                    GROUPS.forEach((g) => {
-                        const span = legendSpans[g.key];
+                    FILTERS.forEach((f) => {
+                        const span = legendSpans[f.key];
                         if (!span) return;
                         span.className =
                             PILL +
-                            (key === g.key
+                            (key === f.key
                                 ? " border-gray-800 bg-gray-100 font-medium"
                                 : " border-gray-300");
                     });
-                    clusters.clearLayers();
-                    clusters.addLayers(markersByGroup[key]);
-                    statLine.textContent = `${key}: ${speciesPerGroup[key]} species · ${(obsPerGroup[key] || 0).toLocaleString()} observations · ${(spotsPerGroup[key] || 0).toLocaleString()} mapped locations (${totalSpecies} species recorded in all)`;
-                    history.replaceState(null, "", `#${key.toLowerCase()}`);
+                    activeLayer.clearLayers();
+                    markersByFilter[key].forEach((m) =>
+                        activeLayer.addLayer(m),
+                    );
+                    const label = FILTERS.find((f) => f.key === key).label;
+                    statLine.textContent = `${label}: ${speciesPerFilter[key]} species · ${(obsPerFilter[key] || 0).toLocaleString()} observations · ${(spotsPerFilter[key] || 0).toLocaleString()} mapped locations (${totalSpecies} species recorded in all)`;
+                    history.replaceState(null, "", `#${key}`);
                 }
 
-                const fromHash = GROUPS.find(
-                    (g) =>
-                        g.key.toLowerCase() ===
+                const fromHash = FILTERS.find(
+                    (f) =>
+                        f.key ===
                         decodeURIComponent(location.hash.slice(1)).toLowerCase(),
                 );
-                setFilter(fromHash ? fromHash.key : "Mammals");
+                setFilter(fromHash ? fromHash.key : "mammals");
             });
         })();
     </script>
