@@ -675,9 +675,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     spiderfyDistanceMultiplier: 2.2,
                     iconCreateFunction: (cluster) => {
                         const kids = cluster.getAllChildMarkers();
-                        // A stack of just 2–3 lifeforms draws the creatures
+                        // A stack of just 2 lifeforms draws the creatures
                         // themselves, side by side, instead of a bubble
-                        if (kids.length <= 3) {
+                        if (kids.length <= 2) {
                             let w = 0;
                             let h = 0;
                             const html = kids
