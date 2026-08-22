@@ -764,14 +764,69 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 }
                 byCoord.forEach((group) => {
                     if (group.length === 1) return;
-                    // ~33 m base radius, growing with the size of the stack
-                    const R = 0.0003 + 0.00007 * Math.sqrt(group.length);
+                    // ~45 m base radius, growing with the size of the stack
+                    const R = 0.0004 + 0.0001 * Math.sqrt(group.length);
                     group.forEach((s) => {
                         const r = R * Math.sqrt(hash01(s.species + "|r"));
                         const a = hash01(s.species + "|a") * 2 * Math.PI;
                         s.lat += r * Math.cos(a);
                         s.lon += (r * Math.sin(a)) / cosLat;
                     });
+                });
+
+                // Relaxation: within each clade (markers that are shown
+                // together), nudge apart any two spots closer than ~60 m
+                // until the icons stop piling on each other. Deterministic,
+                // so the layout is stable across reloads.
+                const MIN = 0.00055; // degrees latitude, ~60 m
+                const byFilter = new Map();
+                spots.forEach((s) => {
+                    (
+                        byFilter.get(s.filterKey) ||
+                        byFilter.set(s.filterKey, []).get(s.filterKey)
+                    ).push(s);
+                });
+                byFilter.forEach((arr) => {
+                    for (let pass = 0; pass < 6; pass++) {
+                        const grid = new Map();
+                        const cellOf = (s) =>
+                            Math.floor((s.lon * cosLat) / MIN) +
+                            "|" +
+                            Math.floor(s.lat / MIN);
+                        arr.forEach((s) => {
+                            const k = cellOf(s);
+                            (grid.get(k) || grid.set(k, []).get(k)).push(s);
+                        });
+                        let moved = 0;
+                        arr.forEach((s) => {
+                            const gx = Math.floor((s.lon * cosLat) / MIN);
+                            const gy = Math.floor(s.lat / MIN);
+                            for (let dx = -1; dx <= 1; dx++) {
+                                for (let dy = -1; dy <= 1; dy++) {
+                                    const cell = grid.get(
+                                        gx + dx + "|" + (gy + dy),
+                                    );
+                                    if (!cell) continue;
+                                    cell.forEach((t) => {
+                                        if (t === s) return;
+                                        const ax =
+                                            (t.lon - s.lon) * cosLat;
+                                        const ay = t.lat - s.lat;
+                                        const d = Math.hypot(ax, ay);
+                                        if (d >= MIN || d === 0) return;
+                                        const push =
+                                            (MIN - d) / 2 / d;
+                                        s.lat -= ay * push;
+                                        s.lon -= (ax * push) / cosLat;
+                                        t.lat += ay * push;
+                                        t.lon += (ax * push) / cosLat;
+                                        moved++;
+                                    });
+                                }
+                            }
+                        });
+                        if (!moved) break;
+                    }
                 });
 
                 // No clustering: with one clade shown at a time, every
