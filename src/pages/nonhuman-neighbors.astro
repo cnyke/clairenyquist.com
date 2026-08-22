@@ -885,51 +885,79 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 const totalSpecies = new Set(rows.map((d) => d.species)).size;
                 const statLine = document.getElementById("stat-line");
 
-                // Pixels expressed in degrees latitude at the current zoom
-                function pxToDeg(px) {
+                // Pixels expressed in degrees latitude at a given zoom
+                function pxToDegAt(px, z) {
                     const mpp =
                         (156543.03392 * Math.cos((45.02 * Math.PI) / 180)) /
-                        Math.pow(2, map.getZoom());
+                        Math.pow(2, z);
                     return (px * mpp) / 111320;
+                }
+                function pxToDeg(px) {
+                    return pxToDegAt(px, map.getZoom());
+                }
+
+                // Each spot gets a fixed reveal zoom, computed once per
+                // deal: whoever is visible at one zoom stays visible at
+                // every deeper zoom, and zooming in only adds neighbors.
+                // Levels nest, so nothing swaps or reshuffles as you move
+                // in and out.
+                function assignLevels() {
+                    const visible = new Set();
+                    const byPri = [...allSpots].sort(
+                        (a, b) => a.pri - b.pri,
+                    );
+                    for (let z = startZoom; z < FULL_ZOOM; z++) {
+                        // Cells grow a little with each zoom step past the
+                        // start, so the reveal stays gradual
+                        const cellPx =
+                            CELL_PX * Math.pow(1.4, z - startZoom);
+                        const degCell = pxToDegAt(cellPx, z);
+                        const cellOf = (s) =>
+                            Math.floor((s.baseLon * cosLat) / degCell) +
+                            "|" +
+                            Math.floor(s.baseLat / degCell);
+                        const counts = new Map();
+                        visible.forEach((s) => {
+                            const k = cellOf(s);
+                            counts.set(k, (counts.get(k) || 0) + 1);
+                        });
+                        byPri.forEach((s) => {
+                            if (visible.has(s)) return;
+                            const k = cellOf(s);
+                            const n = counts.get(k) || 0;
+                            if (n < PER_CELL) {
+                                counts.set(k, n + 1);
+                                visible.add(s);
+                                s.minZ = z;
+                            }
+                        });
+                    }
+                    allSpots.forEach((s) => {
+                        if (!visible.has(s)) s.minZ = FULL_ZOOM;
+                    });
                 }
 
                 function render() {
+                    const z = map.getZoom();
+                    if (startZoom === null) {
+                        startZoom = z;
+                        assignLevels();
+                    }
                     const bounds = map.getBounds().pad(0.05);
                     const inView = allSpots.filter((s) =>
                         bounds.contains([s.baseLat, s.baseLon]),
                     );
-                    inView.sort((a, b) => a.pri - b.pri);
                     // Past FULL_ZOOM the sampling switches off and the
-                    // full density is displayed
-                    let shown;
-                    if (startZoom === null) startZoom = map.getZoom();
-                    if (map.getZoom() >= FULL_ZOOM) {
-                        shown = inView;
-                    } else {
-                        // Cells grow a little with each zoom step past the
-                        // start, so zooming reveals more without suddenly
-                        // getting very crowded
-                        const cellPx =
-                            CELL_PX *
-                            Math.pow(
-                                1.4,
-                                Math.max(0, map.getZoom() - startZoom),
-                            );
-                        const degCell = pxToDeg(cellPx);
-                        const cells = new Map();
-                        shown = [];
-                        inView.forEach((s) => {
-                            const k =
-                                Math.floor((s.baseLon * cosLat) / degCell) +
-                                "|" +
-                                Math.floor(s.baseLat / degCell);
-                            const n = cells.get(k) || 0;
-                            if (n < PER_CELL) {
-                                cells.set(k, n + 1);
-                                shown.push(s);
-                            }
-                        });
-                    }
+                    // full density is displayed. Zooming back out keeps
+                    // the base deal.
+                    const shown =
+                        z >= FULL_ZOOM
+                            ? inView
+                            : inView.filter(
+                                  (s) =>
+                                      s.minZ <=
+                                      Math.max(z, startZoom) + 1e-9,
+                              );
                     const shownSet = new Set(shown);
                     if (popSpot && !shownSet.has(popSpot)) hidePopup();
                     shown.forEach((s) => {
@@ -965,6 +993,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         L.DomEvent.disableClickPropagation(btn);
                         btn.addEventListener("click", () => {
                             assignPriorities();
+                            assignLevels();
                             render();
                         });
                         return btn;
