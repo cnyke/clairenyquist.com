@@ -640,16 +640,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     map.project(b.getNorthEast(), 0).x -
                     map.project(b.getNorthWest(), 0).x;
                 const size = map.getSize();
-                let z0 = Math.log2(size.x / boundsPxW) - 0.05;
                 if (size.x < 640) {
-                    z0 += 0.95;
-                    // Nudge the field of view up a little
-                    const cPt = map
-                        .project(b.getCenter(), z0)
-                        .subtract([0, size.y * 0.07]);
-                    map.setView(map.unproject(cPt, z0), z0);
+                    // Phones: fit the neighborhood top to bottom, with the
+                    // eastern arc just inside the right edge (matched to
+                    // Claire's reference framing)
+                    const boundsPxH =
+                        map.project(b.getSouthEast(), 0).y -
+                        map.project(b.getNorthEast(), 0).y;
+                    const z0 = Math.log2(size.y / boundsPxH) - 0.03;
+                    const cx =
+                        map.project(b.getNorthEast(), z0).x -
+                        (size.x / 2 - 24);
+                    const cy = map.project(b.getCenter(), z0).y;
+                    map.setView(map.unproject(L.point(cx, cy), z0), z0);
                 } else {
-                    map.setView(b.getCenter(), z0);
+                    map.setView(
+                        b.getCenter(),
+                        Math.log2(size.x / boundsPxW) - 0.05,
+                    );
                 }
 
                 // Markers: icons only, no clustering. Species stacked at the
