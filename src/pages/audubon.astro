@@ -27,7 +27,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 goldfinch gold, monarch orange. Click
                 any icon for the species behind it, with a photo where an
                 observer shared one. Species recorded at the very same spot
-                are scattered with a little jitter so each one stays visible.
+                are scattered with a little jitter so each one stays visible,
+                and where too many crowd together they gather into a light
+                gray circle showing the number of species — click it or zoom
+                in to spread them out.
                 Click a group in the legend to show only that group; click it
                 again to bring everything back.
             </p>
@@ -110,7 +113,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+    <script
+        is:inline
+        src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
     ></script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/d3-dsv@3/dist/d3-dsv.min.js"
     ></script>
@@ -123,6 +134,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
+        }
+        .cluster-badge {
+            border-radius: 50%;
+            background: rgba(243, 244, 246, 0.92);
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            text-align: center;
+            font-family: "Helvetica Neue", Inter, sans-serif;
+            font-size: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        /* Shorter map on phones so the page still scrolls comfortably */
+        @media (max-width: 640px) {
+            #map {
+                height: 65vh !important;
+                min-height: 420px !important;
+            }
         }
         #species-popup {
             position: absolute;
@@ -415,7 +443,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
             // One knob for overall marker size; sizes in the tables above
             // stay proportional to each drawing.
-            const ICON_SCALE = 1.6;
+            const ICON_SCALE = 1.8;
             function makeIcon(def, src) {
                 const w = Math.round(def.size[0] * ICON_SCALE);
                 const h = Math.round(def.size[1] * ICON_SCALE);
@@ -569,7 +597,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 GROUPS.forEach((g) => {
                     if (!speciesPerGroup[g.key]) return;
                     const b = makePill(
-                        `${iconImg(g, 18, tintedSrc(g.icon, g.color))}${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`,
+                        `${iconImg(g, 18)}${g.key} <span class="text-gray-400">(${speciesPerGroup[g.key]} species)</span>`,
                         `Show only ${g.key.toLowerCase()}`,
                         () => setFilter(activeKey === g.key ? null : g.key),
                     );
@@ -626,10 +654,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     });
                 });
 
-                const layers = {};
-                GROUPS.forEach(
-                    (g) => (layers[g.key] = L.layerGroup().addTo(map)),
-                );
+                // Crowded spots collapse into a light gray circle counting
+                // the species inside; clicking or zooming opens them up.
+                const clusters = L.markerClusterGroup({
+                    maxClusterRadius: 44,
+                    showCoverageOnHover: false,
+                    // No spider legs when a small cluster fans open, and a
+                    // wider, taller fan so the icons breathe
+                    spiderLegPolylineOptions: { weight: 0, opacity: 0 },
+                    spiderfyDistanceMultiplier: 2.2,
+                    iconCreateFunction: (cluster) => {
+                        const species = new Set();
+                        cluster
+                            .getAllChildMarkers()
+                            .forEach((m) => species.add(m.options.species));
+                        const n = species.size;
+                        const d = n < 10 ? 30 : n < 50 ? 38 : 46;
+                        return L.divIcon({
+                            html: `<div class="cluster-badge" style="width:${d}px;height:${d}px;line-height:${d - 2}px">${n}</div>`,
+                            className: "",
+                            iconSize: [d, d],
+                        });
+                    },
+                }).addTo(map);
+                const markersByGroup = {};
+                GROUPS.forEach((g) => (markersByGroup[g.key] = []));
 
                 function licenseShort(url) {
                     const m = (url || "").match(
@@ -702,6 +751,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             iconDefFor(s.group.key, s.species),
                             colorFor(s),
                         ),
+                        species: s.species,
                     });
                     const common = commonOf[s.species];
                     let html = "";
@@ -710,7 +760,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             "/original.",
                             "/medium.",
                         );
-                        html += `<img src="${src}" alt="${common || s.species}" loading="lazy" style="width:220px;max-height:170px;object-fit:cover;border-radius:6px;margin-bottom:6px;display:block">`;
+                        html += `<img src="${src}" alt="${common || s.species}" loading="lazy" style="width:220px;height:auto;max-height:300px;object-fit:contain;border-radius:6px;margin-bottom:6px;display:block">`;
                     }
                     if (common) html += `<strong>${common}</strong><br>`;
                     html += `<em>${s.species}</em>`;
@@ -724,7 +774,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     if (s.photo && (s.photoBy || s.photoLicense))
                         html += `<br><span style="color:#999;font-size:11px">Photo: ${s.photoBy || "unknown"}${licenseShort(s.photoLicense) ? ", " + licenseShort(s.photoLicense) : ""}, via iNaturalist/GBIF</span>`;
                     m.on("click", () => showPopup([s.lat, s.lon], html));
-                    m.addTo(layers[s.group.key]);
+                    markersByGroup[s.group.key].push(m);
                 });
 
                 // Per-group totals for the stat line when filtered
@@ -751,12 +801,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         (key
                             ? " border-gray-300"
                             : " border-gray-800 bg-gray-100 font-medium");
+                    const visible = [];
                     GROUPS.forEach((g) => {
+                        const on = !key || g.key === key;
+                        if (on) visible.push(...markersByGroup[g.key]);
                         const span = legendSpans[g.key];
                         if (!span) return;
-                        const on = !key || g.key === key;
-                        if (on) map.addLayer(layers[g.key]);
-                        else map.removeLayer(layers[g.key]);
                         span.style.opacity = on ? "" : "0.4";
                         span.className =
                             PILL +
@@ -768,6 +818,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                                 ? "Show all groups"
                                 : `Show only ${g.key.toLowerCase()}`;
                     });
+                    clusters.clearLayers();
+                    clusters.addLayers(visible);
                     statLine.textContent = key
                         ? `${key}: ${speciesPerGroup[key]} species · ${(obsPerGroup[key] || 0).toLocaleString()} observations · ${(spotsPerGroup[key] || 0).toLocaleString()} mapped locations`
                         : `${totalSpecies} species · ${totalObs.toLocaleString()} observations · ${spots.size.toLocaleString()} mapped locations`;
