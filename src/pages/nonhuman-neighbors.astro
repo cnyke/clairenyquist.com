@@ -633,50 +633,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     },
                 }).addTo(map);
                 // Start zoomed so the boundary spans almost the width of
-                // the screen. On phones, start deeper still, anchored so
-                // the Saint Anthony Parkway curve (the boundary's
-                // northeast corner) just appears in the top right corner.
+                // the screen, centered on the neighborhood; phones start
+                // a little deeper.
                 const b = boundaryLayer.getBounds();
                 const boundsPxW =
                     map.project(b.getNorthEast(), 0).x -
                     map.project(b.getNorthWest(), 0).x;
                 const size = map.getSize();
                 let z0 = Math.log2(size.x / boundsPxW) - 0.05;
-                if (size.x < 640) {
-                    z0 += 0.75;
-                    // The curve is the boundary's most-northeast actual
-                    // vertex (the bbox corner is a phantom point the
-                    // parkway arc cuts off)
-                    const ring = boundaryLayer
-                        .getLayers()[0]
-                        .getLatLngs()
-                        .flat(2);
-                    let curve = ring[0];
-                    let best = -Infinity;
-                    ring.forEach((p) => {
-                        const score =
-                            (p.lat - b.getSouth()) /
-                                (b.getNorth() - b.getSouth()) +
-                            (p.lng - b.getWest()) /
-                                (b.getEast() - b.getWest());
-                        if (score > best) {
-                            best = score;
-                            curve = p;
-                        }
-                    });
-                    // Center on the neighborhood, shifting only as much
-                    // as needed to keep the curve inside the top right
-                    const cPt = map.project(curve, z0);
-                    const bCenterPt = map.project(b.getCenter(), z0);
-                    const cx = Math.max(
-                        bCenterPt.x,
-                        cPt.x - (size.x / 2 - 44),
-                    );
-                    const cy = cPt.y + (size.y / 2 - 44);
-                    map.setView(map.unproject(L.point(cx, cy), z0), z0);
-                } else {
-                    map.setView(b.getCenter(), z0);
-                }
+                if (size.x < 640) z0 += 0.75;
+                map.setView(b.getCenter(), z0);
 
                 // Markers: icons only, no clustering. Species stacked at the
                 // exact same coordinate (eBird hotspots) get a generous
