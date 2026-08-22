@@ -53,6 +53,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 style="height: 90vh; min-height: 600px; background:#fafafa;"
             >
             </div>
+            <p class="text-xs text-gray-400 mt-1 text-center sm:hidden">
+                Use two fingers to move the map.
+            </p>
             <p id="stat-line" class="text-sm text-gray-500 mt-2 text-center"></p>
         </div>
 
@@ -173,6 +176,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 height: 65vh !important;
                 min-height: 420px !important;
             }
+        }
+        /* The two-finger hint lives below the map instead of flashing
+           over it on every one-finger swipe */
+        .leaflet-gesture-handling-touch-warning:after {
+            opacity: 0 !important;
         }
         #species-popup {
             position: absolute;
