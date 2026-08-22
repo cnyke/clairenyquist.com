@@ -446,20 +446,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 },
             ).addTo(map);
 
-            function iconImg(def, h, src) {
+            function iconImg(def, h, src, flip) {
                 const w = Math.round((def.size[0] / def.size[1]) * h);
-                return `<img src="${src || `/images/species-icons/${def.icon}.png`}" alt="" style="width:${w}px;height:${h}px;object-fit:contain">`;
+                return `<img src="${src || `/images/species-icons/${def.icon}.png`}" alt="" style="width:${w}px;height:${h}px;object-fit:contain${flip ? ";transform:scaleX(-1)" : ""}">`;
             }
 
             // One knob for overall marker size; sizes in the tables above
             // stay proportional to each drawing.
             const ICON_SCALE = 1.8;
-            function makeIcon(def, src) {
+            function makeIcon(def, src, flip) {
                 const w = Math.round(def.size[0] * ICON_SCALE);
                 const h = Math.round(def.size[1] * ICON_SCALE);
                 return L.divIcon({
                     className: "species-icon",
-                    html: iconImg(def, h, src),
+                    html: iconImg(def, h, src, flip),
                     iconSize: [w, h],
                     iconAnchor: [w / 2, h / 2],
                     popupAnchor: [0, -h / 2],
@@ -498,10 +498,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             }
 
             const tintCache = {};
-            function tintedIcon(def, color) {
-                const key = def.icon + "|" + color;
+            function tintedIcon(def, color, flip) {
+                const key = def.icon + "|" + color + (flip ? "|f" : "");
                 if (!tintCache[key])
-                    tintCache[key] = makeIcon(def, tintedSrc(def.icon, color));
+                    tintCache[key] = makeIcon(
+                        def,
+                        tintedSrc(def.icon, color),
+                        flip,
+                    );
                 return tintCache[key];
             }
 
@@ -775,10 +779,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 map.on("click", hidePopup);
 
                 spots.forEach((s) => {
+                    // Half the birds face the other way (stable per spot),
+                    // so flocks don't all march in one direction
+                    const flip =
+                        s.group.key === "Birds" &&
+                        hash01(`${s.species}|${s.lat}|flip`) < 0.5;
                     const m = L.marker([s.lat, s.lon], {
                         icon: tintedIcon(
                             iconDefFor(s.group.key, s.species),
                             colorFor(s),
+                            flip,
                         ),
                         species: s.species,
                     });
