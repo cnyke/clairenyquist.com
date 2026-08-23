@@ -22,44 +22,8 @@ const GA_MEASUREMENT_ID: string = "G-7PZ8NQ5JQD";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
 
-const dataVizGroups = [
-  {
-    heading: "Public Health",
-    pages: [
-      { href: "/malaria", label: "Malaria" },
-      { href: "/meps", label: "Medical Expenditure Panel Survey" },
-      { href: "/respiratoryviruses", label: "Respiratory Viruses" },
-      { href: "/tuberculosis", label: "Tuberculosis" },
-    ],
-  },
-  {
-    heading: "Science & Nature",
-    pages: [
-      { href: "/nonhuman-neighbors", label: "Nonhuman Neighbors" },
-      { href: "/exoplanets", label: "Exoplanets" },
-      { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
-      { href: "/octopuses", label: "Octopuses" },
-      { href: "/wilddyeplants", label: "Wild Dye Plants" },
-    ],
-  },
-  {
-    heading: "Speculative",
-    pages: [
-      { href: "/ai-models-timeline", label: "AI Models" },
-      { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
-      { href: "/themet", label: "The Met Collection" },
-    ],
-  },
-  {
-    heading: "Personal",
-    pages: [
-      { href: "/audiobooks", label: "Audiobooks" },
-      { href: "/music", label: "Music" },
-    ],
-  },
-];
-
 const topLevelPages = [
+  { href: "/", label: "Data Visualizations" },
   { href: "/graphic-design", label: "Graphic Design" },
   { href: "/tcplot", label: "tcplot" },
   { href: "/resume", label: "Resumé" },
@@ -210,44 +174,6 @@ const topLevelPages = [
           
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-8">
-            <!-- Data Visualizations Dropdown -->
-            <div class="relative">
-              <button
-                id="desktop-dataviz-toggle"
-                type="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                aria-controls="desktop-dataviz-menu"
-                class="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center space-x-1"
-              >
-                <span>Data Visualizations</span>
-                <svg id="desktop-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="desktop-dataviz-menu"
-                class="absolute left-0 top-full pt-2 w-56 hidden z-50"
-              >
-                <div class="rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div class="py-1">
-                    {dataVizGroups.map((g) => (
-                      <div>
-                        <p class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                          {g.heading}
-                        </p>
-                        {g.pages.map((p) => (
-                          <a href={p.href} class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
-                            {p.label}
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {topLevelPages.map((p) => (
               <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors ${p.href === "/tcplot" ? "font-silkscreen font-normal" : "font-medium"}`}>
                 {p.label}
@@ -268,36 +194,6 @@ const topLevelPages = [
         <!-- Mobile Navigation -->
         <div id="mobile-menu" class="hidden md:hidden pb-4">
           <div class="flex flex-col space-y-2">
-            <!-- Data Visualizations Dropdown for Mobile -->
-            <div>
-              <button
-                id="mobile-dataviz-toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="mobile-dataviz-menu"
-                class="text-gray-700 hover:text-blue-600 transition-colors font-medium py-2 flex items-center justify-between w-full"
-              >
-                <span>Data Visualizations</span>
-                <svg id="mobile-dataviz-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div id="mobile-dataviz-menu" class="hidden pl-4 space-y-2 mt-2">
-                {dataVizGroups.map((g) => (
-                  <div>
-                    <p class="pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-                      {g.heading}
-                    </p>
-                    {g.pages.map((p) => (
-                      <a href={p.href} class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
-                        {p.label}
-                      </a>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {topLevelPages.map((p) => (
               <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors py-2 ${p.href === "/tcplot" ? "font-silkscreen font-normal" : "font-medium"}`}>
                 {p.label}
@@ -344,60 +240,6 @@ const topLevelPages = [
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
       });
 
-      // Mobile dropdown (accordion) — wired up by id prefix
-      function setupMobileDropdown(prefix: string) {
-        const btn = document.getElementById(`mobile-${prefix}-toggle`);
-        const submenu = document.getElementById(`mobile-${prefix}-menu`);
-        const icon = document.getElementById(`mobile-${prefix}-icon`);
-        btn?.addEventListener('click', () => {
-          const willOpen = submenu?.classList.contains('hidden');
-          submenu?.classList.toggle('hidden');
-          icon?.classList.toggle('rotate-180');
-          btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        });
-      }
-
-      // Desktop dropdown — click to toggle (works on touch), close on outside click / Escape
-      function setupDesktopDropdown(prefix: string) {
-        const btn = document.getElementById(`desktop-${prefix}-toggle`);
-        const menu = document.getElementById(`desktop-${prefix}-menu`);
-        const icon = document.getElementById(`desktop-${prefix}-icon`);
-        if (!btn || !menu) return;
-
-        const closeMenu = () => {
-          menu.classList.add('hidden');
-          icon?.classList.remove('rotate-180');
-          btn.setAttribute('aria-expanded', 'false');
-        };
-
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const willOpen = menu.classList.contains('hidden');
-          menu.classList.toggle('hidden');
-          icon?.classList.toggle('rotate-180');
-          btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        });
-
-        // Close when clicking anywhere outside
-        document.addEventListener('click', (e) => {
-          if (menu.classList.contains('hidden')) return;
-          const target = e.target;
-          if (target instanceof Node && !menu.contains(target) && target !== btn) {
-            closeMenu();
-          }
-        });
-
-        // Close on Escape
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') closeMenu();
-        });
-      }
-
-      // Wire up every nav dropdown. Add a prefix here when you add another.
-      ['dataviz'].forEach((prefix) => {
-        setupMobileDropdown(prefix);
-        setupDesktopDropdown(prefix);
-      });
     </script>
   </body>
 </html>

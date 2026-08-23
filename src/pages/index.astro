@@ -5,55 +5,142 @@ const title = "Claire Nyquist | Health Data Visualization";
 const description =
     "Claire Nyquist builds interactive data visualizations about public health. Master of Public Health + graphic design + R, Python, JavaScript, and D3. Based in Minneapolis.";
 
-// Cells for the MEPS card preview (static mini-heatmap)
-const heatRows = 5;
-const heatCols = 9;
-const heatCells = Array.from({ length: heatRows * heatCols }, (_, i) => {
-    const r = Math.floor(i / heatCols);
-    const c = i % heatCols;
-    // deterministic pseudo-pattern, darker toward one corner
-    const v =
-        ((r * 37 + c * 53) % 70) / 100 + (r + c) / (heatRows + heatCols) / 2.5;
-    return Math.min(0.95, v);
-});
-
-const moreViz = [
-    { href: "/malaria", label: "Malaria" },
-    { href: "/respiratoryviruses", label: "Respiratory Viruses" },
-    { href: "/minnesota-bryophytes", label: "Minnesota Mosses" },
-    { href: "/octopuses", label: "Octopuses" },
-    { href: "/wilddyeplants", label: "Wild Dye Plants" },
-    { href: "/ai-models-timeline", label: "AI Models Timeline" },
-    { href: "/stanford-torus-explorer", label: "Stanford Torus Explorer" },
+// Every card on this page comes from this one list. To add a visualization,
+// drop its GIF in public/images/gifs/ and add an entry here.
+const works = [
+    {
+        href: "/nonhuman-neighbors",
+        gif: "/images/gifs/nonhuman-neighbors.gif",
+        w: 359,
+        h: 480,
+        title: "Nonhuman Neighbors",
+        blurb: "Every species recorded in one Northeast Minneapolis neighborhood, each drawn as line art of the organism itself and tinted its own color, chickadees to slime molds.",
+    },
+    {
+        href: "/minnesota-bryophytes",
+        gif: "/images/gifs/minnesota-bryophytes.gif",
+        w: 437,
+        h: 480,
+        title: "Minnesota Mosses",
+        blurb: "A century of moss observations built into a 3D map you can turn in your hands. Bar height is how much was recorded, and the stacked colors are taxonomic orders.",
+    },
+    {
+        href: "/malaria",
+        gif: "/images/gifs/malaria.gif",
+        w: 570,
+        h: 730,
+        title: "Mosquitoes, Malaria & Sickle Cell",
+        blurb: "A scrolling atlas of how mosquito range, malaria burden and sickle cell trait fall across the same ground, and the evolutionary pressure that links them.",
+    },
+    {
+        href: "/themet",
+        gif: "/images/gifs/themet.gif",
+        w: 772,
+        h: 812,
+        title: "The Met Collection",
+        blurb: "Thousands of artworks sorted into a single colour spectrum, each one reduced to the hue it is most saturated in.",
+    },
+    {
+        href: "/wilddyeplants",
+        gif: "/images/gifs/wilddyeplants.gif",
+        w: 404,
+        h: 480,
+        title: "Wild Dye Plants",
+        blurb: "A radial index of plants that yield dye, arranged by the colour each one gives up.",
+    },
+    {
+        href: "/exoplanets",
+        gif: "/images/gifs/exoplanets.gif",
+        w: 560,
+        h: 483,
+        title: "Exoplanet Discoveries",
+        blurb: "Every confirmed exoplanet by distance, mass and the method that found it, showing how detection has reached steadily farther from Earth.",
+    },
+    {
+        href: "/ai-models-timeline",
+        gif: "/images/gifs/ai-models-timeline.png",
+        w: 718,
+        h: 770,
+        title: "AI Models Timeline",
+        blurb: "Notable AI models year by year from Epoch AI data, coloured by the organization that trained them.",
+    },
+    {
+        href: "/stanford-torus-explorer",
+        gif: "/images/gifs/stanford-torus-explorer.gif",
+        w: 480,
+        h: 421,
+        title: "Stanford Torus Explorer",
+        blurb: "A parametric walk through the 1975 NASA design for a rotating space colony, at true scale and adjustable.",
+    },
+    {
+        href: "/tuberculosis",
+        gif: "/images/gifs/tuberculosis.gif",
+        w: 560,
+        h: 378,
+        title: "Global Tuberculosis",
+        blurb: "Estimated incidence, detected cases and deaths for every country from 2000 onward, drawn from WHO programme data.",
+    },
+    {
+        href: "/respiratoryviruses",
+        gif: "/images/gifs/respiratoryviruses.gif",
+        w: 810,
+        h: 638,
+        title: "Respiratory Viruses in Minnesota",
+        blurb: "RSV, influenza and COVID-19 hospitalizations and laboratory detections, tracked season over season from state surveillance data.",
+    },
+    {
+        href: "/octopuses",
+        gif: "/images/gifs/octopuses.gif",
+        w: 772,
+        h: 744,
+        title: "Octopuses",
+        blurb: "Where octopus species have been observed worldwide, species by species across a quarter century of records.",
+    },
+    {
+        href: "/meps",
+        gif: "/images/gifs/meps.gif",
+        w: 831,
+        h: 900,
+        title: "Medical Expenditure Panel Survey",
+        blurb: "Healthcare use, spending and insurance coverage across American households, normalized so variables measured in different units can be read side by side.",
+    },
+    {
+        href: "/audiobooks",
+        gif: "/images/gifs/audiobooks.webp",
+        w: 1100,
+        h: 904,
+        title: "Audiobooks",
+        blurb: "An Audible library as one long bookshelf: every spine coloured from its cover art, its thickness the book's length, its height the year of release.",
+    },
+    {
+        href: "/music",
+        gif: "/images/gifs/music.gif",
+        w: 810,
+        h: 760,
+        title: "Music",
+        blurb: "A whole music library turned into a bar chart you can hear, each artist a beat whose pitch and colour follow how many songs are theirs.",
+    },
 ];
 ---
 
-<script is:inline src="https://d3js.org/d3.v7.min.js"></script>
-
 <BaseLayout title={title} description={description}>
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Hero -->
-        <section class="py-16 md:py-24">
+        <section class="pt-2 pb-8 md:pt-4 md:pb-10">
             <div class="grid grid-cols-1 gap-10 items-start">
                 <div class="max-w-3xl">
-                    <p
-                        class="text-5xl md:text-7xl mb-4 leading-tight name-gradient"
-                        style="font-weight: 400;"
-                    >
-                        Claire Nyquist
-                    </p>
                     <h1
-                        class="text-2xl md:text-4xl text-gray-900 mb-6 leading-tight"
+                        class="text-4xl md:text-6xl mb-6 leading-tight name-gradient"
                     >
-                        I build data visualizations about health.
+                        I build data visualizations about science and health.
                     </h1>
-                    <p class="text-xl text-gray-600 leading-relaxed mb-4">
+                    <p class="text-lg text-gray-600 leading-relaxed mb-4">
                         I have a Master of Public Health (University of
                         Minnesota), a degree in graphic communication design
                         (University of Westminster, First Class Honors), and
                         expertise in R, Python, JavaScript, and D3.
                     </p>
-                    <p class="text-lg text-gray-600 leading-relaxed mb-8">
+                    <p class="text-lg text-gray-600 leading-relaxed mb-0">
                         I've worked in public health consulting at ICF, vaccine
                         distribution at the Minnesota Department of Health, and
                         rapid diagnostic development at the University of
@@ -64,321 +151,98 @@ const moreViz = [
                             >tcplot</a
                         >, the Twin Cities data visualization community.
                     </p>
-                    <div class="flex flex-wrap gap-4">
-                        <a
-                            href="#work"
-                            class="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
-                            >See the work</a
-                        >
-                        <a
-                            href="/resume"
-                            class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
-                            >Resumé</a
-                        >
-                        <a
-                            href="mailto:clairenyquist@gmail.com"
-                            class="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:border-blue-600 hover:text-blue-600 transition-colors"
-                            >Get in touch</a
-                        >
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured work -->
-        <section id="work" class="pb-16">
-            <h2 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
-                Featured work
-            </h2>
-            <p class="text-gray-600 mb-8">
-                Interactive pieces created from public datasets — with the
-                methods shown.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- MEPS card -->
-                <a
-                    href="/meps"
-                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                    <div
-                        class="h-40 bg-gray-50 flex items-center justify-center p-4"
-                    >
-                        <svg
-                            viewBox={`0 0 ${heatCols * 20} ${heatRows * 20}`}
-                            class="w-full h-full"
-                            role="img"
-                            aria-label="Stylized heatmap preview"
+        <!-- Gallery Section -->
+        <div class="mb-16">
+            <div class="masonry-container">
+                {
+                    works.map((w) => (
+                        <a
+                            href={w.href}
+                            class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
                         >
-                            {
-                                heatCells.map((v, i) => (
-                                    <rect
-                                        class="meps-cell"
-                                        data-v={v}
-                                        x={(i % heatCols) * 20 + 1}
-                                        y={Math.floor(i / heatCols) * 20 + 1}
-                                        width="18"
-                                        height="18"
-                                        rx="2"
-                                        fill={`rgba(79, 70, 229, ${v})`}
-                                    />
-                                ))
-                            }
-                        </svg>
-                    </div>
-                    <div class="p-5">
-                        <h3
-                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
-                        >
-                            Medical Expenditure Panel Survey
-                        </h3>
-                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
-                            U.S. healthcare use, spending, and insurance
-                            coverage by region and age — an animated D3 heatmap
-                            of AHRQ survey data.
-                        </p>
-                        <p class="text-xs text-gray-400 mt-3">
-                            D3 · AHRQ data · normalization methods included
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Tuberculosis card -->
-                <a
-                    href="/tuberculosis"
-                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                    <div
-                        id="tb-preview"
-                        class="h-40 bg-gray-50 flex items-center justify-center"
-                        role="img"
-                        aria-label="Concentric circles showing estimated tuberculosis incidence, notified cases, and deaths"
-                    >
-                    </div>
-                    <div class="p-5">
-                        <h3
-                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
-                        >
-                            Tuberculosis
-                        </h3>
-                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
-                            The world's deadliest infectious disease — estimated
-                            incidence and mortality by country, 2000–2024.
-                        </p>
-                        <p class="text-xs text-gray-400 mt-3">
-                            D3 · WHO Global Tuberculosis Programme data
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Met card -->
-                <a
-                    href="/themet"
-                    class="group bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                    <div class="h-40 bg-gray-100 relative overflow-hidden">
-                        <img
-                            id="met-img-a"
-                            class="met-fade-img"
-                            src="/images/met-initial.jpg"
-                            style="opacity:1;"
-                            alt=""
-                            aria-hidden="true"
-                        />
-                        <img
-                            id="met-img-b"
-                            class="met-fade-img"
-                            alt=""
-                            aria-hidden="true"
-                        />
-                    </div>
-                    <div class="p-5">
-                        <h3
-                            class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors"
-                        >
-                            The Met Collection
-                        </h3>
-                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">
-                            1,000+ artworks from the Met's open-access
-                            collection, colored by dominant hue and re-sorted as
-                            you scroll.
-                        </p>
-                        <p class="text-xs text-gray-400 mt-3">
-                            Canvas animation · Met Museum API
-                        </p>
-                    </div>
-                </a>
+                            <div class="relative">
+                                <img
+                                    src={w.gif}
+                                    alt={w.blurb}
+                                    width={w.w}
+                                    height={w.h}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="w-full h-auto object-contain"
+                                />
+                            </div>
+                        </a>
+                    ))
+                }
             </div>
-
-            <!-- More work -->
-            <div class="mt-10">
-                <p class="text-sm font-medium text-gray-500 mb-3">
-                    More visualizations
-                </p>
-                <div class="flex flex-wrap gap-2">
-                    {
-                        moreViz.map((p) => (
-                            <a
-                                href={p.href}
-                                class="px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
-                            >
-                                {p.label}
-                            </a>
-                        ))
-                    }
-                    <a
-                        href="/graphic-design"
-                        class="px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors"
-                    >
-                        Graphic Design
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- tcplot strip -->
-        <section class="pb-20">
-            <div
-                class="bg-gray-50 border border-gray-200 rounded-lg p-8 md:flex md:items-center md:justify-between"
-            >
-                <div class="md:max-w-2xl">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2">
-                        tcplot — Twin Cities data visualization
-                    </h2>
-                    <p class="text-gray-600 leading-relaxed">
-                        I founded and organize tcplot, a meetup for the Twin
-                        Cities creative coding and data visualization community.
-                        If you're local and you make charts, come say hi.
-                    </p>
-                </div>
-                <a
-                    href="/tcplot"
-                    class="inline-flex items-center mt-6 md:mt-0 px-6 py-3 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-700 transition-colors"
-                    >About tcplot</a
-                >
-            </div>
-        </section>
+        </div>
+    </div>
     </div>
 
     <style>
-        .met-fade-img {
-            position: absolute;
-            inset: 0;
+        .masonry-container {
+            /* Use column-width for more natural responsiveness in Chrome */
+            column-width: 320px;
+            column-gap: 2rem;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 1.2s ease;
+            max-width: 100%;
         }
-        /* .name-gradient now lives in BaseLayout's global styles. */
+
+        /* Ensure no more than 3 columns on large screens */
+        @media (min-width: 1200px) {
+            .masonry-container {
+                column-count: 3;
+            }
+        }
+
+        /* Masonry items */
+        .masonry-item {
+            display: block;
+            /* break-inside is the key for columns */
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+
+            width: 100%;
+            margin-bottom: 0.1rem;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+
+            /* Simplify stacking to avoid Chrome rendering bugs in columns */
+            position: relative;
+        }
+
+        /* Natural image sizing - no cropping for masonry */
+        .masonry-item img {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            will-change: transform;
+        }
+
+        /* Image zoom effect on hover */
+        .masonry-item:hover img {
+            transform: scale(1.03);
+        }
+
+        /* Ensure image container doesn't show overflow */
+        .masonry-item .relative {
+            overflow: hidden;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Text container stability */
+
+        /* Prevent column breaks within cards */
+        .masonry-item * {
+            break-inside: avoid;
+        }
     </style>
-
-    <script is:inline>
-        (function () {
-            "use strict";
-            if (typeof d3 === "undefined") return;
-
-            // --- MEPS card: recolor cells with the page's viridis scale ---
-            d3.selectAll(".meps-cell").attr("fill", function () {
-                var v = parseFloat(this.getAttribute("data-v")) || 0;
-                return d3.interpolateViridis(v);
-            });
-
-            // --- TB card: concentric circles from the TB viz, outer pulsing ---
-            (function tbPreview() {
-                var container = document.getElementById("tb-preview");
-                if (!container) return;
-                var W = 300,
-                    H = 160,
-                    cx = W / 2,
-                    cy = H / 2;
-                var svg = d3
-                    .select(container)
-                    .append("svg")
-                    .attr("viewBox", "0 0 " + W + " " + H)
-                    .attr("width", "100%")
-                    .attr("height", "100%");
-
-                // Same encoding and palette as /tuberculosis:
-                // outer = estimated incidence, middle = notified cases, inner = deaths
-                var R_INC = 54,
-                    R_NOT = 36,
-                    R_DTH = 16;
-                var incidence = svg
-                    .append("circle")
-                    .attr("cx", cx)
-                    .attr("cy", cy)
-                    .attr("r", R_INC)
-                    .attr("fill", "#f0d0e8");
-                svg.append("circle")
-                    .attr("cx", cx)
-                    .attr("cy", cy)
-                    .attr("r", R_NOT)
-                    .attr("fill", "#c054a0");
-                svg.append("circle")
-                    .attr("cx", cx)
-                    .attr("cy", cy)
-                    .attr("r", R_DTH)
-                    .attr("fill", "#7b2d6e");
-
-                function pulse() {
-                    incidence
-                        .transition()
-                        .duration(1400)
-                        .ease(d3.easeSinInOut)
-                        .attr("r", R_INC + 9)
-                        .transition()
-                        .duration(1400)
-                        .ease(d3.easeSinInOut)
-                        .attr("r", R_INC)
-                        .on("end", pulse);
-                }
-                pulse();
-            })();
-
-            // --- Met card: crossfade between random artworks every 2s ---
-            (function metFade() {
-                var imgA = document.getElementById("met-img-a");
-                var imgB = document.getElementById("met-img-b");
-                if (!imgA || !imgB) return;
-
-                d3.csv("/data/met_colors.csv")
-                    .then(function (rows) {
-                        var artworks = rows.filter(function (r) {
-                            return r.imageUrl;
-                        });
-                        if (artworks.length === 0) return;
-
-                        var layers = [imgA, imgB];
-                        var active = 0;
-
-                        function randomUrl() {
-                            return artworks[
-                                Math.floor(Math.random() * artworks.length)
-                            ].imageUrl;
-                        }
-
-                        function showNext() {
-                            var next = 1 - active;
-                            var loader = new Image();
-                            loader.onload = function () {
-                                layers[next].src = loader.src;
-                                layers[next].style.opacity = "1";
-                                layers[active].style.opacity = "0";
-                                active = next;
-                            };
-                            // Skip silently on a broken image; try again next tick
-                            loader.src = randomUrl();
-                        }
-
-                        // The static initial image (met-img-a) holds for the
-                        // first interval, then crossfades to random artworks.
-                        setInterval(showNext, 2000);
-                    })
-                    .catch(function () {
-                        // CSV unavailable — the static initial image remains.
-                    });
-            })();
-        })();
-    </script>
 </BaseLayout>

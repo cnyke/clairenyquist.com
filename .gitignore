@@ -31,3 +31,7 @@ scripts/met_progress.db
 # Large data files (exceed GitHub 100MB limit)
 public/data/malariadata/gbifanopheles.csv
 dist/data/malariadata/gbifanopheles.csv
+
+# Source videos for scripts/gifify.py (the generated GIFs are committed)
+media/*
+!media/README.md

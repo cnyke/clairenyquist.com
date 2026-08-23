@@ -473,6 +473,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     // Generic chart creation function
     function createChart(container: HTMLElement, data: any[], yAxisLabel: string, defaultColor: string) {
+      // How long each line takes to draw itself in. Zero for anyone who has
+      // asked their system for reduced motion.
+      const drawMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1300;
+
       // Validate container dimensions with retry
       if (container.clientWidth === 0) {
         console.log('Container width is 0, waiting for layout...');
@@ -602,7 +606,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const color = pathogenColors[pathogen as keyof typeof pathogenColors] || defaultColor;
 
         // Draw the line
-        g.append('path')
+        const path = g.append('path')
           .datum(sortedValues)
           .attr('class', `line pathogen-${pathogen.replace(/[^a-zA-Z0-9]/g, '')}`)
           .attr('fill', 'none')
@@ -610,6 +614,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           .attr('stroke-width', 2)
           .attr('opacity', 0.8)
           .attr('d', line);
+
+        // Unroll each line left to right: hide it inside a dash as long as
+        // itself, then walk the gap off the end. The dash is cleared afterwards
+        // so hovering and redraws behave normally.
+        if (drawMs > 0) {
+          const len = path.node().getTotalLength();
+          path
+            .attr('stroke-dasharray', `${len} ${len}`)
+            .attr('stroke-dashoffset', len)
+            .transition()
+            .duration(drawMs)
+            .ease(d3.easeLinear)
+            .attr('stroke-dashoffset', 0)
+            .on('end', function(this: any) {
+              d3.select(this).attr('stroke-dasharray', null).attr('stroke-dashoffset', null);
+            });
+        }
 
         // Add dots for data points
         g.selectAll(`.dot-${pathogen.replace(/[^a-zA-Z0-9]/g, '')}-${metric}`)
@@ -620,7 +641,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           .attr('cy', (d: any) => yScale(d.value))
           .attr('r', 3)
           .attr('fill', color)
-          .attr('opacity', 0.7)
+          // Each point arrives as the line reaches it.
+          .attr('opacity', (_d: any, i: number) => (drawMs > 0 ? 0 : 0.7))
+          .call((sel: any) => {
+            if (drawMs <= 0) return;
+            const last = Math.max(1, sortedValues.length - 1);
+            sel.transition()
+              .delay((_d: any, i: number) => (drawMs * i) / last)
+              .duration(180)
+              .attr('opacity', 0.7);
+          })
           .on('mouseover', function(event: any, d: any) {
             event.target.setAttribute('r', '5');
             event.target.setAttribute('opacity', '1');
