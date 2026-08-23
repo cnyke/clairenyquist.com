@@ -394,6 +394,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
     }
 
+    // The draw-in animation runs once per chart, on the first render only.
+    // Redraws from filter changes or resize (mobile URL-bar scrolling fires
+    // resize) appear instantly.
+    let hospHasAnimated = false;
+    let labHasAnimated = false;
+
     // Create hospitalization chart
     function createHospitalizationChart() {
       const container = document.getElementById('hosp-container');
@@ -404,13 +410,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       // Get filtered data
       const filteredData = getHospFilteredData();
-      
+
       if (filteredData.length === 0) {
         showNoDataMessage(container, 'No hospitalization data available for the selected filters');
         return;
       }
 
-      createChart(container, filteredData, 'Hospitalization Rate', pathogenColors['COVID-19']);
+      const animate = !hospHasAnimated;
+      hospHasAnimated = true;
+      createChart(container, filteredData, 'Hospitalization Rate', pathogenColors['COVID-19'], animate);
     }
 
     // Create laboratory chart
@@ -423,13 +431,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       // Get filtered data
       const filteredData = getLabFilteredData();
-      
+
       if (filteredData.length === 0) {
         showNoDataMessage(container, 'No laboratory data available for the selected filters');
         return;
       }
 
-      createChart(container, filteredData, 'Laboratory Detections', pathogenColors['RSV']);
+      const animate = !labHasAnimated;
+      labHasAnimated = true;
+      createChart(container, filteredData, 'Laboratory Detections', pathogenColors['RSV'], animate);
     }
 
 
@@ -472,17 +482,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     // Generic chart creation function
-    function createChart(container: HTMLElement, data: any[], yAxisLabel: string, defaultColor: string) {
-      // How long each line takes to draw itself in. Zero for anyone who has
-      // asked their system for reduced motion.
-      const drawMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1300;
+    function createChart(container: HTMLElement, data: any[], yAxisLabel: string, defaultColor: string, animate: boolean = true) {
+      // How long each line takes to draw itself in. Zero on redraws, and for
+      // anyone who has asked their system for reduced motion.
+      const drawMs = (!animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 0 : 1300;
 
       // Validate container dimensions with retry
       if (container.clientWidth === 0) {
         console.log('Container width is 0, waiting for layout...');
         setTimeout(() => {
           if (container.clientWidth > 0) {
-            createChart(container, data, yAxisLabel, defaultColor);
+            createChart(container, data, yAxisLabel, defaultColor, animate);
           } else {
             showNoDataMessage(container, 'Chart container not ready. Please refresh the page.');
           }
