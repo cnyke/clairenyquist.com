@@ -330,30 +330,40 @@ const works = [
                 }, PLAY_MS);
             };
 
-            let cursor = Math.floor(Math.random() * cards.length);
+            // Random pick among eligible cards; `recent` keeps the last couple
+            // of woken cards out of the pool so nothing repeats back-to-back.
+            const recent = [];
             setInterval(() => {
                 const playing = cards.filter(
                     (c) => c.scheduled || c.hover
                 ).length;
                 if (playing >= MAX_PLAYING) return;
-                for (let i = 0; i < cards.length; i++) {
-                    const c = cards[(cursor + i) % cards.length];
-                    if (c.visible && !c.scheduled && !c.hover) {
-                        cursor = (cursor + i + 1) % cards.length;
-                        if (c.loaded) {
-                            startWindow(c);
-                        } else {
-                            // First play: fetch the GIF, start its window once
-                            // it's ready so loading time doesn't eat the loop.
-                            const pre = new Image();
-                            pre.onload = () => {
-                                c.loaded = true;
-                                startWindow(c);
-                            };
-                            pre.src = c.gif;
-                        }
-                        return;
-                    }
+                let pool = cards.filter(
+                    (c) =>
+                        c.visible &&
+                        !c.scheduled &&
+                        !c.hover &&
+                        !recent.includes(c)
+                );
+                if (!pool.length)
+                    pool = cards.filter(
+                        (c) => c.visible && !c.scheduled && !c.hover
+                    );
+                if (!pool.length) return;
+                const c = pool[Math.floor(Math.random() * pool.length)];
+                recent.push(c);
+                if (recent.length > 2) recent.shift();
+                if (c.loaded) {
+                    startWindow(c);
+                } else {
+                    // First play: fetch the GIF, start its window once it's
+                    // ready so loading time doesn't eat the loop.
+                    const pre = new Image();
+                    pre.onload = () => {
+                        c.loaded = true;
+                        startWindow(c);
+                    };
+                    pre.src = c.gif;
                 }
             }, TICK_MS);
         }
