@@ -187,6 +187,39 @@ const works = [
                     ))
                 }
             </div>
+            <script is:inline>
+                // Shuffle the cards on every load. Runs synchronously right
+                // after the grid parses, so the order is set before first
+                // paint. The two still images (no data-gif) are kept apart.
+                (function () {
+                    var c = document.querySelector(".masonry-container");
+                    if (!c) return;
+                    var items = Array.prototype.slice.call(c.children);
+                    for (var i = items.length - 1; i > 0; i--) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var t = items[i];
+                        items[i] = items[j];
+                        items[j] = t;
+                    }
+                    var isStill = function (el) {
+                        var img = el.querySelector("img");
+                        return img && !img.hasAttribute("data-gif");
+                    };
+                    for (var k = 0; k + 1 < items.length; k++) {
+                        if (isStill(items[k]) && isStill(items[k + 1])) {
+                            var target = (k + 3) % items.length;
+                            if (isStill(items[target]))
+                                target = (target + 1) % items.length;
+                            var s = items[k + 1];
+                            items[k + 1] = items[target];
+                            items[target] = s;
+                        }
+                    }
+                    items.forEach(function (el) {
+                        c.appendChild(el);
+                    });
+                })();
+            </script>
         </div>
     </div>
     </div>
