@@ -11,16 +11,16 @@ const works = [
     {
         href: "/nonhuman-neighbors",
         gif: "/images/gifs/nonhuman-neighbors.gif",
-        w: 359,
-        h: 480,
+        w: 538,
+        h: 720,
         title: "Nonhuman Neighbors",
         blurb: "Every species recorded in one Northeast Minneapolis neighborhood, each drawn as line art of the organism itself and tinted its own color, chickadees to slime molds.",
     },
     {
         href: "/minnesota-bryophytes",
         gif: "/images/gifs/minnesota-bryophytes.gif",
-        w: 437,
-        h: 480,
+        w: 656,
+        h: 720,
         title: "Minnesota Mosses",
         blurb: "A century of moss observations built into a 3D map you can turn in your hands. Bar height is how much was recorded, and the stacked colors are taxonomic orders.",
     },
@@ -43,16 +43,16 @@ const works = [
     {
         href: "/wilddyeplants",
         gif: "/images/gifs/wilddyeplants.gif",
-        w: 404,
-        h: 480,
+        w: 606,
+        h: 720,
         title: "Wild Dye Plants",
         blurb: "A radial index of plants that yield dye, arranged by the colour each one gives up.",
     },
     {
         href: "/exoplanets",
         gif: "/images/gifs/exoplanets.gif",
-        w: 560,
-        h: 483,
+        w: 826,
+        h: 712,
         title: "Exoplanet Discoveries",
         blurb: "Every confirmed exoplanet by distance, mass and the method that found it, showing how detection has reached steadily farther from Earth.",
     },
@@ -67,16 +67,16 @@ const works = [
     {
         href: "/stanford-torus-explorer",
         gif: "/images/gifs/stanford-torus-explorer.gif",
-        w: 480,
-        h: 421,
+        w: 720,
+        h: 632,
         title: "Stanford Torus Explorer",
         blurb: "A parametric walk through the 1975 NASA design for a rotating space colony, at true scale and adjustable.",
     },
     {
         href: "/tuberculosis",
         gif: "/images/gifs/tuberculosis.gif",
-        w: 560,
-        h: 378,
+        w: 862,
+        h: 582,
         title: "Global Tuberculosis",
         blurb: "Estimated incidence, detected cases and deaths for every country from 2000 onward, drawn from WHO programme data.",
     },
@@ -126,34 +126,30 @@ const works = [
 <BaseLayout title={title} description={description}>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Hero -->
-        <section class="pt-2 pb-8 md:pt-4 md:pb-10">
-            <div class="grid grid-cols-1 gap-10 items-start">
-                <div class="max-w-3xl">
-                    <h1
-                        class="text-4xl md:text-6xl mb-6 leading-tight name-gradient"
-                    >
-                        I build data visualizations about science and health.
-                    </h1>
-                    <p class="text-lg text-gray-600 leading-relaxed mb-4">
-                        I have a Master of Public Health (University of
-                        Minnesota), a degree in graphic communication design
-                        (University of Westminster, First Class Honors), and
-                        expertise in R, Python, JavaScript, and D3.
-                    </p>
-                    <p class="text-lg text-gray-600 leading-relaxed mb-0">
-                        I've worked in public health consulting at ICF, vaccine
-                        distribution at the Minnesota Department of Health, and
-                        rapid diagnostic development at the University of
-                        Minnesota. I also founded
-                        <a
-                            href="/tcplot"
-                            class="text-blue-600 hover:text-blue-800 underline"
-                            >tcplot</a
-                        >, the Twin Cities data visualization community.
-                    </p>
-                </div>
-            </div>
-        </section>
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl name-gradient mb-6">
+                I build data visualizations<br />about science and health.
+            </h1>
+            <p
+                class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-4"
+            >
+                I have a Master of Public Health (University of Minnesota), a
+                degree in graphic communication design (University of
+                Westminster, First Class Honors), and expertise in R, Python,
+                JavaScript, and D3.
+            </p>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                I've worked in public health consulting at ICF, vaccine
+                distribution at the Minnesota Department of Health, and rapid
+                diagnostic development at the University of Minnesota. I also
+                founded
+                <a
+                    href="/tcplot"
+                    class="text-blue-600 hover:text-blue-800 underline"
+                    >tcplot</a
+                >, the Twin Cities data visualization community.
+            </p>
+        </div>
 
         <!-- Gallery Section -->
         <div class="mb-16">
@@ -166,7 +162,19 @@ const works = [
                         >
                             <div class="relative">
                                 <img
-                                    src={w.gif}
+                                    src={
+                                        w.gif.endsWith(".gif")
+                                            ? w.gif.replace(
+                                                  /\.gif$/,
+                                                  "-poster.webp",
+                                              )
+                                            : w.gif
+                                    }
+                                    data-gif={
+                                        w.gif.endsWith(".gif")
+                                            ? w.gif
+                                            : undefined
+                                    }
                                     alt={w.blurb}
                                     width={w.w}
                                     height={w.h}
@@ -245,4 +253,109 @@ const works = [
             break-inside: avoid;
         }
     </style>
+
+    <script>
+        // Cards rest as static posters. A scheduler wakes at most MAX_PLAYING
+        // cards at a time, lets each run for one loop, then puts it back to
+        // sleep — so the grid always has motion somewhere but never everywhere.
+        // Hovering (or keyboard-focusing) a card always plays it immediately.
+        const MAX_PLAYING = 2;
+        const PLAY_MS = 7000;
+        const TICK_MS = 2000;
+
+        const cards = [];
+        document.querySelectorAll(".masonry-item").forEach((card) => {
+            const img = card.querySelector("img[data-gif]");
+            if (!img) return;
+            const poster = img.getAttribute("src");
+            const gif = img.getAttribute("data-gif");
+            if (!poster || !gif) return;
+            const c = {
+                img,
+                poster,
+                gif,
+                hover: false,
+                scheduled: false,
+                visible: false,
+                loaded: false,
+            };
+            const show = () => c.img.setAttribute("src", c.gif);
+            const rest = () => {
+                if (!c.hover && !c.scheduled)
+                    c.img.setAttribute("src", c.poster);
+            };
+            c.show = show;
+            c.rest = rest;
+            card.addEventListener("mouseenter", () => {
+                c.hover = true;
+                show();
+            });
+            card.addEventListener("mouseleave", () => {
+                c.hover = false;
+                rest();
+            });
+            card.addEventListener("focus", () => {
+                c.hover = true;
+                show();
+            });
+            card.addEventListener("blur", () => {
+                c.hover = false;
+                rest();
+            });
+            cards.push(c);
+        });
+
+        if (
+            cards.length &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((e) => {
+                    const c = cards.find(
+                        (x) => x.img === e.target.querySelector("img[data-gif]")
+                    );
+                    if (c) c.visible = e.isIntersecting;
+                });
+            });
+            document
+                .querySelectorAll(".masonry-item")
+                .forEach((el) => io.observe(el));
+
+            const startWindow = (c) => {
+                c.scheduled = true;
+                c.show();
+                setTimeout(() => {
+                    c.scheduled = false;
+                    c.rest();
+                }, PLAY_MS);
+            };
+
+            let cursor = Math.floor(Math.random() * cards.length);
+            setInterval(() => {
+                const playing = cards.filter(
+                    (c) => c.scheduled || c.hover
+                ).length;
+                if (playing >= MAX_PLAYING) return;
+                for (let i = 0; i < cards.length; i++) {
+                    const c = cards[(cursor + i) % cards.length];
+                    if (c.visible && !c.scheduled && !c.hover) {
+                        cursor = (cursor + i + 1) % cards.length;
+                        if (c.loaded) {
+                            startWindow(c);
+                        } else {
+                            // First play: fetch the GIF, start its window once
+                            // it's ready so loading time doesn't eat the loop.
+                            const pre = new Image();
+                            pre.onload = () => {
+                                c.loaded = true;
+                                startWindow(c);
+                            };
+                            pre.src = c.gif;
+                        }
+                        return;
+                    }
+                }
+            }, TICK_MS);
+        }
+    </script>
 </BaseLayout>
