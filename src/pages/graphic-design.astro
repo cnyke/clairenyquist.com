@@ -11,6 +11,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleBlend    — explicit mix-blend-mode override (e.g. "multiply").
 //   titleOutline  — outline color for the title, drawn as a stroke
 //                   behind the fill so the letterforms stay clean.
+//   noTitle       — skip the overlaid title entirely (the image
+//                   carries its own).
 //   titlePos      — "third" (centered a third down), "bottom", or a
 //                   number 0-1: center the title at that fraction of
 //                   the image height.
@@ -34,8 +36,8 @@ const works = [
         h: 2400,
         alt: "Mars Society convention poster with rusty red Martian terrain, three circular insets of rovers, habitats, and a domed city.",
         title: "Mars Society Poster",
-        // The muted turquoise of the poster's own text.
-        titleColor: "#78a8a8",
+        // The poster carries its own printed title.
+        noTitle: true,
         blurb: "This poster was submitted to the Mars Society's poster competition.",
     },
     {
@@ -154,14 +156,14 @@ const works = [
                                     decoding="async"
                                     class="w-full h-auto object-contain"
                                 />
-                                <span
+                                {!w.noTitle && <span
                                     class={`card-title font-space-grotesk${w.titlePos === "third" || typeof w.titlePos === "number" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
                                     data-title-pos={
                                         typeof w.titlePos === "number"
                                             ? w.titlePos
                                             : undefined
                                     }
-                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: 0.045em ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
+                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: 0.06em ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
                                 >
                                     {w.titleLines ? (
                                         <span
@@ -176,7 +178,7 @@ const works = [
                                             {w.title}
                                         </span>
                                     )}
-                                </span>
+                                </span>}
                             </div>
                             <p class="card-blurb">{w.blurb}</p>
                         </a>
