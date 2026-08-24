@@ -9,6 +9,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleKeepBlend — keep difference blending even with a titleColor set.
 //   titleLines    — explicit line breaks for the fitted title.
 //   titleBlend    — explicit mix-blend-mode override (e.g. "multiply").
+//   titleOutline  — outline color for the title, drawn as a stroke
+//                   behind the fill so the letterforms stay clean.
 //   titlePos      — "third" (centered a third down), "bottom", or a
 //                   number 0-1: center the title at that fraction of
 //                   the image height.
@@ -20,7 +22,9 @@ const works = [
         h: 1024,
         alt: "Pixel-style mosaic of Venus flytrap traps rendered in yellow, green, red, and dark brown squares.",
         title: "Brick Designer",
-        titleColor: "#ffffff",
+        // The mosaic's bright lime-green squares, outlined in its yellow.
+        titleColor: "#bbe90b",
+        titleOutline: "#f3e537",
         blurb: "An interactive tool that transforms your images into 32x32 brick mosaic patterns using a classic color palette.",
     },
     {
@@ -106,8 +110,9 @@ const works = [
         h: 788,
         alt: "Simple line drawing of a white N95 respirator mask with yellow straps and a gray nose band.",
         title: "Personal Protective Equipment Instructions",
-        // Bright strap yellow.
+        // Bright strap yellow, outlined in the nose band's gray.
         titleColor: "#ffd21e",
+        titleOutline: "#757572",
         blurb: "How do you correctly put on personal protective equipment in a hospital?",
     },
 ];
@@ -156,7 +161,7 @@ const works = [
                                             ? w.titlePos
                                             : undefined
                                     }
-                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};`}
+                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: 0.045em ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
                                 >
                                     {w.titleLines ? (
                                         <span
