@@ -11,6 +11,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleBlend    — explicit mix-blend-mode override (e.g. "multiply").
 //   titleOutline  — outline color for the title, drawn as a stroke
 //                   behind the fill so the letterforms stay clean.
+//   titleOutlineWidth — stroke width for titleOutline (default 0.06em).
 //   noTitle       — skip the overlaid title entirely (the image
 //                   carries its own).
 //   titlePos      — "third" (centered a third down), "bottom", or a
@@ -115,6 +116,7 @@ const works = [
         // Bright strap yellow, outlined in the nose band's gray.
         titleColor: "#ffd21e",
         titleOutline: "#757572",
+        titleOutlineWidth: "0.08em",
         blurb: "How do you correctly put on personal protective equipment in a hospital?",
     },
 ];
@@ -163,7 +165,7 @@ const works = [
                                             ? w.titlePos
                                             : undefined
                                     }
-                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: 0.06em ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
+                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: ${w.titleOutlineWidth ?? "0.06em"} ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
                                 >
                                     {w.titleLines ? (
                                         <span
