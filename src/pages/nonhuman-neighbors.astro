@@ -33,8 +33,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 are scattered with a little jitter so each one stays visible.
                 Where records are sparse, everyone appears exactly where
                 they were seen. Where they crowd, each visit deals one
-                random sample of the neighbors; as you zoom in, more of
-                them join, until at close range every record is shown. The
+                random sample of the neighbors, and the deal runs from
+                large lives down to small ones: the wide view belongs to
+                the turkeys, herons, and raccoons; zoom in and the
+                songbirds arrive, then the dragonflies and bees, until at
+                close range every record is shown, down to the lichens
+                and slime molds. The
                 cast holds still while you move around the map: nothing
                 swaps or shifts, and whoever greeted you at the start stays
                 put. A fresh visit, or the resample button on the map,
@@ -369,6 +373,52 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 );
             }
 
+            // Body-size rank, 1 (megafauna) to 6 (ground-level miniature).
+            // The widest view deals only the big lives; each zoom step
+            // unlocks the next size class, so zooming in descends from
+            // turkeys and raccoons to bees and, at last, slime molds.
+            const SIZE_RANK = {
+                // 1: the neighborhood's megafauna, and its trees
+                turkey: 1, goose: 1, crane: 1, heron: 1, mallard: 1,
+                loon: 1, gull: 1, hawk: 1, owl: 1, raccoon: 1, turtle: 1,
+                conifer: 1, "tree-leaf": 1,
+                // 2: mid-size birds and mammals, tall plants
+                crow: 2, woodpecker: 2, kingfisher: 2, dove: 2,
+                killdeer: 2, robin: 2, "blue-jay": 2, oriole: 2,
+                waxwing: 2, squirrel: 2, rabbit: 2, grapevine: 2,
+                milkweed: 2,
+                // 3: songbirds, chipmunks, garden flowers
+                cardinal: 3, blackbird: 3, chickadee: 3,
+                "house-sparrow": 3, goldfinch: 3, nuthatch: 3, wren: 3,
+                swift: 3, junco: 3, warbler: 3, chipmunk: 3, mullein: 3,
+                aster: 3, bellflower: 3, mint: 3, clover: 3, violet: 3,
+                "creeping-charlie": 3, "berry-branch": 3,
+                // 4: the big showy insects, hummingbirds, shrews
+                hummingbird: 4, monarch: 4, swallowtail: 4, dragonfly: 4,
+                moth: 4, grasshopper: 4, shrew: 4,
+                // 5: bees, wasps, spiders, bugs, bracket fungi
+                bumblebee: 5, "honey-bee": 5, wasp: 5, beetle: 5,
+                hoverfly: 5, "sweat-bee": 5, "miner-bee": 5,
+                "boxelder-bug": 5, "stink-bug": 5, "orb-weaver": 5,
+                "jumping-spider": 5, "grass-spider": 5, harvestman: 5,
+                "bracket-fungus": 5,
+                // 6: the ground-level miniature
+                ladybug: 6, ant: 6, leafhopper: 6, tick: 6, pillbug: 6,
+                millipede: 6, lichen: 6, "slime-mold": 6,
+            };
+            const GROUP_RANK = {
+                Birds: 3, Mammals: 2, Plants: 3, Insects: 5,
+                Arachnids: 5, Fungi: 6, Other: 5,
+            };
+            function sizeRankFor(groupKey, species) {
+                const def = iconDefFor(groupKey, species);
+                return (
+                    (def && SIZE_RANK[def.icon]) ||
+                    GROUP_RANK[groupKey] ||
+                    4
+                );
+            }
+
             // Estimated dominant color per genus — the color you'd name if
             // asked "what color is a cardinal?" — with species overrides
             // where one genus spans very different looks. Anything unlisted
@@ -601,6 +651,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         s = {
                             species: d.species,
                             group: g,
+                            sizeRank: sizeRankFor(g.key, d.species),
                             lat: +d.lat,
                             lon: +d.lon,
                             count: 0,
@@ -939,6 +990,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         (a, b) => a.pri - b.pri,
                     );
                     for (let z = startZoom; z < FULL_ZOOM; z++) {
+                        // Size gate: the widest view admits only the
+                        // largest-bodied classes, and each zoom step
+                        // unlocks the next size down. FULL_ZOOM (below)
+                        // still shows every record regardless.
+                        const sizeCap =
+                            2 +
+                            ((z - startZoom) /
+                                Math.max(1, FULL_ZOOM - 1 - startZoom)) *
+                                4;
                         // Cells grow a little with each zoom step past the
                         // start, so the reveal stays gradual
                         const cellPx =
@@ -955,6 +1015,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         });
                         byPri.forEach((s) => {
                             if (visible.has(s)) return;
+                            if (s.sizeRank > sizeCap) return;
                             const k = cellOf(s);
                             const n = counts.get(k) || 0;
                             if (n < PER_CELL) {
