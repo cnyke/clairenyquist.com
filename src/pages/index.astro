@@ -352,6 +352,11 @@ const works = [
         .masonry-item .relative {
             overflow: hidden;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            /* Keep difference-blended titles blending against the image
+               while the browser composites during scroll; without an
+               isolated stacking context the blend can drop out and the
+               title flashes plain white. */
+            isolation: isolate;
         }
 
         /* Project title overlaid on the image. White text with
