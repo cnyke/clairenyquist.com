@@ -346,6 +346,24 @@ const works = [
             cards.push(c);
         });
 
+        // Returning via back/forward restores the page from the browser's
+        // cache, and images whose src was swapped by script can come back
+        // blank. Reset every card to its resting state and force a repaint.
+        window.addEventListener("pageshow", (event) => {
+            if (!event.persisted) return;
+            cards.forEach((c) => {
+                c.hover = false;
+                c.scheduled = false;
+                c.img.setAttribute("src", c.poster);
+            });
+            document
+                .querySelectorAll(".masonry-item img:not([data-gif])")
+                .forEach((img) => {
+                    const src = img.getAttribute("src");
+                    if (src) img.setAttribute("src", src);
+                });
+        });
+
         if (
             cards.length &&
             !window.matchMedia("(prefers-reduced-motion: reduce)").matches
