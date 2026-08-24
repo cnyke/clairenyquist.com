@@ -292,8 +292,8 @@ const works = [
 
     <style>
         .masonry-container {
-            /* Two columns on mobile, three on desktop */
-            column-count: 2;
+            /* One column on mobile, two on tablet, three on desktop */
+            column-count: 1;
             column-gap: 1rem;
             width: 100%;
             max-width: 100%;
@@ -301,6 +301,7 @@ const works = [
 
         @media (min-width: 768px) {
             .masonry-container {
+                column-count: 2;
                 column-gap: 2rem;
             }
             .masonry-item {
