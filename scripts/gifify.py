@@ -325,13 +325,29 @@ def content_box(frames, pad=0.035, min_frac=0.5, max_aspect=1.9, min_aspect=0.62
     return (int(left), int(top), int(right), int(bot))
 
 
-def encode(frames, out_path, width, fps, colors, vivid, dither="fs", hold=0.0):
+def encode(frames, out_path, width, fps, colors, vivid, dither="fs", hold=0.0,
+           quality=82, bounce=False):
     w, h = frames[0].size
     height = max(2, int(round(width * h / w)))
     frames = [f.resize((width, height), Image.LANCZOS) for f in frames]
 
     if vivid and abs(vivid - 1.0) > 1e-3:
         frames = [ImageEnhance.Color(f).enhance(vivid) for f in frames]
+
+    # Boomerang: play forward then back so the loop never snaps to the start.
+    if bounce and len(frames) > 2:
+        frames = frames + frames[-2:0:-1]
+
+    base = int(round(1000.0 / fps))
+    durations = [base] * len(frames)
+    durations[-1] = base + int(round(hold * 1000))
+
+    # Animated WebP: no 256-colour palette, so no quantising or dithering,
+    # and lossy compression keeps even 20 fps clips lighter than a GIF.
+    if out_path.lower().endswith(".webp"):
+        frames[0].save(out_path, save_all=True, append_images=frames[1:],
+                       duration=durations, loop=0, quality=quality, method=4)
+        return width, height
 
     # One palette for the whole clip: per-frame palettes make colours crawl.
     step = max(1, len(frames) // 24)
@@ -343,11 +359,6 @@ def encode(frames, out_path, width, fps, colors, vivid, dither="fs", hold=0.0):
 
     mode = Image.FLOYDSTEINBERG if dither == "fs" else Image.NONE
     conv = [f.quantize(palette=palette, dither=mode) for f in frames]
-    base = int(round(1000.0 / fps))
-    # Linger on the final frame so an animation that ends does not snap
-    # straight back to the start.
-    durations = [base] * len(conv)
-    durations[-1] = base + int(round(hold * 1000))
     conv[0].save(out_path, save_all=True, append_images=conv[1:],
                  duration=durations, loop=0, optimize=True, disposal=1)
     return width, height
@@ -363,11 +374,20 @@ def main():
     ap = argparse.ArgumentParser(description="Convert edited clips in media/ to GIFs.")
     ap.add_argument("files", nargs="*", help="specific video files (default: all of media/)")
     ap.add_argument("--width", type=int, default=480, help="output width in px (default 480)")
-    ap.add_argument("--fps", type=int, default=10, help="frames per second (default 10)")
+    ap.add_argument("--fps", type=int, default=20, help="frames per second (default 20)")
+    ap.add_argument("--format", choices=("gif", "webp"), default="webp",
+                    help="webp (default) is smoother and lighter: real colour, "
+                         "no palette; gif is the legacy output")
     ap.add_argument("--colors", type=int, default=160, help="palette size, max 256 (default 160)")
     ap.add_argument("--dither", choices=("fs", "none"), default="fs",
                     help="fs keeps gradients smooth; none is smaller and crisper "
                          "on flat-colour charts")
+    ap.add_argument("--no-bounce", action="store_true",
+                    help="loop straight through instead of the default "
+                         "forward-then-backward boomerang")
+    ap.add_argument("--quality", type=int, default=82,
+                    help="webp lossy quality 0-100 (default 82); lower it for "
+                         "long clips that come out heavy")
     ap.add_argument("--vivid", type=float, default=1.06,
                     help="saturation multiplier, 1.0 leaves colour untouched")
     ap.add_argument("--start", type=float, default=0.0,
@@ -406,7 +426,7 @@ def main():
     try:
         for path in vids:
             slug = args.slug or os.path.splitext(os.path.basename(path))[0]
-            out = os.path.join(OUT_DIR, slug + ".gif")
+            out = os.path.join(OUT_DIR, slug + "." + args.format)
 
             if (not args.force and os.path.exists(out)
                     and os.path.getmtime(out) >= os.path.getmtime(path)):
@@ -425,7 +445,8 @@ def main():
             if args.crop:
                 frames = [f.crop(content_box(frames)) for f in frames]
             w, h = encode(frames, out, args.width, args.fps, args.colors,
-                          args.vivid, args.dither, args.hold)
+                          args.vivid, args.dither, args.hold, args.quality,
+                          bounce=not args.no_bounce)
             kb = os.path.getsize(out) / 1024
             note = "" if slug in slugs else "   (no page /%s yet)" % slug
             if kb > 1200:

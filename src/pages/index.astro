@@ -6,7 +6,9 @@ const description =
     "Claire Nyquist builds interactive data visualizations about public health. Master of Public Health + graphic design + R, Python, JavaScript, and D3. Based in Minneapolis.";
 
 // Every card on this page comes from this one list. To add a visualization,
-// drop its GIF in public/images/gifs/ and add an entry here.
+// drop its animation (animated WebP from scripts/gifify.py, or a GIF) in
+// public/images/gifs/ and add an entry here. Entries with `still: true`
+// are static images: no poster swap, no wake-up animation.
 // Optional per-card title overrides:
 //   titleColor    — solid color for the title (sampled from the image);
 //                   without it the title is white + difference-blended.
@@ -18,7 +20,7 @@ const description =
 const works = [
     {
         href: "/nonhuman-neighbors",
-        gif: "/images/gifs/nonhuman-neighbors.gif",
+        gif: "/images/gifs/nonhuman-neighbors.webp",
         w: 538,
         h: 720,
         title: "Nonhuman Neighbors",
@@ -29,7 +31,7 @@ const works = [
     },
     {
         href: "/minnesota-bryophytes",
-        gif: "/images/gifs/minnesota-bryophytes.gif",
+        gif: "/images/gifs/minnesota-bryophytes.webp",
         w: 656,
         h: 720,
         title: "Minnesota Mosses",
@@ -38,7 +40,7 @@ const works = [
     },
     {
         href: "/malaria",
-        gif: "/images/gifs/malaria.gif",
+        gif: "/images/gifs/malaria.webp",
         w: 570,
         h: 730,
         title: "Mosquitoes, Malaria & Sickle Cell",
@@ -47,7 +49,7 @@ const works = [
     },
     {
         href: "/themet",
-        gif: "/images/gifs/themet.gif",
+        gif: "/images/gifs/themet.webp",
         w: 772,
         h: 812,
         title: "The Met Collection",
@@ -55,7 +57,7 @@ const works = [
     },
     {
         href: "/wilddyeplants",
-        gif: "/images/gifs/wilddyeplants.gif",
+        gif: "/images/gifs/wilddyeplants.webp",
         w: 606,
         h: 720,
         title: "Wild Dye Plants",
@@ -64,7 +66,7 @@ const works = [
     },
     {
         href: "/exoplanets",
-        gif: "/images/gifs/exoplanets.gif",
+        gif: "/images/gifs/exoplanets.webp",
         w: 826,
         h: 712,
         title: "Exoplanet Discoveries",
@@ -78,6 +80,7 @@ const works = [
     {
         href: "/ai-models-timeline",
         gif: "/images/gifs/ai-models-timeline.png",
+        still: true,
         w: 718,
         h: 770,
         title: "AI Models Timeline",
@@ -90,7 +93,7 @@ const works = [
     },
     {
         href: "/stanford-torus-explorer",
-        gif: "/images/gifs/stanford-torus-explorer.gif",
+        gif: "/images/gifs/stanford-torus-explorer.webp",
         w: 720,
         h: 632,
         title: "Stanford Torus Explorer",
@@ -98,7 +101,7 @@ const works = [
     },
     {
         href: "/tuberculosis",
-        gif: "/images/gifs/tuberculosis.gif",
+        gif: "/images/gifs/tuberculosis.webp",
         w: 862,
         h: 582,
         title: "Global Tuberculosis",
@@ -111,7 +114,7 @@ const works = [
     },
     {
         href: "/respiratoryviruses",
-        gif: "/images/gifs/respiratoryviruses.gif",
+        gif: "/images/gifs/respiratoryviruses.webp",
         w: 810,
         h: 638,
         title: "Respiratory Viruses in Minnesota",
@@ -120,7 +123,7 @@ const works = [
     },
     {
         href: "/octopuses",
-        gif: "/images/gifs/octopuses.gif",
+        gif: "/images/gifs/octopuses.webp",
         w: 772,
         h: 744,
         title: "Octopuses",
@@ -134,7 +137,7 @@ const works = [
     },
     {
         href: "/meps",
-        gif: "/images/gifs/meps.gif",
+        gif: "/images/gifs/meps.webp",
         w: 831,
         h: 900,
         title: "Medical Expenditure Panel Survey",
@@ -143,6 +146,7 @@ const works = [
     {
         href: "/audiobooks",
         gif: "/images/gifs/audiobooks.webp",
+        still: true,
         w: 1100,
         h: 904,
         title: "Audiobooks",
@@ -151,7 +155,7 @@ const works = [
     },
     {
         href: "/music",
-        gif: "/images/gifs/music.gif",
+        gif: "/images/gifs/music.webp",
         w: 810,
         h: 760,
         title: "Music",
@@ -195,11 +199,11 @@ const works = [
 
         <!-- Gallery Section -->
         <div class="mb-16">
-            <h3
+            <h1
                 class="font-space-grotesk text-2xl text-blue-600 text-center mb-6"
             >
                 Data Visualization Projects
-            </h3>
+            </h1>
             <div class="masonry-container">
                 {
                     works.map((w) => (
@@ -210,18 +214,14 @@ const works = [
                             <div class="relative">
                                 <img
                                     src={
-                                        w.gif.endsWith(".gif")
-                                            ? w.gif.replace(
-                                                  /\.gif$/,
+                                        w.still
+                                            ? w.gif
+                                            : w.gif.replace(
+                                                  /\.(gif|webp)$/,
                                                   "-poster.webp",
                                               )
-                                            : w.gif
                                     }
-                                    data-gif={
-                                        w.gif.endsWith(".gif")
-                                            ? w.gif
-                                            : undefined
-                                    }
+                                    data-gif={w.still ? undefined : w.gif}
                                     alt={w.title}
                                     width={w.w}
                                     height={w.h}
@@ -368,6 +368,7 @@ const works = [
             justify-content: center;
             text-align: center;
             color: #fff;
+            font-weight: 700;
             mix-blend-mode: difference;
             line-height: 1.05;
             pointer-events: none;

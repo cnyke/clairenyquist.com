@@ -9,6 +9,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleKeepBlend — keep difference blending even with a titleColor set.
 //   titleLines    — explicit line breaks for the fitted title.
 //   titleBlend    — explicit mix-blend-mode override (e.g. "multiply").
+//   titlePos      — "third" (centered a third down), "bottom", or a
+//                   number 0-1: center the title at that fraction of
+//                   the image height.
 const works = [
     {
         href: "/brick-designer",
@@ -37,7 +40,7 @@ const works = [
         w: 1027,
         h: 1280,
         alt: "Four marker drawings of striped figures in face masks, including a pink-haired person, an orange cat, and a purple headscarf.",
-        title: "Public Health Review Cover",
+        title: "Public Health Review",
         // The top-left figure's spiky magenta hair.
         titleColor: "#ce3e91",
         blurb: "This cover won a competition for the student-led public health journal, the Public Health Review.",
@@ -72,18 +75,19 @@ const works = [
         h: 896,
         alt: "Two whimsical cartoon creatures, a blue round bird with talons and a green one with an elephant trunk and insect legs.",
         title: "Adaptator",
-        // Dark purple sampled from the green creature's ears.
-        titleColor: "#663295",
+        // The blue of the round creature's body.
+        titleColor: "#00aae9",
         titlePos: "bottom",
         blurb: "This game concept explores evolution by introducing random chance into the creation of animal body plans.",
     },
     {
         href: "/gene-editing-perspectives",
-        img: "/images/child.png",
+        img: "/images/gene-editing-parts.webp",
         w: 600,
-        h: 948,
-        alt: "Grayscale x-ray style illustration of a curled infant showing brain, skeleton, organs, and blood vessels on black.",
-        title: "Gene Editing Perspectives",
+        h: 960,
+        alt: "Animated x-ray style illustration of a curled infant on black, its brain, skeleton, muscles, organs, and vessels glowing white and fading in turn.",
+        title: "Genes",
+        titlePos: "bottom",
         blurb: "A gallery installation explores what people think about gene editing technologies.",
     },
     {
@@ -146,7 +150,12 @@ const works = [
                                     class="w-full h-auto object-contain"
                                 />
                                 <span
-                                    class={`card-title font-space-grotesk${w.titlePos === "third" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
+                                    class={`card-title font-space-grotesk${w.titlePos === "third" || typeof w.titlePos === "number" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
+                                    data-title-pos={
+                                        typeof w.titlePos === "number"
+                                            ? w.titlePos
+                                            : undefined
+                                    }
                                     style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};`}
                                 >
                                     {w.titleLines ? (
@@ -258,6 +267,7 @@ const works = [
             justify-content: center;
             text-align: center;
             color: #fff;
+            font-weight: 700;
             mix-blend-mode: difference;
             line-height: 1.05;
             pointer-events: none;
@@ -316,7 +326,8 @@ const works = [
             }
             outer.style.fontSize = lo + "px";
             if (outer.classList.contains("card-title-third")) {
-                const pad = Math.max(0, bh * 0.18 - inner.offsetHeight / 2);
+                const frac = parseFloat(outer.dataset.titlePos) || 0.18;
+                const pad = Math.max(0, bh * frac - inner.offsetHeight / 2);
                 outer.style.paddingTop = pad + "px";
             }
         };
