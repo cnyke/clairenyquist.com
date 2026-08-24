@@ -497,7 +497,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
             function iconImg(def, h, src, flip) {
                 const w = Math.round((def.size[0] / def.size[1]) * h);
-                return `<img src="${src || `/images/species-icons/${def.icon}.png`}" alt="" style="width:${w}px;height:${h}px;object-fit:contain${flip ? ";transform:scaleX(-1)" : ""}">`;
+                return `<img src="${src || `/images/species-icons/${def.icon}.png`}" alt="${def.icon.replace(/-/g, " ")} drawing" style="width:${w}px;height:${h}px;object-fit:contain${flip ? ";transform:scaleX(-1)" : ""}">`;
             }
 
             // One knob for overall marker size; sizes in the tables above

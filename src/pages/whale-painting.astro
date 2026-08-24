@@ -22,43 +22,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
 
     <!-- Project Gallery -->
-    <div class="mb-16">
-      <div class="masonry-container">
-        
+    <div class="mb-16 flex justify-center">
+      <div>
         <!-- Gallery Item 1 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
           <div class="relative">
-            <img 
-              src="/images/whale.jpg" 
-              alt="Whale Painting"
-              class="w-full h-auto object-contain"
+            <img
+              src="/images/whale.jpg"
+              alt="Tall geometric whale painted on wood grain, its body a dense patchwork of multicolored stripes, squares, and dots."
+              class="featured-art h-auto object-contain"
             />
           </div>
         </div>
-
-        <!-- Gallery Item 2 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
-          <div class="relative">
-            <img 
-              src="/images/whalesketchbook1.png" 
-              alt="Whale Sketchbook Studies 1"
-              class="w-full h-auto object-contain"
-            />
-          </div>
-        </div>
-
-        <!-- Gallery Item 3 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
-          <div class="relative">
-            <img 
-              src="/images/whalesketchbook2.png" 
-              alt="Whale Sketchbook Studies 2"
-              class="w-full h-auto object-contain"
-            />
-          </div>
-        </div>
-
-
       </div>
     </div>
 
@@ -77,63 +52,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <style>
-    /* Masonry layout using CSS columns */
-    .masonry-container {
-      column-count: 1;
-      column-gap: 2rem;
-      column-fill: balance;
-    }
-    
-    /* Responsive masonry columns */
-    @media (min-width: 768px) {
-      .masonry-container {
-        column-count: 2;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .masonry-container {
-        column-count: 3;
-      }
-    }
-    
-    /* Masonry items */
-    .masonry-item {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      display: inline-block;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
-    
     /* Natural image sizing - no cropping */
-    .masonry-item img {
+    img {
       display: block;
       width: 100%;
       height: auto;
       object-fit: contain;
       transition: transform 0.3s ease;
     }
-    
+
+    /* Featured painting: sized to fit on screen without scrolling */
+    .featured-art {
+      width: auto;
+      max-width: 100%;
+      max-height: 150vh;
+    }
+
     /* Card hover effects */
-    .masonry-item:hover {
+    .bg-white:hover {
       transform: translateY(-2px);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    
+
     /* Image zoom effect on hover */
-    .masonry-item:hover img {
+    .bg-white:hover img {
       transform: scale(1.05);
     }
-    
+
     /* Ensure image container doesn't show overflow */
-    .masonry-item .relative {
+    .relative {
       overflow: hidden;
-    }
-    
-    /* Prevent column breaks within cards */
-    .masonry-item * {
-      break-inside: avoid;
     }
   </style>
 </BaseLayout>

@@ -20,43 +20,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         A human skull surrounded by larger than life flies aims to explore the recycling of nutrients and energy in an ecosystem. Decay means fungi and bacteria are breaking down molecules. I find this decomposition to be a beautiful process. The acrylic paint, which is made of plastic, is a very human material, which contrasts with the natural wood it is painted on.       </p>
     </div>
 
-    <!-- Project Gallery -->
-    <div class="mb-16">
-      <div class="masonry-container">
-        
-        <!-- Gallery Item 1 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
+    <!-- Featured painting, large and centered -->
+    <div class="mb-12 flex justify-center">
+      <div>
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
           <div class="relative">
-            <img 
-              src="/images/skullandflies.jpg" 
-              alt="Skull and Flies Painting"
-              class="w-full h-auto object-contain"
+            <img
+              src="/images/skullandflies.jpg"
+              alt="Painting on wood of a human skull in profile flanked by two black flies with stained-glass patterned wings."
+              class="featured-art h-auto object-contain"
             />
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Gallery Item 2 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
-          <div class="relative">
-            <img 
-              src="/images/flywing.jpg" 
-              alt="Fly Wing Study"
-              class="w-full h-auto object-contain"
-            />
-          </div>
+    <!-- Detail studies -->
+    <div class="mb-16 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+        <div class="relative">
+          <img
+            src="/images/flywing.jpg"
+            alt="Close-up painting of a fly's wing in stained-glass panes of blue, green, red, and orange against mint and violet."
+            class="w-full h-auto object-contain"
+          />
         </div>
-
-        <!-- Gallery Item 3 -->
-        <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
-          <div class="relative">
-            <img 
-              src="/images/fly2.png" 
-              alt="Fly Study 2"
-              class="w-full h-auto object-contain"
-            />
-          </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+        <div class="relative">
+          <img
+            src="/images/fly2.png"
+            alt="Bold painting detail of a black fly silhouette with spiny legs crossing vertical bands of magenta, teal, orange, and green."
+            class="w-full h-auto object-contain"
+          />
         </div>
-
       </div>
     </div>
 
@@ -75,63 +72,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <style>
-    /* Masonry layout using CSS columns */
-    .masonry-container {
-      column-count: 1;
-      column-gap: 2rem;
-      column-fill: balance;
-    }
-    
-    /* Responsive masonry columns */
-    @media (min-width: 768px) {
-      .masonry-container {
-        column-count: 2;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .masonry-container {
-        column-count: 3;
-      }
-    }
-    
-    /* Masonry items */
-    .masonry-item {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      display: inline-block;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
-    
     /* Natural image sizing - no cropping */
-    .masonry-item img {
+    img {
       display: block;
       width: 100%;
       height: auto;
       object-fit: contain;
       transition: transform 0.3s ease;
     }
-    
+
+    /* Featured painting: sized to fit on screen without scrolling */
+    .featured-art {
+      width: auto;
+      max-width: 100%;
+      max-height: 100vh;
+    }
+
     /* Card hover effects */
-    .masonry-item:hover {
+    .bg-white:hover {
       transform: translateY(-2px);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    
+
     /* Image zoom effect on hover */
-    .masonry-item:hover img {
+    .bg-white:hover img {
       transform: scale(1.05);
     }
-    
+
     /* Ensure image container doesn't show overflow */
-    .masonry-item .relative {
+    .relative {
       overflow: hidden;
-    }
-    
-    /* Prevent column breaks within cards */
-    .masonry-item * {
-      break-inside: avoid;
     }
   </style>
 </BaseLayout>

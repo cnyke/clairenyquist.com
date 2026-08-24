@@ -728,6 +728,7 @@ const description =
                             if (imgUrl) {
                                 tooltipImgWrap.style.display = "block";
                                 tooltipImgLoader.style.display = "flex";
+                                tooltipImg.alt = a.objectName || "Artwork";
                                 tooltipImg.src = imgUrl;
                             } else {
                                 tooltipImgWrap.style.display = "none";

@@ -7,6 +7,14 @@ const description =
 
 // Every card on this page comes from this one list. To add a visualization,
 // drop its GIF in public/images/gifs/ and add an entry here.
+// Optional per-card title overrides:
+//   titleColor    — solid color for the title (sampled from the image);
+//                   without it the title is white + difference-blended.
+//   titleKeepBlend — keep difference blending even with a titleColor set.
+//   titleLines    — explicit line breaks for the fitted title.
+//   titleSmall    — small static title in the upper left, not fitted.
+//   titleBlend    — explicit mix-blend-mode override (e.g. "multiply"
+//                   deepens whatever the letters sit on).
 const works = [
     {
         href: "/nonhuman-neighbors",
@@ -14,6 +22,9 @@ const works = [
         w: 538,
         h: 720,
         title: "Nonhuman Neighbors",
+        // Brighter bunting blue, semi-transparent so the drawings read
+        // through the letters.
+        titleColor: "rgba(47, 111, 237, 0.65)",
         blurb: "Every species recorded in one Northeast Minneapolis neighborhood, each drawn as line art of the organism itself and tinted its own color, chickadees to slime molds.",
     },
     {
@@ -22,6 +33,7 @@ const works = [
         w: 656,
         h: 720,
         title: "Minnesota Mosses",
+        titleColor: "#386a48",
         blurb: "A century of moss observations built into a 3D map you can turn in your hands. Bar height is how much was recorded, and the stacked colors are taxonomic orders.",
     },
     {
@@ -30,6 +42,7 @@ const works = [
         w: 570,
         h: 730,
         title: "Mosquitoes, Malaria & Sickle Cell",
+        titleColor: "#274593",
         blurb: "A scrolling atlas of how mosquito range, malaria burden and sickle cell trait fall across the same ground, and the evolutionary pressure that links them.",
     },
     {
@@ -38,7 +51,7 @@ const works = [
         w: 772,
         h: 812,
         title: "The Met Collection",
-        blurb: "Thousands of artworks sorted into a single colour spectrum, each one reduced to the hue it is most saturated in.",
+        blurb: "Explore the Metropolitan Museum of Art collections.",
     },
     {
         href: "/wilddyeplants",
@@ -46,7 +59,8 @@ const works = [
         w: 606,
         h: 720,
         title: "Wild Dye Plants",
-        blurb: "A radial index of plants that yield dye, arranged by the colour each one gives up.",
+        titleColor: "#f03236",
+        blurb: "A radial index of plants that yield dye, arranged by the color each one gives up.",
     },
     {
         href: "/exoplanets",
@@ -54,6 +68,11 @@ const works = [
         w: 826,
         h: 712,
         title: "Exoplanet Discoveries",
+        // Difference-blended complement: renders as the sampled green
+        // (#3eac1d) over the white background and inverts where the
+        // exoplanet dots pass under the text.
+        titleColor: "#c153e2",
+        titleKeepBlend: true,
         blurb: "Every confirmed exoplanet by distance, mass and the method that found it, showing how detection has reached steadily farther from Earth.",
     },
     {
@@ -62,7 +81,12 @@ const works = [
         w: 718,
         h: 770,
         title: "AI Models Timeline",
-        blurb: "Notable AI models year by year from Epoch AI data, coloured by the organization that trained them.",
+        // Difference-blended complement: renders as the chart's purple
+        // (#b27df1) over the near-white background and inverts where
+        // the dots/bars pass under the text.
+        titleColor: "#4d820e",
+        titleKeepBlend: true,
+        blurb: "Notable AI models year by year from Epoch AI data, colored by the organization that trained them.",
     },
     {
         href: "/stanford-torus-explorer",
@@ -78,7 +102,12 @@ const works = [
         w: 862,
         h: 582,
         title: "Global Tuberculosis",
-        blurb: "Estimated incidence, detected cases and deaths for every country from 2000 onward, drawn from WHO programme data.",
+        // Multiply-blended: a transparent deepening of the dark pink, so
+        // the title darkens the pale rings and still reads as a deeper
+        // plum over the dark circles.
+        titleColor: "#6b215f",
+        titleBlend: "multiply",
+        blurb: "Estimated incidence, detected cases and deaths for every country from 2000 onward, drawn from WHO program data.",
     },
     {
         href: "/respiratoryviruses",
@@ -86,6 +115,7 @@ const works = [
         w: 810,
         h: 638,
         title: "Respiratory Viruses in Minnesota",
+        titleColor: "#e54f17",
         blurb: "RSV, influenza and COVID-19 hospitalizations and laboratory detections, tracked season over season from state surveillance data.",
     },
     {
@@ -94,6 +124,12 @@ const works = [
         w: 772,
         h: 744,
         title: "Octopuses",
+        // Difference-blended complement: renders as a bright orange
+        // (#ff7a1e) over the white ocean, a touch deeper over the gray
+        // landmass, and inverts where the observation dots pass under.
+        titleColor: "#0085e1",
+        titleKeepBlend: true,
+        titleLines: ["Octo-", "puses"],
         blurb: "Where octopus species have been observed worldwide, species by species across a quarter century of records.",
     },
     {
@@ -110,7 +146,8 @@ const works = [
         w: 1100,
         h: 904,
         title: "Audiobooks",
-        blurb: "An Audible library as one long bookshelf: every spine coloured from its cover art, its thickness the book's length, its height the year of release.",
+        titleColor: "#000000",
+        blurb: "An Audible library as one long bookshelf: every spine colored from its cover art, its thickness the book's length, its height the year of release.",
     },
     {
         href: "/music",
@@ -118,7 +155,12 @@ const works = [
         w: 810,
         h: 760,
         title: "Music",
-        blurb: "A whole music library turned into a bar chart you can hear, each artist a beat whose pitch and colour follow how many songs are theirs.",
+        // Difference-blended, so this is the complement of the color that
+        // actually shows: over the near-white poster it renders as bright
+        // yellow (#ffe600) and inverts against the colored bars.
+        titleColor: "#0019ff",
+        titleKeepBlend: true,
+        blurb: "A whole music library turned into a bar chart you can hear, each artist a beat whose pitch and color follow how many songs are theirs.",
     },
 ];
 ---
@@ -154,7 +196,7 @@ const works = [
         <!-- Gallery Section -->
         <div class="mb-16">
             <h3
-                class="font-space-grotesk text-xl text-blue-600 text-center mb-6"
+                class="font-space-grotesk text-2xl text-blue-600 text-center mb-6"
             >
                 Data Visualization Projects
             </h3>
@@ -180,14 +222,33 @@ const works = [
                                             ? w.gif
                                             : undefined
                                     }
-                                    alt={w.blurb}
+                                    alt={w.title}
                                     width={w.w}
                                     height={w.h}
                                     loading="lazy"
                                     decoding="async"
                                     class="w-full h-auto object-contain"
                                 />
+                                <span
+                                    class={`card-title font-space-grotesk${w.titleSmall ? " card-title-small" : ""}`}
+                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};`}
+                                >
+                                    {w.titleLines ? (
+                                        <span
+                                            class="card-title-inner font-space-grotesk"
+                                            style="white-space: nowrap"
+                                            set:html={w.titleLines.join(
+                                                "<br>",
+                                            )}
+                                        />
+                                    ) : (
+                                        <span class="card-title-inner font-space-grotesk">
+                                            {w.title}
+                                        </span>
+                                    )}
+                                </span>
                             </div>
+                            <p class="card-blurb">{w.blurb}</p>
                         </a>
                     ))
                 }
@@ -292,6 +353,49 @@ const works = [
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
+        /* Project title overlaid on the image. White text with
+           mix-blend-mode: difference inverts whatever is behind each
+           letter (white -> black, orange -> blue, etc.). The overlay
+           covers the whole image; a script sets the largest font-size
+           at which the title still fits inside the rectangle. */
+        .card-title {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            mix-blend-mode: difference;
+            line-height: 1.05;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .card-title-inner {
+            display: inline-block;
+        }
+
+        /* One-sentence project description under each image. */
+        .card-blurb {
+            padding: 0.6rem 0.75rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            color: #6b7280;
+        }
+
+        /* Small static variant: sits in the upper-left corner at a fixed
+           size instead of being fitted to fill the rectangle. */
+        .card-title-small {
+            inset: auto;
+            top: 0.6rem;
+            left: 0.6rem;
+            display: block;
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
         /* Text container stability */
 
         /* Prevent column breaks within cards */
@@ -308,6 +412,41 @@ const works = [
         const MAX_PLAYING = 2;
         const PLAY_MS = 7000;
         const TICK_MS = 2000;
+
+        // Size each overlaid title to fill its card: binary-search the
+        // largest font-size at which the text still fits both dimensions
+        // of the image rectangle. Re-run when fonts arrive (metrics
+        // change) and when the window resizes (card widths change).
+        const fitTitle = (outer) => {
+            const inner = outer.firstElementChild;
+            const bw = outer.clientWidth;
+            const bh = outer.clientHeight;
+            if (!inner || !bw || !bh) return;
+            let lo = 6;
+            let hi = 600;
+            for (let i = 0; i < 14; i++) {
+                const mid = (lo + hi) / 2;
+                outer.style.fontSize = mid + "px";
+                if (inner.offsetWidth <= bw && inner.offsetHeight <= bh) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+            outer.style.fontSize = lo + "px";
+        };
+        const fitAllTitles = () => {
+            document
+                .querySelectorAll(".card-title:not(.card-title-small)")
+                .forEach(fitTitle);
+        };
+        fitAllTitles();
+        document.fonts.ready.then(fitAllTitles);
+        let fitTimer;
+        window.addEventListener("resize", () => {
+            clearTimeout(fitTimer);
+            fitTimer = setTimeout(fitAllTitles, 150);
+        });
 
         const cards = [];
         document.querySelectorAll(".masonry-item").forEach((card) => {

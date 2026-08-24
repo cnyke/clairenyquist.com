@@ -1,5 +1,112 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Same card system as the home page: each project's title is overlaid
+// on its image, fitted to fill the rectangle, with a one-line
+// description below. Optional per-card title overrides:
+//   titleColor    — solid color for the title (sampled from the image);
+//                   without it the title is white + difference-blended.
+//   titleKeepBlend — keep difference blending even with a titleColor set.
+//   titleLines    — explicit line breaks for the fitted title.
+//   titleBlend    — explicit mix-blend-mode override (e.g. "multiply").
+const works = [
+    {
+        href: "/brick-designer",
+        img: "/images/venus2.png",
+        w: 1024,
+        h: 1024,
+        alt: "Pixel-style mosaic of Venus flytrap traps rendered in yellow, green, red, and dark brown squares.",
+        title: "Brick Designer",
+        titleColor: "#ffffff",
+        blurb: "An interactive tool that transforms your images into 32x32 brick mosaic patterns using a classic color palette.",
+    },
+    {
+        href: "/mars-society-poster",
+        img: "/images/MarsSocietyPoster3.16.25.webp",
+        w: 1553,
+        h: 2400,
+        alt: "Mars Society convention poster with rusty red Martian terrain, three circular insets of rovers, habitats, and a domed city.",
+        title: "Mars Society Poster",
+        // The muted turquoise of the poster's own text.
+        titleColor: "#78a8a8",
+        blurb: "This poster was submitted to the Mars Society's poster competition.",
+    },
+    {
+        href: "/public-health-review-cover",
+        img: "/images/phr4.png",
+        w: 1027,
+        h: 1280,
+        alt: "Four marker drawings of striped figures in face masks, including a pink-haired person, an orange cat, and a purple headscarf.",
+        title: "Public Health Review Cover",
+        // The top-left figure's spiky magenta hair.
+        titleColor: "#ce3e91",
+        blurb: "This cover won a competition for the student-led public health journal, the Public Health Review.",
+    },
+    {
+        href: "/skull-and-flies-painting",
+        img: "/images/skullandflies.jpg",
+        w: 2423,
+        h: 3455,
+        alt: "Painting on wood of a human skull in profile flanked by two black flies with stained-glass patterned wings.",
+        title: "Skull and Flies",
+        titleColor: "#000000",
+        titleLines: ["Skull", "and", "Flies"],
+        blurb: "A human skull surrounded by larger than life flies aims to explore the recycling of nutrients and energy in an ecosystem.",
+    },
+    {
+        href: "/whale-painting",
+        img: "/images/whale.jpg",
+        w: 1599,
+        h: 3815,
+        alt: "Tall geometric whale painted on wood grain, its body a dense patchwork of multicolored stripes, squares, and dots.",
+        title: "Whale",
+        titleColor: "#ffffff",
+        // Sit the title about a third of the way down the painting.
+        titlePos: "third",
+        blurb: "The whale is inspired by the small colored pencil drawings of Frank Lloyd Wright.",
+    },
+    {
+        href: "/adaptator-evolution-game",
+        img: "/images/adaptatorcreatures.png",
+        w: 1242,
+        h: 896,
+        alt: "Two whimsical cartoon creatures, a blue round bird with talons and a green one with an elephant trunk and insect legs.",
+        title: "Adaptator",
+        // Dark purple sampled from the green creature's ears.
+        titleColor: "#663295",
+        titlePos: "bottom",
+        blurb: "This game concept explores evolution by introducing random chance into the creation of animal body plans.",
+    },
+    {
+        href: "/gene-editing-perspectives",
+        img: "/images/child.png",
+        w: 600,
+        h: 948,
+        alt: "Grayscale x-ray style illustration of a curled infant showing brain, skeleton, organs, and blood vessels on black.",
+        title: "Gene Editing Perspectives",
+        blurb: "A gallery installation explores what people think about gene editing technologies.",
+    },
+    {
+        href: "/rainbow-bricks",
+        img: "/images/lego.jpeg",
+        w: 2706,
+        h: 2706,
+        alt: "Rainbow LEGO mosaic packed with round studs, flowers, hearts, and translucent pieces shifting from red through blue to purple.",
+        title: "Rainbow Bricks",
+        blurb: "Each toy brick is like a brush stroke in this color composition.",
+    },
+    {
+        href: "/ppe-instructions",
+        img: "/images/ppemask.png",
+        w: 958,
+        h: 788,
+        alt: "Simple line drawing of a white N95 respirator mask with yellow straps and a gray nose band.",
+        title: "Personal Protective Equipment Instructions",
+        // Bright strap yellow.
+        titleColor: "#ffd21e",
+        blurb: "How do you correctly put on personal protective equipment in a hospital?",
+    },
+];
 ---
 
 <BaseLayout
@@ -22,216 +129,65 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <!-- Gallery Section -->
         <div class="mb-16">
             <div class="masonry-container">
-                <!-- Gallery Item: Brick Designer -->
-                <a
-                    href="/brick-designer"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/venus2.png"
-                            alt="Brick Designer Tool"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Brick Designer
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            An interactive tool that transforms your images into
-                            32x32 brick mosaic patterns using a classic color
-                            palette.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item: Mars Society Poster -->
-                <a
-                    href="/mars-society-poster"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/MarsSocietyPoster3.16.25.webp"
-                            alt="Mars Society Poster"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Mars Society Poster
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This poster was submitted to the Mars Society's
-                            poster competition.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 1 -->
-                <a
-                    href="/public-health-review-cover"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/phr4.png"
-                            alt="PHR Design Project"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Public Health Review Cover
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This cover won a competition for the student-led
-                            public health journal, the Public Health Review.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 3 -->
-                <a
-                    href="/skull-and-flies-painting"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/skullandflies.jpg"
-                            alt="Skull and Flies Artistic Design"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Skull and Flies Painting
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            A human skull surrounded by larger than life flies
-                            aims to explore the recycling of nutrients and
-                            energy in an ecosystem.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 4 -->
-                <a
-                    href="/whale-painting"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/whale.jpg"
-                            alt="Whale Artistic Design"
-                            class="w-full h-auto object-contain whale-image"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Whale Painting
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            The whale is inspired by the small colored pencil
-                            drawings of Frank Lloyd Wright.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 5 -->
-                <a
-                    href="/adaptator-evolution-game"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/adaptatorcreatures.png"
-                            alt="Adaptator An Evolution Game"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Adaptator: An Evolution Game
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This game concept explores evolution by introducing
-                            random chance into the creation of animal body
-                            plans.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 6 -->
-                <a
-                    href="/gene-editing-perspectives"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/child.png"
-                            alt="Child Anatomical Illustration"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Gene Editing Perspectives
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            A gallery installation explores what people think
-                            about gene editing technologies.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 7 -->
-                <a
-                    href="/rainbow-bricks"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/lego.jpeg"
-                            alt="LEGO Creative Design"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Rainbow Bricks
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            Each toy brick is like a brush stroke in this color
-                            composition.
-                        </p>
-                    </div>
-                </a>
-
-                <!-- Gallery Item 8 -->
-                <a
-                    href="/ppe-instructions"
-                    class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
-                >
-                    <div class="relative">
-                        <img
-                            src="/images/ppemask.png"
-                            alt="PPE Graphic Design"
-                            class="w-full h-auto object-contain"
-                        />
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            Personal Protective Equipment Instructions
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            How do you correctly put on personal protective
-                            equipment in a hospital?
-                        </p>
-                    </div>
-                </a>
+                {
+                    works.map((w) => (
+                        <a
+                            href={w.href}
+                            class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
+                        >
+                            <div class="relative">
+                                <img
+                                    src={w.img}
+                                    alt={w.alt}
+                                    width={w.w}
+                                    height={w.h}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="w-full h-auto object-contain"
+                                />
+                                <span
+                                    class={`card-title font-space-grotesk${w.titlePos === "third" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
+                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};`}
+                                >
+                                    {w.titleLines ? (
+                                        <span
+                                            class="card-title-inner font-space-grotesk"
+                                            style="white-space: nowrap"
+                                            set:html={w.titleLines.join(
+                                                "<br>",
+                                            )}
+                                        />
+                                    ) : (
+                                        <span class="card-title-inner font-space-grotesk">
+                                            {w.title}
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
+                            <p class="card-blurb">{w.blurb}</p>
+                        </a>
+                    ))
+                }
             </div>
+            <script is:inline>
+                // Shuffle the cards on every load, same as the home page.
+                // Runs synchronously right after the grid parses, so the
+                // order is set before first paint.
+                (function () {
+                    var c = document.querySelector(".masonry-container");
+                    if (!c) return;
+                    var items = Array.prototype.slice.call(c.children);
+                    for (var i = items.length - 1; i > 0; i--) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var t = items[i];
+                        items[i] = items[j];
+                        items[j] = t;
+                    }
+                    items.forEach(function (el) {
+                        c.appendChild(el);
+                    });
+                })();
+            </script>
         </div>
     </div>
 
@@ -280,11 +236,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             will-change: transform;
         }
 
-        /* Card hover effects */
-        .masonry-item:hover {
-            /* No shadow */
-        }
-
         /* Image zoom effect on hover */
         .masonry-item:hover img {
             transform: scale(1.03);
@@ -296,11 +247,44 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Text container stability */
-        .masonry-item .p-6 {
-            background: white;
-            position: relative;
-            z-index: 10;
+        /* Project title overlaid on the image, fitted by script to the
+           largest size that still fits the rectangle. */
+        .card-title {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            mix-blend-mode: difference;
+            line-height: 1.05;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .card-title-inner {
+            display: inline-block;
+        }
+
+        /* Variant: title centered about a third of the way down the
+           image instead of the middle; the fit script computes the
+           exact padding after sizing the text. */
+        .card-title-third {
+            align-items: flex-start;
+        }
+
+        /* Variant: title sits at the bottom edge of the image. */
+        .card-title-bottom {
+            align-items: flex-end;
+        }
+
+        /* One-sentence project description under each image. */
+        .card-blurb {
+            padding: 0.6rem 0.75rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            color: #6b7280;
         }
 
         /* Prevent column breaks within cards */
@@ -308,4 +292,44 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             break-inside: avoid;
         }
     </style>
+
+    <script>
+        // Same title fitting as the home page: binary-search the largest
+        // font-size at which the text still fits both dimensions of the
+        // image rectangle. Re-run when fonts arrive and on resize.
+        const fitTitle = (outer) => {
+            const inner = outer.firstElementChild;
+            outer.style.paddingTop = "";
+            const bw = outer.clientWidth;
+            const bh = outer.clientHeight;
+            if (!inner || !bw || !bh) return;
+            let lo = 6;
+            let hi = 600;
+            for (let i = 0; i < 14; i++) {
+                const mid = (lo + hi) / 2;
+                outer.style.fontSize = mid + "px";
+                if (inner.offsetWidth <= bw && inner.offsetHeight <= bh) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+            outer.style.fontSize = lo + "px";
+            if (outer.classList.contains("card-title-third")) {
+                const pad = Math.max(0, bh * 0.18 - inner.offsetHeight / 2);
+                outer.style.paddingTop = pad + "px";
+            }
+        };
+        const fitAllTitles = () => {
+            document.querySelectorAll(".card-title").forEach(fitTitle);
+        };
+        fitAllTitles();
+        document.fonts.ready.then(fitAllTitles);
+        window.addEventListener("load", fitAllTitles);
+        let fitTimer;
+        window.addEventListener("resize", () => {
+            clearTimeout(fitTimer);
+            fitTimer = setTimeout(fitAllTitles, 150);
+        });
+    </script>
 </BaseLayout>
