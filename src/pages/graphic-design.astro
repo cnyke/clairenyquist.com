@@ -333,16 +333,19 @@ const works = [
         }
 
         /* Variant: title as a heading above the image instead of
-           overlaid on it, sitting flush on the image and fitted by
-           script to span its full width. */
+           overlaid on it, fitted by script to span its full width and
+           pulled down so its lower half straddles the image's top edge. */
         .card-title-above {
             display: block;
+            position: relative;
+            z-index: 1;
             padding: 0.4rem 0 0;
             font-size: 1.5rem;
             font-weight: 700;
             line-height: 0.95;
             white-space: nowrap;
             overflow: hidden;
+            margin-bottom: -0.48em;
         }
 
         /* One-sentence project description under each image. */
