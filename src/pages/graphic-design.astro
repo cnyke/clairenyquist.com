@@ -3,7 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Same card system as the home page: each project's title is overlaid
 // on its image, fitted to fill the rectangle, with a one-line
-// description below. Optional per-card title overrides:
+// description below. Entries with `video:` render a bouncing H.264 clip
+// (poster at /images/gifs/<slug>-poster.webp); entries with `img:` are
+// static images. Optional per-card title overrides:
 //   titleColor    — solid color for the title (sampled from the image);
 //                   without it the title is white + difference-blended.
 //   titleKeepBlend — keep difference blending even with a titleColor set.
@@ -14,6 +16,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleOutlineWidth — stroke width for titleOutline (default 0.06em).
 //   noTitle       — skip the overlaid title entirely (the image
 //                   carries its own).
+//   titleAbove    — render the title as a heading above the image
+//                   (combine with noTitle to skip the overlay).
 //   titlePos      — "third" (centered a third down), "bottom", or a
 //                   number 0-1: center the title at that fraction of
 //                   the image height.
@@ -25,7 +29,8 @@ const works = [
         h: 1024,
         alt: "Pixel-style mosaic of Venus flytrap traps rendered in yellow, green, red, and dark brown squares.",
         title: "Brick Designer",
-        noTitle: true,
+        // Bright orange sampled from the mosaic's orange bricks.
+        titleColor: "#fe8a18",
         blurb: "An interactive tool that transforms your images into 32x32 brick mosaic patterns using a classic color palette.",
     },
     {
@@ -78,12 +83,16 @@ const works = [
         h: 896,
         alt: "Two whimsical cartoon creatures, a blue round bird with talons and a green one with an elephant trunk and insect legs.",
         title: "Adaptator",
+        // No overlay; a heading above the image instead, in the round
+        // creature's body blue.
         noTitle: true,
+        titleAbove: true,
+        titleColor: "#00aae9",
         blurb: "This game concept explores evolution by introducing random chance into the creation of animal body plans.",
     },
     {
         href: "/gene-editing-perspectives",
-        img: "/images/gene-editing-parts.webp",
+        video: "/videos/genes.mp4",
         w: 600,
         h: 960,
         alt: "Animated x-ray style illustration of a curled infant on black, its brain, skeleton, muscles, organs, and vessels glowing white and fading in turn.",
@@ -140,16 +149,42 @@ const works = [
                             href={w.href}
                             class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
                         >
+                            {w.titleAbove && (
+                                <span
+                                    class="card-title-above font-space-grotesk"
+                                    style={`color: ${w.titleColor ?? "#111"};`}
+                                >
+                                    {w.title}
+                                </span>
+                            )}
                             <div class="relative">
-                                <img
-                                    src={w.img}
-                                    alt={w.alt}
-                                    width={w.w}
-                                    height={w.h}
-                                    loading="lazy"
-                                    decoding="async"
-                                    class="w-full h-auto object-contain"
-                                />
+                                {w.video ? (
+                                    <video
+                                        class="w-full h-auto object-contain"
+                                        muted
+                                        loop
+                                        playsinline
+                                        preload="none"
+                                        poster={w.video
+                                            .replace("/videos/", "/images/gifs/")
+                                            .replace(".mp4", "-poster.webp")}
+                                        width={w.w}
+                                        height={w.h}
+                                        aria-label={w.title}
+                                    >
+                                        <source src={w.video} type="video/mp4" />
+                                    </video>
+                                ) : (
+                                    <img
+                                        src={w.img}
+                                        alt={w.alt}
+                                        width={w.w}
+                                        height={w.h}
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="w-full h-auto object-contain"
+                                    />
+                                )}
                                 {!w.noTitle && <span
                                     class={`card-title font-space-grotesk${w.titlePos === "third" || typeof w.titlePos === "number" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
                                     data-title-pos={
@@ -237,7 +272,8 @@ const works = [
         }
 
         /* Natural image sizing - no cropping for masonry */
-        .masonry-item img {
+        .masonry-item img,
+        .masonry-item video {
             display: block;
             width: 100%;
             height: auto;
@@ -247,7 +283,8 @@ const works = [
         }
 
         /* Image zoom effect on hover */
-        .masonry-item:hover img {
+        .masonry-item:hover img,
+        .masonry-item:hover video {
             transform: scale(1.03);
         }
 
@@ -293,6 +330,16 @@ const works = [
         /* Variant: title sits at the bottom edge of the image. */
         .card-title-bottom {
             align-items: flex-end;
+        }
+
+        /* Variant: title as a heading above the image instead of
+           overlaid on it. */
+        .card-title-above {
+            display: block;
+            padding: 0.6rem 0.75rem 0.35rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.1;
         }
 
         /* One-sentence project description under each image. */
@@ -348,5 +395,38 @@ const works = [
             clearTimeout(fitTimer);
             fitTimer = setTimeout(fitAllTitles, 150);
         });
+
+        // Same as the home page: card videos play while on screen, pause
+        // off screen; reduced-motion users keep the static posters.
+        const videos = Array.from(
+            document.querySelectorAll(".masonry-item video")
+        );
+        if (
+            videos.length &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            const tryPlay = (v) => {
+                const p = v.play();
+                if (p) p.catch(() => {});
+            };
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting) tryPlay(e.target);
+                        else e.target.pause();
+                    });
+                },
+                { rootMargin: "100px" }
+            );
+            videos.forEach((v) => io.observe(v));
+            window.addEventListener("pageshow", (event) => {
+                if (!event.persisted) return;
+                videos.forEach((v) => {
+                    const r = v.getBoundingClientRect();
+                    if (r.bottom > 0 && r.top < window.innerHeight)
+                        tryPlay(v);
+                });
+            });
+        }
     </script>
 </BaseLayout>
