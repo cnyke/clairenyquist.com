@@ -333,13 +333,16 @@ const works = [
         }
 
         /* Variant: title as a heading above the image instead of
-           overlaid on it. */
+           overlaid on it, sitting flush on the image and fitted by
+           script to span its full width. */
         .card-title-above {
             display: block;
-            padding: 0.6rem 0.75rem 0.35rem;
+            padding: 0.4rem 0 0;
             font-size: 1.5rem;
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 0.95;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         /* One-sentence project description under each image. */
@@ -384,8 +387,28 @@ const works = [
                 outer.style.paddingTop = pad + "px";
             }
         };
+        // Above-the-image titles fit to the card's full width instead.
+        const fitAboveTitle = (el) => {
+            const bw = el.clientWidth;
+            if (!bw) return;
+            let lo = 6;
+            let hi = 600;
+            for (let i = 0; i < 14; i++) {
+                const mid = (lo + hi) / 2;
+                el.style.fontSize = mid + "px";
+                if (el.scrollWidth <= bw) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+            el.style.fontSize = lo + "px";
+        };
         const fitAllTitles = () => {
             document.querySelectorAll(".card-title").forEach(fitTitle);
+            document
+                .querySelectorAll(".card-title-above")
+                .forEach(fitAboveTitle);
         };
         fitAllTitles();
         document.fonts.ready.then(fitAllTitles);
