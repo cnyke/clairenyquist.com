@@ -5,10 +5,13 @@ const title = "Claire Nyquist | Data Visualization";
 const description =
     "Claire Nyquist builds interactive data visualizations about public health. Master of Public Health + graphic design + R, Python, JavaScript, and D3. Based in Minneapolis.";
 
-// Every card on this page comes from this one list. To add a visualization,
-// build its clip with scripts/videoify.py (bouncing H.264 in public/videos/),
-// drop a first-frame poster at /images/gifs/<slug>-poster.webp, and add an
-// entry with `video:`. Entries with `gif:` are static images.
+// Every card on this page comes from this one list. Each animated card has
+// two builds of the same clip: a retina H.264 video in public/videos/
+// (scripts/captures/ or scripts/videoify.py) and an animated WebP in
+// public/images/gifs/ (gifify.py from that mp4), plus a first-frame poster
+// at <slug>-poster.webp. Desktops get the video; phones and tablets get the
+// WebP, which keeps moving even in low power mode, where video autoplay is
+// blocked. Entries with `still: true` are static images.
 // Optional per-card title overrides:
 //   titleColor    — solid color for the title (sampled from the image);
 //                   without it the title is white + difference-blended.
@@ -20,7 +23,7 @@ const description =
 const works = [
     {
         href: "/nonhuman-neighbors",
-        video: "/videos/nonhuman-neighbors.mp4",
+        gif: "/images/gifs/nonhuman-neighbors.webp",
         w: 538,
         h: 720,
         title: "Nonhuman Neighbors",
@@ -31,7 +34,7 @@ const works = [
     },
     {
         href: "/minnesota-bryophytes",
-        video: "/videos/minnesota-bryophytes.mp4",
+        gif: "/images/gifs/minnesota-bryophytes.webp",
         w: 656,
         h: 720,
         title: "Minnesota Mosses",
@@ -40,7 +43,7 @@ const works = [
     },
     {
         href: "/malaria",
-        video: "/videos/malaria.mp4",
+        gif: "/images/gifs/malaria.webp",
         w: 570,
         h: 730,
         title: "Mosquitoes, Malaria & Sickle Cell",
@@ -49,7 +52,7 @@ const works = [
     },
     {
         href: "/themet",
-        video: "/videos/themet.mp4",
+        gif: "/images/gifs/themet.webp",
         w: 772,
         h: 812,
         title: "The Met Collection",
@@ -57,7 +60,7 @@ const works = [
     },
     {
         href: "/wilddyeplants",
-        video: "/videos/wilddyeplants.mp4",
+        gif: "/images/gifs/wilddyeplants.webp",
         w: 606,
         h: 720,
         title: "Wild Dye Plants",
@@ -66,7 +69,7 @@ const works = [
     },
     {
         href: "/exoplanets",
-        video: "/videos/exoplanets.mp4",
+        gif: "/images/gifs/exoplanets.webp",
         w: 600,
         h: 520,
         title: "Exoplanet Discoveries",
@@ -79,7 +82,7 @@ const works = [
     },
     {
         href: "/ai-models-timeline",
-        video: "/videos/ai-models-timeline.mp4",
+        gif: "/images/gifs/ai-models-timeline.webp",
         w: 668,
         h: 768,
         title: "AI Models Timeline",
@@ -92,7 +95,7 @@ const works = [
     },
     {
         href: "/stanford-torus-explorer",
-        video: "/videos/stanford-torus-explorer.mp4",
+        gif: "/images/gifs/stanford-torus-explorer.webp",
         w: 720,
         h: 632,
         title: "Stanford Torus Explorer",
@@ -100,7 +103,7 @@ const works = [
     },
     {
         href: "/tuberculosis",
-        video: "/videos/tuberculosis.mp4",
+        gif: "/images/gifs/tuberculosis.webp",
         w: 862,
         h: 582,
         title: "Global Tuberculosis",
@@ -113,7 +116,7 @@ const works = [
     },
     {
         href: "/respiratoryviruses",
-        video: "/videos/respiratoryviruses.mp4",
+        gif: "/images/gifs/respiratoryviruses.webp",
         w: 810,
         h: 638,
         title: "Respiratory Viruses in Minnesota",
@@ -122,7 +125,7 @@ const works = [
     },
     {
         href: "/octopuses",
-        video: "/videos/octopuses.mp4",
+        gif: "/images/gifs/octopuses.webp",
         w: 772,
         h: 744,
         title: "Octopuses",
@@ -136,7 +139,7 @@ const works = [
     },
     {
         href: "/meps",
-        video: "/videos/meps.mp4",
+        gif: "/images/gifs/meps.webp",
         w: 830,
         h: 898,
         title: "Medical Expenditure Panel Survey",
@@ -145,6 +148,7 @@ const works = [
     {
         href: "/audiobooks",
         gif: "/images/gifs/audiobooks.webp",
+        still: true,
         w: 1100,
         h: 904,
         title: "Audiobooks",
@@ -153,7 +157,7 @@ const works = [
     },
     {
         href: "/music",
-        video: "/videos/music.mp4",
+        gif: "/images/gifs/music.webp",
         w: 810,
         h: 760,
         title: "Music",
@@ -210,33 +214,33 @@ const works = [
                             class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
                         >
                             <div class="relative">
-                                {w.video ? (
-                                    <video
-                                        class="w-full h-auto object-contain"
-                                        muted
-                                        loop
-                                        playsinline
-                                        preload="none"
-                                        poster={w.video
-                                            .replace("/videos/", "/images/gifs/")
-                                            .replace(".mp4", "-poster.webp")}
-                                        width={w.w}
-                                        height={w.h}
-                                        aria-label={w.title}
-                                    >
-                                        <source src={w.video} type="video/mp4" />
-                                    </video>
-                                ) : (
-                                    <img
-                                        src={w.gif}
-                                        alt={w.title}
-                                        width={w.w}
-                                        height={w.h}
-                                        loading="lazy"
-                                        decoding="async"
-                                        class="w-full h-auto object-contain"
-                                    />
-                                )}
+                                <img
+                                    src={
+                                        w.still
+                                            ? w.gif
+                                            : w.gif.replace(
+                                                  /\.(gif|webp)$/,
+                                                  "-poster.webp",
+                                              )
+                                    }
+                                    data-gif={w.still ? undefined : w.gif}
+                                    data-video={
+                                        w.still
+                                            ? undefined
+                                            : w.gif
+                                                  .replace(
+                                                      "/images/gifs/",
+                                                      "/videos/",
+                                                  )
+                                                  .replace(".webp", ".mp4")
+                                    }
+                                    alt={w.title}
+                                    width={w.w}
+                                    height={w.h}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="w-full h-auto object-contain"
+                                />
                                 <span
                                     class={`card-title font-space-grotesk${w.titleSmall ? " card-title-small" : ""}`}
                                     style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};`}
@@ -276,7 +280,8 @@ const works = [
                         items[j] = t;
                     }
                     var isStill = function (el) {
-                        return !el.querySelector("video");
+                        var img = el.querySelector("img");
+                        return img && !img.hasAttribute("data-gif");
                     };
                     for (var k = 0; k + 1 < items.length; k++) {
                         if (isStill(items[k]) && isStill(items[k + 1])) {
@@ -341,7 +346,8 @@ const works = [
         }
 
         /* Natural image sizing - no cropping for masonry */
-        .masonry-item img {
+        .masonry-item img,
+        .masonry-item video {
             display: block;
             width: 100%;
             height: auto;
@@ -351,7 +357,8 @@ const works = [
         }
 
         /* Image zoom effect on hover */
-        .masonry-item:hover img {
+        .masonry-item:hover img,
+        .masonry-item:hover video {
             transform: scale(1.03);
         }
 
@@ -419,6 +426,14 @@ const works = [
     </style>
 
     <script>
+        // Cards rest as static posters. A scheduler wakes at most MAX_PLAYING
+        // cards at a time, lets each run for one loop, then puts it back to
+        // sleep — so the grid always has motion somewhere but never everywhere.
+        // Hovering (or keyboard-focusing) a card always plays it immediately.
+        const MAX_PLAYING = 2;
+        const PLAY_MS = 7000;
+        const TICK_MS = 2000;
+
         // Size each overlaid title to fill its card: binary-search the
         // largest font-size at which the text still fits both dimensions
         // of the image rectangle. Re-run when fonts arrive (metrics
@@ -454,22 +469,41 @@ const works = [
             fitTimer = setTimeout(fitAllTitles, 150);
         });
 
-        // Every card's video plays while it is on screen and pauses off
-        // screen. H.264 is hardware-decoded, so all visible cards can move
-        // at once without taxing the browser. Users who prefer reduced
-        // motion keep the static posters.
-        const videos = Array.from(
-            document.querySelectorAll(".masonry-item video")
-        );
-        if (
-            videos.length &&
-            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
+        // Desktops (fine pointer + hover) get the retina H.264 build: each
+        // poster img is swapped for a muted looping video that plays while
+        // on screen. Touch devices skip this and keep the WebP path below —
+        // animated WebP still moves in low power mode, where phones block
+        // video autoplay. Reduced-motion users keep the static posters.
+        const reduced = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const desktop = window.matchMedia(
+            "(hover: hover) and (pointer: fine)"
+        ).matches;
+        if (desktop && !reduced) {
+            const videos = [];
+            document
+                .querySelectorAll(".masonry-item img[data-video]")
+                .forEach((img) => {
+                    const v = document.createElement("video");
+                    v.muted = true;
+                    v.loop = true;
+                    v.playsInline = true;
+                    v.preload = "none";
+                    v.poster = img.getAttribute("src");
+                    v.width = img.getAttribute("width");
+                    v.height = img.getAttribute("height");
+                    v.className = img.className;
+                    v.setAttribute("aria-label", img.getAttribute("alt") || "");
+                    v.src = img.getAttribute("data-video");
+                    img.replaceWith(v);
+                    videos.push(v);
+                });
             const tryPlay = (v) => {
                 const p = v.play();
                 if (p) p.catch(() => {});
             };
-            const io = new IntersectionObserver(
+            const vio = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((e) => {
                         if (e.isIntersecting) tryPlay(e.target);
@@ -478,8 +512,7 @@ const works = [
                 },
                 { rootMargin: "100px" }
             );
-            videos.forEach((v) => io.observe(v));
-
+            videos.forEach((v) => vio.observe(v));
             // Back/forward restores from the browser's cache with videos
             // paused; resume the ones in view.
             window.addEventListener("pageshow", (event) => {
@@ -490,6 +523,131 @@ const works = [
                         tryPlay(v);
                 });
             });
+        }
+
+        // WebP path: with the posters swapped for videos above, these
+        // selectors find nothing and the scheduler stays idle.
+        const cards = [];
+        document.querySelectorAll(".masonry-item").forEach((card) => {
+            const img = card.querySelector("img[data-gif]");
+            if (!img) return;
+            const poster = img.getAttribute("src");
+            const gif = img.getAttribute("data-gif");
+            if (!poster || !gif) return;
+            const c = {
+                img,
+                poster,
+                gif,
+                hover: false,
+                scheduled: false,
+                visible: false,
+                loaded: false,
+            };
+            const show = () => c.img.setAttribute("src", c.gif);
+            const rest = () => {
+                if (!c.hover && !c.scheduled)
+                    c.img.setAttribute("src", c.poster);
+            };
+            c.show = show;
+            c.rest = rest;
+            card.addEventListener("mouseenter", () => {
+                c.hover = true;
+                show();
+            });
+            card.addEventListener("mouseleave", () => {
+                c.hover = false;
+                rest();
+            });
+            card.addEventListener("focus", () => {
+                c.hover = true;
+                show();
+            });
+            card.addEventListener("blur", () => {
+                c.hover = false;
+                rest();
+            });
+            cards.push(c);
+        });
+
+        // Returning via back/forward restores the page from the browser's
+        // cache, and images whose src was swapped by script can come back
+        // blank. Reset every card to its resting state and force a repaint.
+        window.addEventListener("pageshow", (event) => {
+            if (!event.persisted) return;
+            cards.forEach((c) => {
+                c.hover = false;
+                c.scheduled = false;
+                c.img.setAttribute("src", c.poster);
+            });
+            document
+                .querySelectorAll(".masonry-item img:not([data-gif])")
+                .forEach((img) => {
+                    const src = img.getAttribute("src");
+                    if (src) img.setAttribute("src", src);
+                });
+        });
+
+        if (
+            cards.length &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((e) => {
+                    const c = cards.find(
+                        (x) => x.img === e.target.querySelector("img[data-gif]")
+                    );
+                    if (c) c.visible = e.isIntersecting;
+                });
+            });
+            document
+                .querySelectorAll(".masonry-item")
+                .forEach((el) => io.observe(el));
+
+            const startWindow = (c) => {
+                c.scheduled = true;
+                c.show();
+                setTimeout(() => {
+                    c.scheduled = false;
+                    c.rest();
+                }, PLAY_MS);
+            };
+
+            // Random pick among eligible cards; `recent` keeps the last couple
+            // of woken cards out of the pool so nothing repeats back-to-back.
+            const recent = [];
+            setInterval(() => {
+                const playing = cards.filter(
+                    (c) => c.scheduled || c.hover
+                ).length;
+                if (playing >= MAX_PLAYING) return;
+                let pool = cards.filter(
+                    (c) =>
+                        c.visible &&
+                        !c.scheduled &&
+                        !c.hover &&
+                        !recent.includes(c)
+                );
+                if (!pool.length)
+                    pool = cards.filter(
+                        (c) => c.visible && !c.scheduled && !c.hover
+                    );
+                if (!pool.length) return;
+                const c = pool[Math.floor(Math.random() * pool.length)];
+                recent.push(c);
+                if (recent.length > 2) recent.shift();
+                if (c.loaded) {
+                    startWindow(c);
+                } else {
+                    // First play: fetch the animation, start its window once
+                    // it's ready so loading time doesn't eat the loop.
+                    const pre = new Image();
+                    pre.onload = () => {
+                        c.loaded = true;
+                        startWindow(c);
+                    };
+                    pre.src = c.gif;
+                }
+            }, TICK_MS);
         }
     </script>
 </BaseLayout>

@@ -28,20 +28,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- Animated central visualization -->
         <div class="masonry-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 mb-6">
           <div class="relative">
-            <video
-              class="w-full h-auto object-contain"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              poster="/images/gifs/genes-poster.webp"
+            <img
+              src="/images/gifs/genes.webp"
+              alt="Animated x-ray style illustration of a curled infant on black, its brain, skeleton, muscles, organs, and vessels glowing white and fading in turn."
               width="600"
               height="960"
-              aria-label="Animated x-ray style illustration of a curled infant on black, its brain, skeleton, muscles, organs, and vessels glowing white and fading in turn."
-            >
-              <source src="/videos/genes.mp4" type="video/mp4" />
-            </video>
+              decoding="async"
+              class="w-full h-auto object-contain"
+            />
           </div>
         </div>
 

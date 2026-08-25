@@ -3,9 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Same card system as the home page: each project's title is overlaid
 // on its image, fitted to fill the rectangle, with a one-line
-// description below. Entries with `video:` render a bouncing H.264 clip
-// (poster at /images/gifs/<slug>-poster.webp); entries with `img:` are
-// static images. Optional per-card title overrides:
+// description below. Optional per-card title overrides:
 //   titleColor    — solid color for the title (sampled from the image);
 //                   without it the title is white + difference-blended.
 //   titleKeepBlend — keep difference blending even with a titleColor set.
@@ -29,8 +27,8 @@ const works = [
         h: 1024,
         alt: "Pixel-style mosaic of Venus flytrap traps rendered in yellow, green, red, and dark brown squares.",
         title: "Brick Designer",
-        // Bright orange sampled from the mosaic's orange bricks.
-        titleColor: "#fe8a18",
+        // No titleColor: white + difference blend, so the letters invert
+        // whatever brick colors sit beneath them.
         blurb: "An interactive tool that transforms your images into 32x32 brick mosaic patterns using a classic color palette.",
     },
     {
@@ -92,6 +90,11 @@ const works = [
     },
     {
         href: "/gene-editing-perspectives",
+        // Two builds of the same clip, chosen by script: desktops swap the
+        // poster for the retina H.264; touch devices get the animated WebP,
+        // which keeps moving in low power mode.
+        img: "/images/gifs/genes-poster.webp",
+        anim: "/images/gifs/genes.webp",
         video: "/videos/genes.mp4",
         w: 600,
         h: 960,
@@ -158,33 +161,17 @@ const works = [
                                 </span>
                             )}
                             <div class="relative">
-                                {w.video ? (
-                                    <video
-                                        class="w-full h-auto object-contain"
-                                        muted
-                                        loop
-                                        playsinline
-                                        preload="none"
-                                        poster={w.video
-                                            .replace("/videos/", "/images/gifs/")
-                                            .replace(".mp4", "-poster.webp")}
-                                        width={w.w}
-                                        height={w.h}
-                                        aria-label={w.title}
-                                    >
-                                        <source src={w.video} type="video/mp4" />
-                                    </video>
-                                ) : (
-                                    <img
-                                        src={w.img}
-                                        alt={w.alt}
-                                        width={w.w}
-                                        height={w.h}
-                                        loading="lazy"
-                                        decoding="async"
-                                        class="w-full h-auto object-contain"
-                                    />
-                                )}
+                                <img
+                                    src={w.img}
+                                    data-gif={w.anim}
+                                    data-video={w.video}
+                                    alt={w.alt}
+                                    width={w.w}
+                                    height={w.h}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="w-full h-auto object-contain"
+                                />
                                 {!w.noTitle && <span
                                     class={`card-title font-space-grotesk${w.titlePos === "third" || typeof w.titlePos === "number" ? " card-title-third" : ""}${w.titlePos === "bottom" ? " card-title-bottom" : ""}`}
                                     data-title-pos={
@@ -272,8 +259,7 @@ const works = [
         }
 
         /* Natural image sizing - no cropping for masonry */
-        .masonry-item img,
-        .masonry-item video {
+        .masonry-item img {
             display: block;
             width: 100%;
             height: auto;
@@ -283,8 +269,7 @@ const works = [
         }
 
         /* Image zoom effect on hover */
-        .masonry-item:hover img,
-        .masonry-item:hover video {
+        .masonry-item:hover img {
             transform: scale(1.03);
         }
 
@@ -423,37 +408,72 @@ const works = [
             fitTimer = setTimeout(fitAllTitles, 150);
         });
 
-        // Same as the home page: card videos play while on screen, pause
-        // off screen; reduced-motion users keep the static posters.
-        const videos = Array.from(
-            document.querySelectorAll(".masonry-item video")
-        );
-        if (
-            videos.length &&
-            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-            const tryPlay = (v) => {
-                const p = v.play();
-                if (p) p.catch(() => {});
-            };
-            const io = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((e) => {
-                        if (e.isIntersecting) tryPlay(e.target);
-                        else e.target.pause();
+        // Animated cards ship two builds: desktops (fine pointer + hover)
+        // swap the poster for the retina H.264 video, playing while on
+        // screen; touch devices set the animated WebP, which keeps moving
+        // in low power mode, where phones block video autoplay.
+        // Reduced-motion users keep the static poster.
+        const reduced = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const desktop = window.matchMedia(
+            "(hover: hover) and (pointer: fine)"
+        ).matches;
+        if (!reduced) {
+            if (desktop) {
+                const videos = [];
+                document
+                    .querySelectorAll(".masonry-item img[data-video]")
+                    .forEach((img) => {
+                        const v = document.createElement("video");
+                        v.muted = true;
+                        v.loop = true;
+                        v.playsInline = true;
+                        v.preload = "none";
+                        v.poster = img.getAttribute("src");
+                        v.width = img.getAttribute("width");
+                        v.height = img.getAttribute("height");
+                        v.className = img.className;
+                        v.setAttribute(
+                            "aria-label",
+                            img.getAttribute("alt") || ""
+                        );
+                        v.src = img.getAttribute("data-video");
+                        img.replaceWith(v);
+                        videos.push(v);
                     });
-                },
-                { rootMargin: "100px" }
-            );
-            videos.forEach((v) => io.observe(v));
-            window.addEventListener("pageshow", (event) => {
-                if (!event.persisted) return;
-                videos.forEach((v) => {
-                    const r = v.getBoundingClientRect();
-                    if (r.bottom > 0 && r.top < window.innerHeight)
-                        tryPlay(v);
+                const tryPlay = (v) => {
+                    const p = v.play();
+                    if (p) p.catch(() => {});
+                };
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((e) => {
+                            if (e.isIntersecting) tryPlay(e.target);
+                            else e.target.pause();
+                        });
+                    },
+                    { rootMargin: "100px" }
+                );
+                videos.forEach((v) => io.observe(v));
+                window.addEventListener("pageshow", (event) => {
+                    if (!event.persisted) return;
+                    videos.forEach((v) => {
+                        const r = v.getBoundingClientRect();
+                        if (r.bottom > 0 && r.top < window.innerHeight)
+                            tryPlay(v);
+                    });
                 });
-            });
+            } else {
+                document
+                    .querySelectorAll(".masonry-item img[data-gif]")
+                    .forEach((img) => {
+                        img.setAttribute(
+                            "src",
+                            img.getAttribute("data-gif")
+                        );
+                    });
+            }
         }
     </script>
 </BaseLayout>
