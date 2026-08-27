@@ -151,13 +151,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600"
                     >OpenStreetMap contributors</a
-                >, tiles by
-                <a
-                    href="https://carto.com/attributions"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="underline hover:text-gray-600">CARTO</a
-                >. Neighborhood boundary from OpenStreetMap.
+                >, who also serve the map tiles. Neighborhood boundary
+                from OpenStreetMap.
             </p>
             <p>
                 <strong class="text-gray-500">Built with:</strong>
@@ -188,6 +183,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
+        }
+        /* Standard OSM tiles carry the map's only color; washing them
+           to pale gray keeps the species icons as the loudest thing on
+           the page. Markers live in a sibling pane, so they're untouched. */
+        .leaflet-tile-pane {
+            filter: grayscale(1) brightness(1.12) contrast(0.85);
         }
         .resample-btn {
             background: #fff;
@@ -536,14 +537,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // snapping a whole level out. One finger drags the map on
             // touch; the wheel is left to page scrolling on desktop.
             const map = L.map("map", { zoomSnap: 0, scrollWheelZoom: false });
-            L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-                {
-                    attribution:
-                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                    maxZoom: 20,
-                },
-            ).addTo(map);
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19,
+            }).addTo(map);
 
             function iconImg(def, h, src, flip) {
                 const w = Math.round((def.size[0] / def.size[1]) * h);
