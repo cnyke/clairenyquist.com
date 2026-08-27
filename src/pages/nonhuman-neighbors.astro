@@ -151,8 +151,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600"
                     >OpenStreetMap contributors</a
-                >, who also serve the map tiles. Neighborhood boundary
-                from OpenStreetMap.
+                >, basemap by
+                <a
+                    href="https://carto.com/attributions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600">CARTO</a
+                >. Neighborhood boundary from OpenStreetMap.
             </p>
             <p>
                 <strong class="text-gray-500">Built with:</strong>
@@ -172,6 +177,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     ></script>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+    />
+    <script is:inline src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"
+    ></script>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.min.js"
+    ></script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/d3-dsv@3/dist/d3-dsv.min.js"
     ></script>
 
@@ -183,12 +196,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .species-icon img {
             filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9));
-        }
-        /* Standard OSM tiles carry the map's only color; washing them
-           to pale gray keeps the species icons as the loudest thing on
-           the page. Markers live in a sibling pane, so they're untouched. */
-        .leaflet-tile-pane {
-            filter: grayscale(1) brightness(1.12) contrast(0.85);
         }
         .resample-btn {
             background: #fff;
@@ -536,11 +543,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // boundary's edges can sit right at the frame instead of
             // snapping a whole level out. One finger drags the map on
             // touch; the wheel is left to page scrolling on desktop.
-            const map = L.map("map", { zoomSnap: 0, scrollWheelZoom: false });
-            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            // CARTO retired its keyless raster tiles, so the basemap is
+            // now their Positron vector style, rendered by MapLibre GL
+            // inside Leaflet via the maplibre-gl-leaflet bridge. The key
+            // is a publishable client-side basemap key (free to 5M
+            // tiles/month).
+            const CARTO_KEY = "cb1_2dkj_1_342baac3afde83e980fa4eb1";
+            const map = L.map("map", {
+                zoomSnap: 0,
+                scrollWheelZoom: false,
+                maxZoom: 20,
+            });
+            L.maplibreGL({
+                style: `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json?key=${CARTO_KEY}`,
                 attribution:
-                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19,
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
             }).addTo(map);
 
             function iconImg(def, h, src, flip) {
