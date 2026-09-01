@@ -19,17 +19,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         >
             <!-- The proof copy, flipping through -->
             <div class="book-video w-full max-w-lg lg:max-w-xl flex-shrink-0">
-                <img
-                    id="poetry-clip"
-                    src="/images/gifs/poetry-poster.webp"
-                    data-gif="/images/gifs/poetry.webp"
-                    data-video="/videos/poetry.mp4"
-                    alt="Hands flipping through a printed hardcover proof copy of the poetry book Mummies & Wildflowers on a wooden table."
+                <!-- Plain video everywhere; if autoplay is blocked (low
+                     power mode), the poster frame stands in. -->
+                <video
+                    src="/videos/poetry.mp4"
+                    poster="/images/gifs/poetry-poster.webp"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="auto"
+                    aria-label="Hands flipping through a printed hardcover proof copy of the poetry book Mummies & Wildflowers on a wooden table."
                     width="1080"
                     height="1270"
-                    decoding="async"
                     class="w-full h-auto rounded-lg shadow-lg"
-                />
+                ></video>
             </div>
 
             <!-- Coming soon + blurb -->
@@ -60,41 +64,4 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
     </div>
 
-    <script>
-        // Same two-build convention as the project cards: desktops
-        // (fine pointer + hover) swap the poster for the H.264 video;
-        // touch devices get the animated WebP, which keeps moving in
-        // low power mode, where phones block video autoplay.
-        // Reduced-motion users keep the static poster.
-        const img = document.getElementById(
-            "poetry-clip"
-        ) as HTMLImageElement | null;
-        const reduced = window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-        ).matches;
-        const desktop = window.matchMedia(
-            "(hover: hover) and (pointer: fine)"
-        ).matches;
-        if (img && !reduced) {
-            if (desktop) {
-                const v = document.createElement("video");
-                v.muted = true;
-                v.loop = true;
-                v.playsInline = true;
-                v.autoplay = true;
-                v.preload = "auto";
-                v.poster = img.getAttribute("src") || "";
-                v.width = Number(img.getAttribute("width"));
-                v.height = Number(img.getAttribute("height"));
-                v.className = img.className;
-                v.setAttribute("aria-label", img.getAttribute("alt") || "");
-                v.src = img.getAttribute("data-video") || "";
-                img.replaceWith(v);
-                const p = v.play();
-                if (p) p.catch(() => {});
-            } else {
-                img.setAttribute("src", img.getAttribute("data-gif") || "");
-            }
-        }
-    </script>
 </BaseLayout>
