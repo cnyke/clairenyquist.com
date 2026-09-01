@@ -1,0 +1,100 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Poetry - Claire Nyquist"
+    description="Poetry by Claire Nyquist. Coming soon: Mummies & Wildflowers, a collection of poems about birth, bodies, nature, love, and the end."
+    image="/images/gifs/poetry-poster.webp"
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl name-gradient mb-6">Poetry</h1>
+        </div>
+
+        <!-- Book Section -->
+        <div
+            class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 lg:gap-16 mb-16"
+        >
+            <!-- The proof copy, flipping through -->
+            <div class="book-video w-full max-w-xl lg:max-w-2xl flex-shrink-0">
+                <img
+                    id="poetry-clip"
+                    src="/images/gifs/poetry-poster.webp"
+                    data-gif="/images/gifs/poetry.webp"
+                    data-video="/videos/poetry.mp4"
+                    alt="Hands flipping through a printed hardcover proof copy of the poetry book Mummies & Wildflowers on a wooden table."
+                    width="1080"
+                    height="1270"
+                    decoding="async"
+                    class="w-full h-auto rounded-lg shadow-lg"
+                />
+            </div>
+
+            <!-- Coming soon + blurb -->
+            <div class="max-w-md lg:pt-8 text-center lg:text-left">
+                <p
+                    class="text-sm uppercase tracking-widest text-blue-600 mb-3"
+                >
+                    Coming soon
+                </p>
+                <h2
+                    class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-2"
+                >
+                    Mummies &amp; Wildflowers
+                </h2>
+                <p class="text-gray-500 italic mb-8">poems</p>
+                <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                    After four years of trying to write a novel about
+                    conflicting views, life, and death, I realized I had been
+                    writing the book the whole time in the almost-daily poems
+                    detailing the little beauties of everyday life.
+                </p>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Here are the poems: birth, bodies, nature, love, the end,
+                    and all the glories of a certain third rock falling around
+                    a regular star.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Same two-build convention as the project cards: desktops
+        // (fine pointer + hover) swap the poster for the H.264 video;
+        // touch devices get the animated WebP, which keeps moving in
+        // low power mode, where phones block video autoplay.
+        // Reduced-motion users keep the static poster.
+        const img = document.getElementById(
+            "poetry-clip"
+        ) as HTMLImageElement | null;
+        const reduced = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const desktop = window.matchMedia(
+            "(hover: hover) and (pointer: fine)"
+        ).matches;
+        if (img && !reduced) {
+            if (desktop) {
+                const v = document.createElement("video");
+                v.muted = true;
+                v.loop = true;
+                v.playsInline = true;
+                v.autoplay = true;
+                v.preload = "auto";
+                v.poster = img.getAttribute("src") || "";
+                v.width = Number(img.getAttribute("width"));
+                v.height = Number(img.getAttribute("height"));
+                v.className = img.className;
+                v.setAttribute("aria-label", img.getAttribute("alt") || "");
+                v.src = img.getAttribute("data-video") || "";
+                img.replaceWith(v);
+                const p = v.play();
+                if (p) p.catch(() => {});
+            } else {
+                img.setAttribute("src", img.getAttribute("data-gif") || "");
+            }
+        }
+    </script>
+</BaseLayout>
