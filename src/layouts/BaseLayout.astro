@@ -5,6 +5,9 @@ export interface Props {
   image?: string;
   type?: string;
   author?: string;
+  /** Schema.org type for this page's WebPage node: "WebPage" (default),
+   *  "ProfilePage", "CollectionPage", or "Article". */
+  schemaType?: "WebPage" | "ProfilePage" | "CollectionPage" | "Article";
 }
 
 const {
@@ -12,7 +15,8 @@ const {
   description = "Claire Nyquist - Data Visualization and Design. Exploring biology, public health, and epidemiology through interactive data visualizations, science communication, and creative storytelling.",
   image = "/images/headshot.png",
   type = "website",
-  author = "Claire Nyquist"
+  author = "Claire Nyquist",
+  schemaType = type === "article" ? "Article" : "WebPage"
 } = Astro.props;
 
 // Google Analytics Measurement ID
@@ -21,6 +25,114 @@ const GA_MEASUREMENT_ID: string = "G-7PZ8NQ5JQD";
 // Get current URL for canonical and OG tags
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+// Stable identifiers for the site-wide Schema.org graph. Every page links
+// its WebPage node to these, so crawlers and AI search engines see one
+// consistent Person and WebSite rather than a fresh copy per page.
+const siteURL = new URL("/", Astro.site);
+const personId = new URL("/#person", Astro.site).href;
+const websiteId = new URL("/#website", Astro.site).href;
+const person = {
+  "@type": "Person",
+  "@id": personId,
+  "name": "Claire Nyquist",
+  "url": siteURL,
+  "email": "clairenyquist@gmail.com",
+  "image": new URL("/images/headshot2026.jpg", Astro.site),
+  "jobTitle": "Data Visualization Designer, Developer, and Public Health Analyst",
+  "description": "Minneapolis-based data visualization designer, developer, and public health analyst. Master of Public Health (University of Minnesota) and First Class Honors in Graphic Communication Design (University of Westminster). Builds interactive data visualizations about science and health in R, Python, JavaScript, and D3.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Minneapolis",
+    "addressRegion": "MN",
+    "addressCountry": "US"
+  },
+  "alumniOf": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "University of Minnesota",
+      "sameAs": "https://twin-cities.umn.edu/"
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "University of Westminster",
+      "sameAs": "https://www.westminster.ac.uk/"
+    }
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "degree",
+      "name": "Master of Public Health, Public Health Administration and Policy",
+      "recognizedBy": { "@type": "CollegeOrUniversity", "name": "University of Minnesota" }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "degree",
+      "name": "Bachelor of Arts, Graphic Communication Design (First Class Honors)",
+      "recognizedBy": { "@type": "CollegeOrUniversity", "name": "University of Westminster" }
+    }
+  ],
+  "knowsAbout": [
+    "data visualization",
+    "public health",
+    "epidemiology",
+    "science communication",
+    "graphic design",
+    "infectious disease",
+    "emergency preparedness",
+    "D3.js",
+    "R",
+    "Python",
+    "JavaScript"
+  ],
+  "knowsLanguage": ["en", "es"],
+  "memberOf": {
+    "@type": "Organization",
+    "name": "tcplot",
+    "url": "https://tcplot.com",
+    "description": "Twin Cities data visualization community, founded and organized by Claire Nyquist.",
+    "founder": { "@id": personId },
+    "sameAs": [
+      "https://www.meetup.com/tcplot/",
+      "https://www.instagram.com/tcplot/"
+    ]
+  },
+  "sameAs": [
+    "https://twitter.com/clairenyquist",
+    "https://github.com/cnyke",
+    "https://tcplot.com"
+  ]
+};
+const website = {
+  "@type": "WebSite",
+  "@id": websiteId,
+  "name": "Claire Nyquist",
+  "alternateName": "clairenyquist.com",
+  "url": siteURL,
+  "description": "Interactive data visualizations about science, biology, and public health by Claire Nyquist, a Minneapolis data visualization designer and public health analyst.",
+  "inLanguage": "en-US",
+  "author": { "@id": personId },
+  "publisher": { "@id": personId },
+  "copyrightHolder": { "@id": personId }
+};
+const webpage = {
+  "@type": schemaType,
+  "@id": canonicalURL.href,
+  "url": canonicalURL,
+  "name": title,
+  "headline": title,
+  "description": description,
+  "inLanguage": "en-US",
+  "isPartOf": { "@id": websiteId },
+  "about": { "@id": personId },
+  "author": { "@id": personId },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": socialImageURL
+  },
+  ...(schemaType === "ProfilePage" ? { "mainEntity": { "@id": personId } } : {})
+};
 
 const topLevelPages = [
   { href: "/", label: "Data Visualization" },
@@ -40,6 +152,7 @@ const topLevelPages = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={author} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="keywords" content="data visualization, public health, science communication, epidemiology, biology, Claire Nyquist, interactive data, design, science fiction" />
     
     <!-- Canonical URL -->
@@ -126,26 +239,11 @@ const topLevelPages = [
       }
     </style>
 
-    <!-- Structured Data (Schema.org JSON-LD) -->
+    <!-- Structured Data (Schema.org JSON-LD): one graph per page linking
+         this WebPage to the site-wide Person and WebSite nodes -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": type === "article" ? "Article" : "WebSite",
-      "name": "Claire Nyquist",
-      "url": canonicalURL,
-      "description": description,
-      "author": {
-        "@type": "Person",
-        "name": author,
-        "email": "clairenyquist@gmail.com"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Claire Nyquist",
-        "logo": {
-          "@type": "ImageObject",
-          "url": new URL("/favicon.png", Astro.site)
-        }
-      }
+      "@graph": [person, website, webpage]
     })} />
     
     <!-- Google Analytics -->

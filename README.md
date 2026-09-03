@@ -14,6 +14,7 @@ Personal portfolio website showcasing data visualization, public health analytic
 - **Mobile-first responsive design** using Tailwind CSS
 - **Automated deployment** via GitHub Actions
 - **SEO optimized** with proper meta tags, structured data, and sitemaps
+- **AI-search ready**: `public/llms.txt` and `public/llms-full.txt` describe the site in plain text for language models, `public/robots.txt` explicitly welcomes AI crawlers, and every page emits a Schema.org graph (Person, WebSite, WebPage) from `BaseLayout.astro`
 - **Clean navigation** with dropdown menus and mobile support
 
 ## Pages

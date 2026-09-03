@@ -1,0 +1,52 @@
+# Claire Nyquist
+
+> Claire Nyquist is a data visualization designer, developer, and public health analyst in Minneapolis, Minnesota. She holds a Master of Public Health from the University of Minnesota and a First Class Honors degree in Graphic Communication Design from the University of Westminster in London. She builds interactive data visualizations about science and health in R, Python, JavaScript, and D3, founded the Twin Cities data visualization community tcplot, and is available for freelance data visualization, science communication, and design work. Contact: clairenyquist@gmail.com.
+
+Every page on this site is static HTML with descriptive text, so it can be read without running JavaScript. The visualizations themselves are rendered in the browser with D3.js, Leaflet, and Three.js. A longer narrative version of this file is at https://clairenyquist.com/llms-full.txt.
+
+## About
+
+- [Home](https://clairenyquist.com/): Portfolio of interactive data visualizations about science, biology, and public health.
+- [About & Contact](https://clairenyquist.com/about-contact/): Biography, career background, and how to get in touch for freelance or full-time work.
+- [Resumé](https://clairenyquist.com/resume/): Full work history (ICF, Minnesota Department of Health, Minneapolis Health Department, Robert Wood Johnson Foundation programs, Massachusetts General Hospital, Brigham and Women's Hospital), awards, and education.
+- [tcplot](https://clairenyquist.com/tcplot/): The Twin Cities data visualization meetup she founded and organizes, with talks, workshops, and build-a-thons. Also at https://tcplot.com.
+
+## Data visualization projects
+
+- [Nonhuman Neighbors](https://clairenyquist.com/nonhuman-neighbors/): Every species recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism and tinted its own dominant color on a minimalist basemap.
+- [Minnesota Mosses](https://clairenyquist.com/minnesota-bryophytes/): A century of bryophyte observations from GBIF as a rotatable 3D map of Minnesota; bar height is observation density and stacked colors are taxonomic orders.
+- [Malaria, Mosquitoes & Sickle Cell](https://clairenyquist.com/malaria/): A scrollytelling choropleth on the geographic overlap of Anopheles mosquito records (GBIF), WHO malaria case estimates, and sickle cell trait, and the evolutionary pressure linking them.
+- [Global Tuberculosis](https://clairenyquist.com/tuberculosis/): Estimated incidence, detected cases, and deaths for every country from 2000 to 2024, from WHO Global Tuberculosis Programme data.
+- [Respiratory Viruses in Minnesota](https://clairenyquist.com/respiratoryviruses/): RSV, influenza, and COVID-19 hospitalizations and laboratory detections season over season, from Minnesota Department of Health surveillance data.
+- [DALYs & NIH Investment](https://clairenyquist.com/dalysinvestment/): Bubble chart comparing global disease burden (IHME Global Burden of Disease DALYs) with US NIH research funding across 30 disease categories.
+- [NTD R&D Funding](https://clairenyquist.com/ntds/): How research and development funding for neglected tropical diseases (G-FINDER, Policy Cures Research) compares with their global health burden (WHO Global Health Estimates).
+- [Medical Expenditure Panel Survey](https://clairenyquist.com/meps/): Healthcare use, spending, and insurance coverage across American households from AHRQ's MEPS, normalized so differently measured variables can be read side by side.
+- [Exoplanet Discoveries](https://clairenyquist.com/exoplanets/): Every confirmed exoplanet with a published mass from the NASA Exoplanet Archive, by distance from Earth, mass, and discovery method.
+- [AI Models Timeline](https://clairenyquist.com/ai-models-timeline/): Notable AI models year by year from Epoch AI data, colored by the organization that trained them.
+- [Stanford Torus Explorer](https://clairenyquist.com/stanford-torus-explorer/): A parametric 3D walk through the 1975 NASA design for a rotating space colony, at true scale and adjustable.
+- [Octopuses](https://clairenyquist.com/octopuses/): Where octopus species have been observed worldwide from 2000 to 2024, from GBIF, with interactive maps and time series.
+- [Mosquitoes](https://clairenyquist.com/mosquitoes/): More than 9,000 specimens from the Natural History Museum, London, filterable by genus, location, and year.
+- [The Met Collection](https://clairenyquist.com/themet/): Over 1,000 objects from the Metropolitan Museum of Art Open Access collection, each a square colored by its dominant hue and rearranged as you scroll.
+- [Wild Dye Plants](https://clairenyquist.com/wilddyeplants/): A radial index of plants that yield natural dye, arranged by the color each one gives.
+- [Audiobooks](https://clairenyquist.com/audiobooks/): An Audible library of 355 titles as one bookshelf; each spine is colored from its cover art, its thickness is the book's length, its height the release year.
+- [Music](https://clairenyquist.com/music/): A YouTube Music library of 6,497 songs by 1,473 artists as a bar chart you can hear; each artist is a beat whose pitch and color follow their song count.
+
+## Graphic design and art
+
+- [Graphic Design Portfolio](https://clairenyquist.com/graphic-design/): Science communication and visual design projects combining art and science.
+- [Brick Designer](https://clairenyquist.com/brick-designer/): Interactive tool that turns an image into a 32 by 32 brick mosaic pattern.
+- [Comic Book Art](https://clairenyquist.com/comic-book-art/): Turn a photo into comic book style art with Ben Day dots and edge detection.
+- [Mars Society Poster](https://clairenyquist.com/mars-society-poster/): Poster submitted to the Mars Society poster competition.
+- [Public Health Review Cover](https://clairenyquist.com/public-health-review-cover/): Competition-winning cover for the student-led journal Public Health Review.
+- [PPE Instructions](https://clairenyquist.com/ppe-instructions/): Infographic on correctly donning personal protective equipment, designed for the Minneapolis Health Department.
+- [Gene Editing Perspectives](https://clairenyquist.com/gene-editing-perspectives/): Gallery installation exploring public opinion on gene editing technologies.
+- [Adaptator: An Evolution Game](https://clairenyquist.com/adaptator-evolution-game/): Game concept that introduces random chance into the creation of animal body plans.
+- [Mosses Sketchbook](https://clairenyquist.com/bryophyta-sketchbook/): Sketchbook studies of mosses.
+- [Skull and Flies Painting](https://clairenyquist.com/skull-and-flies-painting/): Mixed media painting on the recycling of nutrients and energy in an ecosystem.
+- [Whale Painting](https://clairenyquist.com/whale-painting/): Painting inspired by the colored pencil drawings of Frank Lloyd Wright.
+- [Rainbow Bricks](https://clairenyquist.com/rainbow-bricks/): Color composition built from toy bricks.
+
+## Optional
+
+- [Sitemap](https://clairenyquist.com/sitemap-index.xml): XML sitemap of every page.
+- [Source code](https://github.com/cnyke/clairenyquist.com): The site is built with Astro and Tailwind CSS and deployed from GitHub.

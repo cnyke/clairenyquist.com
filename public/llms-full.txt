@@ -1,0 +1,91 @@
+# Claire Nyquist: data visualization, public health, and design
+
+This is a plain-text description of https://clairenyquist.com, written for language models and other readers who want the substance of the site without loading its interactive pages. It covers who Claire Nyquist is, what she does, and what each project on the site contains.
+
+## Who Claire Nyquist is
+
+Claire Nyquist is a data visualization designer, developer, and public health analyst based in Minneapolis, Minnesota. She builds interactive data visualizations about science, biology, and public health, and she is available for freelance data visualization, science communication, and design work, as well as full-time roles. Her email is clairenyquist@gmail.com.
+
+She combines two trainings. The first is a Master of Public Health in Public Health Administration and Policy from the University of Minnesota (December 2021, GPA 3.96), focused on global health security, emerging and reemerging infectious disease, emergency preparedness, and pandemic response. Her master's thesis was a systematic literature review on global disruptions to essential medicine supply chains during COVID-19. The second is a Bachelor of Arts in Graphic Communication Design from the University of Westminster in London (June 2015, First Class Honors), specializing in science communication through graphic design, data visualization, user experience design, and typography.
+
+She works in R, Python, JavaScript, HTML, CSS, and D3.js, with Leaflet for maps and Three.js for 3D scenes. She founded and organizes tcplot, the Twin Cities data visualization community (https://tcplot.com), which runs talks, workshops, and build-a-thons for the Minneapolis and Saint Paul area. She has volunteered at the Minneapolis Institute of Art and The Bakken Museum.
+
+## Career
+
+- Resident Assistant and Certified Trainer, The Waters on 50th (February 2026 to present). Person-centered care in assisted living and memory care; trains new resident assistants.
+- Data Visualization Analyst, Developer, and Designer, freelance (January 2025 to present). Builds data visualization websites in R, Python, HTML, CSS, and JavaScript.
+- Public Health Preparedness and Communications Analyst, ICF (January 2022 to May 2025). Literature reviews and resource curation for the U.S. Department of Health and Human Services ASPR TRACIE program; data analysis and visualization in R; writing on vaccines, global health, and civic engagement for the Robert Wood Johnson Foundation and Tulane University Partners for Advancing Health Equity program.
+- Graduate Student Worker, Minnesota Department of Health (December 2020 to January 2022). Coordinated COVID-19 vaccine distribution across Minnesota and redistributed over 150,000 doses before expiration.
+- Graduate Student Intern, Minneapolis Health Department (June to November 2020). Designed the PPE donning infographic and interviewed long term care administrators about PPE supply barriers.
+- Graduate Student Worker, Healthy Eating Research, Robert Wood Johnson Foundation (October 2019 to December 2020). Communications reports, graphics, and data visualizations.
+- Medical Scribe, Children's Minnesota and University of Minnesota (April 2018 to August 2019). Pediatric emergency room and chronic wound clinic.
+- Clinical Research Coordinator, Massachusetts General Hospital (October 2017 to February 2018). Study using children's cough recordings to diagnose respiratory illness; recruited patients in Spanish and English.
+- Research Assistant, Brigham and Women's Hospital (March to August 2017). Inpatient safety reporting application study.
+- Research Assistant, University of Minnesota Veterinary Diagnostic Laboratory (June 2016 to January 2017). Developed a PCR assay for Porcine Reproductive and Respiratory Syndrome virus.
+
+Awards: ASPR Pledge to Excellence Award from the U.S. Department of Health and Human Services; Partners for Advancing Health Equity 2024 Delivery Excellence Award from ICF.
+
+## Data visualization projects
+
+Each project is an interactive page at clairenyquist.com. Data sources are named where the page cites them.
+
+Nonhuman Neighbors (https://clairenyquist.com/nonhuman-neighbors/). Every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, about 80 species from chickadees to slime molds. Each species is drawn as line art of the organism itself, tinted its own dominant color, and placed on a minimalist basemap.
+
+Minnesota Mosses (https://clairenyquist.com/minnesota-bryophytes/). A century of bryophyte observations from GBIF built into a 3D map of Minnesota you can rotate. Bar height is how many observations were recorded in each area and the stacked colors are taxonomic orders.
+
+Malaria, Mosquitoes & Sickle Cell (https://clairenyquist.com/malaria/). A scrollytelling choropleth atlas of how Anopheles mosquito range (GBIF occurrence records), malaria burden (WHO estimated cases by country, 2021), and sickle cell trait fall across the same ground, and the evolutionary pressure that links them.
+
+Global Tuberculosis (https://clairenyquist.com/tuberculosis/). Estimated tuberculosis incidence, detected cases, and deaths for every country from 2000 to 2024, drawn from WHO Global Tuberculosis Programme data.
+
+Respiratory Viruses in Minnesota (https://clairenyquist.com/respiratoryviruses/). RSV, influenza, and COVID-19 hospitalization rates and laboratory detections in Minnesota, tracked season over season from Minnesota Department of Health surveillance data.
+
+DALYs & NIH Investment (https://clairenyquist.com/dalysinvestment/). An interactive bubble chart comparing global disease burden, measured in disability-adjusted life years from the IHME Global Burden of Disease Study 2023, against US National Institutes of Health research funding across 30 major disease categories.
+
+NTD R&D Funding (https://clairenyquist.com/ntds/). Interactive charts on how research and development investment in neglected tropical diseases (G-FINDER survey by Policy Cures Research, 2022 funding year) compares with their global health burden (WHO Global Health Estimates, 2019 revision) and with GDP per capita (World Bank).
+
+Medical Expenditure Panel Survey (https://clairenyquist.com/meps/). Healthcare utilization, expenditures, and insurance coverage across American households from AHRQ's Medical Expenditure Panel Survey, normalized so variables measured in different units can be read side by side.
+
+Exoplanet Discoveries (https://clairenyquist.com/exoplanets/). Every confirmed exoplanet with a published mass estimate, from the NASA Exoplanet Archive (retrieved August 2026), plotted by distance from Earth, planet mass, and discovery method, showing how detection has reached steadily farther from Earth.
+
+AI Models Timeline (https://clairenyquist.com/ai-models-timeline/). A vertical timeline of notable AI models year by year from Epoch AI data, colored by the organization that trained them, from early neural networks to modern large language models.
+
+Stanford Torus Explorer (https://clairenyquist.com/stanford-torus-explorer/). A parametric 3D walk through the 1975 NASA design for a rotating space colony, at true scale, with adjustable parameters.
+
+Octopuses (https://clairenyquist.com/octopuses/). Where octopus species have been observed worldwide from 2000 to 2024, from GBIF records, with an interactive Leaflet map and time series by species.
+
+Mosquitoes (https://clairenyquist.com/mosquitoes/). More than 9,000 mosquito specimens from the Natural History Museum, London, filterable by genus, location, and year, for studying the history of vector-borne disease.
+
+The Met Collection (https://clairenyquist.com/themet/). Over 1,000 objects from the Metropolitan Museum of Art Open Access collection. Every square is an artwork colored by its dominant hue, and the grid rearranges as you scroll.
+
+Wild Dye Plants (https://clairenyquist.com/wilddyeplants/). A radial index of wild plants that yield natural dye, arranged by the color each one gives, with the plant part used for each.
+
+Audiobooks (https://clairenyquist.com/audiobooks/). An Audible library of 355 titles as one long bookshelf. Every spine is colored from its cover art, its thickness is the book's length, and its height the year of release. The shelf can be sorted by author, genre, spine color, date added, length, or reading progress.
+
+Music (https://clairenyquist.com/music/). A YouTube Music library of 6,497 songs by 1,473 artists turned into a bar chart you can hear. Each artist is a beat whose pitch and color follow how many songs are theirs.
+
+## Graphic design and art
+
+The graphic design portfolio (https://clairenyquist.com/graphic-design/) collects science communication and visual design work:
+
+- Brick Designer: an interactive tool that turns an uploaded image into a 32 by 32 brick mosaic pattern using a classic toy-brick palette.
+- Comic Book Art: turns a photo into comic book style art with Ben Day dots and edge detection.
+- Mars Society Poster: a poster submitted to the Mars Society poster competition.
+- Public Health Review Cover: the winning cover in a competition for the student-led journal Public Health Review.
+- PPE Instructions: an infographic on how to correctly put on personal protective equipment in a hospital, made for the Minneapolis Health Department.
+- Gene Editing Perspectives: a gallery installation exploring what people think about gene editing technologies, created at the University of Westminster.
+- Adaptator, An Evolution Game: a game concept that explores evolution by introducing random chance into the creation of animal body plans.
+- Mosses Sketchbook: sketchbook studies of mosses.
+- Skull and Flies Painting: a human skull surrounded by larger than life flies, on the recycling of nutrients and energy in an ecosystem.
+- Whale Painting: inspired by the small colored pencil drawings of Frank Lloyd Wright.
+- Rainbow Bricks: a color composition in which each toy brick is like a brush stroke.
+
+## tcplot
+
+tcplot (https://clairenyquist.com/tcplot/ and https://tcplot.com) is a Twin Cities community for data visualization practitioners, enthusiasts, and storytellers, founded and organized by Claire Nyquist. Its mission is to raise the data literacy and design standards of the Minneapolis and Saint Paul area through talks by local experts, hands-on workshops, and collaborative build-a-thons. It is on Meetup (https://www.meetup.com/tcplot/) and Instagram (https://www.instagram.com/tcplot/).
+
+## How to cite or contact
+
+Site: https://clairenyquist.com
+Author: Claire Nyquist, Minneapolis, Minnesota
+Email: clairenyquist@gmail.com
+Page index for language models: https://clairenyquist.com/llms.txt
