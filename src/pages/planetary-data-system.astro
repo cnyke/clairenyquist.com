@@ -93,6 +93,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     style="width:100%;height:auto;display:block;cursor:pointer;touch-action:manipulation;"
                 >
                 </svg>
+                <figure id="pds-size-key" class="mt-2 mb-1">
+                    <figcaption
+                        class="font-space-grotesk text-xs uppercase tracking-wider text-gray-400 mb-1"
+                    >
+                        Circle area = approximate archive volume
+                    </figcaption>
+                    <svg
+                        id="pds-key-svg"
+                        role="img"
+                        aria-label="Size key: circle area is approximate archive volume, on a seven-rung ladder from 1 to 600 terabytes"
+                        style="width:100%;height:auto;max-width:600px;display:block;overflow:visible;"
+                    >
+                    </svg>
+                </figure>
                 <div
                     id="pds-tip"
                     class="pointer-events-none absolute z-10 hidden max-w-xs rounded-md border border-gray-200 bg-white/95 px-3 py-2 text-sm text-gray-700 shadow-lg"
@@ -136,12 +150,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p>
                 <span class="font-space-grotesk text-gray-700"
                     >How to read the sizes.</span
-                > Circle area is an order-of-magnitude estimate of how much
-                data an archive holds, rounded to the nearest half decade and
-                used here to give the map its shape. It is not a citable
-                figure. HiRISE really does dwarf whole nodes, and the
-                Navigation and Ancillary Information Facility really is tiny,
-                but for exact holdings go to the node's own inventory.
+                > Circle area is approximate archive volume. Every dataset is
+                rounded to one of seven rungs, from 1 TB to 600 TB, shown in
+                the key under the map; a group or a node is the sum of
+                everything inside it, so the packing adds up to 1,723 TB at
+                the top. These are order-of-magnitude estimates assigned per
+                instrument, not figures measured from the node inventories,
+                and no single number here is citable. The shape is what they
+                are for: HiRISE really does outweigh four whole nodes put
+                together, and the Navigation and Ancillary Information
+                Facility, which every other node's geometry depends on,
+                really is that small.
             </p>
             <p>
                 <span class="font-space-grotesk text-gray-700"
@@ -466,6 +485,72 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     detail.innerHTML = html;
                 }
 
+
+                // The ladder is the whole size encoding: every dataset is
+                // rounded to one of seven rungs, so the key can show all of
+                // them at true relative area and count what sits on each.
+                function drawSizeKey(root) {
+                    const tally = {};
+                    root.leaves().forEach(function (l) {
+                        tally[l.data.tb] = (tally[l.data.tb] || 0) + 1;
+                    });
+                    const rungs = Object.keys(tally)
+                        .map(Number)
+                        .sort((a, b) => a - b);
+                    const maxR = 32;
+                    const r = (tb) => Math.sqrt(tb / d3.max(rungs)) * maxR;
+                    const base = maxR * 2 + 6;
+                    let x = 0;
+                    const placed = rungs.map(function (tb) {
+                        const slot = Math.max(r(tb) * 2 + 10, 62);
+                        const cx = x + slot / 2;
+                        x += slot;
+                        return { tb: tb, cx: cx, r: r(tb) };
+                    });
+                    const key = d3
+                        .select("#pds-key-svg")
+                        .attr("viewBox", "0 0 " + x + " " + (base + 34));
+
+                    const grp = key
+                        .selectAll("g")
+                        .data(placed)
+                        .join("g")
+                        .attr("transform", (d) => "translate(" + d.cx + ",0)");
+                    grp
+                        .append("circle")
+                        .attr("cy", (d) => base - d.r)
+                        .attr("r", (d) => d.r)
+                        .attr("fill", "#cbd5e1")
+                        .attr("stroke", "#94a3b8")
+                        .attr("stroke-width", 1);
+                    // A tick, because the 1 TB rung is genuinely a speck and
+                    // still has to be findable.
+                    grp
+                        .append("line")
+                        .attr("y1", (d) => base - d.r * 2 - 3)
+                        .attr("y2", 4)
+                        .attr("stroke", "#e2e8f0")
+                        .attr("stroke-width", 1);
+                    grp
+                        .append("text")
+                        .attr("y", base + 15)
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "#475569")
+                        .attr("font-size", 12)
+                        .text((d) => volume(d.tb).replace("~", ""));
+                    grp
+                        .append("text")
+                        .attr("y", base + 29)
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "#94a3b8")
+                        .attr("font-size", 11)
+                        .text(
+                            (d) =>
+                                tally[d.tb] +
+                                (tally[d.tb] === 1 ? " dataset" : " datasets"),
+                        );
+                }
+
                 function zoomTo(v) {
                     const k = W / v[2];
                     view = v;
@@ -588,6 +673,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         },
                     );
                 }
+
+                drawSizeKey(root);
 
                 zoomTo([root.x, root.y, root.r * 2.05]);
                 select(root);
