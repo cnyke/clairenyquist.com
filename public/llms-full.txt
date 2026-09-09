@@ -79,6 +79,10 @@ The graphic design portfolio (https://clairenyquist.com/graphic-design/) collect
 - Whale Painting: inspired by the small colored pencil drawings of Frank Lloyd Wright.
 - Rainbow Bricks: a color composition in which each toy brick is like a brush stroke.
 
+## Poetry
+
+Mummies & Wildflowers (https://clairenyquist.com/poetry/) is a forthcoming collection of poems by Claire Nyquist about birth, bodies, nature, love, and the end. After four years of trying to write a novel about conflicting views, life, and death, she realized she had been writing the book the whole time in the almost-daily poems detailing the little beauties of everyday life.
+
 ## tcplot
 
 tcplot (https://clairenyquist.com/tcplot/ and https://tcplot.com) is a Twin Cities community for data visualization practitioners, enthusiasts, and storytellers, founded and organized by Claire Nyquist. Its mission is to raise the data literacy and design standards of the Minneapolis and Saint Paul area through talks by local experts, hands-on workshops, and collaborative build-a-thons. It is on Meetup (https://www.meetup.com/tcplot/) and Instagram (https://www.instagram.com/tcplot/).

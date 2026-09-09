@@ -10,6 +10,7 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [About & Contact](https://clairenyquist.com/about-contact/): Biography, career background, and how to get in touch for freelance or full-time work.
 - [Resumé](https://clairenyquist.com/resume/): Full work history (ICF, Minnesota Department of Health, Minneapolis Health Department, Robert Wood Johnson Foundation programs, Massachusetts General Hospital, Brigham and Women's Hospital), awards, and education.
 - [tcplot](https://clairenyquist.com/tcplot/): The Twin Cities data visualization meetup she founded and organizes, with talks, workshops, and build-a-thons. Also at https://tcplot.com.
+- [Poetry](https://clairenyquist.com/poetry/): Mummies & Wildflowers, a forthcoming collection of poems about birth, bodies, nature, love, and the end.
 
 ## Data visualization projects
 
