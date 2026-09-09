@@ -27,11 +27,10 @@ const works = [
         still: true,
         w: 720,
         h: 720,
-        // Sampled from the tools-and-standards bubbles: the green that
-        // marks the Engineering Node and the SPICE toolkits, and the only
-        // hue on the card the title can take without competing with the
-        // two that carry the archive itself.
-        titleColor: "#1baf7a",
+        // The tools-and-standards green sampled off the bubbles, stepped
+        // down until it clears contrast on the white margin, then let
+        // through at 0.8 so the packing reads under the letters.
+        titleColor: "rgba(15, 125, 86, 0.8)",
         titleLines: ["Planetary", "Data System"],
         title: "The Planetary Data System",
         blurb: "NASA's planetary archive drawn as nested circles, sized by how much data each one holds. Eight federated nodes open a layer at a time, down to individual instruments. One camera on one Mars orbiter outweighs most of the nodes around it.",
