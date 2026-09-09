@@ -1,0 +1,251 @@
+{
+  "name": "Planetary Data System",
+  "short": "PDS",
+  "kind": "root",
+  "host": "NASA Planetary Science Division",
+  "blurb": "NASA's archive for every planetary mission it has flown. Not one repository but a federation: seven discipline nodes that curate the science, plus an Engineering Node that owns the standard, the registry and the tools. Everything in it is public domain, with no account and no fee.",
+  "children": [
+    {
+      "name": "Cartography & Imaging Sciences Node",
+      "short": "Imaging",
+      "kind": "node",
+      "host": "JPL, with USGS Astrogeology",
+      "blurb": "The pictures, and the map products made from them. By volume this is most of the archive: one camera, HiRISE, outweighs several whole nodes.",
+      "children": [
+        { "name": "Mars orbital imaging", "kind": "group", "children": [
+          { "name": "HiRISE", "std": "pds3", "target": "Mars", "years": "2006-", "tb": 600, "note": "25 cm/pixel from orbit. The single largest instrument archive in the PDS." },
+          { "name": "CTX context camera", "std": "pds3", "target": "Mars", "years": "2006-", "tb": 100, "note": "6 m/pixel, now covering essentially the whole planet." },
+          { "name": "MARCI weather camera", "std": "pds3", "target": "Mars", "years": "2006-", "tb": 10, "note": "Daily global weather imaging, the basis of the Mars weather report." },
+          { "name": "Mars Orbiter Camera", "std": "pds3", "target": "Mars", "years": "1997-2006", "tb": 3, "note": "Mars Global Surveyor. The first modern high-resolution look at the surface." },
+          { "name": "Viking Orbiter imaging", "std": "pds3", "target": "Mars", "years": "1976-1980", "tb": 1, "note": "Vidicon frames, restored and reprocessed several times since." }
+        ]},
+        { "name": "Mars surface imaging", "kind": "group", "children": [
+          { "name": "Mars 2020 cameras", "std": "pds4", "target": "Mars", "years": "2021-", "tb": 30, "note": "Mastcam-Z, Navcam, SHERLOC WATSON, plus the Ingenuity helicopter cameras." },
+          { "name": "MSL Curiosity cameras", "std": "pds4", "target": "Mars", "years": "2012-", "tb": 30, "note": "Mastcam, MAHLI, MARDI, Navcam and Hazcam." },
+          { "name": "MER Pancam & Navcam", "std": "pds3", "target": "Mars", "years": "2004-2018", "tb": 10, "note": "Spirit and Opportunity, fourteen years of them." },
+          { "name": "InSight IDC & ICC", "std": "pds4", "target": "Mars", "years": "2018-2022", "tb": 1, "note": "Arm and body cameras that documented the instrument deployment." },
+          { "name": "Mars Pathfinder IMP", "std": "pds3", "target": "Mars", "years": "1997", "tb": 1, "note": "The imager that gave us the first color panoramas from the surface since Viking." }
+        ]},
+        { "name": "Lunar imaging", "kind": "group", "children": [
+          { "name": "LROC NAC & WAC", "std": "pds3", "target": "Moon", "years": "2009-", "tb": 300, "note": "Narrow and wide angle cameras on Lunar Reconnaissance Orbiter." },
+          { "name": "Apollo metric & panoramic scans", "std": "pds3", "target": "Moon", "years": "1971-1972", "tb": 10, "note": "Film from the J-mission service modules, scanned at high resolution." },
+          { "name": "Lunar Orbiter frames", "std": "pds3", "target": "Moon", "years": "1966-1967", "tb": 3, "note": "Recovered from analog tape decades later and digitized." },
+          { "name": "Clementine UVVIS & NIR", "std": "pds3", "target": "Moon", "years": "1994", "tb": 3, "note": "The first global multispectral map of the Moon." }
+        ]},
+        { "name": "Outer planets & flybys", "kind": "group", "children": [
+          { "name": "Cassini ISS", "std": "pds3", "target": "Saturn system", "years": "2004-2017", "tb": 30, "note": "Thirteen years of Saturn, its rings and its moons." },
+          { "name": "Voyager ISS", "std": "pds3", "target": "Jupiter to Neptune", "years": "1979-1989", "tb": 1, "note": "The only close imaging of Uranus and Neptune that exists." },
+          { "name": "Galileo SSI", "std": "pds3", "target": "Jupiter system", "years": "1995-2003", "tb": 1, "note": "Small by modern standards because the high-gain antenna never opened." },
+          { "name": "JunoCam", "std": "pds4", "target": "Jupiter", "years": "2016-", "tb": 3, "note": "A public-outreach camera whose raw frames are processed by volunteers." },
+          { "name": "New Horizons LORRI & Ralph", "std": "pds4", "target": "Pluto, Arrokoth", "years": "2015-2019", "tb": 3, "note": "Returned over sixteen months on a link measured in kilobits." }
+        ]},
+        { "name": "Inner planets & cartography", "kind": "group", "children": [
+          { "name": "Magellan SAR", "std": "pds3", "target": "Venus", "years": "1990-1994", "tb": 10, "note": "Radar through the cloud deck, still the best global map of Venus." },
+          { "name": "MESSENGER MDIS", "std": "pds3", "target": "Mercury", "years": "2011-2015", "tb": 10, "note": "The first orbital imaging of Mercury." },
+          { "name": "Mariner 10 imaging", "std": "pds3", "target": "Mercury, Venus", "years": "1974-1975", "tb": 1, "note": "Three flybys, one gravity assist, the whole template for the technique." },
+          { "name": "Cartographic map products", "std": "pds4", "target": "multiple", "years": "ongoing", "tb": 30, "note": "Controlled mosaics and DEMs. Many derived products live at USGS Astrogeology rather than in the PDS proper." }
+        ]}
+      ]
+    },
+    {
+      "name": "Geosciences Node",
+      "short": "Geosciences",
+      "kind": "node",
+      "host": "Washington University in St. Louis",
+      "blurb": "Everything about the solid body: topography, gravity, spectroscopy, in-situ chemistry, seismology. Also hosts the Radio Science subnode and laboratory spectral libraries.",
+      "children": [
+        { "name": "Mars orbital geoscience", "kind": "group", "children": [
+          { "name": "CRISM hyperspectral", "std": "pds3", "target": "Mars", "years": "2006-2022", "tb": 100, "note": "544 wavelengths per pixel. How most Martian aqueous minerals were found." },
+          { "name": "MOLA topography", "std": "pds3", "target": "Mars", "years": "1997-2001", "tb": 3, "note": "The laser altimetry grid nearly every Mars map is registered to." },
+          { "name": "TES thermal spectra", "std": "pds3", "target": "Mars", "years": "1997-2006", "tb": 3, "note": "Mars Global Surveyor. Surface mineralogy plus atmospheric dust and ice." },
+          { "name": "Odyssey GRS & neutron spectrometer", "std": "pds3", "target": "Mars", "years": "2001-", "tb": 1, "note": "Found the near-surface hydrogen that implied buried ice." }
+        ]},
+        { "name": "Mars in-situ geochemistry", "kind": "group", "children": [
+          { "name": "MSL ChemCam, APXS, CheMin", "std": "pds4", "target": "Mars", "years": "2012-", "tb": 10, "note": "Laser spectroscopy, X-ray fluorescence and X-ray diffraction from a rover deck." },
+          { "name": "Mars 2020 PIXL, SHERLOC, SuperCam", "std": "pds4", "target": "Mars", "years": "2021-", "tb": 10, "note": "Fine-scale elemental and organic mapping tied to the cached samples." },
+          { "name": "InSight SEIS & HP3", "std": "pds4", "target": "Mars", "years": "2018-2022", "tb": 10, "note": "The first seismic network on another planet, and the mole that never dug." },
+          { "name": "MER Mossbauer, APXS, Mini-TES", "std": "pds3", "target": "Mars", "years": "2004-2018", "tb": 1, "note": "The instruments that identified hematite and jarosite at Meridiani." }
+        ]},
+        { "name": "Lunar geophysics", "kind": "group", "children": [
+          { "name": "LOLA altimetry", "std": "pds3", "target": "Moon", "years": "2009-", "tb": 10, "note": "The densest topographic dataset for any body other than Earth." },
+          { "name": "Diviner radiometer", "std": "pds3", "target": "Moon", "years": "2009-", "tb": 10, "note": "Surface temperatures, including the coldest places measured in the solar system." },
+          { "name": "Moon Mineralogy Mapper", "std": "pds3", "target": "Moon", "years": "2008-2009", "tb": 10, "note": "Chandrayaan-1. Detected hydroxyl and water across the lunar surface." },
+          { "name": "GRAIL gravity fields", "std": "pds3", "target": "Moon", "years": "2012", "tb": 3, "note": "Twin spacecraft ranging to each other, producing the crustal thickness map." },
+          { "name": "Apollo passive seismic", "std": "pds3", "target": "Moon", "years": "1969-1977", "tb": 1, "note": "Eight years of moonquakes, restored from the original tapes." },
+          { "name": "Apollo sample & surface experiments", "std": "pds4", "target": "Moon", "years": "1969-1977", "tb": 1, "note": "Sample measurements and ALSEP data, still being reprocessed." }
+        ]},
+        { "name": "Mercury & Venus", "kind": "group", "children": [
+          { "name": "MESSENGER MASCS, MLA, gravity", "std": "pds3", "target": "Mercury", "years": "2011-2015", "tb": 10, "note": "Spectroscopy, laser altimetry and the gravity field of the innermost planet." },
+          { "name": "Magellan gravity & altimetry", "std": "pds3", "target": "Venus", "years": "1990-1994", "tb": 3, "note": "Still the reference gravity model for Venus, thirty years on." }
+        ]},
+        { "name": "Radio science & laboratory", "kind": "group", "children": [
+          { "name": "Radio Science subnode", "std": "pds3", "target": "multiple", "years": "1970s-", "tb": 3, "note": "Gravity fields and atmospheric occultations derived from the tracking link itself." },
+          { "name": "RELAB & spectral libraries", "std": "pds4", "target": "laboratory", "years": "ongoing", "tb": 1, "note": "Measured spectra of real minerals and meteorites. The ground truth remote sensing is matched against." }
+        ]}
+      ]
+    },
+    {
+      "name": "Atmospheres Node",
+      "short": "Atmospheres",
+      "kind": "node",
+      "host": "New Mexico State University",
+      "blurb": "Every atmosphere in the solar system except Earth's: weather, composition, structure, escape. Small in bytes, long in time series.",
+      "children": [
+        { "name": "Mars atmosphere & weather", "kind": "group", "children": [
+          { "name": "MAVEN IUVS, NGIMS & remote sensing", "std": "pds4", "target": "Mars", "years": "2014-", "tb": 30, "note": "The mission built to measure how Mars lost its air." },
+          { "name": "Mars Climate Sounder", "std": "pds3", "target": "Mars", "years": "2006-", "tb": 3, "note": "Limb profiles of temperature, dust and water ice through the whole column." },
+          { "name": "MSL REMS", "std": "pds4", "target": "Mars", "years": "2012-", "tb": 1, "note": "A decade of daily surface weather from one location in Gale crater." },
+          { "name": "InSight APSS & TWINS", "std": "pds4", "target": "Mars", "years": "2018-2022", "tb": 1, "note": "Pressure at 20 Hz, which turned out to record passing dust devils and impacts." },
+          { "name": "MGS TES atmospheric products", "std": "pds3", "target": "Mars", "years": "1997-2006", "tb": 1, "note": "Global dust and temperature records spanning several Mars years." }
+        ]},
+        { "name": "Outer planet atmospheres", "kind": "group", "children": [
+          { "name": "Cassini CIRS", "std": "pds3", "target": "Saturn system", "years": "2004-2017", "tb": 30, "note": "Composite infrared spectra of Saturn, Titan and the icy moons." },
+          { "name": "Juno MWR", "std": "pds4", "target": "Jupiter", "years": "2016-", "tb": 3, "note": "Microwave sounding hundreds of kilometers below the visible cloud tops." },
+          { "name": "Voyager IRIS", "std": "pds3", "target": "Jupiter to Neptune", "years": "1979-1989", "tb": 1, "note": "The infrared spectra still cited for Uranus and Neptune." },
+          { "name": "Galileo Probe", "std": "pds3", "target": "Jupiter", "years": "1995", "tb": 1, "note": "Fifty-eight minutes of direct measurement before the probe was crushed." }
+        ]},
+        { "name": "Venus & Titan", "kind": "group", "children": [
+          { "name": "Huygens DISR & HASI", "std": "pds3", "target": "Titan", "years": "2005", "tb": 1, "note": "The only descent and landing data from an outer solar system body." },
+          { "name": "Pioneer Venus orbiter & probes", "std": "pds3", "target": "Venus", "years": "1978-1992", "tb": 1, "note": "Four probes into the atmosphere plus fourteen years in orbit." },
+          { "name": "Venus Express (ESA mirror)", "std": "pds3", "target": "Venus", "years": "2006-2014", "tb": 3, "note": "Mirrored from ESA's Planetary Science Archive under a data exchange agreement." }
+        ]},
+        { "name": "Support observations", "kind": "group", "children": [
+          { "name": "Ground-based planetary spectra", "std": "pds3", "target": "multiple", "years": "1970s-", "tb": 1, "note": "IRTF and other telescope data archived as mission support." },
+          { "name": "Occultation & photometry archives", "std": "pds4", "target": "multiple", "years": "ongoing", "tb": 1, "note": "Stellar occultations that probe atmospheric structure from Earth." }
+        ]}
+      ]
+    },
+    {
+      "name": "Navigation & Ancillary Information Facility",
+      "short": "NAIF",
+      "kind": "node",
+      "host": "Jet Propulsion Laboratory",
+      "blurb": "SPICE: where the spacecraft was, where it was pointing, and how the target body was oriented at that instant. Tiny by volume and load-bearing for everything else. You cannot do geometry on any other node's data without it.",
+      "children": [
+        { "name": "SPICE kernels", "kind": "group", "children": [
+          { "name": "SPK ephemerides", "std": "pds4", "target": "all missions", "years": "1960s-", "tb": 10, "note": "Positions and velocities of spacecraft, planets, satellites and small bodies." },
+          { "name": "CK pointing", "std": "pds4", "target": "all missions", "years": "1960s-", "tb": 10, "note": "Instrument and spacecraft attitude through time, reconstructed after the fact." },
+          { "name": "DSK shape kernels", "std": "pds4", "target": "small bodies, moons", "years": "2000s-", "tb": 3, "note": "Digital shape models for bodies too irregular to treat as an ellipsoid." },
+          { "name": "PCK planetary constants", "std": "pds4", "target": "all bodies", "years": "1980s-", "tb": 1, "note": "Radii, rotation rates and pole orientations, versioned as the values are revised." },
+          { "name": "IK & FK definitions", "std": "pds4", "target": "all missions", "years": "1980s-", "tb": 1, "note": "Instrument fields of view and the reference frame tree that connects them." },
+          { "name": "SCLK & LSK clocks", "std": "pds4", "target": "all missions", "years": "1970s-", "tb": 1, "note": "Spacecraft clock correlation and leapseconds. Time is not simple out there." }
+        ]},
+        { "name": "Toolkits & documentation", "kind": "group", "children": [
+          { "name": "CSPICE, SPICELIB, Icy, Mice", "std": "tool", "target": "software", "years": "1990-", "tb": 1, "note": "The reference implementation in C, Fortran, IDL and MATLAB." },
+          { "name": "SpiceyPy", "std": "tool", "target": "software", "years": "2014-", "tb": 1, "note": "Community Python wrapper, now how most new users reach SPICE." },
+          { "name": "WebGeocalc & Cosmographia", "std": "tool", "target": "software", "years": "2010s-", "tb": 1, "note": "Browser geometry calculator and a 3D visualizer for checking your answer." },
+          { "name": "SPICE lessons & tutorials", "std": "tool", "target": "training", "years": "ongoing", "tb": 1, "note": "NAIF teaches the toolkit directly. The training material is part of the archive." }
+        ]}
+      ]
+    },
+    {
+      "name": "Planetary Plasma Interactions Node",
+      "short": "Plasma",
+      "kind": "node",
+      "host": "University of California, Los Angeles",
+      "blurb": "Fields and particles: magnetometers, plasma analyzers, energetic particle detectors, radio and plasma wave receivers. Continuous time series rather than scenes.",
+      "children": [
+        { "name": "Giant planet magnetospheres", "kind": "group", "children": [
+          { "name": "Cassini MAG, CAPS, MIMI, RPWS", "std": "pds3", "target": "Saturn system", "years": "2004-2017", "tb": 30, "note": "The most complete magnetospheric record of any planet but Earth." },
+          { "name": "Juno MAG, Waves, JADE, JEDI", "std": "pds4", "target": "Jupiter", "years": "2016-", "tb": 10, "note": "Polar orbits through the auroral field lines, which no earlier mission flew." },
+          { "name": "Galileo MAG, PLS, PWS, EPD", "std": "pds3", "target": "Jupiter system", "years": "1995-2003", "tb": 3, "note": "The Europa magnetic signature that implied a conducting subsurface ocean." }
+        ]},
+        { "name": "Mars & Venus plasma", "kind": "group", "children": [
+          { "name": "MAVEN MAG, SWIA, SWEA, STATIC, SEP", "std": "pds4", "target": "Mars", "years": "2014-", "tb": 30, "note": "Escape rates measured ion species by ion species." },
+          { "name": "MGS magnetometer & electron reflectometer", "std": "pds3", "target": "Mars", "years": "1997-2006", "tb": 1, "note": "Found the crustal magnetic stripes in the southern highlands." },
+          { "name": "Pioneer Venus plasma & fields", "std": "pds3", "target": "Venus", "years": "1978-1992", "tb": 1, "note": "A solar cycle and a half of an unmagnetized planet in the solar wind." }
+        ]},
+        { "name": "Lunar & heliospheric", "kind": "group", "children": [
+          { "name": "ARTEMIS at the Moon", "std": "pds4", "target": "Moon", "years": "2011-", "tb": 3, "note": "Two repurposed THEMIS spacecraft, now in lunar orbit." },
+          { "name": "Lunar Prospector MAG & ER", "std": "pds3", "target": "Moon", "years": "1998-1999", "tb": 1, "note": "Mapped lunar crustal magnetism and the swirls associated with it." },
+          { "name": "Voyager MAG, PLS, PWS", "std": "pds3", "target": "heliosphere", "years": "1977-", "tb": 1, "note": "Still returning data from interstellar space, still being archived." }
+        ]}
+      ]
+    },
+    {
+      "name": "Ring-Moon Systems Node",
+      "short": "Rings",
+      "kind": "node",
+      "host": "SETI Institute",
+      "blurb": "Rings and the small moons that shepherd them. The smallest node by volume and the best search interface in the whole federation: OPUS lets you query by observing geometry, not just by filename.",
+      "children": [
+        { "name": "Occultation profiles", "kind": "group", "children": [
+          { "name": "Cassini radio science occultations", "std": "pds3", "target": "Saturn rings", "years": "2005-2017", "tb": 3, "note": "Radio through the rings at three wavelengths, resolving structure to tens of meters." },
+          { "name": "Cassini UVIS stellar occultations", "std": "pds3", "target": "Saturn rings", "years": "2004-2017", "tb": 1, "note": "A star watched through the rings, sampled fast enough to see individual ringlets." },
+          { "name": "Cassini VIMS occultations", "std": "pds3", "target": "Saturn rings", "years": "2004-2017", "tb": 1, "note": "The infrared counterpart, sensitive to particle size." },
+          { "name": "Voyager PPS & UVS occultations", "std": "pds3", "target": "Saturn, Uranus", "years": "1980-1989", "tb": 1, "note": "The first high-resolution ring profiles ever obtained." },
+          { "name": "Earth-based stellar occultations", "std": "pds3", "target": "Uranus, Neptune rings", "years": "1977-", "tb": 1, "note": "How the Uranian rings were discovered, from an airborne telescope." }
+        ]},
+        { "name": "Imaging & small moons", "kind": "group", "children": [
+          { "name": "Cassini ISS ring observations", "std": "pds3", "target": "Saturn system", "years": "2004-2017", "tb": 3, "note": "Reindexed by ring geometry rather than by spacecraft sequence." },
+          { "name": "Voyager ring imaging", "std": "pds3", "target": "Jupiter to Neptune", "years": "1979-1989", "tb": 1, "note": "Includes the only images of the Neptune ring arcs." },
+          { "name": "Hubble ring & satellite programs", "std": "pds4", "target": "multiple", "years": "1990s-", "tb": 1, "note": "Long-baseline monitoring that catches slow changes missions cannot." },
+          { "name": "New Horizons ring search", "std": "pds4", "target": "Pluto system", "years": "2015", "tb": 1, "note": "A null result that still constrains what is there." }
+        ]},
+        { "name": "Catalogs & tools", "kind": "group", "children": [
+          { "name": "Ring feature & orbit catalogs", "std": "pds4", "target": "multiple", "years": "ongoing", "tb": 1, "note": "Derived positions of gaps, ringlets and shepherding moons." },
+          { "name": "OPUS search interface", "std": "tool", "target": "software", "years": "2000s-", "tb": 1, "note": "Faceted search across missions by observing geometry, phase angle and target." },
+          { "name": "Ephemeris & geometry generators", "std": "tool", "target": "software", "years": "1990s-", "tb": 1, "note": "Viewer tools that draw what a ring system looked like from a given place and time." }
+        ]}
+      ]
+    },
+    {
+      "name": "Small Bodies Node",
+      "short": "Small Bodies",
+      "kind": "node",
+      "host": "University of Maryland & Planetary Science Institute",
+      "blurb": "Asteroids, comets, dust and returned samples, plus the Minor Planet Center as a subnode. The most heterogeneous holdings in the PDS: spacecraft data sits beside century-old ground-based catalogs.",
+      "children": [
+        { "name": "Sample return & rendezvous", "kind": "group", "children": [
+          { "name": "OSIRIS-REx OCAMS, OVIRS, OTES, OLA", "std": "pds4", "target": "Bennu", "years": "2018-2021", "tb": 30, "note": "Two years of survey before touching the surface for five seconds." },
+          { "name": "OSIRIS-REx sample analysis", "std": "pds4", "target": "Bennu", "years": "2023-", "tb": 1, "note": "Laboratory results on the returned material, archived alongside the remote sensing." },
+          { "name": "Hayabusa & Hayabusa2 (JAXA mirror)", "std": "pds4", "target": "Itokawa, Ryugu", "years": "2005-2019", "tb": 3, "note": "Mirrored from JAXA's DARTS archive." },
+          { "name": "Stardust & Stardust-NExT", "std": "pds3", "target": "Wild 2, Tempel 1", "years": "2004-2011", "tb": 1, "note": "The first cometary coma sample returned to Earth." }
+        ]},
+        { "name": "Flyby & impact missions", "kind": "group", "children": [
+          { "name": "Dawn FC, VIR, GRaND", "std": "pds4", "target": "Vesta, Ceres", "years": "2011-2018", "tb": 30, "note": "The only mission to orbit two different bodies, on ion propulsion." },
+          { "name": "Rosetta (ESA PSA mirror)", "std": "pds3", "target": "67P", "years": "2014-2016", "tb": 30, "note": "Two years alongside a comet through perihelion, plus the Philae lander." },
+          { "name": "Lucy L'LORRI, L'TES, L'Ralph", "std": "pds4", "target": "Dinkinesh, Donaldjohanson", "years": "2023-", "tb": 3, "note": "Early main-belt encounters ahead of the Trojan tour." },
+          { "name": "DART DRACO & LICIACube", "std": "pds4", "target": "Didymos, Dimorphos", "years": "2022", "tb": 3, "note": "The final frames before impact, and the cubesat that watched the plume." },
+          { "name": "Deep Impact & EPOXI", "std": "pds3", "target": "Tempel 1, Hartley 2", "years": "2005-2010", "tb": 3, "note": "An impactor into a comet nucleus, then an extended mission to a second one." },
+          { "name": "NEAR Shoemaker", "std": "pds3", "target": "Eros", "years": "1998-2001", "tb": 1, "note": "First orbit of an asteroid, and an unplanned soft landing at the end." }
+        ]},
+        { "name": "Surveys & derived catalogs", "kind": "group", "children": [
+          { "name": "NEOWISE detections", "std": "pds4", "target": "near-Earth objects", "years": "2010-2024", "tb": 10, "note": "Infrared detections that give diameters and albedos, not just orbits." },
+          { "name": "Minor Planet Center (subnode)", "std": "pds4", "target": "asteroids, comets", "years": "1947-", "tb": 3, "note": "Astrometry and orbits for every known small body. Continuously updated." },
+          { "name": "Asteroid taxonomy & spectral surveys", "std": "pds3", "target": "asteroids", "years": "1995-", "tb": 1, "note": "SMASS, S3OS2 and their successors: the spectral classes the field still uses." },
+          { "name": "Lightcurve database & shape models", "std": "pds4", "target": "asteroids", "years": "ongoing", "tb": 1, "note": "Rotation periods and inverted shapes, largely from amateur observers." },
+          { "name": "Albedo & diameter catalogs", "std": "pds4", "target": "asteroids", "years": "ongoing", "tb": 1, "note": "IRAS and WISE-derived physical properties." },
+          { "name": "Cometary photometry & astrometry", "std": "pds3", "target": "comets", "years": "1900s-", "tb": 1, "note": "Including plate-era observations digitized into a usable series." },
+          { "name": "Interplanetary dust & meteors", "std": "pds3", "target": "dust", "years": "1970s-", "tb": 1, "note": "In-situ dust detectors from Ulysses, Galileo and Cassini." }
+        ]}
+      ]
+    },
+    {
+      "name": "Engineering Node",
+      "short": "Engineering",
+      "kind": "node",
+      "host": "Jet Propulsion Laboratory",
+      "blurb": "No science data at all. The Engineering Node owns the information model, the registry, the search API and the tools every other node runs. This is the part of the PDS that decides what counts as an archive.",
+      "children": [
+        { "name": "The standard", "kind": "group", "children": [
+          { "name": "PDS4 Information Model", "std": "tool", "target": "standard", "years": "2013-", "tb": 3, "note": "An ontology, versioned in a 1.x series, from which the schemas are generated." },
+          { "name": "XML schemas & Schematron", "std": "tool", "target": "standard", "years": "2013-", "tb": 1, "note": "A label either validates or it does not. No human judgment in the loop." },
+          { "name": "Discipline & mission dictionaries", "std": "tool", "target": "standard", "years": "2013-", "tb": 1, "note": "Local data dictionaries let a mission extend the model without forking it." },
+          { "name": "Standards Reference & Provider's Handbook", "std": "tool", "target": "documentation", "years": "1990s-", "tb": 1, "note": "What a data provider actually has to deliver, and in what shape." }
+        ]},
+        { "name": "Registry & access", "kind": "group", "children": [
+          { "name": "PDS Registry", "std": "tool", "target": "infrastructure", "years": "2013-", "tb": 3, "note": "The index of every product, collection, bundle and context object, by LIDVID." },
+          { "name": "PDS Search API", "std": "tool", "target": "infrastructure", "years": "2020-", "tb": 1, "note": "REST and JSON with an OpenAPI spec. The programmatic way in." },
+          { "name": "pds.nasa.gov portal", "std": "tool", "target": "infrastructure", "years": "1990s-", "tb": 1, "note": "The human front door, plus per-node portals with their own search tools." }
+        ]},
+        { "name": "Pipeline tools", "kind": "group", "children": [
+          { "name": "Validate", "std": "tool", "target": "software", "years": "2013-", "tb": 1, "note": "Checks a delivery against the model before a peer review ever sees it." },
+          { "name": "Harvest & Registry Manager", "std": "tool", "target": "software", "years": "2013-", "tb": 1, "note": "Crawls an accepted archive and loads it into the registry." },
+          { "name": "Transform", "std": "tool", "target": "software", "years": "2013-", "tb": 1, "note": "Converts archived products into working formats such as GeoTIFF or PNG." },
+          { "name": "Deep Archive", "std": "tool", "target": "software", "years": "2019-", "tb": 1, "note": "Builds the OAIS submission and archive packages delivered to NSSDCA." }
+        ]}
+      ]
+    }
+  ]
+}
