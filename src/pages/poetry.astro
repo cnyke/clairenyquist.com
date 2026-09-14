@@ -62,6 +62,51 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 </p>
             </div>
         </div>
+
+        <!-- The poem from the back cover. Verbatim from the
+             manuscript; each line is its own element so the breaks
+             survive, with a hanging indent so a wrapped long line reads
+             as a wrap and not as a new line. -->
+        <div class="max-w-2xl mx-auto pb-4">
+            <p class="text-sm uppercase tracking-widest text-blue-600 mb-3">
+                From the back cover
+            </p>
+            <h2
+                class="font-space-grotesk text-2xl md:text-3xl text-gray-900 mb-6"
+            >
+                Reprieve
+            </h2>
+            <div class="poem text-gray-700">
+                <p>They may say it’s strange to get married in a cemetery</p>
+                <p>But it’s beautiful here</p>
+                <p>So we dance in the face of death</p>
+                <p>Here we celebrate in the company of the departed</p>
+                <p>With a sugar skull and a bundle of marigolds</p>
+                <p>We’re all just ash on reprieve</p>
+                <p>We’re all just nibbles for bacteria in the end</p>
+                <p>But we’ve got each other</p>
+                <p>Hold tight to your loved ones in the face</p>
+                <p>Of bookended</p>
+                <p>Eternity.</p>
+            </div>
+        </div>
     </div>
+
+    <style>
+        .poem p {
+            font-style: italic;
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin: 0;
+            padding-left: 1.6em;
+            text-indent: -1.6em;
+        }
+        @media (max-width: 640px) {
+            .poem p {
+                font-size: 1.0625rem;
+                line-height: 1.7;
+            }
+        }
+    </style>
 
 </BaseLayout>

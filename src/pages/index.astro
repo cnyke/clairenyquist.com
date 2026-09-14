@@ -22,20 +22,6 @@ const description =
 //                   deepens whatever the letters sit on).
 const works = [
     {
-        href: "/planetary-data-system",
-        gif: "/images/gifs/planetary-data-system.webp",
-        still: true,
-        w: 720,
-        h: 720,
-        // #94a3b8, the gray the size key's circles are outlined in. One
-        // step darker again, so the watermark holds against the orange as
-        // well as it does against the pale containers.
-        titleColor: "rgba(148, 163, 184, 0.8)",
-        titleLines: ["Planetary", "Data System", "Overview"],
-        title: "Planetary Data System Overview",
-        blurb: "NASA's planetary archive drawn as nested circles, sized by how much data each one holds. Eight federated nodes open a layer at a time, down to individual instruments. One camera on one Mars orbiter outweighs most of the nodes around it.",
-    },
-    {
         href: "/nonhuman-neighbors",
         gif: "/images/gifs/nonhuman-neighbors.webp",
         w: 538,
@@ -82,6 +68,19 @@ const works = [
         // arc, so the plant names read through the letters.
         titleColor: "rgba(132, 204, 22, 0.7)",
         blurb: "A radial index of plants that yield dye, arranged by the color each one gives up.",
+    },
+    {
+        href: "/seti",
+        gif: "/images/gifs/seti.webp",
+        still: true,
+        w: 600,
+        h: 640,
+        // The plate's own ink, laid over it at 0.8 so the ridge lines keep
+        // running through the letters instead of stopping at their edges.
+        titleColor: "rgba(31, 41, 55, 0.8)",
+        titleLines: ["Listening to", "Voyager"],
+        title: "Listening to Voyager",
+        blurb: "Eighteen seconds of radio from the Green Bank Telescope, stacked into ninety-six staves and playable as a score. Ninety-three rows are thermal noise. Three of them are a spacecraft.",
     },
     {
         href: "/exoplanets",

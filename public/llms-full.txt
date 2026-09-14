@@ -63,8 +63,6 @@ Audiobooks (https://clairenyquist.com/audiobooks/). An Audible library of 355 ti
 
 Music (https://clairenyquist.com/music/). A YouTube Music library of 6,497 songs by 1,473 artists turned into a bar chart you can hear. Each artist is a beat whose pitch and color follow how many songs are theirs.
 
-The Planetary Data System (https://clairenyquist.com/planetary-data-system/). NASA's Planetary Data System drawn as nested circles, sized by approximate archive volume. The archive is a federation of seven discipline nodes plus an Engineering Node at JPL, and the map opens one layer at a time: node, then mission or theme, then the individual instrument archives. Color marks whether a dataset is filed under the legacy PDS3 standard or the current PDS4 information model.
-
 ## Graphic design and art
 
 The graphic design portfolio (https://clairenyquist.com/graphic-design/) collects science communication and visual design work:

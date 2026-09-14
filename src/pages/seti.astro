@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Listening to Voyager | Claire Nyquist"
+    description="A single 18-second radio observation from the Green Bank Telescope, cut into 96 staves and played as a score. Somewhere in the noise is Voyager 1, the only technosignature we have ever confirmed, because we built it."
+    image="/images/gifs/seti.webp"
+>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl sm:text-4xl md:text-6xl name-gradient mb-4 md:mb-6">
+                Listening to Voyager
+            </h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                On September 19th, 2016, the Green Bank Telescope pointed at
+                Voyager 1 and recorded five minutes of radio. Below is one
+                18-second slice: 28,800 frequency channels, cut into 96 rows
+                and stacked. Almost all of it is noise. Three of these lines
+                are a spacecraft twenty billion kilometers away, still talking.
+                Press play and every line sounds at once, each pitched to its
+                own frequency. When the carrier arrives you will know.
+            </p>
+        </div>
+
+        <!-- ===== The plate ===== -->
+        <section class="my-8">
+            <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex flex-wrap items-center gap-2 px-4 py-3 border-b border-gray-100 bg-gray-50">
+                    <button
+                        id="seti-play"
+                        disabled
+                        class="px-4 py-1.5 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 disabled:opacity-40 disabled:cursor-default transition"
+                        >Play ▶</button
+                    >
+                    <button
+                        id="seti-restart"
+                        class="px-3 py-1.5 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 transition"
+                        >Restart</button
+                    >
+                    <span class="mx-1 text-gray-300">|</span>
+                    <span class="text-sm text-gray-500">Speed:</span>
+                    <button
+                        data-speed="1"
+                        data-active="true"
+                        class="seti-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+                        >1×</button
+                    >
+                    <button
+                        data-speed="2"
+                        class="seti-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+                        >2×</button
+                    >
+                    <button
+                        data-speed="4"
+                        class="seti-sp px-2.5 py-1 rounded-md bg-white border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 data-[active=true]:bg-gray-900 data-[active=true]:text-white data-[active=true]:border-gray-900 transition"
+                        >4×</button
+                    >
+                    <span class="ml-auto text-xs text-gray-400">🔊 sound on</span>
+                </div>
+                <div class="px-2 py-3 sm:px-4">
+                    <p id="seti-loading" class="text-sm text-gray-400 py-16 text-center">
+                        Loading 28,800 channels…
+                    </p>
+                    <div id="seti-canvas" class="w-full"></div>
+                </div>
+            </div>
+            <p class="text-sm text-gray-400 mt-2">
+                Hover any row for its exact frequency, power and channel number.
+                Click anywhere on the plate to start the sweep from that column.
+                Built with p5.js and the Web Audio API from Breakthrough Listen
+                open data.
+            </p>
+        </section>
+
+        <!-- About this data -->
+        <div class="mt-8 max-w-3xl mx-auto bg-white rounded-lg shadow-sm border p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                About this data
+            </h3>
+            <div class="text-sm text-gray-600 space-y-2">
+                <p>
+                    A radio telescope measures how much power arrives at each
+                    frequency. This plate covers 80.5 kilohertz of sky in
+                    channels 2.79 hertz wide, read left to right, top row
+                    highest in frequency. Height is power in decibels above the
+                    recording&rsquo;s median. There is no binning, smoothing or
+                    interpolation: every vertex is one raw channel, which is why
+                    the texture never repeats. Noise never repeats.
+                </p>
+                <p>
+                    The bright line in row 48 is Voyager&rsquo;s carrier, 14.6 dB
+                    up and only five channels wide. Nothing in nature is that
+                    narrow, and narrowness is the whole signature of a
+                    transmitter. Rows 21 and 75 are its telemetry sidebands,
+                    sitting symmetrically about 22.5 kilohertz either side.
+                    Noise does not arrange itself in matched pairs around a
+                    center.
+                </p>
+                <p>
+                    The sound is the same numbers, mapped once. Each row is a
+                    voice pitched to its own radio frequency; the height of the
+                    line sets its loudness and bends its pitch upward. The piece
+                    writes itself, and the only reason it has a climax is that a
+                    spacecraft is out there.
+                </p>
+                <p>
+                    Observation <span class="font-mono text-xs">Voyager1.single_coarse.fine_res.fil</span>,
+                    Green Bank Telescope X-band, 2016-09-19, retrieved September
+                    9th, 2026 from the
+                    <a href="https://breakthroughinitiatives.org/opendatasearch" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener">Breakthrough Listen Open Data Archive</a>,
+                    which releases its data into the public domain. Recorder and
+                    the Voyager commissioning detections described in
+                    <a href="https://doi.org/10.1088/1538-3873/aa80d2" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener">MacMahon et al. (2017)</a>.
+                    Built with p5.js and the Web Audio API, with Claude Opus 5
+                    as a programming assistant.
+                </p>
+            </div>
+        </div>
+
+        <!-- p5 + sketch (loaded inline, in document order) -->
+        <script is:inline src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+        <script is:inline src="/seti-ridgeline-sketch.js"></script>
+    </div>
+</BaseLayout>

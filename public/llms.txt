@@ -31,7 +31,6 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [Wild Dye Plants](https://clairenyquist.com/wilddyeplants/): A radial index of plants that yield natural dye, arranged by the color each one gives.
 - [Audiobooks](https://clairenyquist.com/audiobooks/): An Audible library of 355 titles as one bookshelf; each spine is colored from its cover art, its thickness is the book's length, its height the release year.
 - [Music](https://clairenyquist.com/music/): A YouTube Music library of 6,497 songs by 1,473 artists as a bar chart you can hear; each artist is a beat whose pitch and color follow their song count.
-- [The Planetary Data System](https://clairenyquist.com/planetary-data-system/): NASA's planetary archive as nested circles sized by archive volume, opening a layer at a time from the eight federated nodes down to individual instruments.
 
 ## Graphic design and art
 
