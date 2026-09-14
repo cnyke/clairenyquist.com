@@ -35,3 +35,11 @@ dist/data/malariadata/gbifanopheles.csv
 # Source videos for scripts/gifify.py (the generated GIFs are committed)
 media/*
 !media/README.md
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Compiled from scripts/png2mp4.swift; rebuild with
+#   swiftc -O scripts/png2mp4.swift -o scripts/png2mp4
+scripts/png2mp4
