@@ -13,7 +13,7 @@ She works in R, Python, JavaScript, HTML, CSS, and D3.js, with Leaflet for maps 
 ## Career
 
 - Resident Assistant and Certified Trainer, The Waters on 50th (February 2026 to present). Person-centered care in assisted living and memory care; trains new resident assistants.
-- Data Visualization Analyst, Developer, and Designer, freelance (January 2025 to present). Builds data visualization websites in R, Python, HTML, CSS, and JavaScript.
+- Data Visualization Analyst, Developer, and Designer, freelance (January 2025 to present). Builds data visualization websites in R, Python, HTML, CSS, JavaScript, and D3.js.
 - Public Health Preparedness and Communications Analyst, ICF (January 2022 to May 2025). Literature reviews and resource curation for the U.S. Department of Health and Human Services ASPR TRACIE program; data analysis and visualization in R; writing on vaccines, global health, and civic engagement for the Robert Wood Johnson Foundation and Tulane University Partners for Advancing Health Equity program.
 - Graduate Student Worker, Minnesota Department of Health (December 2020 to January 2022). Coordinated COVID-19 vaccine distribution across Minnesota and redistributed over 150,000 doses before expiration.
 - Graduate Student Intern, Minneapolis Health Department (June to November 2020). Designed the PPE donning infographic and interviewed long term care administrators about PPE supply barriers.
