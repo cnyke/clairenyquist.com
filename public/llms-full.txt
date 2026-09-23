@@ -37,7 +37,6 @@ Malaria, Mosquitoes & Sickle Cell (https://clairenyquist.com/malaria/). A scroll
 
 Global Tuberculosis (https://clairenyquist.com/tuberculosis/). Estimated tuberculosis incidence, detected cases, and deaths for every country from 2000 to 2024, drawn from WHO Global Tuberculosis Programme data.
 
-Respiratory Viruses in Minnesota (https://clairenyquist.com/respiratoryviruses/). RSV, influenza, and COVID-19 hospitalization rates and laboratory detections in Minnesota, tracked season over season from Minnesota Department of Health surveillance data.
 
 DALYs & NIH Investment (https://clairenyquist.com/dalysinvestment/). An interactive bubble chart comparing global disease burden, measured in disability-adjusted life years from the IHME Global Burden of Disease Study 2023, against US National Institutes of Health research funding across 30 major disease categories.
 
@@ -61,7 +60,6 @@ Wild Dye Plants (https://clairenyquist.com/wilddyeplants/). A radial index of wi
 
 Audiobooks (https://clairenyquist.com/audiobooks/). An Audible library of 355 titles as one long bookshelf. Every spine is colored from its cover art, its thickness is the book's length, and its height the year of release. The shelf can be sorted by author, genre, spine color, date added, length, or reading progress.
 
-Music (https://clairenyquist.com/music/). A YouTube Music library of 6,497 songs by 1,473 artists turned into a bar chart you can hear. Each artist is a beat whose pitch and color follow how many songs are theirs.
 
 ## Graphic design and art
 

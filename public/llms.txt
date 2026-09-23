@@ -18,7 +18,6 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [Minnesota Mosses](https://clairenyquist.com/minnesota-bryophytes/): A century of bryophyte observations from GBIF as a rotatable 3D map of Minnesota; bar height is observation density and stacked colors are taxonomic orders.
 - [Malaria, Mosquitoes & Sickle Cell](https://clairenyquist.com/malaria/): A scrollytelling choropleth on the geographic overlap of Anopheles mosquito records (GBIF), WHO malaria case estimates, and sickle cell trait, and the evolutionary pressure linking them.
 - [Global Tuberculosis](https://clairenyquist.com/tuberculosis/): Estimated incidence, detected cases, and deaths for every country from 2000 to 2024, from WHO Global Tuberculosis Programme data.
-- [Respiratory Viruses in Minnesota](https://clairenyquist.com/respiratoryviruses/): RSV, influenza, and COVID-19 hospitalizations and laboratory detections season over season, from Minnesota Department of Health surveillance data.
 - [DALYs & NIH Investment](https://clairenyquist.com/dalysinvestment/): Bubble chart comparing global disease burden (IHME Global Burden of Disease DALYs) with US NIH research funding across 30 disease categories.
 - [NTD R&D Funding](https://clairenyquist.com/ntds/): How research and development funding for neglected tropical diseases (G-FINDER, Policy Cures Research) compares with their global health burden (WHO Global Health Estimates).
 - [Medical Expenditure Panel Survey](https://clairenyquist.com/meps/): Healthcare use, spending, and insurance coverage across American households from AHRQ's MEPS, normalized so differently measured variables can be read side by side.
@@ -30,7 +29,6 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [The Met Collection](https://clairenyquist.com/themet/): Over 1,000 objects from the Metropolitan Museum of Art Open Access collection, each a square colored by its dominant hue and rearranged as you scroll.
 - [Wild Dye Plants](https://clairenyquist.com/wilddyeplants/): A radial index of plants that yield natural dye, arranged by the color each one gives.
 - [Audiobooks](https://clairenyquist.com/audiobooks/): An Audible library of 355 titles as one bookshelf; each spine is colored from its cover art, its thickness is the book's length, its height the release year.
-- [Music](https://clairenyquist.com/music/): A YouTube Music library of 6,497 songs by 1,473 artists as a bar chart you can hear; each artist is a beat whose pitch and color follow their song count.
 
 ## Graphic design and art
 
