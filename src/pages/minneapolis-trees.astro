@@ -494,6 +494,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 console.warn("Basemap unavailable", err);
             }
             map.fitBounds([[D.lat0, D.lon0], [D.latmax, D.lonmax]], { padding: [10, 10] });
+            // Start a step closer than the full-city fit so the street grid reads at first glance.
+            map.setZoom(map.getZoom() + 0.8, { animate: false });
 
             const TreeLayer = L.Layer.extend({
                 onAdd(m) {
