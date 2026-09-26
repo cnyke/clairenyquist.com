@@ -520,8 +520,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 },
                 onRemove(m) { m.getPanes().overlayPane.removeChild(this._canvas); m.off("moveend zoomend resize", this.redraw, this); m.off("zoomanim", this._anim, this); },
                 _anim(e) {
-                    const scale = this._map.getZoomScale(e.zoom), off = this._map._latLngBoundsToNewLayerBounds(this._map.getBounds(), e.zoom, e.center).min;
-                    L.DomUtil.setTransform(this._canvas, off, scale);
+                    // Scale the last frame around the right point while Leaflet animates the zoom.
+                    const m = this._map, scale = m.getZoomScale(e.zoom);
+                    const nw = m.containerPointToLatLng([0, 0]);
+                    L.DomUtil.setTransform(this._canvas, m._latLngToNewLayerPoint(nw, e.zoom, e.center), scale);
                 },
                 redraw() {
                     const m = this._map; if (!m) return;
@@ -533,7 +535,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const ctx = c.getContext("2d");
                     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                     const z = m.getZoom(), k = 256 * Math.pow(2, z);
-                    const origin = m.getPixelOrigin();
+                    // Canvas pixel (0,0) is layer point `tl`, so subtract it along with the pixel origin.
+                    const origin = m.getPixelOrigin().add(tl);
                     const r = z < 12 ? 0.9 : z < 13.5 ? 1.3 : z < 15 ? 2 : z < 16.5 ? 3 : 4.5;
                     const W = size.x, H = size.y;
                     ctx.globalAlpha = r < 1.5 ? 0.8 : 0.92;
@@ -556,6 +559,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 },
             });
             const layer = new TreeLayer().addTo(map);
+            $("map")._treeMap = map;
 
             // hover: nearest visible tree via a grid over the mercator square
             const CELL = 1 / 2 ** 19; // ~75 m at this latitude
