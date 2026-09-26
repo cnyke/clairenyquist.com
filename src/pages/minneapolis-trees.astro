@@ -120,31 +120,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <div class="max-w-4xl mx-auto mt-10 text-xs text-gray-400 space-y-2">
             <p>
-                <strong class="text-gray-500">Data:</strong> the 2023
-                inventory is the Minneapolis–Saint Paul Long-Term Ecological
-                Research program's <em>2023 Minneapolis-Saint Paul Urban Tree
-                Inventory</em> (Adrienne Keller, Leslie Brandt, Jeannine
-                Cavender-Bares, Joseph Knight, Sarah Hobbie), built from data
-                the Minneapolis Park and Recreation Board provided to the
-                University of Minnesota. It records genus or species and a
-                location for each tree, nothing else. The 2019 to 2023
-                planting layers are Park Board planting records as filed with
-                City Forest Credits for carbon offset projects; the 2022 layer
-                carries location type, root stock, size, planting program and
-                date, the 2023 layer a common name, street and planting
-                method, and the 2019 to 2021 layer coordinates only. All were
-                assembled and republished by an independent researcher as
-                <a
+                <strong class="text-gray-500">Data:</strong> all four layers
+                come from a map titled <a
                     href="https://www.arcgis.com/home/item.html?id=9e896259239d428dbf332a2ac595b623"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="underline hover:text-gray-600"
                     >City of Minneapolis Public Tree Inventory</a
-                > on ArcGIS, not by the city. Values are shown as filed; the
-                planting layers include trees that may since have failed or
+                > on ArcGIS. Despite its title, it is not published by the City
+                of Minneapolis or the Park Board; the owner is a private ArcGIS
+                account belonging to an independent Minneapolis researcher. By
+                that researcher's own description, the 2023 inventory layer is
+                the Minneapolis&ndash;Saint Paul Long-Term Ecological Research
+                program's <em>2023 Minneapolis-Saint Paul Urban Tree
+                Inventory</em> (Adrienne Keller, Leslie Brandt, Jeannine
+                Cavender-Bares, Joseph Knight, Sarah Hobbie), and the 2019 to
+                2023 planting layers were extracted from Park Board planting
+                records filed with City Forest Credits for carbon offset
+                projects. I have not verified either against the original
+                sources. As republished, the inventory layer carries genus or
+                species and a location per tree; the 2022 planting layer adds
+                location type, root stock, size, planting program and date, the
+                2023 layer a common name, street and planting method, and the
+                2019 to 2021 layer coordinates only. Values are shown as filed;
+                the planting layers include trees that may since have failed or
                 been removed. Fourteen 2023 planting records without
-                coordinates were dropped. Genus for the 2023 planting layer
-                was inferred from its common name.
+                coordinates were dropped. Genus for the 2023 planting layer was
+                inferred from its common name.
             </p>
             <p>
                 <strong class="text-gray-500">Basemap:</strong> &copy;
