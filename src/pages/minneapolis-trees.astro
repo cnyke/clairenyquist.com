@@ -39,7 +39,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Plantings over time</span>
-                            <span id="tp-time-lbl" class="tp-ct"></span>
+                            <span><span id="tp-time-lbl" class="tp-ct"></span> <button id="tp-time-exit" class="tp-link" type="button" hidden>Exit</button></span>
                         </div>
                         <div class="tp-time">
                             <button id="tp-play" class="tp-btn" type="button" aria-pressed="false">&#9654; Play</button>
@@ -514,7 +514,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                         else d.on[li] = d.on[li] ? 0 : 1;
                         syncChecklist(key); applyFilters();
                     });
-                    el.addEventListener("dblclick", () => { d.on.fill(0); d.on[li] = 1; syncChecklist(key); applyFilters(); });
+                    el.addEventListener("dblclick", () => { stopPlay(); d.on.fill(0); d.on[li] = 1; syncChecklist(key); applyFilters(); });
                     ul.appendChild(el); d.items.push(el);
                 }
                 syncChecklist(key);
@@ -541,7 +541,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 return n;
             }
             function buildLegend() {
-                const d = dims[state.colorBy], ul = $("tp-legend");
+                const key = state.colorBy, d = dims[key], ul = $("tp-legend");
                 ul.innerHTML = "";
                 const entries = [...colorSlots.entries()].sort((a, b) => a[1] - b[1]);
                 for (const [li, slot] of entries) {
@@ -550,7 +550,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const common = state.colorBy === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
                     el.innerHTML = `<span class="tp-sw" style="background:${CAT[slot]}"></span><span class="tp-nm">${label}${common}</span><span class="tp-ct"></span>`;
                     el.title = "Click to filter to this value";
-                    el.addEventListener("click", () => { d.on.fill(0); d.on[li] = 1; syncChecklist(state.colorBy); applyFilters(); });
+                    el.addEventListener("click", () => { if (state.play) return; d.on.fill(0); d.on[li] = 1; syncChecklist(key); applyFilters(); });
                     ul.appendChild(el);
                 }
                 const restIdx = d.labels.map((_, i) => i).filter((i) => d.total[i] > 0 && !colorSlots.has(i));
@@ -590,7 +590,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             const TreeLayer = L.Layer.extend({
                 onAdd(m) {
                     this._map = m;
-                    this._canvas = L.DomUtil.create("canvas", "tree-canvas leaflet-zoom-hide");
+                    this._canvas = L.DomUtil.create("canvas", "tree-canvas leaflet-zoom-animated");
                     m.getPanes().overlayPane.appendChild(this._canvas);
                     m.on("moveend zoomend resize", this.redraw, this);
                     m.on("zoomanim", this._anim, this);
@@ -647,7 +647,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             const heads = new Int32Array(GW * GH).fill(-1), next = new Int32Array(N);
             for (let i = 0; i < N; i++) { const cidx = Math.floor((MY[i] - gy0) / CELL) * GW + Math.floor((MX[i] - gx0) / CELL); next[i] = heads[cidx]; heads[cidx] = i; }
             const tip = $("tree-tip");
-            map.on("mousemove", (e) => {
+            function showTip(e) {
                 const z = map.getZoom(), k = 256 * Math.pow(2, z);
                 const p = map.project(e.latlng, z);
                 const wx = p.x / k, wy = p.y / k;
@@ -658,7 +658,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     for (let i = heads[cy * GW + cx]; i !== -1; i = next[i]) { if (!pass[i]) continue; const dx = MX[i] - wx, dy = MY[i] - wy, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } } } }
                 if (best < 0) { tip.hidden = true; return; }
                 const rows = [];
-                rows.push(`<b>${D.names[NAM[best]]}</b>`);
+                const nm = D.names[NAM[best]];
+                rows.push(`<b>${nm === "Unrecorded" ? "Species not recorded" : nm}</b>`);
                 const g = D.genera[GEN[best]]; if (g && g !== D.names[NAM[best]]) rows.push(`<span class="tt-row">${g}${D.common[g] ? " · " + D.common[g] : ""}</span>`);
                 rows.push(`<span class="tt-row">${D.sources[SRC[best]]}</span>`);
                 const extras = [];
@@ -673,8 +674,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 const pt = e.containerPoint, wrap = $("tree-mapwrap").getBoundingClientRect();
                 const left = pt.x + 14 + 270 > wrap.width ? pt.x - 14 - 260 : pt.x + 14;
                 tip.style.left = left + "px"; tip.style.top = Math.max(4, pt.y - 10) + "px"; tip.hidden = false;
-            });
-            map.on("mouseout", () => { tip.hidden = true; });
+            }
+            map.on("mousemove", showTip);
+            map.on("click", showTip);
+            map.on("mouseout dragstart", () => { tip.hidden = true; });
 
             // ---------- playback ----------
             const FRAMES = [
@@ -687,7 +690,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             const playBtn = $("tp-play"), steps = $("tp-steps"), timeLbl = $("tp-time-lbl");
             FRAMES.forEach((f, i) => {
                 const b = document.createElement("button"); b.type = "button"; b.textContent = ["Existing", "2019–21", "2022", "2023"][i]; b.title = f.label;
-                b.addEventListener("click", () => { enterPlay(); pauseTimer(); showFrame(i); });
+                b.addEventListener("click", () => { enterPlay(); pauseTimer(); showFrame(i); playBtn.innerHTML = "&#9654; Play"; });
                 steps.appendChild(b);
             });
             function enterPlay() {
@@ -697,6 +700,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 dims.year.on.fill(1); syncChecklist("year");
                 assignColors(); buildLegend();
                 playBtn.setAttribute("aria-pressed", "true"); playBtn.innerHTML = "&#9632; Stop";
+                $("tp-time-exit").hidden = false;
             }
             function showFrame(i) {
                 frame = i;
@@ -706,6 +710,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 timeLbl.textContent = FRAMES[i].label;
             }
             function pauseTimer() { if (timer) { clearInterval(timer); timer = null; } }
+            $("tp-time-exit").addEventListener("click", stopPlay);
             function stopPlay() {
                 pauseTimer();
                 if (!state.play) return;
@@ -715,10 +720,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 syncChecklist("src"); syncChecklist("year"); assignColors(); buildLegend(); applyFilters();
                 [...steps.children].forEach((b) => b.classList.remove("on")); timeLbl.textContent = "";
                 playBtn.setAttribute("aria-pressed", "false"); playBtn.innerHTML = "&#9654; Play";
+                $("tp-time-exit").hidden = true;
             }
             playBtn.addEventListener("click", () => {
                 if (state.play && timer) { stopPlay(); return; }
                 enterPlay();
+                playBtn.innerHTML = "&#9632; Stop";
                 showFrame(frame < 0 || frame >= FRAMES.length - 1 ? 0 : frame + 1);
                 timer = setInterval(() => showFrame((frame + 1) % FRAMES.length), 1600);
             });
@@ -731,8 +738,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 const q = e.target.value.trim().toLowerCase();
                 for (const el of dims.gen.items) el.style.display = !q || genusLower[+el.dataset.i].includes(q) ? "" : "none";
             });
-            $("tp-genus-clear").addEventListener("click", () => { dims.gen.on.fill(1); syncChecklist("gen"); applyFilters(); });
-            for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
+            $("tp-genus-clear").addEventListener("click", () => { stopPlay(); dims.gen.on.fill(1); syncChecklist("gen"); applyFilters(); });
+            for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { stopPlay(); const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
             $("tp-reset").addEventListener("click", () => {
                 stopPlay();
                 for (const k of Object.keys(dims)) { dims[k].on.fill(1); syncChecklist(k); }
