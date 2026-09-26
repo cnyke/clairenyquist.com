@@ -1,0 +1,618 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Minneapolis Public Trees | Claire Nyquist"
+    description="Every public tree in the 2023 Minneapolis inventory plus five years of Park Board plantings, 268,000 trees on one map, filterable by genus, species, planting year, location, root stock and program."
+>
+    <div class="px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-6xl name-gradient mb-4">
+                Minneapolis Public Trees
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Every public tree in the 2023 Minneapolis inventory, and
+                every tree the Park Board planted from 2019 to 2023, one dot
+                each.
+            </p>
+            <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4">
+                Two hundred sixty-eight thousand trees, colored by whatever
+                you choose. Filter by genus, search for a species or
+                cultivar, or narrow to a planting year, a street or park
+                setting, a root stock, or a planting program, and the map
+                and the counts follow. Hover any dot for the tree behind
+                it. Maple alone shows how much of the canopy rides on one
+                genus; ash alone shows what emerald ash borer left; the
+                2022 and 2023 plantings show what the city chose next.
+            </p>
+        </div>
+
+        <div style="width:100vw; margin-left:calc(50% - 50vw);">
+            <div id="tree-app" class="border-y border-gray-200">
+                <aside id="tree-panel">
+                    <div class="tp-stat">
+                        <span id="tp-count">268,364</span>
+                        <small>trees shown</small>
+                    </div>
+
+                    <div class="tp-group">
+                        <label class="tp-label" for="tp-colorby">Color by</label>
+                        <select id="tp-colorby" class="tp-select">
+                            <option value="gen">Genus</option>
+                            <option value="src">Data layer</option>
+                            <option value="year">Planting year</option>
+                            <option value="loc">Location type</option>
+                            <option value="root">Root stock</option>
+                            <option value="proj">Planting program</option>
+                        </select>
+                        <ul id="tp-legend" class="tp-legend"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <label class="tp-label" for="tp-search">Species or cultivar</label>
+                        <input id="tp-search" class="tp-input" type="search" placeholder="e.g. Valley Forge, bicolor, Ginkgo" autocomplete="off" />
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <label class="tp-label" for="tp-genus-search">Genus</label>
+                            <button id="tp-genus-clear" class="tp-link" type="button">All</button>
+                        </div>
+                        <input id="tp-genus-search" class="tp-input" type="search" placeholder="Find a genus" autocomplete="off" />
+                        <ul id="tp-genus" class="tp-checklist tp-scroll"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Data layer</span>
+                            <button class="tp-link tp-clear" data-dim="src" type="button">All</button>
+                        </div>
+                        <ul id="tp-src" class="tp-checklist"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Planting year</span>
+                            <button class="tp-link tp-clear" data-dim="year" type="button">All</button>
+                        </div>
+                        <ul id="tp-year" class="tp-checklist"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Location type</span>
+                            <button class="tp-link tp-clear" data-dim="loc" type="button">All</button>
+                        </div>
+                        <ul id="tp-loc" class="tp-checklist"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Root stock</span>
+                            <button class="tp-link tp-clear" data-dim="root" type="button">All</button>
+                        </div>
+                        <ul id="tp-root" class="tp-checklist tp-scroll"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Planting program</span>
+                            <button class="tp-link tp-clear" data-dim="proj" type="button">All</button>
+                        </div>
+                        <ul id="tp-proj" class="tp-checklist tp-scroll"></ul>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Size as recorded</span>
+                            <button class="tp-link tp-clear" data-dim="size" type="button">All</button>
+                        </div>
+                        <ul id="tp-size" class="tp-checklist"></ul>
+                        <p class="tp-note">Caliper inches for bare root and container stock; the larger figures are as filed.</p>
+                    </div>
+
+                    <button id="tp-reset" class="tp-reset" type="button">Reset all filters</button>
+                </aside>
+
+                <div id="tree-mapwrap">
+                    <div id="map"></div>
+                    <div id="tree-tip" hidden></div>
+                    <div id="tree-loading">Loading 268,364 trees…</div>
+                </div>
+            </div>
+            <p id="tree-stat" class="text-sm text-gray-500 mt-2 text-center"></p>
+        </div>
+
+        <div class="max-w-4xl mx-auto mt-10 text-xs text-gray-400 space-y-2">
+            <p>
+                <strong class="text-gray-500">Data:</strong> the 2023
+                inventory is the Minneapolis–Saint Paul Long-Term Ecological
+                Research program's <em>2023 Minneapolis-Saint Paul Urban Tree
+                Inventory</em> (Adrienne Keller, Leslie Brandt, Jeannine
+                Cavender-Bares, Joseph Knight, Sarah Hobbie), built from data
+                the Minneapolis Park and Recreation Board provided to the
+                University of Minnesota. It records genus or species and a
+                location for each tree, nothing else. The 2019 to 2023
+                planting layers are Park Board planting records as filed with
+                City Forest Credits for carbon offset projects; the 2022 layer
+                carries location type, root stock, size, planting program and
+                date, the 2023 layer a common name, street and planting
+                method, and the 2019 to 2021 layer coordinates only. All were
+                assembled and republished by an independent researcher as
+                <a
+                    href="https://www.arcgis.com/home/item.html?id=9e896259239d428dbf332a2ac595b623"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600"
+                    >City of Minneapolis Public Tree Inventory</a
+                > on ArcGIS, not by the city. Values are shown as filed; the
+                planting layers include trees that may since have failed or
+                been removed. Fourteen 2023 planting records without
+                coordinates were dropped. Genus for the 2023 planting layer
+                was inferred from its common name.
+            </p>
+            <p>
+                <strong class="text-gray-500">Basemap:</strong> &copy;
+                <a
+                    href="https://www.openstreetmap.org/copyright"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600"
+                    >OpenStreetMap contributors</a
+                >, basemap by
+                <a
+                    href="https://carto.com/attributions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600">CARTO</a
+                >.
+            </p>
+            <p>
+                <strong class="text-gray-500">Built with:</strong>
+                <a
+                    href="https://leafletjs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline hover:text-gray-600">Leaflet</a
+                >, MapLibre GL and a hand-rolled canvas layer. First shown at
+                the tcplot event <em>One Dataset, Many Interpretations</em>,
+                September 26th, 2026.
+            </p>
+        </div>
+    </div>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+    />
+    <script is:inline src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"
+    ></script>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.min.js"
+    ></script>
+
+    <style is:global>
+        #tree-app {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 88vh;
+            min-height: 600px;
+            background: #fff;
+        }
+        #tree-panel {
+            overflow-y: auto;
+            border-right: 1px solid #e5e7eb;
+            padding: 16px 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            font-size: 13px;
+            color: #374151;
+        }
+        .tp-stat { line-height: 1; }
+        .tp-stat span {
+            font-size: 34px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+            color: #111827;
+        }
+        .tp-stat small {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+        .tp-group { display: flex; flex-direction: column; gap: 6px; }
+        .tp-label-row { display: flex; justify-content: space-between; align-items: baseline; }
+        .tp-label {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #6b7280;
+        }
+        .tp-link {
+            background: none;
+            border: 0;
+            padding: 0;
+            font-size: 11px;
+            color: #2563eb;
+            cursor: pointer;
+        }
+        .tp-link:hover { text-decoration: underline; }
+        .tp-select, .tp-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 13px;
+            background: #fff;
+            color: #374151;
+        }
+        .tp-input:focus, .tp-select:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+        .tp-legend, .tp-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+        .tp-scroll { max-height: 190px; overflow-y: auto; border: 1px solid #f3f4f6; border-radius: 6px; padding: 2px; }
+        .tp-legend li, .tp-checklist li {
+            display: grid;
+            grid-template-columns: 14px 1fr auto;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 6px;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            line-height: 1.3;
+        }
+        .tp-legend li:hover, .tp-checklist li:hover { background: #f3f4f6; }
+        .tp-checklist li.off { color: #9ca3af; }
+        .tp-checklist li.off .tp-sw { background: transparent !important; }
+        .tp-legend li.off { opacity: 0.35; }
+        .tp-sw {
+            width: 11px; height: 11px; border-radius: 50%;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.18);
+        }
+        .tp-box {
+            width: 12px; height: 12px; border-radius: 3px; border: 1px solid #9ca3af; background: #fff;
+            display: inline-grid; place-items: center;
+        }
+        li:not(.off) > .tp-box { background: #2563eb; border-color: #2563eb; }
+        li:not(.off) > .tp-box::after { content: ""; width: 6px; height: 3px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: translateY(-1px) rotate(-45deg); }
+        .tp-nm i { font-style: normal; color: #9ca3af; margin-left: 4px; font-size: 12px; }
+        .tp-ct { font-variant-numeric: tabular-nums; color: #6b7280; font-size: 12px; }
+        .tp-note { font-size: 11px; color: #9ca3af; margin: 2px 0 0; line-height: 1.4; }
+        .tp-reset {
+            margin-top: auto;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 13px;
+            color: #374151;
+            cursor: pointer;
+        }
+        .tp-reset:hover { background: #f3f4f6; }
+        #tree-mapwrap { position: relative; }
+        #map { width: 100%; height: 100%; background: #fafafa; }
+        #tree-tip {
+            position: absolute;
+            z-index: 1100;
+            pointer-events: none;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+            padding: 8px 10px;
+            font-size: 12px;
+            line-height: 1.45;
+            max-width: 260px;
+            color: #374151;
+        }
+        #tree-tip b { color: #111827; }
+        #tree-tip .tt-row { color: #6b7280; }
+        #tree-loading {
+            position: absolute; inset: 0; z-index: 1050;
+            display: grid; place-items: center;
+            background: rgba(255,255,255,0.85);
+            color: #6b7280; font-size: 14px;
+        }
+        .tree-canvas { position: absolute; left: 0; top: 0; pointer-events: none; }
+        .leaflet-container { font-family: "Helvetica Neue", Inter, sans-serif; }
+        @media (max-width: 800px) {
+            #tree-app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; }
+            #tree-panel { border-right: 0; border-bottom: 1px solid #e5e7eb; max-height: 46vh; }
+            #tree-mapwrap { height: 78vh; min-height: 460px; }
+        }
+    </style>
+
+    <script is:inline>
+        (async function () {
+            const $ = (id) => document.getElementById(id);
+
+            // ---------- data ----------
+            const res = await fetch("/data/minneapolis-trees.json");
+            const D = await res.json();
+            const N = D.n;
+            const b64 = (s) => { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; };
+            const LA = new Uint16Array(b64(D.la).buffer), LO = new Uint16Array(b64(D.lo).buffer);
+            const SRC = b64(D.src), GEN = new Uint16Array(b64(D.gen).buffer), NAM = new Uint16Array(b64(D.nam).buffer);
+            const LOC = b64(D.loc), ROOT = b64(D.root), PROJ = b64(D.proj), YEAR = b64(D.year), SIZE = b64(D.size);
+
+            // Web Mercator, unit square, so screen = merc * 256 * 2^zoom - pixelOrigin
+            const MX = new Float64Array(N), MY = new Float64Array(N);
+            for (let i = 0; i < N; i++) {
+                const lat = D.lat0 + LA[i] * 1e-5, lon = D.lon0 + LO[i] * 1e-5;
+                MX[i] = (lon + 180) / 360;
+                const s = Math.sin(lat * Math.PI / 180);
+                MY[i] = 0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI);
+            }
+
+            // ---------- dimensions ----------
+            const yearLabel = (v) => (v === 0 ? "Not recorded" : String(2018 + v));
+            const sizeLabel = (v) => (D.sizes[v] === 0 ? "Not recorded" : String(D.sizes[v]));
+            const dims = {
+                gen:  { arr: GEN,  labels: D.genera, common: D.common, elId: "tp-genus" },
+                src:  { arr: SRC,  labels: D.sources, elId: "tp-src" },
+                year: { arr: YEAR, labels: Array.from({ length: 6 }, (_, v) => yearLabel(v)), elId: "tp-year" },
+                loc:  { arr: LOC,  labels: D.locs.map((l) => l || "Not recorded"), elId: "tp-loc" },
+                root: { arr: ROOT, labels: D.roots.map((l) => l || "Not recorded"), elId: "tp-root" },
+                proj: { arr: PROJ, labels: D.projects.map((l) => l || "Not recorded"), elId: "tp-proj" },
+                size: { arr: SIZE, labels: D.sizes.map((_, v) => sizeLabel(v)), elId: "tp-size" },
+            };
+            // Merge blank and "Unrecorded"/"Not recorded" into one visible bucket per dim
+            for (const k of Object.keys(dims)) {
+                const d = dims[k];
+                d.total = new Uint32Array(d.labels.length);
+                for (let i = 0; i < N; i++) d.total[d.arr[i]]++;
+                d.on = new Uint8Array(d.labels.length).fill(1);
+                d.order = [...d.labels.keys()].sort((a, b) => d.total[b] - d.total[a]);
+                d.vis = new Uint32Array(d.labels.length);
+            }
+            const state = { search: "", colorBy: "gen" };
+            const nameLower = D.names.map((s) => s.toLowerCase());
+            const genusLower = D.genera.map((g, i) => (g + " " + (D.common[g] || "")).toLowerCase());
+            const nameMatch = new Uint8Array(D.names.length).fill(1);
+
+            // ---------- colors ----------
+            const CAT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"];
+            const OTHER = "#a3a7a0";
+            let colorSlots = new Map(); // label index -> color
+            let colorArr = null;         // per-tree color index (0..8)
+            function assignColors() {
+                const d = dims[state.colorBy];
+                colorSlots = new Map();
+                const ranked = d.order.filter((i) => d.total[i] > 0 && !/not recorded|unrecorded/i.test(d.labels[i]));
+                ranked.slice(0, 8).forEach((li, s) => colorSlots.set(li, s));
+                colorArr = new Uint8Array(N);
+                for (let i = 0; i < N; i++) { const s = colorSlots.get(d.arr[i]); colorArr[i] = s === undefined ? 8 : s; }
+            }
+            const colorOf = (slot) => (slot === 8 ? OTHER : CAT[slot]);
+
+            // ---------- filtering ----------
+            const pass = new Uint8Array(N);
+            let shown = 0;
+            function applyFilters() {
+                const g = dims.gen, s = dims.src, y = dims.year, l = dims.loc, r = dims.root, p = dims.proj, z = dims.size;
+                shown = 0;
+                for (const k of Object.keys(dims)) dims[k].vis.fill(0);
+                for (let i = 0; i < N; i++) {
+                    const ok = g.on[GEN[i]] && s.on[SRC[i]] && y.on[YEAR[i]] && l.on[LOC[i]] && r.on[ROOT[i]] && p.on[PROJ[i]] && z.on[SIZE[i]] && nameMatch[NAM[i]];
+                    pass[i] = ok ? 1 : 0;
+                    if (ok) {
+                        shown++;
+                        g.vis[GEN[i]]++; s.vis[SRC[i]]++; y.vis[YEAR[i]]++; l.vis[LOC[i]]++; r.vis[ROOT[i]]++; p.vis[PROJ[i]]++; z.vis[SIZE[i]]++;
+                    }
+                }
+                $("tp-count").textContent = shown.toLocaleString();
+                updateCounts();
+                updateStat();
+                layer.redraw();
+            }
+            function updateSearch() {
+                const q = state.search.trim().toLowerCase();
+                if (!q) nameMatch.fill(1);
+                else for (let i = 0; i < D.names.length; i++) nameMatch[i] = nameLower[i].includes(q) ? 1 : 0;
+            }
+
+            // ---------- panel ----------
+            function buildChecklist(key) {
+                const d = dims[key], ul = $(d.elId);
+                ul.innerHTML = "";
+                d.items = [];
+                for (const li of d.order) {
+                    if (d.total[li] === 0) continue;
+                    const el = document.createElement("li");
+                    el.dataset.i = li;
+                    const label = d.labels[li];
+                    const common = key === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
+                    el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${label}${common}</span><span class="tp-ct"></span>`;
+                    el.addEventListener("click", (e) => {
+                        if (e.altKey || e.metaKey) { d.on.fill(0); d.on[li] = 1; }
+                        else d.on[li] = d.on[li] ? 0 : 1;
+                        syncChecklist(key); applyFilters();
+                    });
+                    el.addEventListener("dblclick", () => { d.on.fill(0); d.on[li] = 1; syncChecklist(key); applyFilters(); });
+                    ul.appendChild(el); d.items.push(el);
+                }
+                syncChecklist(key);
+            }
+            function syncChecklist(key) {
+                const d = dims[key];
+                for (const el of d.items) el.classList.toggle("off", !d.on[+el.dataset.i]);
+            }
+            function updateCounts() {
+                for (const k of Object.keys(dims)) {
+                    const d = dims[k];
+                    for (const el of d.items) el.querySelector(".tp-ct").textContent = d.vis[+el.dataset.i].toLocaleString();
+                }
+                // legend
+                const d = dims[state.colorBy];
+                for (const el of $("tp-legend").children) {
+                    const li = el.dataset.i;
+                    el.querySelector(".tp-ct").textContent = (li === "other" ? otherCount() : d.vis[+li]).toLocaleString();
+                }
+            }
+            function otherCount() {
+                const d = dims[state.colorBy]; let n = 0;
+                for (let i = 0; i < d.labels.length; i++) if (!colorSlots.has(i)) n += d.vis[i];
+                return n;
+            }
+            function buildLegend() {
+                const d = dims[state.colorBy], ul = $("tp-legend");
+                ul.innerHTML = "";
+                const entries = [...colorSlots.entries()].sort((a, b) => a[1] - b[1]);
+                for (const [li, slot] of entries) {
+                    const el = document.createElement("li"); el.dataset.i = li;
+                    const label = d.labels[li];
+                    const common = state.colorBy === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
+                    el.innerHTML = `<span class="tp-sw" style="background:${CAT[slot]}"></span><span class="tp-nm">${label}${common}</span><span class="tp-ct"></span>`;
+                    el.title = "Click to filter to this value";
+                    el.addEventListener("click", () => { d.on.fill(0); d.on[li] = 1; syncChecklist(state.colorBy); applyFilters(); });
+                    ul.appendChild(el);
+                }
+                const rest = d.labels.length - entries.length;
+                if (rest > 0) {
+                    const el = document.createElement("li"); el.dataset.i = "other";
+                    el.innerHTML = `<span class="tp-sw" style="background:${OTHER}"></span><span class="tp-nm">Everything else<i>${rest} values</i></span><span class="tp-ct"></span>`;
+                    ul.appendChild(el);
+                }
+            }
+            function updateStat() {
+                const parts = [];
+                for (const k of Object.keys(dims)) {
+                    const d = dims[k]; const onIdx = []; let all = true;
+                    for (let i = 0; i < d.labels.length; i++) { if (d.total[i] === 0) continue; if (d.on[i]) onIdx.push(i); else all = false; }
+                    if (!all && onIdx.length <= 3) parts.push(onIdx.map((i) => d.labels[i]).join(" / "));
+                    else if (!all) parts.push(`${onIdx.length} of ${d.order.filter((i) => d.total[i] > 0).length} ${k === "gen" ? "genera" : "values"}`);
+                }
+                if (state.search.trim()) parts.push(`“${state.search.trim()}”`);
+                $("tree-stat").textContent = parts.length ? `${shown.toLocaleString()} trees · ${parts.join(" · ")}` : `${shown.toLocaleString()} trees, no filters`;
+            }
+
+            // ---------- map ----------
+            const CARTO_KEY = "cb1_2dkj_1_342baac3afde83e980fa4eb1";
+            const map = L.map("map", { zoomSnap: 0, maxZoom: 20, scrollWheelZoom: false });
+            try {
+                L.maplibreGL({
+                    style: `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json?key=${CARTO_KEY}`,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                }).addTo(map);
+            } catch (err) {
+                // No WebGL: the trees still draw, on a plain ground.
+                console.warn("Basemap unavailable", err);
+            }
+            map.fitBounds([[D.lat0, D.lon0], [D.latmax, D.lonmax]], { padding: [10, 10] });
+
+            const TreeLayer = L.Layer.extend({
+                onAdd(m) {
+                    this._map = m;
+                    this._canvas = L.DomUtil.create("canvas", "tree-canvas leaflet-zoom-hide");
+                    m.getPanes().overlayPane.appendChild(this._canvas);
+                    m.on("moveend zoomend resize", this.redraw, this);
+                    m.on("zoomanim", this._anim, this);
+                    this.redraw();
+                },
+                onRemove(m) { m.getPanes().overlayPane.removeChild(this._canvas); m.off("moveend zoomend resize", this.redraw, this); m.off("zoomanim", this._anim, this); },
+                _anim(e) {
+                    const scale = this._map.getZoomScale(e.zoom), off = this._map._latLngBoundsToNewLayerBounds(this._map.getBounds(), e.zoom, e.center).min;
+                    L.DomUtil.setTransform(this._canvas, off, scale);
+                },
+                redraw() {
+                    const m = this._map; if (!m) return;
+                    const size = m.getSize(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    const c = this._canvas;
+                    const tl = m.containerPointToLayerPoint([0, 0]);
+                    L.DomUtil.setPosition(c, tl);
+                    c.width = size.x * dpr; c.height = size.y * dpr; c.style.width = size.x + "px"; c.style.height = size.y + "px";
+                    const ctx = c.getContext("2d");
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    const z = m.getZoom(), k = 256 * Math.pow(2, z);
+                    const origin = m.getPixelOrigin();
+                    const r = z < 12 ? 0.9 : z < 13.5 ? 1.3 : z < 15 ? 2 : z < 16.5 ? 3 : 4.5;
+                    const W = size.x, H = size.y;
+                    ctx.globalAlpha = r < 1.5 ? 0.8 : 0.92;
+                    // draw "other" first, then slots in order so named classes sit on top
+                    for (let slot = 8; slot >= 0; slot--) {
+                        ctx.fillStyle = colorOf(slot);
+                        ctx.beginPath();
+                        let any = false;
+                        for (let i = 0; i < N; i++) {
+                            if (!pass[i] || colorArr[i] !== slot) continue;
+                            const x = MX[i] * k - origin.x, y = MY[i] * k - origin.y;
+                            if (x < -r || x > W + r || y < -r || y > H + r) continue;
+                            any = true;
+                            if (r < 1.5) ctx.rect(x - r, y - r, r * 2, r * 2);
+                            else { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, 6.2832); }
+                        }
+                        if (any) ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                },
+            });
+            const layer = new TreeLayer().addTo(map);
+
+            // hover: nearest visible tree via a grid over the mercator square
+            const CELL = 1 / 2 ** 19; // ~75 m at this latitude
+            let gx0 = Infinity, gy0 = Infinity, gx1 = -Infinity, gy1 = -Infinity;
+            for (let i = 0; i < N; i++) { if (MX[i] < gx0) gx0 = MX[i]; if (MX[i] > gx1) gx1 = MX[i]; if (MY[i] < gy0) gy0 = MY[i]; if (MY[i] > gy1) gy1 = MY[i]; }
+            const GW = Math.floor((gx1 - gx0) / CELL) + 2, GH = Math.floor((gy1 - gy0) / CELL) + 2;
+            const heads = new Int32Array(GW * GH).fill(-1), next = new Int32Array(N);
+            for (let i = 0; i < N; i++) { const cidx = Math.floor((MY[i] - gy0) / CELL) * GW + Math.floor((MX[i] - gx0) / CELL); next[i] = heads[cidx]; heads[cidx] = i; }
+            const tip = $("tree-tip");
+            map.on("mousemove", (e) => {
+                const z = map.getZoom(), k = 256 * Math.pow(2, z);
+                const p = map.project(e.latlng, z);
+                const wx = p.x / k, wy = p.y / k;
+                const rad = 8 / k;
+                const cxa = Math.floor((wx - rad - gx0) / CELL), cxb = Math.floor((wx + rad - gx0) / CELL), cya = Math.floor((wy - rad - gy0) / CELL), cyb = Math.floor((wy + rad - gy0) / CELL);
+                let best = -1, bd = rad * rad;
+                for (let cy = cya; cy <= cyb; cy++) { if (cy < 0 || cy >= GH) continue; for (let cx = cxa; cx <= cxb; cx++) { if (cx < 0 || cx >= GW) continue;
+                    for (let i = heads[cy * GW + cx]; i !== -1; i = next[i]) { if (!pass[i]) continue; const dx = MX[i] - wx, dy = MY[i] - wy, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } } } }
+                if (best < 0) { tip.hidden = true; return; }
+                const rows = [];
+                rows.push(`<b>${D.names[NAM[best]]}</b>`);
+                const g = D.genera[GEN[best]]; if (g && g !== D.names[NAM[best]]) rows.push(`<span class="tt-row">${g}${D.common[g] ? " · " + D.common[g] : ""}</span>`);
+                rows.push(`<span class="tt-row">${D.sources[SRC[best]]}</span>`);
+                const extras = [];
+                if (YEAR[best]) extras.push("Planted " + yearLabel(YEAR[best]));
+                if (D.locs[LOC[best]]) extras.push(D.locs[LOC[best]]);
+                if (D.roots[ROOT[best]]) extras.push(D.roots[ROOT[best]]);
+                if (D.projects[PROJ[best]]) extras.push(D.projects[PROJ[best]]);
+                if (D.sizes[SIZE[best]]) extras.push("Size " + D.sizes[SIZE[best]]);
+                if (extras.length) rows.push(`<span class="tt-row">${extras.join(" · ")}</span>`);
+                rows.push(`<span class="tt-row">${(D.lat0 + LA[best] * 1e-5).toFixed(5)}, ${(D.lon0 + LO[best] * 1e-5).toFixed(5)}</span>`);
+                tip.innerHTML = rows.join("<br>");
+                const pt = e.containerPoint, wrap = $("tree-mapwrap").getBoundingClientRect();
+                const left = pt.x + 14 + 270 > wrap.width ? pt.x - 14 - 260 : pt.x + 14;
+                tip.style.left = left + "px"; tip.style.top = Math.max(4, pt.y - 10) + "px"; tip.hidden = false;
+            });
+            map.on("mouseout", () => { tip.hidden = true; });
+
+            // ---------- wire up ----------
+            for (const k of Object.keys(dims)) buildChecklist(k);
+            assignColors(); buildLegend();
+            $("tp-colorby").addEventListener("change", (e) => { state.colorBy = e.target.value; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
+            let t = null;
+            $("tp-search").addEventListener("input", (e) => { state.search = e.target.value; clearTimeout(t); t = setTimeout(() => { updateSearch(); applyFilters(); }, 150); });
+            $("tp-genus-search").addEventListener("input", (e) => {
+                const q = e.target.value.trim().toLowerCase();
+                for (const el of dims.gen.items) el.style.display = !q || genusLower[+el.dataset.i].includes(q) ? "" : "none";
+            });
+            $("tp-genus-clear").addEventListener("click", () => { dims.gen.on.fill(1); syncChecklist("gen"); applyFilters(); });
+            for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
+            $("tp-reset").addEventListener("click", () => {
+                for (const k of Object.keys(dims)) { dims[k].on.fill(1); syncChecklist(k); }
+                state.search = ""; $("tp-search").value = ""; $("tp-genus-search").value = ""; for (const el of dims.gen.items) el.style.display = "";
+                updateSearch(); applyFilters();
+            });
+            updateSearch(); applyFilters();
+            $("tree-loading").remove();
+        })();
+    </script>
+</BaseLayout>
