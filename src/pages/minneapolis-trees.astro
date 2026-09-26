@@ -279,6 +279,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         li:not(.off) > .tp-box { background: #2563eb; border-color: #2563eb; }
         li:not(.off) > .tp-box::after { content: ""; width: 6px; height: 3px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: translateY(-1px) rotate(-45deg); }
         .tp-nm i { font-style: normal; color: #9ca3af; margin-left: 4px; font-size: 12px; }
+        .tp-nm .tp-leaf {
+            display: inline-block; width: 14px; height: 14px; vertical-align: -3px; margin-right: 5px;
+            fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round;
+        }
         .tp-ct { font-variant-numeric: tabular-nums; color: #6b7280; font-size: 12px; }
         .tp-note { font-size: 11px; color: #9ca3af; margin: 2px 0 0; line-height: 1.4; }
         .tp-reset {
@@ -420,10 +424,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               Liriodendron: 'tulip',
               Liquidambar: 'star',
             };
-            const leafIcon = (genus, color) => {
+            const leafIcon = (genus, color, cls = "tt-leaf") => {
                 if (!genus || genus === "Unrecorded") return "";
                 const t = LEAF_TYPE[genus] || "generic";
-                return `<svg class="tt-leaf" viewBox="0 0 24 24" style="color:${color}" aria-hidden="true">${LEAF_SVG[t]}</svg>`;
+                return `<svg class="${cls}" viewBox="0 0 24 24" style="color:${color}" aria-hidden="true">${LEAF_SVG[t]}</svg>`;
             };
 
             // ---------- filtering ----------
@@ -458,7 +462,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     el.dataset.i = li;
                     const label = d.labels[li];
                     const common = key === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
-                    el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${label}${common}</span><span class="tp-ct"></span>`;
+                    const leaf = key === "gen" ? leafIcon(label, "#9ca3af", "tp-leaf") : "";
+                    el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${leaf}${label}${common}</span><span class="tp-ct"></span>`;
                     el.addEventListener("click", (e) => {
                         if (e.altKey || e.metaKey) { d.on.fill(0); d.on[li] = 1; }
                         else d.on[li] = d.on[li] ? 0 : 1;
