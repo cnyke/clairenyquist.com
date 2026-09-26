@@ -18,10 +18,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
             <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4">
                 Two hundred sixty-eight thousand trees, colored by whatever
-                you choose. Filter by genus, search for a species or
-                cultivar, or narrow to a planting year, a street or park
-                setting, a root stock, or a planting program, and the map
-                and the counts follow. Hover any dot for the tree behind
+                you choose. Filter by genus, or narrow to a planting year, a
+                street or park setting, a root stock, or a planting program,
+                and the map and the counts follow. Hover any dot for the tree behind
                 it. Maple alone shows how much of the canopy rides on one
                 genus; ash alone shows what emerald ash borer left; the
                 2022 and 2023 plantings show what the city chose next.
@@ -47,11 +46,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             <option value="proj">Planting program</option>
                         </select>
                         <ul id="tp-legend" class="tp-legend"></ul>
-                    </div>
-
-                    <div class="tp-group">
-                        <label class="tp-label" for="tp-search">Species or cultivar</label>
-                        <input id="tp-search" class="tp-input" type="search" placeholder="e.g. Valley Forge, bicolor, Ginkgo" autocomplete="off" />
                     </div>
 
                     <div class="tp-group">
@@ -374,10 +368,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 d.order = [...d.labels.keys()].sort((a, b) => d.total[b] - d.total[a]);
                 d.vis = new Uint32Array(d.labels.length);
             }
-            const state = { search: "", colorBy: "gen" };
-            const nameLower = D.names.map((s) => s.toLowerCase());
+            const state = { colorBy: "gen" };
             const genusLower = D.genera.map((g, i) => (g + " " + (D.common[g] || "")).toLowerCase());
-            const nameMatch = new Uint8Array(D.names.length).fill(1);
 
             // ---------- colors ----------
             const CAT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"];
@@ -402,7 +394,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 shown = 0;
                 for (const k of Object.keys(dims)) dims[k].vis.fill(0);
                 for (let i = 0; i < N; i++) {
-                    const ok = g.on[GEN[i]] && s.on[SRC[i]] && y.on[YEAR[i]] && l.on[LOC[i]] && r.on[ROOT[i]] && p.on[PROJ[i]] && z.on[SIZE[i]] && nameMatch[NAM[i]];
+                    const ok = g.on[GEN[i]] && s.on[SRC[i]] && y.on[YEAR[i]] && l.on[LOC[i]] && r.on[ROOT[i]] && p.on[PROJ[i]] && z.on[SIZE[i]];
                     pass[i] = ok ? 1 : 0;
                     if (ok) {
                         shown++;
@@ -413,11 +405,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 updateCounts();
                 updateStat();
                 layer.redraw();
-            }
-            function updateSearch() {
-                const q = state.search.trim().toLowerCase();
-                if (!q) nameMatch.fill(1);
-                else for (let i = 0; i < D.names.length; i++) nameMatch[i] = nameLower[i].includes(q) ? 1 : 0;
             }
 
             // ---------- panel ----------
@@ -491,7 +478,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     if (!all && onIdx.length <= 3) parts.push(onIdx.map((i) => d.labels[i]).join(" / "));
                     else if (!all) parts.push(`${onIdx.length} of ${d.order.filter((i) => d.total[i] > 0).length} ${k === "gen" ? "genera" : "values"}`);
                 }
-                if (state.search.trim()) parts.push(`“${state.search.trim()}”`);
                 $("tree-stat").textContent = parts.length ? `${shown.toLocaleString()} trees · ${parts.join(" · ")}` : `${shown.toLocaleString()} trees, no filters`;
             }
 
@@ -602,8 +588,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             for (const k of Object.keys(dims)) buildChecklist(k);
             assignColors(); buildLegend();
             $("tp-colorby").addEventListener("change", (e) => { state.colorBy = e.target.value; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
-            let t = null;
-            $("tp-search").addEventListener("input", (e) => { state.search = e.target.value; clearTimeout(t); t = setTimeout(() => { updateSearch(); applyFilters(); }, 150); });
             $("tp-genus-search").addEventListener("input", (e) => {
                 const q = e.target.value.trim().toLowerCase();
                 for (const el of dims.gen.items) el.style.display = !q || genusLower[+el.dataset.i].includes(q) ? "" : "none";
@@ -612,10 +596,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
             $("tp-reset").addEventListener("click", () => {
                 for (const k of Object.keys(dims)) { dims[k].on.fill(1); syncChecklist(k); }
-                state.search = ""; $("tp-search").value = ""; $("tp-genus-search").value = ""; for (const el of dims.gen.items) el.style.display = "";
-                updateSearch(); applyFilters();
+                $("tp-genus-search").value = ""; for (const el of dims.gen.items) el.style.display = "";
+                applyFilters();
             });
-            updateSearch(); applyFilters();
+            applyFilters();
             $("tree-loading").remove();
         })();
     </script>
