@@ -18,7 +18,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
             <p class="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4">
                 Two hundred sixty-eight thousand trees, colored by whatever
-                you choose. Filter by genus, or narrow to a planting year, a
+                you choose. The map opens on downtown; zoom out for the
+                whole city. Filter by genus, or narrow to a planting year, a
                 street or park setting, a root stock, or a planting program,
                 and the map and the counts follow. Hover any dot for the tree behind
                 it. Maple alone shows how much of the canopy rides on one
@@ -33,6 +34,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-stat">
                         <span id="tp-count">268,364</span>
                         <small>trees shown</small>
+                    </div>
+
+                    <div class="tp-group">
+                        <div class="tp-label-row">
+                            <span class="tp-label">Plantings over time</span>
+                            <span id="tp-time-lbl" class="tp-ct"></span>
+                        </div>
+                        <div class="tp-time">
+                            <button id="tp-play" class="tp-btn" type="button" aria-pressed="false">&#9654; Play</button>
+                            <div id="tp-steps" class="tp-steps" role="group" aria-label="Time steps"></div>
+                        </div>
+                        <p class="tp-note">Standing inventory in gray, then each planting wave on top. Stop to return to your filters.</p>
                     </div>
 
                     <div class="tp-group">
@@ -287,6 +300,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         .tp-ct { font-variant-numeric: tabular-nums; color: #6b7280; font-size: 12px; }
         .tp-note { font-size: 11px; color: #9ca3af; margin: 2px 0 0; line-height: 1.4; }
+        .tp-time { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .tp-btn {
+            border: 1px solid #2563eb; background: #2563eb; color: #fff;
+            border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer; white-space: nowrap;
+        }
+        .tp-btn[aria-pressed="true"] { background: #fff; color: #2563eb; }
+        .tp-steps { display: flex; gap: 4px; flex-wrap: wrap; }
+        .tp-steps button {
+            border: 1px solid #d1d5db; background: #fff; color: #6b7280; border-radius: 999px;
+            padding: 2px 8px; font-size: 11px; cursor: pointer; font-variant-numeric: tabular-nums;
+        }
+        .tp-steps button.on { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
         .tp-reset {
             margin-top: auto;
             border: 1px solid #d1d5db;
@@ -390,8 +415,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             function assignColors() {
                 const d = dims[state.colorBy];
                 colorSlots = new Map();
-                const ranked = d.order.filter((i) => d.total[i] > 0 && !/not recorded|unrecorded/i.test(d.labels[i]));
-                ranked.slice(0, 8).forEach((li, s) => colorSlots.set(li, s));
+                if (state.play) {
+                    // Playback: the three planting waves take the first three hues; the inventory stays gray.
+                    colorSlots.set(3, 0); colorSlots.set(1, 1); colorSlots.set(2, 2);
+                } else {
+                    const ranked = d.order.filter((i) => d.total[i] > 0 && !/not recorded|unrecorded/i.test(d.labels[i]));
+                    ranked.slice(0, 8).forEach((li, s) => colorSlots.set(li, s));
+                }
                 colorArr = new Uint8Array(N);
                 for (let i = 0; i < N; i++) { const s = colorSlots.get(d.arr[i]); colorArr[i] = s === undefined ? 8 : s; }
             }
@@ -479,6 +509,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const leaf = key === "gen" ? leafIcon(label, "#9ca3af", "tp-leaf") : "";
                     el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${leaf}${label}${common}</span><span class="tp-ct"></span>`;
                     el.addEventListener("click", (e) => {
+                        stopPlay();
                         if (e.altKey || e.metaKey) { d.on.fill(0); d.on[li] = 1; }
                         else d.on[li] = d.on[li] ? 0 : 1;
                         syncChecklist(key); applyFilters();
@@ -522,10 +553,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     el.addEventListener("click", () => { d.on.fill(0); d.on[li] = 1; syncChecklist(state.colorBy); applyFilters(); });
                     ul.appendChild(el);
                 }
-                const rest = d.labels.length - entries.length;
-                if (rest > 0) {
+                const restIdx = d.labels.map((_, i) => i).filter((i) => d.total[i] > 0 && !colorSlots.has(i));
+                if (restIdx.length > 0) {
                     const el = document.createElement("li"); el.dataset.i = "other";
-                    el.innerHTML = `<span class="tp-sw" style="background:${OTHER}"></span><span class="tp-nm">Everything else<i>${rest} values</i></span><span class="tp-ct"></span>`;
+                    const nm = restIdx.length === 1 ? d.labels[restIdx[0]] : `Everything else<i>${restIdx.length} values</i>`;
+                    el.innerHTML = `<span class="tp-sw" style="background:${OTHER}"></span><span class="tp-nm">${nm}</span><span class="tp-ct"></span>`;
                     ul.appendChild(el);
                 }
             }
@@ -552,9 +584,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 // No WebGL: the trees still draw, on a plain ground.
                 console.warn("Basemap unavailable", err);
             }
-            map.fitBounds([[D.lat0, D.lon0], [D.latmax, D.lonmax]], { padding: [10, 10] });
-            // Start a step closer than the full-city fit so the street grid reads at first glance.
-            map.setZoom(map.getZoom() + 0.8, { animate: false });
+            // Open on downtown at street level; the whole city is a few zoom-outs away.
+            map.setView([44.9765, -93.2705], 15.2);
 
             const TreeLayer = L.Layer.extend({
                 onAdd(m) {
@@ -645,10 +676,57 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             });
             map.on("mouseout", () => { tip.hidden = true; });
 
+            // ---------- playback ----------
+            const FRAMES = [
+                { label: "2023 standing inventory", src: [0] },
+                { label: "2019–2021 plantings", src: [0, 3] },
+                { label: "2022 plantings", src: [0, 3, 1] },
+                { label: "2023 plantings", src: [0, 3, 1, 2] },
+            ];
+            let timer = null, frame = -1, saved = null;
+            const playBtn = $("tp-play"), steps = $("tp-steps"), timeLbl = $("tp-time-lbl");
+            FRAMES.forEach((f, i) => {
+                const b = document.createElement("button"); b.type = "button"; b.textContent = ["2023", "2019–21", "2022", "2023"][i]; b.title = f.label;
+                b.addEventListener("click", () => { enterPlay(); pauseTimer(); showFrame(i); });
+                steps.appendChild(b);
+            });
+            function enterPlay() {
+                if (state.play) return;
+                saved = { src: Uint8Array.from(dims.src.on), year: Uint8Array.from(dims.year.on), colorBy: state.colorBy };
+                state.play = true; state.colorBy = "src"; $("tp-colorby").value = "src"; $("tp-colorby").disabled = true;
+                dims.year.on.fill(1); syncChecklist("year");
+                assignColors(); buildLegend();
+                playBtn.setAttribute("aria-pressed", "true"); playBtn.innerHTML = "&#9632; Stop";
+            }
+            function showFrame(i) {
+                frame = i;
+                dims.src.on.fill(0); for (const k of FRAMES[i].src) dims.src.on[k] = 1;
+                syncChecklist("src"); applyFilters();
+                [...steps.children].forEach((b, j) => b.classList.toggle("on", j === i));
+                timeLbl.textContent = FRAMES[i].label;
+            }
+            function pauseTimer() { if (timer) { clearInterval(timer); timer = null; } }
+            function stopPlay() {
+                pauseTimer();
+                if (!state.play) return;
+                state.play = false; frame = -1;
+                dims.src.on.set(saved.src); dims.year.on.set(saved.year); state.colorBy = saved.colorBy;
+                $("tp-colorby").value = saved.colorBy; $("tp-colorby").disabled = false;
+                syncChecklist("src"); syncChecklist("year"); assignColors(); buildLegend(); applyFilters();
+                [...steps.children].forEach((b) => b.classList.remove("on")); timeLbl.textContent = "";
+                playBtn.setAttribute("aria-pressed", "false"); playBtn.innerHTML = "&#9654; Play";
+            }
+            playBtn.addEventListener("click", () => {
+                if (state.play && timer) { stopPlay(); return; }
+                enterPlay();
+                showFrame(frame < 0 || frame >= FRAMES.length - 1 ? 0 : frame + 1);
+                timer = setInterval(() => showFrame((frame + 1) % FRAMES.length), 1600);
+            });
+
             // ---------- wire up ----------
             for (const k of Object.keys(dims)) buildChecklist(k);
             assignColors(); buildLegend();
-            $("tp-colorby").addEventListener("change", (e) => { state.colorBy = e.target.value; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
+            $("tp-colorby").addEventListener("change", (e) => { if (state.play) return; state.colorBy = e.target.value; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
             $("tp-genus-search").addEventListener("input", (e) => {
                 const q = e.target.value.trim().toLowerCase();
                 for (const el of dims.gen.items) el.style.display = !q || genusLower[+el.dataset.i].includes(q) ? "" : "none";
@@ -656,6 +734,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             $("tp-genus-clear").addEventListener("click", () => { dims.gen.on.fill(1); syncChecklist("gen"); applyFilters(); });
             for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
             $("tp-reset").addEventListener("click", () => {
+                stopPlay();
                 for (const k of Object.keys(dims)) { dims[k].on.fill(1); syncChecklist(k); }
                 $("tp-genus-search").value = ""; for (const el of dims.gen.items) el.style.display = "";
                 applyFilters();
