@@ -310,6 +310,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         }
         #tree-tip b { color: #111827; }
         #tree-tip .tt-row { color: #6b7280; }
+        #tree-tip .tt-wrap { display: flex; gap: 9px; align-items: flex-start; }
+        #tree-tip .tt-leaf {
+            flex: 0 0 auto; width: 30px; height: 30px; margin-top: 1px;
+            fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round;
+        }
         #tree-loading {
             position: absolute; inset: 0; z-index: 1050;
             display: grid; place-items: center;
@@ -385,6 +390,41 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 for (let i = 0; i < N; i++) { const s = colorSlots.get(d.arr[i]); colorArr[i] = s === undefined ? 8 : s; }
             }
             const colorOf = (slot) => (slot === 8 ? OTHER : CAT[slot]);
+
+            // Leaf silhouettes for the tooltip, one per leaf type, tinted with the dot's color.
+            // Leaf silhouettes, 24x24, drawn with strokes so they tint with currentColor.
+            const LEAF_SVG = {
+              palmate: '<path d="M12 22v-7"/><path d="M12 15 7 17.5 8.5 12 3 10l4-2-2-5.5L10 6l2-4 2 4 5-3.5L17 8l4 2-5.5 2 1.5 5.5z"/>',
+              heart:     '<path d="M12 22V9"/><path d="M12 21C5 16 3 10 7 6.5c2-1.6 4-1 5 1 1-2 3-2.6 5-1 4 3.5 2 9.5-5 14.5z"/>',
+              lobed:     '<path d="M12 22v-4"/><path d="M12 18c-2 1-4-1-3-3-2 0-3-2-1.5-3.5-2-1-1.5-3.5.5-4-1-2 1-4 3-3 0 0 .5-2 1-2s1 2 1 2c2-1 4 1 3 3 2 .5 2.5 3 .5 4 1.5 1.5.5 3.5-1.5 3.5 1 2-1 4-3 3z"/>',
+              simple:    '<path d="M12 22V7"/><path d="M12 3c-4.5 1-7 6-6 12 1.5 3.5 4 5.5 6 7 2-1.5 4.5-3.5 6-7 1-6-1.5-11-6-12z"/><path d="M12 11l-3-2M12 14l-3-2M12 11l3-2M12 14l3-2"/>',
+              pinnate: '<path d="M6 20 18 4"/><ellipse cx="10.6" cy="18.6" rx="1.4" ry="2.6" transform="rotate(45 10.6 18.6)"/><ellipse cx="7.4" cy="15.4" rx="1.4" ry="2.6" transform="rotate(45 7.4 15.4)"/><ellipse cx="13.6" cy="15.6" rx="1.4" ry="2.6" transform="rotate(45 13.6 15.6)"/><ellipse cx="10.4" cy="12.4" rx="1.4" ry="2.6" transform="rotate(45 10.4 12.4)"/><ellipse cx="16.6" cy="12.6" rx="1.4" ry="2.6" transform="rotate(45 16.6 12.6)"/><ellipse cx="13.4" cy="9.4" rx="1.4" ry="2.6" transform="rotate(45 13.4 9.4)"/><ellipse cx="17.6" cy="5.4" rx="1.4" ry="2.6" transform="rotate(-45 17.6 5.4)"/>',
+              bipinnate: '<path d="M4 21 20 5"/><path d="M8 17l3 3M8 17l-3-3M12 13l3 3M12 13l-3-3M16 9l3 3M16 9l-3-3"/><g fill="currentColor" stroke="none"><circle cx="9.6" cy="18.6" r=".9"/><circle cx="10.8" cy="19.8" r=".9"/><circle cx="6.4" cy="15.4" r=".9"/><circle cx="5.2" cy="14.2" r=".9"/><circle cx="13.6" cy="14.6" r=".9"/><circle cx="14.8" cy="15.8" r=".9"/><circle cx="10.4" cy="11.4" r=".9"/><circle cx="9.2" cy="10.2" r=".9"/><circle cx="17.6" cy="10.6" r=".9"/><circle cx="18.8" cy="11.8" r=".9"/><circle cx="14.4" cy="7.4" r=".9"/><circle cx="13.2" cy="6.2" r=".9"/></g>',
+              fan: '<path d="M12 22v-6"/><path d="M12 16C7 16 4 12.5 4 8c2.5 1.5 5 1 7-3l1 2.5L13 5c2 4 4.5 4.5 7 3 0 4.5-3 8-8 8z"/><path d="M12 16v-3M8 15l1-3M16 15l-1-3"/>',
+              needles:   '<path d="M12 22V10"/><path d="M12 10 5 5M12 10 4 9M12 10 6 3M12 10l7-5M12 10l8-1M12 10l6-7M12 10V2"/>',
+              scale:     '<path d="M12 22V4"/><path d="M12 8c-3 0-5-1.5-6-3 2 0 4 0 6 3zM12 8c3 0 5-1.5 6-3-2 0-4 0-6 3zM12 13c-3 0-5.5-1.5-7-3.5 2.5 0 5 .5 7 3.5zM12 13c3 0 5.5-1.5 7-3.5-2.5 0-5 .5-7 3.5zM12 18c-3 0-6-1.5-7.5-3.5 3 0 5.5.5 7.5 3.5zM12 18c3 0 6-1.5 7.5-3.5-3 0-5.5.5-7.5 3.5z"/>',
+              tulip:     '<path d="M12 22V9"/><path d="M12 21 5 17V9l3-5 4 2 4-2 3 5v8z"/>',
+              star:      '<path d="M12 22v-8"/><path d="M12 14 6 18l2-6-5-3h6L12 3l3 6h6l-5 3 2 6z"/>',
+              generic:   '<path d="M12 22V8"/><path d="M12 3c-5 2-8 7-6 14 2 1 4 1 6 0 2 1 4 1 6 0 2-7-1-12-6-14z"/>',
+            };
+            const LEAF_TYPE = {
+              Acer: 'palmate', Platanus: 'palmate', Aesculus: 'palmate',
+              Tilia: 'heart', Catalpa: 'heart', Syringa: 'heart', Cercis: 'heart', Cercidiphyllum: 'heart', Morus: 'heart',
+              Quercus: 'lobed',
+              Ulmus: 'simple', Celtis: 'simple', Betula: 'simple', Malus: 'simple', Amelanchier: 'simple', Prunus: 'simple', Ostrya: 'simple', Carpinus: 'simple', Fagus: 'simple', Alnus: 'simple', Pyrus: 'simple', Zelkova: 'simple', Crataegus: 'simple', Cornus: 'simple', Magnolia: 'simple', Salix: 'simple', Populus: 'simple', Castanea: 'simple', Maclura: 'simple',
+              Gleditsia: 'pinnate', Fraxinus: 'pinnate', Juglans: 'pinnate', Carya: 'pinnate', Cladrastis: 'pinnate', Robinia: 'pinnate', Maackia: 'pinnate', Phellodendron: 'pinnate', Styphnolobium: 'pinnate', Sorbus: 'pinnate', Koelreuteria: 'pinnate', 'Mountain-ash': 'pinnate',
+              Gymnocladus: 'bipinnate',
+              Ginkgo: 'fan',
+              Pinus: 'needles', Picea: 'needles', Abies: 'needles', Larix: 'needles', Tsuga: 'needles', Pseudotsuga: 'needles', 'Douglas-fir': 'needles', Taxodium: 'needles', Taxus: 'needles',
+              Thuja: 'scale', Juniperus: 'scale', Chamaecyparis: 'scale',
+              Liriodendron: 'tulip',
+              Liquidambar: 'star',
+            };
+            const leafIcon = (genus, color) => {
+                if (!genus || genus === "Unrecorded") return "";
+                const t = LEAF_TYPE[genus] || "generic";
+                return `<svg class="tt-leaf" viewBox="0 0 24 24" style="color:${color}" aria-hidden="true">${LEAF_SVG[t]}</svg>`;
+            };
 
             // ---------- filtering ----------
             const pass = new Uint8Array(N);
@@ -579,7 +619,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 if (D.sizes[SIZE[best]]) extras.push("Size " + D.sizes[SIZE[best]]);
                 if (extras.length) rows.push(`<span class="tt-row">${extras.join(" · ")}</span>`);
                 rows.push(`<span class="tt-row">${(D.lat0 + LA[best] * 1e-5).toFixed(5)}, ${(D.lon0 + LO[best] * 1e-5).toFixed(5)}</span>`);
-                tip.innerHTML = rows.join("<br>");
+                tip.innerHTML = `<div class="tt-wrap">${leafIcon(g, colorOf(colorArr[best]))}<div>${rows.join("<br>")}</div></div>`;
                 const pt = e.containerPoint, wrap = $("tree-mapwrap").getBoundingClientRect();
                 const left = pt.x + 14 + 270 > wrap.width ? pt.x - 14 - 260 : pt.x + 14;
                 tip.style.left = left + "px"; tip.style.top = Math.max(4, pt.y - 10) + "px"; tip.hidden = false;
