@@ -45,7 +45,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                             <button id="tp-play" class="tp-btn" type="button" aria-pressed="false">&#9654; Play</button>
                             <div id="tp-steps" class="tp-steps" role="group" aria-label="Time steps"></div>
                         </div>
-                        <p class="tp-note">Standing inventory in gray, then each planting wave on top. Stop to return to your filters.</p>
+                        <p class="tp-note">Existing trees in gray, then each planting wave on top. Stop to return to your filters.</p>
                     </div>
 
                     <div class="tp-group">
@@ -678,7 +678,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
             // ---------- playback ----------
             const FRAMES = [
-                { label: "2023 standing inventory", src: [0] },
+                { label: "Existing trees (2023 inventory)", src: [0] },
                 { label: "2019–2021 plantings", src: [0, 3] },
                 { label: "2022 plantings", src: [0, 3, 1] },
                 { label: "2023 plantings", src: [0, 3, 1, 2] },
@@ -686,7 +686,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             let timer = null, frame = -1, saved = null;
             const playBtn = $("tp-play"), steps = $("tp-steps"), timeLbl = $("tp-time-lbl");
             FRAMES.forEach((f, i) => {
-                const b = document.createElement("button"); b.type = "button"; b.textContent = ["2023", "2019–21", "2022", "2023"][i]; b.title = f.label;
+                const b = document.createElement("button"); b.type = "button"; b.textContent = ["Existing", "2019–21", "2022", "2023"][i]; b.title = f.label;
                 b.addEventListener("click", () => { enterPlay(); pauseTimer(); showFrame(i); });
                 steps.appendChild(b);
             });
