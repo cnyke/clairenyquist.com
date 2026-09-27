@@ -24,3 +24,9 @@ The octopuses, malaria, meps, themet, music, respiratoryviruses,
 tuberculosis, torus, and wilddyeplants cards use hand-recorded clips
 instead (media/*.mov -> videoify.py -> the same gifify.py step). genes.py
 is self-serving: it renders its SVG layers directly, no build needed.
+
+minneapolis-trees.py zooms the tree map out from downtown to the whole
+city (900x1080 card, --width 900 for gifify; the map is dense, so the WebP
+was built with --width 480 --fps 8 --dither none --colors 96 --quality 60
+to stay near 5 MB). `--reel` writes a 1080x1920 Instagram Reel to media/
+instead of public/videos/; `--check` just screenshots the panel.
