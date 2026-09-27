@@ -49,31 +49,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     </div>
 
                     <div class="tp-group">
-                        <label class="tp-label" for="tp-colorby">Color by</label>
-                        <select id="tp-colorby" class="tp-select">
-                            <option value="gen">Genus</option>
-                            <option value="src">Data layer</option>
-                            <option value="year">Planting year</option>
-                            <option value="loc">Location type</option>
-                            <option value="root">Root stock</option>
-                            <option value="proj">Planting program</option>
-                        </select>
-                        <ul id="tp-legend" class="tp-legend"></ul>
-                    </div>
-
-                    <div class="tp-group">
                         <div class="tp-label-row">
-                            <label class="tp-label" for="tp-genus-search">Genus</label>
-                            <button id="tp-genus-clear" class="tp-link" type="button">All</button>
+                            <span class="tp-label">Genus</span>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="gen" type="button">Color by</button><button class="tp-link tp-clear" data-dim="gen" type="button">All</button></span>
                         </div>
-                        <input id="tp-genus-search" class="tp-input" type="search" placeholder="Find a genus" autocomplete="off" />
                         <ul id="tp-genus" class="tp-checklist tp-scroll"></ul>
+                        <p class="tp-note">Uncheck to hide a value; double-click to keep only one.</p>
                     </div>
 
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Data layer</span>
-                            <button class="tp-link tp-clear" data-dim="src" type="button">All</button>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="src" type="button">Color by</button><button class="tp-link tp-clear" data-dim="src" type="button">All</button></span>
                         </div>
                         <ul id="tp-src" class="tp-checklist"></ul>
                     </div>
@@ -81,7 +68,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Planting year</span>
-                            <button class="tp-link tp-clear" data-dim="year" type="button">All</button>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="year" type="button">Color by</button><button class="tp-link tp-clear" data-dim="year" type="button">All</button></span>
                         </div>
                         <ul id="tp-year" class="tp-checklist"></ul>
                     </div>
@@ -89,7 +76,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Location type</span>
-                            <button class="tp-link tp-clear" data-dim="loc" type="button">All</button>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="loc" type="button">Color by</button><button class="tp-link tp-clear" data-dim="loc" type="button">All</button></span>
                         </div>
                         <ul id="tp-loc" class="tp-checklist"></ul>
                     </div>
@@ -97,7 +84,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Root stock</span>
-                            <button class="tp-link tp-clear" data-dim="root" type="button">All</button>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="root" type="button">Color by</button><button class="tp-link tp-clear" data-dim="root" type="button">All</button></span>
                         </div>
                         <ul id="tp-root" class="tp-checklist tp-scroll"></ul>
                     </div>
@@ -105,7 +92,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     <div class="tp-group">
                         <div class="tp-label-row">
                             <span class="tp-label">Planting program</span>
-                            <button class="tp-link tp-clear" data-dim="proj" type="button">All</button>
+                            <span class="tp-links"><button class="tp-link tp-color" data-dim="proj" type="button">Color by</button><button class="tp-link tp-clear" data-dim="proj" type="button">All</button></span>
                         </div>
                         <ul id="tp-proj" class="tp-checklist tp-scroll"></ul>
                     </div>
@@ -266,9 +253,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             color: #374151;
         }
         .tp-input:focus, .tp-select:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
-        .tp-legend, .tp-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+        .tp-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+        #tp-genus { max-height: 300px; }
+        .tp-links { display: inline-flex; gap: 10px; }
+        .tp-color[aria-pressed="true"] { color: #9ca3af; cursor: default; pointer-events: none; }
         .tp-scroll { max-height: 190px; overflow-y: auto; border: 1px solid #f3f4f6; border-radius: 6px; padding: 2px; }
-        .tp-legend li, .tp-checklist li {
+        .tp-checklist li {
             display: grid;
             grid-template-columns: 14px 1fr auto;
             align-items: center;
@@ -279,14 +269,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             user-select: none;
             line-height: 1.3;
         }
-        .tp-legend li:hover, .tp-checklist li:hover { background: #f3f4f6; }
+        .tp-checklist li:hover { background: #f3f4f6; }
         .tp-checklist li.off { color: #9ca3af; }
         .tp-checklist li.off .tp-sw { background: transparent !important; }
-        .tp-legend li.off { opacity: 0.35; }
+        .tp-checklist li.off .tp-leaf { color: #d1d5db !important; }
+        /* Color swatch: shown only on the dimension the map is colored by. */
         .tp-sw {
-            width: 11px; height: 11px; border-radius: 50%;
+            display: none; width: 11px; height: 11px; border-radius: 50%;
+            margin-right: 6px; vertical-align: -1px;
             box-shadow: inset 0 0 0 1px rgba(0,0,0,0.18);
         }
+        li[data-color] .tp-sw { display: inline-block; }
         .tp-box {
             width: 12px; height: 12px; border-radius: 3px; border: 1px solid #9ca3af; background: #fff;
             display: inline-grid; place-items: center;
@@ -405,7 +398,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 d.vis = new Uint32Array(d.labels.length);
             }
             const state = { colorBy: "gen" };
-            const genusLower = D.genera.map((g, i) => (g + " " + (D.common[g] || "")).toLowerCase());
+
 
             // ---------- colors ----------
             const CAT = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"];
@@ -506,8 +499,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     el.dataset.i = li;
                     const label = d.labels[li];
                     const common = key === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
-                    const leaf = key === "gen" ? leafIcon(label, "#9ca3af", "tp-leaf") : "";
-                    el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${leaf}${label}${common}</span><span class="tp-ct"></span>`;
+                    const mark = key === "gen" ? leafIcon(label, "#9ca3af", "tp-leaf") : `<span class="tp-sw"></span>`;
+                    el.innerHTML = `<span class="tp-box"></span><span class="tp-nm">${mark}${label}${common}</span><span class="tp-ct"></span>`;
                     el.addEventListener("click", (e) => {
                         stopPlay();
                         if (e.altKey || e.metaKey) { d.on.fill(0); d.on[li] = 1; }
@@ -528,39 +521,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     const d = dims[k];
                     for (const el of d.items) el.querySelector(".tp-ct").textContent = d.vis[+el.dataset.i].toLocaleString();
                 }
-                // legend
-                const d = dims[state.colorBy];
-                for (const el of $("tp-legend").children) {
-                    const li = el.dataset.i;
-                    el.querySelector(".tp-ct").textContent = (li === "other" ? otherCount() : d.vis[+li]).toLocaleString();
+            }
+            // The checklist of the color-by dimension doubles as the legend: its marks
+            // (leaf icons for genus, dots elsewhere) take the map's colors. Each group's
+            // "Color by" link switches which dimension that is.
+            const colorLinks = [...document.querySelectorAll(".tp-color")];
+            function paintChecklists() {
+                for (const b of colorLinks) {
+                    const on = b.dataset.dim === state.colorBy;
+                    b.setAttribute("aria-pressed", on ? "true" : "false");
+                    b.textContent = on ? "Colored by" : "Color by";
+                }
+                for (const k of Object.keys(dims)) {
+                    const active = k === state.colorBy;
+                    for (const el of dims[k].items) {
+                        const li = +el.dataset.i;
+                        const color = active ? (colorSlots.has(li) ? CAT[colorSlots.get(li)] : OTHER) : null;
+                        if (color) el.dataset.color = color; else delete el.dataset.color;
+                        const leaf = el.querySelector(".tp-leaf"); if (leaf) leaf.style.color = color || "#9ca3af";
+                        const sw = el.querySelector(".tp-sw"); if (sw) sw.style.background = color || "";
+                    }
                 }
             }
-            function otherCount() {
-                const d = dims[state.colorBy]; let n = 0;
-                for (let i = 0; i < d.labels.length; i++) if (!colorSlots.has(i)) n += d.vis[i];
-                return n;
-            }
-            function buildLegend() {
-                const key = state.colorBy, d = dims[key], ul = $("tp-legend");
-                ul.innerHTML = "";
-                const entries = [...colorSlots.entries()].sort((a, b) => a[1] - b[1]);
-                for (const [li, slot] of entries) {
-                    const el = document.createElement("li"); el.dataset.i = li;
-                    const label = d.labels[li];
-                    const common = state.colorBy === "gen" && d.common[label] ? `<i>${d.common[label]}</i>` : "";
-                    el.innerHTML = `<span class="tp-sw" style="background:${CAT[slot]}"></span><span class="tp-nm">${label}${common}</span><span class="tp-ct"></span>`;
-                    el.title = "Click to filter to this value";
-                    el.addEventListener("click", () => { if (state.play) return; d.on.fill(0); d.on[li] = 1; syncChecklist(key); applyFilters(); });
-                    ul.appendChild(el);
-                }
-                const restIdx = d.labels.map((_, i) => i).filter((i) => d.total[i] > 0 && !colorSlots.has(i));
-                if (restIdx.length > 0) {
-                    const el = document.createElement("li"); el.dataset.i = "other";
-                    const nm = restIdx.length === 1 ? d.labels[restIdx[0]] : `Everything else<i>${restIdx.length} values</i>`;
-                    el.innerHTML = `<span class="tp-sw" style="background:${OTHER}"></span><span class="tp-nm">${nm}</span><span class="tp-ct"></span>`;
-                    ul.appendChild(el);
-                }
-            }
+            function buildLegend() { paintChecklists(); }
             function updateStat() {
                 const parts = [];
                 for (const k of Object.keys(dims)) {
@@ -696,7 +679,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             function enterPlay() {
                 if (state.play) return;
                 saved = { src: Uint8Array.from(dims.src.on), year: Uint8Array.from(dims.year.on), colorBy: state.colorBy };
-                state.play = true; state.colorBy = "src"; $("tp-colorby").value = "src"; $("tp-colorby").disabled = true;
+                state.play = true; state.colorBy = "src";
                 dims.year.on.fill(1); syncChecklist("year");
                 assignColors(); buildLegend();
                 playBtn.setAttribute("aria-pressed", "true"); playBtn.innerHTML = "&#9632; Stop";
@@ -716,7 +699,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 if (!state.play) return;
                 state.play = false; frame = -1;
                 dims.src.on.set(saved.src); dims.year.on.set(saved.year); state.colorBy = saved.colorBy;
-                $("tp-colorby").value = saved.colorBy; $("tp-colorby").disabled = false;
                 syncChecklist("src"); syncChecklist("year"); assignColors(); buildLegend(); applyFilters();
                 [...steps.children].forEach((b) => b.classList.remove("on")); timeLbl.textContent = "";
                 playBtn.setAttribute("aria-pressed", "false"); playBtn.innerHTML = "&#9654; Play";
@@ -733,17 +715,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             // ---------- wire up ----------
             for (const k of Object.keys(dims)) buildChecklist(k);
             assignColors(); buildLegend();
-            $("tp-colorby").addEventListener("change", (e) => { if (state.play) return; state.colorBy = e.target.value; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
-            $("tp-genus-search").addEventListener("input", (e) => {
-                const q = e.target.value.trim().toLowerCase();
-                for (const el of dims.gen.items) el.style.display = !q || genusLower[+el.dataset.i].includes(q) ? "" : "none";
-            });
-            $("tp-genus-clear").addEventListener("click", () => { stopPlay(); dims.gen.on.fill(1); syncChecklist("gen"); applyFilters(); });
-            for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { stopPlay(); const k = b.dataset.dim; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
+            for (const b of colorLinks) b.addEventListener("click", () => { if (state.play) return; state.colorBy = b.dataset.dim; assignColors(); buildLegend(); updateCounts(); layer.redraw(); });
+            for (const b of document.querySelectorAll(".tp-clear")) b.addEventListener("click", () => { stopPlay(); const k = b.dataset.dim || state.colorBy; dims[k].on.fill(1); syncChecklist(k); applyFilters(); });
             $("tp-reset").addEventListener("click", () => {
                 stopPlay();
                 for (const k of Object.keys(dims)) { dims[k].on.fill(1); syncChecklist(k); }
-                $("tp-genus-search").value = ""; for (const el of dims.gen.items) el.style.display = "";
                 applyFilters();
             });
             applyFilters();
