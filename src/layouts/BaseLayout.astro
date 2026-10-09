@@ -8,6 +8,9 @@ export interface Props {
   /** Schema.org type for this page's WebPage node: "WebPage" (default),
    *  "ProfilePage", "CollectionPage", or "Article". */
   schemaType?: "WebPage" | "ProfilePage" | "CollectionPage" | "Article";
+  /** Optional Schema.org node this page is about (a Book, say). It joins
+   *  the site graph and becomes the WebPage's mainEntity. Needs an "@id". */
+  mainEntity?: Record<string, unknown>;
 }
 
 const {
@@ -16,7 +19,8 @@ const {
   image = "/images/headshot.png",
   type = "website",
   author = "Claire Nyquist",
-  schemaType = type === "article" ? "Article" : "WebPage"
+  schemaType = type === "article" ? "Article" : "WebPage",
+  mainEntity
 } = Astro.props;
 
 // Google Analytics Measurement ID
@@ -131,7 +135,8 @@ const webpage = {
     "@type": "ImageObject",
     "url": socialImageURL
   },
-  ...(schemaType === "ProfilePage" ? { "mainEntity": { "@id": personId } } : {})
+  ...(schemaType === "ProfilePage" ? { "mainEntity": { "@id": personId } } : {}),
+  ...(mainEntity ? { "mainEntity": { "@id": mainEntity["@id"] } } : {})
 };
 
 const topLevelPages = [
@@ -245,7 +250,7 @@ const topLevelPages = [
          this WebPage to the site-wide Person and WebSite nodes -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@graph": [person, website, webpage]
+      "@graph": [person, website, webpage, ...(mainEntity ? [mainEntity] : [])]
     })} />
     
     <!-- Google Analytics -->

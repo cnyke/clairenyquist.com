@@ -7,12 +7,38 @@ const spreads = [
         alt: "The book open to Petrichor, pages 62 and 63, with a pen drawing of a cicada between the stanzas, in leaf shadow on a wooden floor.",
     },
 ];
+// Schema.org Book node, so search engines and AI assistants can identify
+// the book by title, author, ISBN, format, and publication date.
+const site = "https://clairenyquist.com";
+const blurb =
+    "Spanning four years of Minnesota weather, Mummies & Wildflowers moves through a full circle of seasons and comes out the other side in bloom. These are poems that hold two things at once and refuse to choose: the preserved dead and the flower, the grief and the appetite, the lover and the microscope, the cold breeze and the reason to roll the window down anyway.";
+const book = {
+    "@type": "Book",
+    "@id": `${site}/poetry/#book`,
+    name: "Mummies & Wildflowers",
+    alternateName: "Mummies & Wildflowers: Poems",
+    url: `${site}/poetry/`,
+    author: { "@id": `${site}/#person` },
+    illustrator: { "@id": `${site}/#person` },
+    publisher: { "@id": `${site}/#person` },
+    isbn: "979-8-9981658-0-1",
+    bookFormat: "https://schema.org/Hardcover",
+    numberOfPages: 208,
+    datePublished: "2026-11-02",
+    inLanguage: "en",
+    genre: "Poetry",
+    image: `${site}/images/mummies-wildflowers-cover.webp`,
+    description: blurb,
+    keywords:
+        "poetry, American poetry, Minnesota poetry, Minneapolis, nature poems, four seasons, grief and loss, science poetry, pregnancy and motherhood, life and death",
+};
 ---
 
 <BaseLayout
-    title="Mummies & Wildflowers - Claire Nyquist"
-    description="Poetry by Claire Nyquist. Coming soon: Mummies & Wildflowers, a collection of poems about birth, bodies, nature, love, and the end."
-    image="/images/gifs/poetry-poster.webp"
+    title="Mummies & Wildflowers: Poems by Claire Nyquist"
+    description="Mummies & Wildflowers, poems by Minneapolis poet Claire Nyquist: four years of Minnesota seasons, grief, love, and science. Hardcover, November 2nd, 2026."
+    image="/images/mummies-wildflowers-social.jpg"
+    mainEntity={book}
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Hero Section -->
@@ -58,11 +84,15 @@ const spreads = [
                     Wildflowers moves through a full circle of seasons and
                     comes out the other side in bloom.
                 </p>
-                <p class="text-lg text-gray-600 leading-relaxed">
+                <p class="text-lg text-gray-600 leading-relaxed mb-6">
                     These are poems that hold two things at once and refuse to
                     choose: the preserved dead and the flower, the grief and
                     the appetite, the lover and the microscope, the cold breeze
                     and the reason to roll the window down anyway.
+                </p>
+                <p class="text-sm text-gray-500">
+                    Poems by Claire Nyquist · Hardcover · 208 pages ·
+                    November 2nd, 2026 · ISBN 979-8-9981658-0-1
                 </p>
             </div>
         </div>
