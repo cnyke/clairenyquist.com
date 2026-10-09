@@ -6,10 +6,6 @@ const spreads = [
         file: "spread-petrichor",
         alt: "The book open to Petrichor, pages 62 and 63, with a pen drawing of a cicada between the stanzas, in leaf shadow on a wooden floor.",
     },
-    {
-        file: "spread-tarim-reprieve",
-        alt: "The book open to The Mummies of Tarim Basin and Reprieve, pages 92 and 93, in leaf shadow on a wooden floor.",
-    },
 ];
 ---
 
@@ -72,11 +68,11 @@ const spreads = [
         </div>
 
         <!-- Open spreads of the printed proof, photographed in window light. -->
-        <div class="max-w-6xl mx-auto mb-16">
+        <div class="max-w-3xl mx-auto mb-16">
             <p class="text-sm uppercase tracking-widest text-blue-600 mb-6">
                 Inside the book
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6">
                 {spreads.map((s) => (
                     <img
                         src={`/images/mummies-wildflowers/${s.file}.webp`}
