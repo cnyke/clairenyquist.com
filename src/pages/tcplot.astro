@@ -107,6 +107,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <p class="mt-1">The Coffee Shop NE, 2852 Johnson St NE, Minneapolis, MN</p>
             </div>
 
+            <figure class="mb-6 max-w-md">
+                <div class="rounded-lg overflow-hidden">
+                    <img
+                        src="/images/tcplot-meiji-japan-map.webp"
+                        alt="A Meiji-era outline map of Japan with prefectures hand-tinted in soft green, orange, yellow, and purple"
+                        class="w-full h-auto object-contain"
+                        loading="lazy"
+                    />
+                </div>
+                <figcaption class="text-sm text-gray-500 leading-relaxed mt-2">
+                    A Meiji-era outline map of Japan (1870s), its newly drawn prefectures hand-tinted in watercolor; public domain.
+                </figcaption>
+            </figure>
+
             <p class="text-xl text-gray-600 leading-relaxed mb-4 italic">
                 Every map is a chart with a place in it.
             </p>
@@ -130,6 +144,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 </p>
                 <p class="mt-1">The Coffee Shop NE, 2852 Johnson St NE, Minneapolis, MN</p>
             </div>
+
+            <figure class="mb-6 max-w-2xl">
+                <div class="rounded-lg overflow-hidden">
+                    <img
+                        src="/images/tcplot-nightingale-1858.webp"
+                        alt="Florence Nightingale's two rose diagrams of army deaths, dominated by blue wedges of preventable disease"
+                        class="w-full h-auto object-contain"
+                        loading="lazy"
+                    />
+                </div>
+                <figcaption class="text-sm text-gray-500 leading-relaxed mt-2">
+                    Florence Nightingale, <em>Diagram of the Causes of Mortality in the Army in the East</em> (1858); public domain.
+                </figcaption>
+            </figure>
 
             <p class="text-xl text-gray-600 leading-relaxed mb-4 italic">
                 Same data. Opposite stories.
@@ -155,6 +183,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <p class="mt-1">The Coffee Shop NE, 2852 Johnson St NE, Minneapolis, MN</p>
             </div>
 
+            <figure class="mb-6 max-w-2xl">
+                <div class="rounded-lg overflow-hidden">
+                    <img
+                        src="/images/tcplot-msp-warming-stripes.webp"
+                        alt="Warming stripes for Minneapolis and St. Paul, 1939 to 2025: vertical bands of blue and red, growing redder toward the right"
+                        class="w-full h-40 sm:h-56 object-cover"
+                        loading="lazy"
+                    />
+                </div>
+                <figcaption class="text-sm text-gray-500 leading-relaxed mt-2">
+                    Annual average temperature in Minneapolis and St. Paul, 1939 to 2025, one stripe per year in the style of Ed Hawkins&#39;s warming stripes; data from NOAA.
+                </figcaption>
+            </figure>
+
             <p class="text-lg text-gray-600 leading-relaxed mb-4">
                 Come explore the climate data provided or of your choice.
             </p>
@@ -176,6 +218,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <p class="mt-1">The Coffee Shop NE, 2852 Johnson St NE, Minneapolis, MN</p>
             </div>
 
+            <figure class="mb-6 max-w-2xl">
+                <div class="rounded-lg overflow-hidden aspect-[3/2] bg-white">
+                    <img
+                        src="/images/tcplot-blood-test-reference-ranges.webp"
+                        alt="A long chart of reference ranges for blood tests: dozens of overlapping colored bars on a log scale"
+                        class="w-full h-full object-cover pan-chart"
+                        loading="lazy"
+                    />
+                </div>
+                <figcaption class="text-sm text-gray-500 leading-relaxed mt-2">
+                    Mikael Häggström, <em>Reference ranges for blood tests</em> (2009); public domain (CC0).
+                </figcaption>
+            </figure>
+
             <p class="text-lg text-gray-600 leading-relaxed mb-4">
                 A morning about color in charts, in two acts: bring a chart whose color you have opinions about, then we'll recolor charts together and show the before and after.
             </p>
@@ -196,3 +252,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
     </div>
 </BaseLayout>
+
+<style>
+    .pan-chart {
+        animation: pan-chart 32s ease-in-out infinite alternate;
+    }
+    @keyframes pan-chart {
+        from {
+            object-position: 0% 50%;
+        }
+        to {
+            object-position: 100% 50%;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .pan-chart {
+            animation: none;
+        }
+    }
+</style>
