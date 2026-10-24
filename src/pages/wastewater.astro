@@ -167,7 +167,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 "Influenza B": ["#58c161", "#3ba647", "#158b2d", "#006f1d", "#025314"],
                 "RSV": ["#cf9e2a", "#b38405", "#946c02", "#755504", "#583f02"],
             };
-            function colorOf(lvl) { return lvl.i == null ? "#ffffff" : RAMPS[state.pathogen][lvl.i]; }
+            function colorOf(lvl) {
+                if (lvl === NOT_DETECTED) return "#c4c8ce";
+                if (lvl === NO_DATA) return "none";
+                return RAMPS[state.pathogen][lvl.i];
+            }
             function plantLine() { return RAMPS[state.pathogen][2]; }
             var PATHOGEN_NAMES = {
                 "SARS-CoV-2": "COVID-19",
@@ -233,8 +237,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 var d = derived[state.pathogen][pl.name];
                 var lvl = d.levels[state.week];
                 var thisWeek = d.raw[state.week];
-                var swatch = lvl === NO_DATA || lvl === NOT_DETECTED
-                    ? '<span class="swatch" style="border:1.5px solid ' + MUTED + '"></span>'
+                var swatch = lvl === NO_DATA
+                    ? '<span class="swatch" style="border:1.5px dashed ' + MUTED + '"></span>'
                     : '<span class="swatch" style="background:' + colorOf(lvl) + '"></span>';
                 return "<strong>" + pl.name.replace(" WWTP", "") + "</strong><br>" +
                     pl.city + " · " + pl.region + "<br>" +
@@ -398,13 +402,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 function update() {
                     dots.each(function (pl) {
                         var lvl = derived[state.pathogen][pl.name].levels[state.week];
-                        var empty = lvl === NO_DATA || lvl === NOT_DETECTED;
-                        var on = pl === active;
+                        // No outlines; only a plant with no recent data keeps a
+                        // dashed ring, since it has no fill to show
                         d3.select(this)
                             .attr("fill", colorOf(lvl))
-                            .attr("stroke", on ? "#111827" : empty ? MUTED : "#ffffff")
-                            .attr("stroke-width", on ? 2.5 : empty ? 1.5 : 2)
-                            .attr("stroke-dasharray", lvl === NO_DATA && !on ? "2 2" : null)
+                            .attr("stroke", lvl === NO_DATA ? MUTED : "none")
+                            .attr("stroke-width", 1.5)
+                            .attr("stroke-dasharray", lvl === NO_DATA ? "2 2" : null)
                             .attr("aria-label", pl.name + ", " + pl.city + ": " + lvl.label);
                     });
                     dots.filter(function (pl) { return pl === active; }).raise();
@@ -444,7 +448,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     var s = row.append("svg").attr("width", 16).attr("height", 16);
                     s.append("circle").attr("cx", 8).attr("cy", 8).attr("r", 6)
                         .datum(l).attr("class", "legend-swatch")
-                        .attr("stroke", l === NO_DATA || l === NOT_DETECTED ? MUTED : "none")
+                        .attr("stroke", l === NO_DATA ? MUTED : "none")
                         .attr("stroke-width", 1.5)
                         .attr("stroke-dasharray", l === NO_DATA ? "2 2" : null);
                     row.append("span").text(l.label);
