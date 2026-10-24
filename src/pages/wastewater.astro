@@ -57,29 +57,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
 
         <!-- Maps -->
-        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6">
-            <div class="relative" id="map-wrap">
+        <div class="flex flex-col md:flex-row md:justify-center gap-8">
+            <div class="relative w-full md:max-w-[480px]" id="map-wrap">
                 <svg id="state-map" class="w-full h-auto" role="img" aria-label="Map of Minnesota wastewater treatment plants"></svg>
             </div>
-            <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-6 w-full md:w-[320px] md:shrink-0">
                 <div>
                     <h2 class="text-sm font-medium text-gray-700 mb-2">Twin Cities area</h2>
-                    <div class="relative border border-gray-200 rounded-lg overflow-hidden" id="inset-wrap">
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
                         <svg id="metro-map" class="w-full h-auto block" role="img" aria-label="Inset map of Twin Cities area treatment plants"></svg>
                     </div>
                 </div>
                 <div id="legend" class="text-sm text-gray-700"></div>
-            </div>
-        </div>
-
-        <!-- Trend chart -->
-        <div class="mt-10">
-            <h2 class="text-xl font-medium text-gray-900 mb-1" id="trend-title"></h2>
-            <p class="text-sm text-gray-600 mb-3">
-                Four-week average of PMMoV-normalized concentration. Click a plant on the map to change it; click the chart to jump to a week.
-            </p>
-            <div class="relative" id="trend-wrap">
-                <svg id="trend-chart" class="w-full h-auto"></svg>
+                <p class="text-sm text-gray-500">Hover over or tab to a plant to see its trend against the statewide average.</p>
             </div>
         </div>
 
@@ -125,22 +115,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
     </div>
 
-    <style>
+    <style is:global>
+        /* Follows the cursor, opening upward to its right (or left near the edge) */
         .ww-tooltip {
-            position: absolute;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            max-width: 100%;
             pointer-events: none;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 8px 10px;
+            padding: 10px 12px;
             font-size: 13px;
             line-height: 1.4;
             color: #374151;
-            max-width: 240px;
             z-index: 10;
             visibility: hidden;
         }
+        .ww-tooltip svg { display: block; margin-top: 8px; }
         .ww-tooltip strong { color: #111827; font-weight: 600; }
         .ww-tooltip .swatch {
             display: inline-block;
@@ -155,16 +150,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script is:inline>
         (async function () {
-            // Five-step ordinal blue ramp (validated: monotone, one hue, light end >= 2:1 on white)
             var LEVELS = [
-                { key: "very-low", label: "Very low", color: "#86b6ef" },
-                { key: "low", label: "Low", color: "#5598e7" },
-                { key: "moderate", label: "Moderate", color: "#2a78d6" },
-                { key: "high", label: "High", color: "#1c5cab" },
-                { key: "very-high", label: "Very high", color: "#104281" },
+                { key: "very-low", label: "Very low", i: 0 },
+                { key: "low", label: "Low", i: 1 },
+                { key: "moderate", label: "Moderate", i: 2 },
+                { key: "high", label: "High", i: 3 },
+                { key: "very-high", label: "Very high", i: 4 },
             ];
-            var NOT_DETECTED = { key: "nd", label: "Not detected", color: "#ffffff" };
-            var NO_DATA = { key: "na", label: "No recent data", color: "#ffffff" };
+            var NOT_DETECTED = { key: "nd", label: "Not detected" };
+            var NO_DATA = { key: "na", label: "No recent data" };
+            // One five-step ordinal ramp per virus, all at the same lightness
+            // steps (each validated: monotone, one hue, light end >= 2:1 on white)
+            var RAMPS = {
+                "SARS-CoV-2": ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"],
+                "Influenza A": ["#fe8d8b", "#f4595f", "#d23843", "#b00829", "#83021b"],
+                "Influenza B": ["#58c161", "#3ba647", "#158b2d", "#006f1d", "#025314"],
+                "RSV": ["#cf9e2a", "#b38405", "#946c02", "#755504", "#583f02"],
+            };
+            function colorOf(lvl) { return lvl.i == null ? "#ffffff" : RAMPS[state.pathogen][lvl.i]; }
+            function plantLine() { return RAMPS[state.pathogen][2]; }
             var PATHOGEN_NAMES = {
                 "SARS-CoV-2": "COVID-19",
                 "Influenza A": "Influenza A",
@@ -172,7 +176,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 "RSV": "RSV",
             };
             var STATE_LINE = "#9ca3af";
-            var PLANT_LINE = "#2a78d6";
             var INK = "#374151";
             var MUTED = "#6b7280";
             var GRID = "#e5e7eb";
@@ -194,7 +197,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             var state = {
                 pathogen: "SARS-CoV-2",
                 week: weeks.length - 1,
-                selected: "Metro WWTP",
                 playing: null,
             };
 
@@ -226,53 +228,91 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 derived[p].__state = smooth(data.statewide[p]);
             });
 
-            // ---------- Shared tooltip helper ----------
-            function makeTooltip(wrap) {
-                return d3.select(wrap).append("div").attr("class", "ww-tooltip");
-            }
-            function placeTooltip(tip, wrap, event) {
-                var box = wrap.getBoundingClientRect();
-                var node = tip.node();
-                var x = event.clientX - box.left + 14;
-                var y = event.clientY - box.top + 14;
-                if (x + node.offsetWidth > box.width) x = event.clientX - box.left - node.offsetWidth - 14;
-                if (y + node.offsetHeight > box.height) y = Math.max(0, event.clientY - box.top - node.offsetHeight - 14);
-                tip.style("left", x + "px").style("top", y + "px");
-            }
-            function placeTooltipAt(tip, wrap, el) {
-                var box = wrap.getBoundingClientRect();
-                var r = el.getBoundingClientRect();
-                tip.style("left", Math.min(r.right - box.left + 6, box.width - tip.node().offsetWidth) + "px")
-                    .style("top", (r.top - box.top) + "px");
-            }
-
+            // ---------- Tooltip: plant stats plus its trend vs. statewide ----------
             function plantTooltipHtml(pl) {
                 var d = derived[state.pathogen][pl.name];
                 var lvl = d.levels[state.week];
                 var thisWeek = d.raw[state.week];
                 var swatch = lvl === NO_DATA || lvl === NOT_DETECTED
                     ? '<span class="swatch" style="border:1.5px solid ' + MUTED + '"></span>'
-                    : '<span class="swatch" style="background:' + lvl.color + '"></span>';
+                    : '<span class="swatch" style="background:' + colorOf(lvl) + '"></span>';
                 return "<strong>" + pl.name.replace(" WWTP", "") + "</strong><br>" +
                     pl.city + " · " + pl.region + "<br>" +
                     fmtNum(pl.population) + " people served<br>" +
                     '<div style="margin-top:6px">' + swatch + lvl.label + "</div>" +
-                    "4-week average: " + fmtVal(d.avg[state.week]) + "<br>" +
+                    PATHOGEN_NAMES[state.pathogen] + ", 4-week average: " + fmtVal(d.avg[state.week]) + "<br>" +
                     "Week of " + fmtShort(weeks[state.week]) + ": " +
                     (thisWeek == null ? "no sample" : fmtVal(thisWeek));
+            }
+
+            // Small line chart of the plant's 4-week average against statewide
+            function drawTrend(container, pl) {
+                var W = 276, H = 130, m = { top: 8, right: 8, bottom: 18, left: 30 };
+                var series = derived[state.pathogen][pl.name].avg;
+                var statewide = derived[state.pathogen].__state;
+                var x = d3.scaleTime().domain(d3.extent(weeks)).range([m.left, W - m.right]);
+                var y = d3.scaleLinear().domain([0, (d3.max(series.concat(statewide)) || 1) * 1.05])
+                    .nice(3).range([H - m.bottom, m.top]);
+                var line = d3.line()
+                    .defined(function (v) { return v != null; })
+                    .x(function (v, i) { return x(weeks[i]); })
+                    .y(function (v) { return y(v); });
+
+                var svg = container.append("svg").attr("width", "100%").attr("viewBox", "0 0 " + W + " " + H);
+                y.ticks(3).forEach(function (t) {
+                    svg.append("line").attr("x1", m.left).attr("x2", W - m.right)
+                        .attr("y1", y(t)).attr("y2", y(t)).attr("stroke", GRID);
+                    svg.append("text").attr("x", m.left - 5).attr("y", y(t) + 3.5)
+                        .attr("text-anchor", "end").attr("font-size", 10).attr("fill", MUTED).text(d3.format(",")(t));
+                });
+                [weeks[0], weeks[weeks.length - 1]].forEach(function (d, i) {
+                    svg.append("text").attr("x", x(d)).attr("y", H - 4)
+                        .attr("text-anchor", i ? "end" : "start").attr("font-size", 10).attr("fill", MUTED)
+                        .text(d3.timeFormat("%b %Y")(d));
+                });
+                var wx = x(weeks[state.week]);
+                svg.append("line").attr("x1", wx).attr("x2", wx).attr("y1", m.top).attr("y2", H - m.bottom)
+                    .attr("stroke", "#d1d5db");
+                svg.append("path").attr("d", line(statewide)).attr("fill", "none")
+                    .attr("stroke", STATE_LINE).attr("stroke-width", 1.5).attr("stroke-dasharray", "4 3");
+                svg.append("path").attr("d", line(series)).attr("fill", "none")
+                    .attr("stroke", plantLine()).attr("stroke-width", 2);
+                if (series[state.week] != null) {
+                    svg.append("circle").attr("cx", wx).attr("cy", y(series[state.week])).attr("r", 4)
+                        .attr("fill", plantLine()).attr("stroke", "#fff").attr("stroke-width", 2);
+                }
+                container.append("div").attr("class", "flex gap-4 mt-1 text-xs text-gray-600").html(
+                    '<span><svg width="16" height="8" style="display:inline;margin:0 4px 0 0"><line x1="0" x2="16" y1="4" y2="4" stroke="' + plantLine() + '" stroke-width="2"/></svg>' + pl.city + "</span>" +
+                    '<span><svg width="16" height="8" style="display:inline;margin:0 4px 0 0"><line x1="0" x2="16" y1="4" y2="4" stroke="' + STATE_LINE + '" stroke-width="1.5" stroke-dasharray="4 3"/></svg>Statewide</span>');
             }
 
             // ---------- Maps ----------
             var radius = d3.scaleSqrt().domain([0, d3.max(plants, function (p) { return p.population; })]).range([0, 26]);
             function r(pl) { return Math.max(4.5, radius(pl.population)); }
 
-            function buildMap(svgId, wrapId, width, height, fitTarget, opts) {
+            // One tooltip for both maps. Its lower corner sits just off the
+            // cursor: up and to the right, flipping left when it would run
+            // off the screen, and down only when there's no room above.
+            var tip = d3.select("body").append("div").attr("class", "ww-tooltip");
+            var anchor = null;
+            function placeTip() {
+                if (!anchor) return;
+                var node = tip.node(), gap = 12;
+                var w = node.offsetWidth, h = node.offsetHeight;
+                var vw = document.documentElement.clientWidth;
+                var left = anchor[0] + gap;
+                if (left + w > vw - 8) left = anchor[0] - gap - w;
+                left = Math.max(8, left);
+                var top = anchor[1] - gap - h;
+                if (top < 8) top = Math.min(anchor[1] + gap, window.innerHeight - h - 8);
+                tip.style("left", left + "px").style("top", top + "px");
+            }
+
+            function buildMap(svgId, width, height, fitTarget, opts) {
                 var svg = d3.select("#" + svgId).attr("viewBox", "0 0 " + width + " " + height);
-                var wrap = document.getElementById(wrapId);
                 var projection = d3.geoConicConformal().parallels([45.6, 47]).rotate([94, 0])
                     .fitExtent([[opts.pad, opts.pad], [width - opts.pad, height - opts.pad]], fitTarget);
                 var path = d3.geoPath(projection);
-                var tip = makeTooltip(wrap);
 
                 if (opts.clip) {
                     svg.append("defs").append("clipPath").attr("id", svgId + "-clip")
@@ -317,42 +357,62 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .join("text")
                     .attr("x", function (pl) { return projection([pl.lon, pl.lat])[0] + r(pl) + 4; })
                     .attr("y", function (pl) { return projection([pl.lon, pl.lat])[1] + 4; })
-                    .attr("font-size", 12).attr("fill", INK)
+                    .attr("font-size", opts.fontSize).attr("fill", INK)
                     .attr("stroke", "#ffffff").attr("stroke-width", 3).attr("paint-order", "stroke")
                     .style("pointer-events", "none")
                     .text(function (pl) { return pl.city; });
 
-                function show(event, pl) {
-                    tip.html(plantTooltipHtml(pl)).style("visibility", "visible");
-                    if (event.clientX != null) placeTooltip(tip, wrap, event);
-                    else placeTooltipAt(tip, wrap, event.target);
+                // The plant under the pointer (or keyboard focus); its tooltip
+                // stays live while the week slider plays
+                var active = null;
+                function fillTooltip() {
+                    tip.html(plantTooltipHtml(active));
+                    drawTrend(tip, active);
                 }
-                function hide() { tip.style("visibility", "hidden"); }
-                function pick(event, pl) { state.selected = pl.name; render(); }
+                function track(event) {
+                    if (event.clientX != null) {
+                        anchor = [event.clientX, event.clientY];
+                    } else {
+                        var b = event.target.getBoundingClientRect();
+                        anchor = [b.left + b.width / 2, b.top + b.height / 2];
+                    }
+                    placeTip();
+                }
+                function show(event, pl) {
+                    track(event);
+                    if (active === pl) return;
+                    active = pl;
+                    update();
+                    tip.style("visibility", "visible");
+                    placeTip();
+                }
+                function hide() {
+                    active = null;
+                    tip.style("visibility", "hidden");
+                    update();
+                }
 
-                hits.on("mousemove", show).on("mouseleave", hide).on("click", pick);
-                dots.on("focus", show).on("blur", hide).on("click", pick)
-                    .on("keydown", function (event, pl) {
-                        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); pick(event, pl); }
-                    });
+                hits.on("mouseenter", show).on("mousemove", track).on("mouseleave", hide);
+                dots.on("focus", show).on("blur", hide);
 
-                return function update() {
+                function update() {
                     dots.each(function (pl) {
                         var lvl = derived[state.pathogen][pl.name].levels[state.week];
                         var empty = lvl === NO_DATA || lvl === NOT_DETECTED;
-                        var sel = pl.name === state.selected;
+                        var on = pl === active;
                         d3.select(this)
-                            .attr("fill", lvl.color)
-                            .attr("stroke", sel ? "#111827" : empty ? MUTED : "#ffffff")
-                            .attr("stroke-width", sel ? 2.5 : empty ? 1.5 : 2)
-                            .attr("stroke-dasharray", lvl === NO_DATA ? "2 2" : null)
+                            .attr("fill", colorOf(lvl))
+                            .attr("stroke", on ? "#111827" : empty ? MUTED : "#ffffff")
+                            .attr("stroke-width", on ? 2.5 : empty ? 1.5 : 2)
+                            .attr("stroke-dasharray", lvl === NO_DATA && !on ? "2 2" : null)
                             .attr("aria-label", pl.name + ", " + pl.city + ": " + lvl.label);
                     });
-                    dots.filter(function (pl) { return pl.name === state.selected; }).raise();
+                    dots.filter(function (pl) { return pl === active; }).raise();
                     labels.raise();
                     hits.raise();
-                    if (tip.style("visibility") === "visible") hide();
-                };
+                    if (active) { fillTooltip(); placeTip(); }
+                }
+                return update;
             }
 
             var metroOutline = {
@@ -364,12 +424,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     [METRO_BOX.west, METRO_BOX.south],
                 ]],
             };
-            var updateState = buildMap("state-map", "map-wrap", 620, 700, counties, {
-                pad: 10, showInsetBox: true, clip: false,
+            var updateState = buildMap("state-map", 620, 700, counties, {
+                pad: 10, showInsetBox: true, clip: false, fontSize: 16,
                 labels: ["Duluth (WLSSD) WWTP", "Rochester WWTP", "St. Cloud WWTP", "Mankato WWTP", "Grand Rapids WWTP", "Fergus Falls WWTP", "Worthington WWTP"],
             });
-            var updateMetro = buildMap("metro-map", "inset-wrap", 340, 260, metroOutline, {
-                pad: 0, showInsetBox: false, clip: true,
+            var updateMetro = buildMap("metro-map", 340, 260, metroOutline, {
+                pad: 0, showInsetBox: false, clip: true, fontSize: 12,
                 labels: ["Metro WWTP", "Blue Lake WWTP", "Seneca WWTP", "Empire WWTP", "Rogers WWTP", "Hastings WWTP"],
             });
 
@@ -383,7 +443,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     var row = list.append("div").attr("class", "flex items-center gap-2");
                     var s = row.append("svg").attr("width", 16).attr("height", 16);
                     s.append("circle").attr("cx", 8).attr("cy", 8).attr("r", 6)
-                        .attr("fill", l.color)
+                        .datum(l).attr("class", "legend-swatch")
                         .attr("stroke", l === NO_DATA || l === NOT_DETECTED ? MUTED : "none")
                         .attr("stroke-width", 1.5)
                         .attr("stroke-dasharray", l === NO_DATA ? "2 2" : null);
@@ -404,109 +464,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     x += rr * 2 + 16;
                 });
             })();
-
-            // ---------- Trend chart ----------
-            var T = { w: 900, h: 280, m: { top: 16, right: 110, bottom: 30, left: 48 } };
-            var tsvg = d3.select("#trend-chart").attr("viewBox", "0 0 " + T.w + " " + T.h);
-            var twrap = document.getElementById("trend-wrap");
-            var ttip = makeTooltip(twrap);
-            var x = d3.scaleTime().domain(d3.extent(weeks)).range([T.m.left, T.w - T.m.right]);
-            var y = d3.scaleLinear().range([T.h - T.m.bottom, T.m.top]);
-            var gGrid = tsvg.append("g");
-            var gX = tsvg.append("g").attr("transform", "translate(0," + (T.h - T.m.bottom) + ")");
-            var weekMarker = tsvg.append("line").attr("stroke", "#d1d5db").attr("stroke-width", 1);
-            var stateLine = tsvg.append("path").attr("fill", "none").attr("stroke", STATE_LINE).attr("stroke-width", 2).attr("stroke-dasharray", "5 4");
-            var plantLine = tsvg.append("path").attr("fill", "none").attr("stroke", PLANT_LINE).attr("stroke-width", 2);
-            var stateLabel = tsvg.append("text").attr("font-size", 12).attr("fill", MUTED);
-            var plantLabel = tsvg.append("text").attr("font-size", 12).attr("fill", INK);
-            var crosshair = tsvg.append("line").attr("stroke", MUTED).attr("stroke-width", 1).style("visibility", "hidden");
-            var dotPlant = tsvg.append("circle").attr("r", 4).attr("fill", PLANT_LINE).attr("stroke", "#fff").attr("stroke-width", 2).style("visibility", "hidden");
-            var dotState = tsvg.append("circle").attr("r", 4).attr("fill", STATE_LINE).attr("stroke", "#fff").attr("stroke-width", 2).style("visibility", "hidden");
-            var overlay = tsvg.append("rect")
-                .attr("x", T.m.left).attr("y", T.m.top)
-                .attr("width", T.w - T.m.left - T.m.right).attr("height", T.h - T.m.top - T.m.bottom)
-                .attr("fill", "transparent").style("cursor", "crosshair");
-
-            var line = d3.line()
-                .defined(function (v) { return v != null; })
-                .x(function (v, i) { return x(weeks[i]); })
-                .y(function (v) { return y(v); });
-
-            function nearestWeek(event) {
-                var mx = d3.pointer(event, tsvg.node())[0];
-                var i = d3.bisectCenter(weeks, x.invert(mx));
-                return Math.max(0, Math.min(weeks.length - 1, i));
-            }
-
-            function updateTrend() {
-                var pl = plants.find(function (p) { return p.name === state.selected; });
-                var series = derived[state.pathogen][pl.name].avg;
-                var statewide = derived[state.pathogen].__state;
-                var max = d3.max(series.concat(statewide)) || 1;
-                y.domain([0, max * 1.08]).nice();
-
-                d3.select("#trend-title").text(
-                    PATHOGEN_NAMES[state.pathogen] + " at " + pl.name.replace(" WWTP", "") + " (" + pl.city + ") vs. statewide");
-
-                gGrid.selectAll("*").remove();
-                y.ticks(5).forEach(function (t) {
-                    gGrid.append("line").attr("x1", T.m.left).attr("x2", T.w - T.m.right)
-                        .attr("y1", y(t)).attr("y2", y(t)).attr("stroke", GRID).attr("stroke-width", 1);
-                    gGrid.append("text").attr("x", T.m.left - 8).attr("y", y(t) + 4)
-                        .attr("text-anchor", "end").attr("font-size", 11).attr("fill", MUTED).text(d3.format(",")(t));
-                });
-                gX.call(d3.axisBottom(x).ticks(d3.timeMonth.every(2)).tickFormat(d3.timeFormat("%b %Y")).tickSizeOuter(0))
-                    .call(function (g) { g.select(".domain").attr("stroke", "#d1d5db"); })
-                    .call(function (g) { g.selectAll(".tick line").attr("stroke", "#d1d5db"); })
-                    .call(function (g) { g.selectAll(".tick text").attr("fill", MUTED).attr("font-size", 11); });
-
-                stateLine.attr("d", line(statewide));
-                plantLine.attr("d", line(series));
-
-                function lastPoint(s) {
-                    for (var i = s.length - 1; i >= 0; i--) if (s[i] != null) return [i, s[i]];
-                    return null;
-                }
-                var lp = lastPoint(series), ls = lastPoint(statewide);
-                var yp = lp ? y(lp[1]) : 0, ys = ls ? y(ls[1]) : 0;
-                if (lp && ls && Math.abs(yp - ys) < 14) {
-                    if (yp <= ys) { yp -= (14 - (ys - yp)) / 2; ys = yp + 14; }
-                    else { ys -= (14 - (yp - ys)) / 2; yp = ys + 14; }
-                }
-                plantLabel.attr("x", T.w - T.m.right + 8).attr("y", yp + 4).text(lp ? pl.city : "");
-                stateLabel.attr("x", T.w - T.m.right + 8).attr("y", ys + 4).text(ls ? "Statewide" : "");
-
-                var wx = x(weeks[state.week]);
-                weekMarker.attr("x1", wx).attr("x2", wx).attr("y1", T.m.top).attr("y2", T.h - T.m.bottom);
-            }
-
-            overlay
-                .on("mousemove", function (event) {
-                    var i = nearestWeek(event);
-                    var pl = plants.find(function (p) { return p.name === state.selected; });
-                    var pv = derived[state.pathogen][pl.name].avg[i];
-                    var sv = derived[state.pathogen].__state[i];
-                    var cx = x(weeks[i]);
-                    crosshair.attr("x1", cx).attr("x2", cx).attr("y1", T.m.top).attr("y2", T.h - T.m.bottom).style("visibility", "visible");
-                    dotPlant.attr("cx", cx).attr("cy", pv == null ? 0 : y(pv)).style("visibility", pv == null ? "hidden" : "visible");
-                    dotState.attr("cx", cx).attr("cy", sv == null ? 0 : y(sv)).style("visibility", sv == null ? "hidden" : "visible");
-                    ttip.html("<strong>Week of " + fmtWeek(weeks[i]) + "</strong><br>" +
-                        '<span class="swatch" style="background:' + PLANT_LINE + '"></span>' + pl.city + ": " + fmtVal(pv) + "<br>" +
-                        '<span class="swatch" style="background:' + STATE_LINE + '"></span>Statewide: ' + fmtVal(sv))
-                        .style("visibility", "visible");
-                    placeTooltip(ttip, twrap, event);
-                })
-                .on("mouseleave", function () {
-                    crosshair.style("visibility", "hidden");
-                    dotPlant.style("visibility", "hidden");
-                    dotState.style("visibility", "hidden");
-                    ttip.style("visibility", "hidden");
-                })
-                .on("click", function (event) {
-                    stopPlaying();
-                    state.week = nearestWeek(event);
-                    render();
-                });
 
             // ---------- Table ----------
             function updateTable() {
@@ -564,8 +521,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 document.getElementById("week-label").textContent = fmtWeek(weeks[state.week]);
                 updateState();
                 updateMetro();
-                updateTrend();
                 updateTable();
+                d3.selectAll(".legend-swatch").attr("fill", colorOf);
             }
             render();
         })();
