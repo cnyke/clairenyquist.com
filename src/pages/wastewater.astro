@@ -62,12 +62,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 <svg id="state-map" class="w-full h-auto" role="img" aria-label="Map of Minnesota wastewater treatment plants"></svg>
             </div>
             <div class="flex flex-col gap-6 w-full md:w-[320px] md:shrink-0">
-                <div>
-                    <h2 class="text-sm font-medium text-gray-700 mb-2">Twin Cities area</h2>
-                    <div class="border border-gray-200 rounded-lg overflow-hidden">
-                        <svg id="metro-map" class="w-full h-auto block" role="img" aria-label="Inset map of Twin Cities area treatment plants"></svg>
-                    </div>
-                </div>
                 <div id="legend" class="text-sm text-gray-700"></div>
                 <p class="text-sm text-gray-500">Hover over or tab to a plant to see its trend against the statewide average.</p>
             </div>
@@ -183,8 +177,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             var INK = "#374151";
             var MUTED = "#6b7280";
             var GRID = "#e5e7eb";
-            // Twin Cities inset extent
-            var METRO_BOX = { west: -93.98, east: -92.68, south: 44.56, north: 45.40 };
 
             var [data, counties] = await Promise.all([
                 d3.json("/data/mdh_wastewater.json"),
@@ -318,28 +310,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     .fitExtent([[opts.pad, opts.pad], [width - opts.pad, height - opts.pad]], fitTarget);
                 var path = d3.geoPath(projection);
 
-                if (opts.clip) {
-                    svg.append("defs").append("clipPath").attr("id", svgId + "-clip")
-                        .append("rect").attr("width", width).attr("height", height);
-                }
-                var root = svg.append("g").attr("clip-path", opts.clip ? "url(#" + svgId + "-clip)" : null);
+                var root = svg.append("g");
                 root.append("g").selectAll("path").data(counties.features).join("path")
                     .attr("d", path).attr("fill", "#f3f4f6").attr("stroke", "#ffffff").attr("stroke-width", 1);
 
-                if (opts.showInsetBox) {
-                    var a = projection([METRO_BOX.west, METRO_BOX.north]);
-                    var b = projection([METRO_BOX.east, METRO_BOX.south]);
-                    root.append("rect")
-                        .attr("x", Math.min(a[0], b[0])).attr("y", Math.min(a[1], b[1]))
-                        .attr("width", Math.abs(b[0] - a[0])).attr("height", Math.abs(b[1] - a[1]))
-                        .attr("fill", "none").attr("stroke", MUTED).attr("stroke-width", 1).attr("stroke-dasharray", "3 3");
-                }
-
-                // Largest first so small plants sit on top
-                var visible = plants.filter(function (pl) {
-                    var p = projection([pl.lon, pl.lat]);
-                    return p[0] > -30 && p[0] < width + 30 && p[1] > -30 && p[1] < height + 30;
-                });
+                // Plants come sorted largest first, so small ones sit on top
+                var visible = plants;
                 var dots = root.append("g").selectAll("circle").data(visible).join("circle")
                     .attr("cx", function (pl) { return projection([pl.lon, pl.lat])[0]; })
                     .attr("cy", function (pl) { return projection([pl.lon, pl.lat])[1]; })
@@ -419,22 +395,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 return update;
             }
 
-            var metroOutline = {
-                type: "Polygon",
-                coordinates: [[
-                    // Clockwise winding, so d3 reads it as the box, not the rest of the globe
-                    [METRO_BOX.west, METRO_BOX.south], [METRO_BOX.west, METRO_BOX.north],
-                    [METRO_BOX.east, METRO_BOX.north], [METRO_BOX.east, METRO_BOX.south],
-                    [METRO_BOX.west, METRO_BOX.south],
-                ]],
-            };
             var updateState = buildMap("state-map", 620, 700, counties, {
-                pad: 10, showInsetBox: true, clip: false, fontSize: 16,
-                labels: ["Duluth (WLSSD) WWTP", "Rochester WWTP", "St. Cloud WWTP", "Mankato WWTP", "Grand Rapids WWTP", "Fergus Falls WWTP", "Worthington WWTP"],
-            });
-            var updateMetro = buildMap("metro-map", 340, 260, metroOutline, {
-                pad: 0, showInsetBox: false, clip: true, fontSize: 12,
-                labels: ["Metro WWTP", "Blue Lake WWTP", "Seneca WWTP", "Empire WWTP", "Rogers WWTP", "Hastings WWTP"],
+                pad: 10, fontSize: 16,
+                labels: ["Metro WWTP", "Duluth (WLSSD) WWTP", "Rochester WWTP", "St. Cloud WWTP", "Mankato WWTP", "Grand Rapids WWTP", "Fergus Falls WWTP", "Worthington WWTP"],
             });
 
             // ---------- Legend ----------
@@ -524,7 +487,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 slider.value = state.week;
                 document.getElementById("week-label").textContent = fmtWeek(weeks[state.week]);
                 updateState();
-                updateMetro();
                 updateTable();
                 d3.selectAll(".legend-swatch").attr("fill", colorOf);
             }
