@@ -29,6 +29,8 @@ Awards: ASPR Pledge to Excellence Award from the U.S. Department of Health and H
 
 Each project is an interactive page at clairenyquist.com. Data sources are named where the page cites them.
 
+Minnesota Wastewater (https://clairenyquist.com/wastewater/). An interactive map of SARS-CoV-2, influenza A, influenza B and RSV in wastewater at 30 Minnesota treatment plants, week by week since June 2025, from the Minnesota Department of Health wastewater dashboard (PMMoV-normalized digital PCR concentrations). Circles are sized by population served and shaded by each plant's four-week average relative to its own history, with a Twin Cities inset, a plant-versus-statewide trend chart and a table view.
+
 Nonhuman Neighbors (https://clairenyquist.com/nonhuman-neighbors/). Every species occurrence recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, about 80 species from chickadees to slime molds. Each species is drawn as line art of the organism itself, tinted its own dominant color, and placed on a minimalist basemap.
 
 Minnesota Mosses (https://clairenyquist.com/minnesota-bryophytes/). A century of bryophyte observations from GBIF built into a 3D map of Minnesota you can rotate. Bar height is how many observations were recorded in each area and the stacked colors are taxonomic orders.

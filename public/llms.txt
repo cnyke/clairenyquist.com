@@ -14,6 +14,7 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 
 ## Data visualization projects
 
+- [Minnesota Wastewater](https://clairenyquist.com/wastewater/): A weekly map of COVID-19, influenza and RSV in wastewater at 30 Minnesota treatment plants, from Minnesota Department of Health monitoring data, with each plant shaded against its own history.
 - [Nonhuman Neighbors](https://clairenyquist.com/nonhuman-neighbors/): Every species recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism and tinted its own dominant color on a minimalist basemap.
 - [Minnesota Mosses](https://clairenyquist.com/minnesota-bryophytes/): A century of bryophyte observations from GBIF as a rotatable 3D map of Minnesota; bar height is observation density and stacked colors are taxonomic orders.
 - [Malaria, Mosquitoes & Sickle Cell](https://clairenyquist.com/malaria/): A scrollytelling choropleth on the geographic overlap of Anopheles mosquito records (GBIF), WHO malaria case estimates, and sickle cell trait, and the evolutionary pressure linking them.

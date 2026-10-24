@@ -30,3 +30,8 @@ city (900x1080 card, --width 900 for gifify; the map is dense, so the WebP
 was built with --width 480 --fps 8 --dither none --colors 96 --quality 60
 to stay near 5 MB). `--reel` writes a 1080x1920 Instagram Reel to media/
 instead of public/videos/; `--check` just screenshots the panel.
+
+wastewater.py steps the COVID map through every week (600x677 card,
+`--width 600 --no-bounce` for gifify) and writes the poster itself. To
+refresh the data first, download the four CSVs from the MDH wastewater
+dashboard and run `python3 scripts/prepare_wastewater.py "<that folder>"`.

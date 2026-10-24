@@ -1,0 +1,573 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Minnesota Wastewater | Claire Nyquist"
+    description="An interactive map of COVID-19, influenza and RSV in Minnesota wastewater, week by week at 30 treatment plants, from Minnesota Department of Health monitoring data."
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1
+                class="text-3xl sm:text-4xl md:text-6xl name-gradient mb-4 md:mb-6"
+            >
+                Minnesota Wastewater
+            </h1>
+            <p
+                class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4"
+            >
+                What the sewers say about COVID-19, flu and RSV, one treatment plant at a time.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                People shed virus before they feel sick and whether or not they
+                ever get tested, so wastewater is one of the earliest signals of a
+                rising wave. Each circle is a treatment plant sampled by the
+                Minnesota Department of Health, sized by the number of people it
+                serves and shaded by how high this week's level is compared with
+                that plant's own readings since June 2025.
+            </p>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-end gap-x-6 gap-y-4 mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <div>
+                <label for="pathogen-select" class="block text-sm font-medium text-gray-700 mb-1">Virus</label>
+                <select id="pathogen-select" class="px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="SARS-CoV-2">COVID-19 (SARS-CoV-2)</option>
+                    <option value="Influenza A">Influenza A</option>
+                    <option value="Influenza B">Influenza B</option>
+                    <option value="RSV">RSV</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[240px]">
+                <label for="week-slider" class="block text-sm font-medium text-gray-700 mb-1">
+                    Week of <span id="week-label" class="text-gray-900"></span>
+                </label>
+                <div class="flex items-center gap-3">
+                    <button id="play-button" type="button" class="shrink-0 w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-700 hover:border-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Play through the weeks">
+                        <svg id="play-icon" viewBox="0 0 20 20" class="w-4 h-4 mx-auto" fill="currentColor"><path d="M6 4l10 6-10 6z" /></svg>
+                        <svg id="pause-icon" viewBox="0 0 20 20" class="w-4 h-4 mx-auto hidden" fill="currentColor"><path d="M5 4h4v12H5zM11 4h4v12h-4z" /></svg>
+                    </button>
+                    <input id="week-slider" type="range" min="0" max="0" step="1" value="0" class="w-full accent-blue-600" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Maps -->
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6">
+            <div class="relative" id="map-wrap">
+                <svg id="state-map" class="w-full h-auto" role="img" aria-label="Map of Minnesota wastewater treatment plants"></svg>
+            </div>
+            <div class="flex flex-col gap-6">
+                <div>
+                    <h2 class="text-sm font-medium text-gray-700 mb-2">Twin Cities area</h2>
+                    <div class="relative border border-gray-200 rounded-lg overflow-hidden" id="inset-wrap">
+                        <svg id="metro-map" class="w-full h-auto block" role="img" aria-label="Inset map of Twin Cities area treatment plants"></svg>
+                    </div>
+                </div>
+                <div id="legend" class="text-sm text-gray-700"></div>
+            </div>
+        </div>
+
+        <!-- Trend chart -->
+        <div class="mt-10">
+            <h2 class="text-xl font-medium text-gray-900 mb-1" id="trend-title"></h2>
+            <p class="text-sm text-gray-600 mb-3">
+                Four-week average of PMMoV-normalized concentration. Click a plant on the map to change it; click the chart to jump to a week.
+            </p>
+            <div class="relative" id="trend-wrap">
+                <svg id="trend-chart" class="w-full h-auto"></svg>
+            </div>
+        </div>
+
+        <!-- Table view -->
+        <details class="mt-8 border border-gray-200 rounded-lg">
+            <summary class="cursor-pointer px-4 py-3 text-sm font-medium text-gray-700">Table view for the selected week</summary>
+            <div class="overflow-x-auto px-4 pb-4">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-gray-600 border-b border-gray-200">
+                            <th class="py-2 pr-4 font-medium">Plant</th>
+                            <th class="py-2 pr-4 font-medium">Region</th>
+                            <th class="py-2 pr-4 font-medium text-right">People served</th>
+                            <th class="py-2 pr-4 font-medium text-right">4-week average</th>
+                            <th class="py-2 font-medium">Level vs. own history</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="text-gray-800"></tbody>
+                </table>
+            </div>
+        </details>
+
+        <!-- Methods -->
+        <div class="mt-10 max-w-4xl text-sm text-gray-600 leading-relaxed space-y-3">
+            <h2 class="text-base font-medium text-gray-900">About the data</h2>
+            <p>
+                Data from the <a class="text-blue-600 hover:underline" href="https://www.health.state.mn.us/diseases/wastewater/stats/index.html">Minnesota Department of Health wastewater dashboard</a>,
+                which publishes weekly averages for each treatment plant. MDH's Public Health Laboratory tests most plants twice a week
+                with digital PCR and divides each virus concentration by pepper mild mottle virus (PMMoV), a plant virus common in
+                human waste, to adjust for how much sewage a plant handles. The values are relative, not copies per liter.
+            </p>
+            <p>
+                Because plants differ in their sewers, sampling and populations, each circle's shade compares its four-week average
+                with that same plant's own four-week averages since <span id="first-week"></span>: the lowest fifth of its readings is
+                "very low" and the highest fifth is "very high." An open circle means the virus was not detected over those four
+                weeks; a dashed circle means the plant has no recent samples. The statewide line is MDH's population-weighted average.
+            </p>
+            <p>
+                Plant locations are approximate (city or plant site); MDH publishes county but not coordinates. On September 7, 2026,
+                Duluth (WLSSD) moved its sampling point, so compare its readings before and after that date with caution.
+                Data downloaded <span id="downloaded"></span>.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        .ww-tooltip {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 8px 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #374151;
+            max-width: 240px;
+            z-index: 10;
+            visibility: hidden;
+        }
+        .ww-tooltip strong { color: #111827; font-weight: 600; }
+        .ww-tooltip .swatch {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: -1px;
+        }
+    </style>
+
+    <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script is:inline>
+        (async function () {
+            // Five-step ordinal blue ramp (validated: monotone, one hue, light end >= 2:1 on white)
+            var LEVELS = [
+                { key: "very-low", label: "Very low", color: "#86b6ef" },
+                { key: "low", label: "Low", color: "#5598e7" },
+                { key: "moderate", label: "Moderate", color: "#2a78d6" },
+                { key: "high", label: "High", color: "#1c5cab" },
+                { key: "very-high", label: "Very high", color: "#104281" },
+            ];
+            var NOT_DETECTED = { key: "nd", label: "Not detected", color: "#ffffff" };
+            var NO_DATA = { key: "na", label: "No recent data", color: "#ffffff" };
+            var PATHOGEN_NAMES = {
+                "SARS-CoV-2": "COVID-19",
+                "Influenza A": "Influenza A",
+                "Influenza B": "Influenza B",
+                "RSV": "RSV",
+            };
+            var STATE_LINE = "#9ca3af";
+            var PLANT_LINE = "#2a78d6";
+            var INK = "#374151";
+            var MUTED = "#6b7280";
+            var GRID = "#e5e7eb";
+            // Twin Cities inset extent
+            var METRO_BOX = { west: -93.98, east: -92.68, south: 44.56, north: 45.40 };
+
+            var [data, counties] = await Promise.all([
+                d3.json("/data/mdh_wastewater.json"),
+                d3.json("/data/mn-counties.json"),
+            ]);
+
+            var weeks = data.weeks.map(function (w) { return new Date(w + "T00:00:00"); });
+            var plants = data.plants;
+            var fmtWeek = d3.timeFormat("%B %-d, %Y");
+            var fmtShort = d3.timeFormat("%b %-d");
+            var fmtNum = d3.format(",");
+            var fmtVal = function (v) { return v == null ? "—" : v < 10 ? d3.format(".1f")(v) : d3.format(",.0f")(v); };
+
+            var state = {
+                pathogen: "SARS-CoV-2",
+                week: weeks.length - 1,
+                selected: "Metro WWTP",
+                playing: null,
+            };
+
+            // ---------- Derived series: 4-week average and level vs. own history ----------
+            function smooth(raw) {
+                return raw.map(function (_, i) {
+                    var win = raw.slice(Math.max(0, i - 3), i + 1).filter(function (v) { return v != null; });
+                    return win.length ? d3.mean(win) : null;
+                });
+            }
+            var derived = {};
+            data.pathogens.forEach(function (p) {
+                derived[p] = {};
+                plants.forEach(function (pl) {
+                    var raw = data.values[p][pl.name] || weeks.map(function () { return null; });
+                    var avg = smooth(raw);
+                    var history = avg.filter(function (v) { return v != null && v > 0; }).sort(d3.ascending);
+                    var levels = avg.map(function (v) {
+                        if (v == null) return NO_DATA;
+                        if (v === 0) return NOT_DETECTED;
+                        // Mid-rank percentile among this plant's own detected weeks
+                        var below = d3.bisectLeft(history, v);
+                        var upTo = d3.bisectRight(history, v);
+                        var pct = (below + upTo) / 2 / history.length;
+                        return LEVELS[Math.min(4, Math.floor(pct * 5))];
+                    });
+                    derived[p][pl.name] = { raw: raw, avg: avg, levels: levels };
+                });
+                derived[p].__state = smooth(data.statewide[p]);
+            });
+
+            // ---------- Shared tooltip helper ----------
+            function makeTooltip(wrap) {
+                return d3.select(wrap).append("div").attr("class", "ww-tooltip");
+            }
+            function placeTooltip(tip, wrap, event) {
+                var box = wrap.getBoundingClientRect();
+                var node = tip.node();
+                var x = event.clientX - box.left + 14;
+                var y = event.clientY - box.top + 14;
+                if (x + node.offsetWidth > box.width) x = event.clientX - box.left - node.offsetWidth - 14;
+                if (y + node.offsetHeight > box.height) y = Math.max(0, event.clientY - box.top - node.offsetHeight - 14);
+                tip.style("left", x + "px").style("top", y + "px");
+            }
+            function placeTooltipAt(tip, wrap, el) {
+                var box = wrap.getBoundingClientRect();
+                var r = el.getBoundingClientRect();
+                tip.style("left", Math.min(r.right - box.left + 6, box.width - tip.node().offsetWidth) + "px")
+                    .style("top", (r.top - box.top) + "px");
+            }
+
+            function plantTooltipHtml(pl) {
+                var d = derived[state.pathogen][pl.name];
+                var lvl = d.levels[state.week];
+                var thisWeek = d.raw[state.week];
+                var swatch = lvl === NO_DATA || lvl === NOT_DETECTED
+                    ? '<span class="swatch" style="border:1.5px solid ' + MUTED + '"></span>'
+                    : '<span class="swatch" style="background:' + lvl.color + '"></span>';
+                return "<strong>" + pl.name.replace(" WWTP", "") + "</strong><br>" +
+                    pl.city + " · " + pl.region + "<br>" +
+                    fmtNum(pl.population) + " people served<br>" +
+                    '<div style="margin-top:6px">' + swatch + lvl.label + "</div>" +
+                    "4-week average: " + fmtVal(d.avg[state.week]) + "<br>" +
+                    "Week of " + fmtShort(weeks[state.week]) + ": " +
+                    (thisWeek == null ? "no sample" : fmtVal(thisWeek));
+            }
+
+            // ---------- Maps ----------
+            var radius = d3.scaleSqrt().domain([0, d3.max(plants, function (p) { return p.population; })]).range([0, 26]);
+            function r(pl) { return Math.max(4.5, radius(pl.population)); }
+
+            function buildMap(svgId, wrapId, width, height, fitTarget, opts) {
+                var svg = d3.select("#" + svgId).attr("viewBox", "0 0 " + width + " " + height);
+                var wrap = document.getElementById(wrapId);
+                var projection = d3.geoConicConformal().parallels([45.6, 47]).rotate([94, 0])
+                    .fitExtent([[opts.pad, opts.pad], [width - opts.pad, height - opts.pad]], fitTarget);
+                var path = d3.geoPath(projection);
+                var tip = makeTooltip(wrap);
+
+                if (opts.clip) {
+                    svg.append("defs").append("clipPath").attr("id", svgId + "-clip")
+                        .append("rect").attr("width", width).attr("height", height);
+                }
+                var root = svg.append("g").attr("clip-path", opts.clip ? "url(#" + svgId + "-clip)" : null);
+                root.append("g").selectAll("path").data(counties.features).join("path")
+                    .attr("d", path).attr("fill", "#f3f4f6").attr("stroke", "#ffffff").attr("stroke-width", 1);
+
+                if (opts.showInsetBox) {
+                    var a = projection([METRO_BOX.west, METRO_BOX.north]);
+                    var b = projection([METRO_BOX.east, METRO_BOX.south]);
+                    root.append("rect")
+                        .attr("x", Math.min(a[0], b[0])).attr("y", Math.min(a[1], b[1]))
+                        .attr("width", Math.abs(b[0] - a[0])).attr("height", Math.abs(b[1] - a[1]))
+                        .attr("fill", "none").attr("stroke", MUTED).attr("stroke-width", 1).attr("stroke-dasharray", "3 3");
+                }
+
+                // Largest first so small plants sit on top
+                var visible = plants.filter(function (pl) {
+                    var p = projection([pl.lon, pl.lat]);
+                    return p[0] > -30 && p[0] < width + 30 && p[1] > -30 && p[1] < height + 30;
+                });
+                var dots = root.append("g").selectAll("circle").data(visible).join("circle")
+                    .attr("cx", function (pl) { return projection([pl.lon, pl.lat])[0]; })
+                    .attr("cy", function (pl) { return projection([pl.lon, pl.lat])[1]; })
+                    .attr("r", r)
+                    .attr("tabindex", 0)
+                    .attr("role", "button")
+                    .style("cursor", "pointer")
+                    .style("outline", "none");
+                // Generous invisible hit targets for small circles
+                var hits = root.append("g").selectAll("circle").data(visible).join("circle")
+                    .attr("cx", function (pl) { return projection([pl.lon, pl.lat])[0]; })
+                    .attr("cy", function (pl) { return projection([pl.lon, pl.lat])[1]; })
+                    .attr("r", function (pl) { return Math.max(10, r(pl)); })
+                    .attr("fill", "transparent")
+                    .style("cursor", "pointer");
+
+                var labels = root.append("g").selectAll("text")
+                    .data(visible.filter(function (pl) { return opts.labels.indexOf(pl.name) >= 0; }))
+                    .join("text")
+                    .attr("x", function (pl) { return projection([pl.lon, pl.lat])[0] + r(pl) + 4; })
+                    .attr("y", function (pl) { return projection([pl.lon, pl.lat])[1] + 4; })
+                    .attr("font-size", 12).attr("fill", INK)
+                    .attr("stroke", "#ffffff").attr("stroke-width", 3).attr("paint-order", "stroke")
+                    .style("pointer-events", "none")
+                    .text(function (pl) { return pl.city; });
+
+                function show(event, pl) {
+                    tip.html(plantTooltipHtml(pl)).style("visibility", "visible");
+                    if (event.clientX != null) placeTooltip(tip, wrap, event);
+                    else placeTooltipAt(tip, wrap, event.target);
+                }
+                function hide() { tip.style("visibility", "hidden"); }
+                function pick(event, pl) { state.selected = pl.name; render(); }
+
+                hits.on("mousemove", show).on("mouseleave", hide).on("click", pick);
+                dots.on("focus", show).on("blur", hide).on("click", pick)
+                    .on("keydown", function (event, pl) {
+                        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); pick(event, pl); }
+                    });
+
+                return function update() {
+                    dots.each(function (pl) {
+                        var lvl = derived[state.pathogen][pl.name].levels[state.week];
+                        var empty = lvl === NO_DATA || lvl === NOT_DETECTED;
+                        var sel = pl.name === state.selected;
+                        d3.select(this)
+                            .attr("fill", lvl.color)
+                            .attr("stroke", sel ? "#111827" : empty ? MUTED : "#ffffff")
+                            .attr("stroke-width", sel ? 2.5 : empty ? 1.5 : 2)
+                            .attr("stroke-dasharray", lvl === NO_DATA ? "2 2" : null)
+                            .attr("aria-label", pl.name + ", " + pl.city + ": " + lvl.label);
+                    });
+                    dots.filter(function (pl) { return pl.name === state.selected; }).raise();
+                    labels.raise();
+                    hits.raise();
+                    if (tip.style("visibility") === "visible") hide();
+                };
+            }
+
+            var metroOutline = {
+                type: "Polygon",
+                coordinates: [[
+                    // Clockwise winding, so d3 reads it as the box, not the rest of the globe
+                    [METRO_BOX.west, METRO_BOX.south], [METRO_BOX.west, METRO_BOX.north],
+                    [METRO_BOX.east, METRO_BOX.north], [METRO_BOX.east, METRO_BOX.south],
+                    [METRO_BOX.west, METRO_BOX.south],
+                ]],
+            };
+            var updateState = buildMap("state-map", "map-wrap", 620, 700, counties, {
+                pad: 10, showInsetBox: true, clip: false,
+                labels: ["Duluth (WLSSD) WWTP", "Rochester WWTP", "St. Cloud WWTP", "Mankato WWTP", "Grand Rapids WWTP", "Fergus Falls WWTP", "Worthington WWTP"],
+            });
+            var updateMetro = buildMap("metro-map", "inset-wrap", 340, 260, metroOutline, {
+                pad: 0, showInsetBox: false, clip: true,
+                labels: ["Metro WWTP", "Blue Lake WWTP", "Seneca WWTP", "Empire WWTP", "Rogers WWTP", "Hastings WWTP"],
+            });
+
+            // ---------- Legend ----------
+            (function buildLegend() {
+                var el = d3.select("#legend");
+                el.append("div").attr("class", "font-medium text-gray-700 mb-2")
+                    .text("Level vs. the plant's own history");
+                var list = el.append("div").attr("class", "flex flex-col gap-1.5");
+                LEVELS.slice().reverse().concat([NOT_DETECTED, NO_DATA]).forEach(function (l) {
+                    var row = list.append("div").attr("class", "flex items-center gap-2");
+                    var s = row.append("svg").attr("width", 16).attr("height", 16);
+                    s.append("circle").attr("cx", 8).attr("cy", 8).attr("r", 6)
+                        .attr("fill", l.color)
+                        .attr("stroke", l === NO_DATA || l === NOT_DETECTED ? MUTED : "none")
+                        .attr("stroke-width", 1.5)
+                        .attr("stroke-dasharray", l === NO_DATA ? "2 2" : null);
+                    row.append("span").text(l.label);
+                });
+                el.append("div").attr("class", "font-medium text-gray-700 mt-5 mb-2").text("People served");
+                var sizes = [10000, 250000, 2000000];
+                var baseline = radius(sizes[2]) * 2 + 18;
+                var s = el.append("svg").attr("width", 220).attr("height", baseline + 2);
+                var x = 4;
+                sizes.forEach(function (n) {
+                    var rr = Math.max(4.5, radius(n));
+                    s.append("circle").attr("cx", x + rr).attr("cy", baseline - rr).attr("r", rr)
+                        .attr("fill", "none").attr("stroke", MUTED).attr("stroke-width", 1);
+                    s.append("text").attr("x", x + rr).attr("y", baseline - rr * 2 - 4)
+                        .attr("text-anchor", "middle").attr("font-size", 11).attr("fill", MUTED)
+                        .text(n >= 1e6 ? (n / 1e6) + "M" : (n / 1e3) + "K");
+                    x += rr * 2 + 16;
+                });
+            })();
+
+            // ---------- Trend chart ----------
+            var T = { w: 900, h: 280, m: { top: 16, right: 110, bottom: 30, left: 48 } };
+            var tsvg = d3.select("#trend-chart").attr("viewBox", "0 0 " + T.w + " " + T.h);
+            var twrap = document.getElementById("trend-wrap");
+            var ttip = makeTooltip(twrap);
+            var x = d3.scaleTime().domain(d3.extent(weeks)).range([T.m.left, T.w - T.m.right]);
+            var y = d3.scaleLinear().range([T.h - T.m.bottom, T.m.top]);
+            var gGrid = tsvg.append("g");
+            var gX = tsvg.append("g").attr("transform", "translate(0," + (T.h - T.m.bottom) + ")");
+            var weekMarker = tsvg.append("line").attr("stroke", "#d1d5db").attr("stroke-width", 1);
+            var stateLine = tsvg.append("path").attr("fill", "none").attr("stroke", STATE_LINE).attr("stroke-width", 2).attr("stroke-dasharray", "5 4");
+            var plantLine = tsvg.append("path").attr("fill", "none").attr("stroke", PLANT_LINE).attr("stroke-width", 2);
+            var stateLabel = tsvg.append("text").attr("font-size", 12).attr("fill", MUTED);
+            var plantLabel = tsvg.append("text").attr("font-size", 12).attr("fill", INK);
+            var crosshair = tsvg.append("line").attr("stroke", MUTED).attr("stroke-width", 1).style("visibility", "hidden");
+            var dotPlant = tsvg.append("circle").attr("r", 4).attr("fill", PLANT_LINE).attr("stroke", "#fff").attr("stroke-width", 2).style("visibility", "hidden");
+            var dotState = tsvg.append("circle").attr("r", 4).attr("fill", STATE_LINE).attr("stroke", "#fff").attr("stroke-width", 2).style("visibility", "hidden");
+            var overlay = tsvg.append("rect")
+                .attr("x", T.m.left).attr("y", T.m.top)
+                .attr("width", T.w - T.m.left - T.m.right).attr("height", T.h - T.m.top - T.m.bottom)
+                .attr("fill", "transparent").style("cursor", "crosshair");
+
+            var line = d3.line()
+                .defined(function (v) { return v != null; })
+                .x(function (v, i) { return x(weeks[i]); })
+                .y(function (v) { return y(v); });
+
+            function nearestWeek(event) {
+                var mx = d3.pointer(event, tsvg.node())[0];
+                var i = d3.bisectCenter(weeks, x.invert(mx));
+                return Math.max(0, Math.min(weeks.length - 1, i));
+            }
+
+            function updateTrend() {
+                var pl = plants.find(function (p) { return p.name === state.selected; });
+                var series = derived[state.pathogen][pl.name].avg;
+                var statewide = derived[state.pathogen].__state;
+                var max = d3.max(series.concat(statewide)) || 1;
+                y.domain([0, max * 1.08]).nice();
+
+                d3.select("#trend-title").text(
+                    PATHOGEN_NAMES[state.pathogen] + " at " + pl.name.replace(" WWTP", "") + " (" + pl.city + ") vs. statewide");
+
+                gGrid.selectAll("*").remove();
+                y.ticks(5).forEach(function (t) {
+                    gGrid.append("line").attr("x1", T.m.left).attr("x2", T.w - T.m.right)
+                        .attr("y1", y(t)).attr("y2", y(t)).attr("stroke", GRID).attr("stroke-width", 1);
+                    gGrid.append("text").attr("x", T.m.left - 8).attr("y", y(t) + 4)
+                        .attr("text-anchor", "end").attr("font-size", 11).attr("fill", MUTED).text(d3.format(",")(t));
+                });
+                gX.call(d3.axisBottom(x).ticks(d3.timeMonth.every(2)).tickFormat(d3.timeFormat("%b %Y")).tickSizeOuter(0))
+                    .call(function (g) { g.select(".domain").attr("stroke", "#d1d5db"); })
+                    .call(function (g) { g.selectAll(".tick line").attr("stroke", "#d1d5db"); })
+                    .call(function (g) { g.selectAll(".tick text").attr("fill", MUTED).attr("font-size", 11); });
+
+                stateLine.attr("d", line(statewide));
+                plantLine.attr("d", line(series));
+
+                function lastPoint(s) {
+                    for (var i = s.length - 1; i >= 0; i--) if (s[i] != null) return [i, s[i]];
+                    return null;
+                }
+                var lp = lastPoint(series), ls = lastPoint(statewide);
+                var yp = lp ? y(lp[1]) : 0, ys = ls ? y(ls[1]) : 0;
+                if (lp && ls && Math.abs(yp - ys) < 14) {
+                    if (yp <= ys) { yp -= (14 - (ys - yp)) / 2; ys = yp + 14; }
+                    else { ys -= (14 - (yp - ys)) / 2; yp = ys + 14; }
+                }
+                plantLabel.attr("x", T.w - T.m.right + 8).attr("y", yp + 4).text(lp ? pl.city : "");
+                stateLabel.attr("x", T.w - T.m.right + 8).attr("y", ys + 4).text(ls ? "Statewide" : "");
+
+                var wx = x(weeks[state.week]);
+                weekMarker.attr("x1", wx).attr("x2", wx).attr("y1", T.m.top).attr("y2", T.h - T.m.bottom);
+            }
+
+            overlay
+                .on("mousemove", function (event) {
+                    var i = nearestWeek(event);
+                    var pl = plants.find(function (p) { return p.name === state.selected; });
+                    var pv = derived[state.pathogen][pl.name].avg[i];
+                    var sv = derived[state.pathogen].__state[i];
+                    var cx = x(weeks[i]);
+                    crosshair.attr("x1", cx).attr("x2", cx).attr("y1", T.m.top).attr("y2", T.h - T.m.bottom).style("visibility", "visible");
+                    dotPlant.attr("cx", cx).attr("cy", pv == null ? 0 : y(pv)).style("visibility", pv == null ? "hidden" : "visible");
+                    dotState.attr("cx", cx).attr("cy", sv == null ? 0 : y(sv)).style("visibility", sv == null ? "hidden" : "visible");
+                    ttip.html("<strong>Week of " + fmtWeek(weeks[i]) + "</strong><br>" +
+                        '<span class="swatch" style="background:' + PLANT_LINE + '"></span>' + pl.city + ": " + fmtVal(pv) + "<br>" +
+                        '<span class="swatch" style="background:' + STATE_LINE + '"></span>Statewide: ' + fmtVal(sv))
+                        .style("visibility", "visible");
+                    placeTooltip(ttip, twrap, event);
+                })
+                .on("mouseleave", function () {
+                    crosshair.style("visibility", "hidden");
+                    dotPlant.style("visibility", "hidden");
+                    dotState.style("visibility", "hidden");
+                    ttip.style("visibility", "hidden");
+                })
+                .on("click", function (event) {
+                    stopPlaying();
+                    state.week = nearestWeek(event);
+                    render();
+                });
+
+            // ---------- Table ----------
+            function updateTable() {
+                var rows = plants.map(function (pl) {
+                    var d = derived[state.pathogen][pl.name];
+                    return { pl: pl, avg: d.avg[state.week], lvl: d.levels[state.week] };
+                });
+                d3.select("#table-body").selectAll("tr").data(rows).join("tr")
+                    .attr("class", "border-b border-gray-100")
+                    .html(function (row) {
+                        return '<td class="py-1.5 pr-4">' + row.pl.name.replace(" WWTP", "") + ' <span class="text-gray-500">(' + row.pl.city + ")</span></td>" +
+                            '<td class="py-1.5 pr-4">' + row.pl.region + "</td>" +
+                            '<td class="py-1.5 pr-4 text-right tabular-nums">' + fmtNum(row.pl.population) + "</td>" +
+                            '<td class="py-1.5 pr-4 text-right tabular-nums">' + fmtVal(row.avg) + "</td>" +
+                            '<td class="py-1.5">' + row.lvl.label + "</td>";
+                    });
+            }
+
+            // ---------- Controls ----------
+            var slider = document.getElementById("week-slider");
+            var select = document.getElementById("pathogen-select");
+            var playBtn = document.getElementById("play-button");
+            slider.max = weeks.length - 1;
+            slider.value = state.week;
+            slider.addEventListener("input", function () { stopPlaying(); state.week = +slider.value; render(); });
+            select.addEventListener("change", function () { state.pathogen = select.value; render(); });
+
+            function stopPlaying() {
+                if (!state.playing) return;
+                clearInterval(state.playing);
+                state.playing = null;
+                document.getElementById("play-icon").classList.remove("hidden");
+                document.getElementById("pause-icon").classList.add("hidden");
+                playBtn.setAttribute("aria-label", "Play through the weeks");
+            }
+            playBtn.addEventListener("click", function () {
+                if (state.playing) { stopPlaying(); return; }
+                if (state.week >= weeks.length - 1) state.week = 0;
+                document.getElementById("play-icon").classList.add("hidden");
+                document.getElementById("pause-icon").classList.remove("hidden");
+                playBtn.setAttribute("aria-label", "Pause");
+                render();
+                state.playing = setInterval(function () {
+                    if (state.week >= weeks.length - 1) { stopPlaying(); return; }
+                    state.week += 1;
+                    render();
+                }, 550);
+            });
+
+            document.getElementById("first-week").textContent = fmtWeek(weeks[0]);
+            document.getElementById("downloaded").textContent = fmtWeek(new Date(data.updated + "T00:00:00"));
+
+            function render() {
+                slider.value = state.week;
+                document.getElementById("week-label").textContent = fmtWeek(weeks[state.week]);
+                updateState();
+                updateMetro();
+                updateTrend();
+                updateTable();
+            }
+            render();
+        })();
+    </script>
+</BaseLayout>
