@@ -63,7 +63,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </div>
             <div class="flex flex-col gap-6 w-full md:w-[320px] md:shrink-0">
                 <div id="legend" class="text-sm text-gray-700"></div>
-                <p class="text-sm text-gray-500">Hover over or tab to a plant to see its trend against the statewide average.</p>
+                <p class="text-sm text-gray-500">Hover over, tap or tab to a plant to see its trend against the statewide average.</p>
             </div>
         </div>
 
@@ -98,13 +98,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <p>
                 Because plants differ in their sewers, sampling and populations, each circle's shade compares its four-week average
                 with that same plant's own four-week averages since <span id="first-week"></span>: the lowest fifth of its readings is
-                "very low" and the highest fifth is "very high." An open circle means the virus was not detected over those four
+                "very low" and the highest fifth is "very high." A gray dot means the virus was not detected over those four
                 weeks; a dashed circle means the plant has no recent samples. The statewide line is MDH's population-weighted average.
             </p>
             <p>
                 Plant locations are approximate (city or plant site); MDH publishes county but not coordinates. On September 7, 2026,
                 Duluth (WLSSD) moved its sampling point, so compare its readings before and after that date with caution.
                 Data downloaded <span id="downloaded"></span>.
+            </p>
+            <p>
+                I made this map at <a class="text-blue-600 hover:underline" href="https://tcplot.com/mapathon">Mapathon: All About Maps</a>,
+                a <a class="text-blue-600 hover:underline" href="https://tcplot.com">tcplot</a> event held in Minneapolis on October 24, 2026.
             </p>
         </div>
     </div>
@@ -372,8 +376,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                     update();
                 }
 
-                hits.on("mouseenter", show).on("mousemove", track).on("mouseleave", hide);
+                // A mouse hovers; a finger taps a plant to open its tooltip
+                // and taps anywhere else to close it
+                function isMouse(event) { return event.pointerType === "mouse"; }
+                hits.on("pointerenter", function (event, pl) { if (isMouse(event)) show(event, pl); })
+                    .on("pointermove", function (event) { if (isMouse(event)) track(event); })
+                    .on("pointerleave", function (event) { if (isMouse(event)) hide(); })
+                    .on("click", show);
                 dots.on("focus", show).on("blur", hide);
+                d3.select(document).on("pointerdown." + svgId, function (event) {
+                    if (active && !isMouse(event) && hits.nodes().indexOf(event.target) < 0) hide();
+                });
+
+                // Labels hold at least 12px on screen however small the map renders
+                function sizeLabels() {
+                    var shown = svg.node().getBoundingClientRect().width || width;
+                    var size = Math.max(opts.fontSize, 12 * width / shown);
+                    labels.attr("font-size", size)
+                        .attr("stroke-width", size * 3 / opts.fontSize)
+                        .attr("x", function (pl) { return projection([pl.lon, pl.lat])[0] + r(pl) + size / 4; })
+                        .attr("y", function (pl) { return projection([pl.lon, pl.lat])[1] + size / 4; });
+                }
+                sizeLabels();
+                window.addEventListener("resize", sizeLabels);
 
                 function update() {
                     dots.each(function (pl) {
