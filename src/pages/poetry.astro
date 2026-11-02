@@ -1,12 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const spreads = [
-    {
-        file: "spread-petrichor",
-        alt: "The book open to Petrichor, pages 62 and 63, with a pen drawing of a cicada between the stanzas, in leaf shadow on a wooden floor.",
-    },
-];
 // Schema.org Book node, so search engines and AI assistants can identify
 // the book by title, author, ISBN, format, and publication date.
 const site = "https://clairenyquist.com";
@@ -102,25 +96,6 @@ const book = {
                 >
                     Buy the hardcover
                 </a>
-            </div>
-        </div>
-
-        <!-- Open spreads of the printed proof, photographed in window light. -->
-        <div class="max-w-3xl mx-auto mb-16">
-            <p class="text-sm uppercase tracking-widest text-blue-600 mb-6">
-                Inside the book
-            </p>
-            <div class="grid grid-cols-1 gap-6">
-                {spreads.map((s) => (
-                    <img
-                        src={`/images/mummies-wildflowers/${s.file}.webp`}
-                        alt={s.alt}
-                        width="1600"
-                        height="1200"
-                        loading="lazy"
-                        class="w-full h-auto rounded-lg shadow-lg"
-                    />
-                ))}
             </div>
         </div>
 
