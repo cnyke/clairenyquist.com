@@ -125,12 +125,17 @@ const works = [
         // Sign-up form lives off-site; open it in a new tab.
         external: true,
         img: "/images/ladyslipper-bulletin.webp",
-        w: 1500,
-        h: 2000,
-        alt: "Sign up for The Lady Slipper Bulletin, for odd fragments of Minneapolis. A watercolor and ink card titled Bde Maka Ska, Minneapolis, Minnesota: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush.",
+        w: 1200,
+        h: 1742,
+        alt: "Watercolor and ink card titled Bde Maka Ska, Minneapolis, Minnesota: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush, dated 10/26/26.",
         title: "The Lady Slipper Bulletin",
-        // The card carries its own printed title.
+        // Heading above the painting, in the red of "Bde Maka Ska",
+        // so the painted title stays clear.
+        titleAbove: true,
+        // Two lines so the fitted heading can run larger.
+        titleLines: ["The Lady Slipper", "Bulletin"],
         noTitle: true,
+        titleColor: "#a84030",
         blurb: "A free seasonal zine from Minneapolis, mailed four times a year. Sign up to get it in the mail.",
     },
 ];
@@ -170,7 +175,11 @@ const works = [
                                     class="card-title-above font-space-grotesk"
                                     style={`color: ${w.titleColor ?? "#111"};`}
                                 >
-                                    {w.title}
+                                    {w.titleLines ? (
+                                        <Fragment set:html={w.titleLines.join("<br>")} />
+                                    ) : (
+                                        w.title
+                                    )}
                                 </span>
                             )}
                             <div class="relative">
