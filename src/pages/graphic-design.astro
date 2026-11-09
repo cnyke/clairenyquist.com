@@ -120,6 +120,19 @@ const works = [
         titleColor: "#e6ae12",
         blurb: "How do you correctly put on personal protective equipment in a hospital?",
     },
+    {
+        href: "https://docs.google.com/forms/d/e/1FAIpQLSfipLL6Fh195pDBu0iIRgFyf0QiiZO88HKdQdlnvDcsPzs_TQ/viewform",
+        // Sign-up form lives off-site; open it in a new tab.
+        external: true,
+        img: "/images/ladyslipper-bulletin.webp",
+        w: 1500,
+        h: 2000,
+        alt: "Sign up for The Lady Slipper Bulletin, for odd fragments of Minneapolis. A watercolor and ink card titled Bde Maka Ska, Minneapolis, Minnesota: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush.",
+        title: "The Lady Slipper Bulletin",
+        // The card carries its own printed title.
+        noTitle: true,
+        blurb: "A free seasonal zine from Minneapolis, mailed four times a year. Sign up to get it in the mail.",
+    },
 ];
 ---
 
@@ -148,6 +161,8 @@ const works = [
                     works.map((w) => (
                         <a
                             href={w.href}
+                            target={w.external ? "_blank" : undefined}
+                            rel={w.external ? "noopener" : undefined}
                             class="masonry-item bg-white rounded-lg overflow-hidden mb-6 block"
                         >
                             {w.titleAbove && (
