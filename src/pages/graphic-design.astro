@@ -14,6 +14,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 //   titleOutlineWidth — stroke width for titleOutline (default 0.06em).
 //   noTitle       — skip the overlaid title entirely (the image
 //                   carries its own).
+//   titleBox      — {left, top, width, height} as 0-1 fractions of the
+//                   image: fit the title inside that box, left-aligned.
 //   titleAbove    — render the title as a heading above the image
 //                   (combine with noTitle to skip the overlay).
 //   titlePos      — "third" (centered a third down), "bottom", or a
@@ -127,14 +129,12 @@ const works = [
         img: "/images/ladyslipper-bulletin.webp",
         w: 1200,
         h: 1742,
-        alt: "Watercolor and ink card titled Bde Maka Ska, Minneapolis, Minnesota: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush, dated 10/26/26.",
+        alt: "Watercolor and ink card: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush, labeled Minneapolis, Minnesota and dated 10/26/26.",
         title: "The Lady Slipper Bulletin",
-        // Heading above the painting, in the red of "Bde Maka Ska",
-        // so the painted title stays clear.
-        titleAbove: true,
-        // Two lines so the fitted heading can run larger.
+        // Overlaid in the open band under the branch, left-aligned over
+        // "Minneapolis, Minnesota", in the card's brick red.
         titleLines: ["The Lady Slipper", "Bulletin"],
-        noTitle: true,
+        titleBox: { left: 0.05, top: 0.375, width: 0.8, height: 0.125 },
         titleColor: "#a84030",
         blurb: "A free seasonal zine from Minneapolis, mailed four times a year. Sign up to get it in the mail.",
     },
@@ -201,7 +201,7 @@ const works = [
                                             ? w.titlePos
                                             : undefined
                                     }
-                                    style={`color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: ${w.titleOutlineWidth ?? "0.06em"} ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
+                                    style={`${w.titleBox ? `inset: auto; left: ${w.titleBox.left * 100}%; top: ${w.titleBox.top * 100}%; width: ${w.titleBox.width * 100}%; height: ${w.titleBox.height * 100}%; justify-content: flex-start; text-align: left; ` : ""}color: ${w.titleColor ?? "#fff"}; mix-blend-mode: ${w.titleBlend ?? (!w.titleColor || w.titleKeepBlend ? "difference" : "normal")};${w.titleOutline ? ` -webkit-text-stroke: ${w.titleOutlineWidth ?? "0.06em"} ${w.titleOutline}; paint-order: stroke fill;` : ""}`}
                                 >
                                     {w.titleLines ? (
                                         <span
