@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const FORM = "https://docs.google.com/forms/d/e/1FAIpQLSfipLL6Fh195pDBu0iIRgFyf0QiiZO88HKdQdlnvDcsPzs_TQ/viewform";
+---
+
+<BaseLayout title="The Lady Slipper Bulletin - Claire Nyquist" description="The Lady Slipper Bulletin is Claire Nyquist's zine: seasonal dispatches from Minneapolis, mailed free four times a year.">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Back Navigation -->
+    <div class="mb-8">
+      <a href="/graphic-design" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+        ← Back to Graphic Design
+      </a>
+    </div>
+
+    <!-- Project Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-4xl md:text-5xl name-gradient mb-6">
+        The Lady Slipper Bulletin
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Seasonal dispatches from Minneapolis. Free, four times a year.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href={FORM} target="_blank" rel="noopener" class="signup">
+          Get the Bulletin in the mail
+        </a>
+        <a href="https://theladyslipper.com" class="text-blue-600 hover:text-blue-800 font-medium">
+          theladyslipper.com →
+        </a>
+      </div>
+      <p class="mt-4 text-sm text-gray-500">
+        Your address is only used to mail the zine and never shared.
+      </p>
+    </div>
+
+    <!-- Artwork -->
+    <div class="mb-16 flex justify-center">
+      <a href={FORM} target="_blank" rel="noopener" class="block bg-white rounded-lg shadow-lg overflow-hidden">
+        <img
+          src="/images/ladyslipper-bulletin.webp"
+          alt="Watercolor and ink card: an autumn tree branch in red, orange and gold, a falling leaf, two portable toilets, a blue stone pillar, a young tree and green brush, labeled Minneapolis, Minnesota and dated 10/26/26."
+          width="1200"
+          height="1742"
+          class="featured-art"
+        />
+      </a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <div class="flex justify-between items-center">
+        <a href="/graphic-design" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+          ← Back to Graphic Design
+        </a>
+        <div class="text-sm text-gray-500">
+          Zine
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .featured-art {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: 85vh;
+      height: auto;
+    }
+    .signup {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      background: #a84030;
+      color: #fff;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .signup:hover {
+      background: #8a3226;
+    }
+  </style>
+</BaseLayout>

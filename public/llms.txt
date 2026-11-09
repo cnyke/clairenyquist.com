@@ -45,6 +45,7 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [Skull and Flies Painting](https://clairenyquist.com/skull-and-flies-painting/): Mixed media painting on the recycling of nutrients and energy in an ecosystem.
 - [Whale Painting](https://clairenyquist.com/whale-painting/): Painting inspired by the colored pencil drawings of Frank Lloyd Wright.
 - [Rainbow Bricks](https://clairenyquist.com/rainbow-bricks/): Color composition built from toy bricks.
+- [The Lady Slipper Bulletin](https://clairenyquist.com/lady-slipper-bulletin/): Zine of seasonal dispatches from Minneapolis, mailed free four times a year (theladyslipper.com).
 
 ## Optional
 
