@@ -4,14 +4,15 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const steps = [
-    ["Choose the source.", "A research paper or one of my stories, picked for what it means to people and how well it can be pictured."],
-    ["Pull the claims.", "Every claim the film may make, with its page number, plus what the paper does not support and the film must not say."],
-    ["Set the concept.", "One character, one visual metaphor and the point where the metaphor stops being true."],
-    ["Write the script and shots.", "About 20 words of narration per 8-second shot, each line tied to a claim. For fiction, the narration is my own text."],
-    ["Independent accuracy review.", "A second reader checks the narration and the pictures against the source. Pictures make claims too: counts, directions, sizes, who is shown."],
-    ["Reference images.", "Characters, objects and a style plate, so the look holds from shot to shot."],
-    ["Generate and check every shot.", "Each clip is compared frame by frame with what the shot must show; misses are retaken, and every take is kept."],
-    ["Edit and fidelity pass.", "Assemble, narrate and caption, then check every claim once more before anything is shared."],
+    ["Start from my own words.", "The narration is taken from the story itself, passage by passage. Where a line needs to be shorter, I cut or join my own sentences; nothing is paraphrased or invented."],
+    ["Plan every shot in one file.", "Each 8 to 10 second shot is written down once: its narration, what is on screen, the action second by second, what it must show and must not show, continuity and sound. The script, captions and video prompts are all generated from that one file, so a change in one place carries everywhere."],
+    ["Draft with AI, direct myself.", "I work with Claude, Anthropic's AI, to draft the shot list and prompts. I choose the passages, make the edits and decide what stays."],
+    ["Hold a house style.", "A style document I keep (Miyazaki as a starting point, realistic faces, rich color, Saul Bass where things turn abstract) goes into every prompt, along with each film's own look. For Starkite, that is cyanotype star charts for space and warm lamplight for home."],
+    ["Check the plan before generating.", "A separate AI reviewer reads the shots against the source. Pictures make claims too, so it checks what each image would imply, not just the words."],
+    ["Make reference images first.", "Characters, key objects and a style plate are generated before any video and attached to the shots, so faces and the look hold from shot to shot."],
+    ["Generate the shots.", "Clips are made with Google's Gemini Omni Flash, mostly in batches through its API. When a prompt is refused or keeps missing, I rework it and make that shot by hand; Starkite's opening and title were made this way."],
+    ["Check every shot against its plan.", "Each clip is compared frame by frame with what it must show. Misses, such as photographs that should age and don't, or an alien planet that looks like Jupiter, are rewritten and retaken. Every take is kept."],
+    ["Assemble.", "The chosen takes are joined with the title and captions into a rough cut. Narration is recorded last, over the finished picture."],
 ];
 ---
 
