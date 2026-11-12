@@ -1,0 +1,96 @@
+---
+// Unlisted page (11.12.26): not in the nav, the sitemap or llms.txt, and
+// marked noindex. Shared by direct link only.
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const steps = [
+    ["Choose the source.", "A research paper or one of my stories, picked for what it means to people and how well it can be pictured."],
+    ["Pull the claims.", "Every claim the film may make, with its page number, plus what the paper does not support and the film must not say."],
+    ["Set the concept.", "One character, one visual metaphor and the point where the metaphor stops being true."],
+    ["Write the script and shots.", "About 20 words of narration per 8-second shot, each line tied to a claim. For fiction, the narration is my own text."],
+    ["Independent accuracy review.", "A second reader checks the narration and the pictures against the source. Pictures make claims too: counts, directions, sizes, who is shown."],
+    ["Reference images.", "Characters, objects and a style plate, so the look holds from shot to shot."],
+    ["Generate and check every shot.", "Each clip is compared frame by frame with what the shot must show; misses are retaken, and every take is kept."],
+    ["Edit and fidelity pass.", "Assemble, narrate and caption, then check every claim once more before anything is shared."],
+];
+---
+
+<BaseLayout
+    title="Animation - Claire Nyquist"
+    description="Short animated films by Claire Nyquist: a story and a research explainer."
+    noindex={true}
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl name-gradient mb-6">Animation</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Short animated films I write, direct and edit, made with generative video and a repeatable process
+                that keeps every line true to its source.
+            </p>
+        </div>
+
+        <section id="starkite" class="max-w-3xl mx-auto mb-20">
+            <header class="mb-6 text-center">
+                <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">Starkite</h2>
+                <p class="text-sm uppercase tracking-widest text-blue-600">A story by Claire Nyquist</p>
+                <p class="text-gray-500 italic mt-3">
+                    A wafer-sized probe is flung at the nearest star, and one founder lives long enough to see the data come home.
+                </p>
+            </header>
+            <video
+                src="/videos/animation/starkite.mp4"
+                poster="/images/animation/starkite-poster.webp"
+                controls
+                playsinline
+                preload="metadata"
+                width="1280"
+                height="720"
+                aria-label="Animated short film of the story Starkite, with captions."
+                class="w-full h-auto rounded-lg shadow-lg"
+            ></video>
+            <p class="text-sm text-gray-500 mt-4">
+                Rough cut with captions; narration to come. The words are from my story
+                <a href="/fiction#starkite" class="text-blue-600 hover:text-blue-800">Starkite</a>.
+                Visuals generated with Gemini Omni Flash.
+            </p>
+        </section>
+
+        <section id="ai-opponents" class="max-w-3xl mx-auto mb-20">
+            <header class="mb-6 text-center">
+                <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">What Happens When Machines Become Smarter?</h2>
+                <p class="text-sm uppercase tracking-widest text-blue-600">Research explainer, draft</p>
+                <p class="text-gray-500 italic mt-3">
+                    What AI opponents did to players in an online racing game.
+                </p>
+            </header>
+            <video
+                src="/videos/animation/ai-opponents.mp4"
+                poster="/images/animation/ai-opponents-poster.webp"
+                controls
+                playsinline
+                preload="metadata"
+                width="1280"
+                height="720"
+                aria-label="Animated draft explainer of a research paper on AI opponents in online racing games, with captions."
+                class="w-full h-auto rounded-lg shadow-lg"
+            ></video>
+            <p class="text-sm text-gray-500 mt-4">
+                An independent explainer of Yuan, He, Wang, Huang, Wei and Zhang (2026),
+                <i>What Happens When Machines Become Smarter? An Empirical Investigation of AI Opponents in Online Gaming</i>,
+                MIS Quarterly 50(3), 971–1000,
+                <a href="https://doi.org/10.25300/MISQ/2025/18603" class="text-blue-600 hover:text-blue-800">doi.org/10.25300/MISQ/2025/18603</a>.
+                Draft rough cut without narration, scripted from the paper's abstract and not yet reviewed by the authors.
+                Not affiliated with MIS Quarterly. Visuals generated with Gemini Omni Flash.
+            </p>
+        </section>
+
+        <section id="process" class="max-w-3xl mx-auto mb-12">
+            <h2 class="font-space-grotesk text-2xl md:text-3xl text-gray-900 mb-6 text-center">How I make them</h2>
+            <ol class="list-decimal pl-6 space-y-3 text-gray-800">
+                {steps.map(([title, text]) => (
+                    <li><b>{title}</b> {text}</li>
+                ))}
+            </ol>
+        </section>
+    </div>
+</BaseLayout>

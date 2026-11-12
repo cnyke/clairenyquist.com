@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   integrations: [
     tailwind(),
-    sitemap()
+    sitemap({ filter: (page) => !page.includes('/animation') })
   ],
   redirects: {
     '/audubon': '/nonhuman-neighbors'

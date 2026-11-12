@@ -11,6 +11,8 @@ export interface Props {
   /** Optional Schema.org node this page is about (a Book, say). It joins
    *  the site graph and becomes the WebPage's mainEntity. Needs an "@id". */
   mainEntity?: Record<string, unknown>;
+  /** Unlisted page: tell search engines not to index it. */
+  noindex?: boolean;
 }
 
 const {
@@ -20,7 +22,8 @@ const {
   type = "website",
   author = "Claire Nyquist",
   schemaType = type === "article" ? "Article" : "WebPage",
-  mainEntity
+  mainEntity,
+  noindex = false
 } = Astro.props;
 
 // Google Analytics Measurement ID
@@ -160,7 +163,7 @@ const topLevelPages = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={author} />
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
     <meta name="keywords" content="data visualization, public health, science communication, epidemiology, biology, Claire Nyquist, interactive data, design, science fiction" />
     
     <!-- Canonical URL -->
