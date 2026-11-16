@@ -1,0 +1,486 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+    title="Opposing Data Stories | Claire Nyquist"
+    description="Twin Cities Metro Transit ridership month by month since 2002, from the National Transit Database, charted two opposite ways."
+>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1
+                class="text-3xl sm:text-4xl md:text-6xl name-gradient mb-4 md:mb-6"
+            >
+                Opposing Data Stories
+            </h1>
+            <p
+                class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4"
+            >
+                Same numbers, opposite stories.
+            </p>
+            <p
+                class="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed mt-4 px-4"
+            >
+                Every bus, light rail, bus rapid transit and Northstar trip
+                Metro Transit reported to the National Transit Database, month
+                by month from January 2002 to September 2026. Ridership peaked
+                at 85.8 million trips in 2015, fell to 32.9 million in 2021 and
+                has climbed each full year since.
+            </p>
+        </div>
+
+        <!-- Two spins on the same data -->
+        <section>
+        <h2 class="text-xl sm:text-2xl font-medium text-gray-900 mb-4">Two spins</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <figure class="spin">
+                <p class="text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">Spin A</p>
+                <h3 class="text-lg sm:text-xl font-medium text-gray-900 mb-1">
+                    A third of Metro Transit's trips never came back
+                </h3>
+                <p class="text-sm text-gray-600 mb-3">
+                    Monthly trips, 2002 to 2026, against the 2019 level.
+                </p>
+                <div id="chart-a" class="chart" role="img"
+                    aria-label="Line chart of Metro Transit monthly trips from 2002 to 2026, with the gap below the 2019 average shaded red after March 2020. The last twelve months are 34 percent below 2019."></div>
+            </figure>
+            <figure class="spin">
+                <p class="text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">Spin B</p>
+                <h3 class="text-lg sm:text-xl font-medium text-gray-900 mb-1">
+                    Ridership is up every year since 2021
+                </h3>
+                <p class="text-sm text-gray-600 mb-3">
+                    Change in trips from the year before, 2003 to 2026.
+                    *2026 compares January to September with the same months of 2025.
+                </p>
+                <div id="chart-b" class="chart" role="img"
+                    aria-label="Bar chart of year-over-year change in Metro Transit trips. Bars for 2022 through 2026 are green and positive, from 18 percent in 2022 to 1.5 percent so far in 2026. The 2020 drop of 54 percent runs off the bottom of the chart."></div>
+            </figure>
+        </div>
+        </section>
+
+        <!-- Design choices -->
+        <section class="mt-16 max-w-4xl text-sm text-gray-600 leading-relaxed">
+            <h2 class="text-xl sm:text-2xl font-medium text-gray-900 mb-4">The design choices</h2>
+            <p class="mb-6">
+                Same 297 months, nothing dropped or invented. Every difference is a design choice.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div>
+                    <h3 class="text-base font-medium text-gray-900 mb-2">Spin A: the crisis</h3>
+                    <ul class="space-y-2 list-disc pl-5">
+                        <li><strong class="text-gray-900">Baseline:</strong> "2019 level" implies normal, but ridership had fallen four straight years from its 2015 peak.</li>
+                        <li><strong class="text-gray-900">Red fill:</strong> turns a gap into a wound before you read a number.</li>
+                        <li><strong class="text-gray-900">Monthly data:</strong> seasonal swings make the recovery look ragged.</li>
+                        <li><strong class="text-gray-900">Callout:</strong> the biggest, reddest text on the chart, where the eye lands first.</li>
+                        <li><strong class="text-gray-900">Headline:</strong> "never came back" is a forecast; ridership is still climbing.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-base font-medium text-gray-900 mb-2">Spin B: the comeback</h3>
+                    <ul class="space-y-2 list-disc pl-5">
+                        <li><strong class="text-gray-900">Measure:</strong> change from the year before hides size; 2022's +18.1% still left ridership at half of 2019.</li>
+                        <li><strong class="text-gray-900">Clipped axis:</strong> 2020 (&minus;54%) and the 2004 strike run off the bottom.</li>
+                        <li><strong class="text-gray-900">Color:</strong> only the comeback is green; the pre-pandemic decline fades to gray.</li>
+                        <li><strong class="text-gray-900">Partial year:</strong> nine months of 2026 turn four years of growth into five.</li>
+                        <li><strong class="text-gray-900">Labels:</strong> only the tallest bar gets a number, so the slowdown goes unremarked.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="text-base font-medium text-gray-900 mb-2 mt-8">What neither chart shows</h3>
+            <p>
+                How much transit there was to ride. Both spins treat the gap as riders choosing to stay away, but service
+                was cut too, and it has come back faster than riders have.
+            </p>
+        </section>
+
+        <!-- Honest version -->
+        <section class="mt-16">
+        <h2 class="text-xl sm:text-2xl font-medium text-gray-900 mb-4">The honest version</h2>
+        <figure class="spin">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">No spin</p>
+            <h3 class="text-lg sm:text-xl font-medium text-gray-900 mb-1">
+                Service is 90% back. Trips are two&#8209;thirds back.
+            </h3>
+            <p class="text-sm text-gray-600 mb-3 max-w-3xl">
+                Trips and vehicle service hours as a share of 2019 (2019 = 100). Each point totals the twelve months
+                ending that month, so there are no partial years and no seasonal noise.
+            </p>
+            <div class="flex flex-wrap gap-x-5 gap-y-1 text-sm text-gray-700 mb-2" aria-hidden="true">
+                <span class="inline-flex items-center gap-2"><span class="inline-block w-4 h-[3px] rounded" style="background:#2a78d6"></span>Trips</span>
+                <span class="inline-flex items-center gap-2"><span class="inline-block w-4 h-[3px] rounded" style="background:#9c2f9e"></span>Service hours</span>
+            </div>
+            <div id="chart-c" class="chart" role="img"
+                aria-label="Line chart of Metro Transit trips and vehicle service hours over the previous twelve months, each as a share of 2019, from 2002 to 2026. Trips peaked at 112 in 2015, fell to 34 in early 2021 and reached 66 by September 2026. Service hours fell to 73 in 2023 and reached 90 by September 2026."></div>
+            <p class="text-sm text-gray-600 mt-3 max-w-4xl leading-relaxed">
+                The axis starts at zero, both lines share one scale, and the only color is for telling them apart.
+                Trips fell further than service and are recovering more slowly: in the twelve months to September 2026,
+                Metro Transit ran 90% of its 2019 service hours and carried 66% of its 2019 trips.
+                2019 is used because it is the pre-pandemic baseline, though ridership had already been falling since
+                its 2015 peak; measured against 2015 instead, trips are at 60% and service at 89%.
+            </p>
+        </figure>
+        </section>
+
+        <!-- Methods -->
+        <section class="mt-16 max-w-4xl text-sm text-gray-600 leading-relaxed space-y-3">
+            <h2 class="text-xl sm:text-2xl font-medium text-gray-900 mb-4">About the data</h2>
+
+            <p>
+                Data from the Federal Transit Administration's
+                <a class="text-blue-600 hover:underline" href="https://data.transportation.gov/Public-Transit/Complete-Monthly-Ridership-with-Adjustments-and-Es/8bui-9xvu">National Transit Database monthly ridership release</a>,
+                for Metro Transit (NTD ID 50027). A trip is an unlinked passenger trip: each time a rider boards a vehicle, so a
+                ride with one transfer counts as two. Bus rapid transit is reported as its own mode only from March 2025, the month
+                the Gold Line opened; before that, those trips are counted as bus. Some months include FTA adjustments
+                or estimates, and recent months may still be revised. Data downloaded November 16, 2026.
+                Service hours are vehicle revenue hours, the hours buses and trains spent in passenger service. <a class="text-blue-600 hover:underline" href="/data/metro-transit-ridership.csv" download>Download the monthly totals (CSV)</a>.
+            </p>
+            <p>
+                Made for <a class="text-blue-600 hover:underline" href="https://tcplot.com/opposing-data-stories">Opposing Data Stories</a>,
+                a <a class="text-blue-600 hover:underline" href="https://tcplot.com">tcplot</a> event in Minneapolis on November 21, 2026.
+            </p>
+            <details class="pt-2">
+                <summary class="cursor-pointer text-base font-medium text-gray-900">Table of yearly totals</summary>
+                <div class="mt-3 overflow-x-auto">
+                    <table class="w-full max-w-md text-left tabular-nums">
+                        <thead class="text-gray-900">
+                            <tr><th class="py-1 pr-4 font-medium">Year</th><th class="py-1 pr-4 font-medium text-right">Trips</th><th class="py-1 font-medium text-right">Change</th></tr>
+                        </thead>
+                        <tbody id="year-table" class="text-gray-800"></tbody>
+                    </table>
+                </div>
+            </details>
+        </section>
+    </div>
+
+    <div id="tip" class="tr-tooltip" role="tooltip"></div>
+
+    <style is:global>
+        .spin { margin: 0; }
+        .chart { width: 100%; position: relative; }
+        .chart svg { display: block; overflow: visible; }
+        .chart .axis text { fill: #6b7280; font-size: 12px; }
+        .chart .axis path, .chart .axis line { stroke: #e5e7eb; }
+        .chart .grid line { stroke: #f0f0ee; }
+        .chart .grid path { display: none; }
+        .chart .note { fill: #374151; font-size: 12px; }
+        .chart .note-strong { fill: #111827; font-size: 13px; font-weight: 600; }
+        .tr-tooltip {
+            position: fixed; left: 0; top: 0; pointer-events: none;
+            background: white; border: 1px solid #e5e7eb; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 8px 10px; font-size: 13px; line-height: 1.4; color: #374151;
+            z-index: 10; visibility: hidden; white-space: nowrap;
+        }
+        .tr-tooltip strong { color: #111827; font-weight: 600; }
+    </style>
+
+    <script is:inline src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script is:inline>
+        (async function () {
+            const RED = "#e34948";
+            const GREEN = "#008300";
+            const INK = "#374151";
+            const MUTED = "#d1d5db";
+
+            const raw = await d3.csv("/data/metro-transit-ridership.csv");
+            const months = raw.map((d) => ({
+                date: d3.timeParse("%Y-%m")(d.month),
+                key: d.month,
+                trips: +d.total_trips,
+                hours: +d.vehicle_revenue_hours,
+            }));
+
+            // Yearly totals and change from the year before. The last year is partial,
+            // so it is compared with the same months of the year before.
+            const byYear = d3.rollup(months, (v) => ({ trips: d3.sum(v, (d) => d.trips), n: v.length }), (d) => d.date.getFullYear());
+            const years = Array.from(byYear.keys()).sort();
+            const lastYear = years[years.length - 1];
+            const lastN = byYear.get(lastYear).n;
+            const ytd = (y) => d3.sum(months.filter((d) => d.date.getFullYear() === y && d.date.getMonth() < lastN), (d) => d.trips);
+            const yearly = years.map((y, i) => {
+                const cur = byYear.get(y);
+                let change = null;
+                if (i > 0) {
+                    change = cur.n < 12
+                        ? ytd(y) / ytd(y - 1) - 1
+                        : cur.trips / byYear.get(years[i - 1]).trips - 1;
+                }
+                return { year: y, trips: cur.trips, partial: cur.n < 12, change };
+            });
+            const base2019 = byYear.get(2019).trips / 12;
+            const last12 = d3.sum(months.slice(-12), (d) => d.trips);
+            const shortfall = 1 - last12 / byYear.get(2019).trips;
+
+            const fmtM = (v) => (v / 1e6).toFixed(1) + "M";
+            const fmtPct = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v * 100).toFixed(1) + "%";
+            const fmtMonth = d3.timeFormat("%B %Y");
+            const monthNames = d3.timeFormat("%b");
+
+            // Key events, shown in the tooltips (by month on Spin A, by year on Spin B)
+            const EVENTS = {
+                "2004-03": "Transit strike begins March 4",
+                "2004-04": "Transit strike ends mid-April, after six weeks",
+                "2004-06": "Hiawatha (now Blue) Line light rail opens June 26",
+                "2009-11": "Northstar commuter rail opens",
+                "2014-06": "Green Line light rail opens June 14",
+                "2020-03": "COVID-19 pandemic; Minnesota stay-at-home order March 27",
+                "2021-12": "Orange Line bus rapid transit opens December 4",
+                "2025-03": "Gold Line bus rapid transit opens March 22",
+            };
+            const monthKey = d3.timeFormat("%Y-%m");
+            const eventHtml = (list) => list.length
+                ? `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #e5e7eb">${list.map((e) => "&bull; " + e).join("<br>")}</div>`
+                : "";
+
+            // Table view
+            d3.select("#year-table").selectAll("tr").data(yearly).join("tr").html((d) =>
+                `<td class="py-0.5 pr-4">${d.year}${d.partial ? " (Jan to " + monthNames(new Date(d.year, lastN - 1)) + ")" : ""}</td>` +
+                `<td class="py-0.5 pr-4 text-right">${d3.format(",")(d.trips)}</td>` +
+                `<td class="py-0.5 text-right">${d.change == null ? "" : fmtPct(d.change)}</td>`);
+
+            const tip = d3.select("#tip");
+            function showTip(event, html) {
+                tip.html(html).style("visibility", "visible");
+                const node = tip.node();
+                const w = node.offsetWidth, h = node.offsetHeight;
+                let x = event.clientX + 14, y = event.clientY - h - 10;
+                if (x + w > window.innerWidth - 8) x = event.clientX - w - 14;
+                if (y < 8) y = event.clientY + 16;
+                tip.style("transform", `translate(${x}px, ${y}px)`);
+            }
+            const hideTip = () => tip.style("visibility", "hidden");
+
+            const H = 380;
+            const M = { top: 16, right: 16, bottom: 30, left: 48 };
+
+            function drawA() {
+                const el = d3.select("#chart-a");
+                el.selectAll("*").remove();
+                const W = el.node().clientWidth;
+                const iw = W - M.left - M.right, ih = H - M.top - M.bottom;
+                const svg = el.append("svg").attr("width", W).attr("height", H);
+                const g = svg.append("g").attr("transform", `translate(${M.left},${M.top})`);
+
+                const x = d3.scaleTime().domain(d3.extent(months, (d) => d.date)).range([0, iw]);
+                const y = d3.scaleLinear().domain([0, 8e6]).range([ih, 0]);
+
+                g.append("g").attr("class", "grid")
+                    .call(d3.axisLeft(y).ticks(4).tickSize(-iw).tickFormat(""));
+                g.append("g").attr("class", "axis").attr("transform", `translate(0,${ih})`)
+                    .call(d3.axisBottom(x).ticks(W < 480 ? 4 : 6).tickSizeOuter(0));
+                g.append("g").attr("class", "axis")
+                    .call(d3.axisLeft(y).ticks(4).tickFormat((v) => v === 0 ? "0" : v / 1e6 + "M").tickSize(0).tickPadding(8))
+                    .call((s) => s.select(".domain").remove());
+
+                // The red gap: everything below the 2019 level since the pandemic began
+                const after = months.filter((d) => d.date >= new Date(2020, 2, 1));
+                g.append("path").datum(after)
+                    .attr("fill", RED).attr("fill-opacity", 0.28)
+                    .attr("d", d3.area().x((d) => x(d.date)).y0(y(base2019)).y1((d) => y(Math.min(d.trips, base2019))));
+
+                g.append("line")
+                    .attr("x1", 0).attr("x2", iw).attr("y1", y(base2019)).attr("y2", y(base2019))
+                    .attr("stroke", INK).attr("stroke-width", 1.5).attr("stroke-dasharray", "5 4");
+                g.append("text").attr("class", "note").attr("x", 4).attr("y", y(base2019) - 6)
+                    .text("2019 level");
+
+                // Small markers so readers know which months carry an event
+                const evMonths = months.filter((d) => EVENTS[monthKey(d.date)]);
+                g.selectAll(".ev").data(evMonths).join("circle")
+                    .attr("cx", (d) => x(d.date)).attr("cy", ih).attr("r", 4)
+                    .attr("fill", "#9ca3af").attr("stroke", "white").attr("stroke-width", 2);
+
+                g.append("path").datum(months)
+                    .attr("fill", "none").attr("stroke", "#111827").attr("stroke-width", 2).attr("stroke-linejoin", "round")
+                    .attr("d", d3.line().x((d) => x(d.date)).y((d) => y(d.trips)));
+
+                // Callout sits in the empty space above the 2019 line, right-aligned
+                const lx = iw;
+                g.append("text").attr("class", "note-strong").attr("x", lx).attr("y", y(7.95e6))
+                    .attr("text-anchor", "end").style("fill", RED).style("font-size", "20px")
+                    .text(`−${Math.round(shortfall * 100)}%`);
+                g.append("text").attr("class", "note").attr("x", lx).attr("y", y(7.95e6) + 16)
+                    .attr("text-anchor", "end")
+                    .text("last 12 months vs. 2019");
+
+                // Crosshair + tooltip
+                const focus = g.append("g").style("display", "none");
+                focus.append("line").attr("y1", 0).attr("y2", ih).attr("stroke", "#9ca3af").attr("stroke-width", 1);
+                focus.append("circle").attr("r", 4).attr("fill", "#111827").attr("stroke", "white").attr("stroke-width", 2);
+                const bisect = d3.bisector((d) => d.date).center;
+                g.append("rect").attr("width", iw).attr("height", ih).attr("fill", "transparent")
+                    .on("pointermove", (event) => {
+                        const [mx] = d3.pointer(event);
+                        const d = months[bisect(months, x.invert(mx))];
+                        focus.style("display", null).attr("transform", `translate(${x(d.date)},0)`);
+                        focus.select("circle").attr("cy", y(d.trips));
+                        const ev = EVENTS[monthKey(d.date)];
+                        showTip(event, `<strong>${fmtMonth(d.date)}</strong><br>${d3.format(",")(d.trips)} trips<br>${Math.round((d.trips / base2019) * 100)}% of the 2019 level${eventHtml(ev ? [ev] : [])}`);
+                    })
+                    .on("pointerleave", () => { focus.style("display", "none"); hideTip(); });
+            }
+
+            function drawB() {
+                const el = d3.select("#chart-b");
+                el.selectAll("*").remove();
+                const W = el.node().clientWidth;
+                const iw = W - M.left - M.right, ih = H - M.top - M.bottom;
+                const svg = el.append("svg").attr("width", W).attr("height", H);
+                const g = svg.append("g").attr("transform", `translate(${M.left},${M.top})`);
+
+                const data = yearly.filter((d) => d.change != null);
+                const FLOOR = -0.10;
+                const firstGrowth = 2022;
+                const x = d3.scaleBand().domain(data.map((d) => d.year)).range([0, iw]).padding(0.25);
+                const y = d3.scaleLinear().domain([FLOOR, 0.25]).range([ih, 0]);
+
+                g.append("g").attr("class", "grid")
+                    .call(d3.axisLeft(y).tickValues([-0.1, 0, 0.1, 0.2]).tickSize(-iw).tickFormat(""));
+                g.append("g").attr("class", "axis")
+                    .call(d3.axisLeft(y).tickValues([-0.1, 0, 0.1, 0.2]).tickFormat((v) => (v > 0 ? "+" : "") + Math.round(v * 100) + "%").tickSize(0).tickPadding(8))
+                    .call((s) => s.select(".domain").remove());
+                g.append("g").attr("class", "axis").attr("transform", `translate(0,${ih})`)
+                    .call(d3.axisBottom(x).tickValues(data.map((d) => d.year).filter((yr) => (yr % (W < 480 ? 5 : 3) === 2 && lastYear - yr > 2) || yr === lastYear)).tickFormat((yr) => yr === lastYear ? yr + "*" : yr).tickSize(0).tickPadding(8))
+                    .call((s) => s.select(".domain").remove());
+
+                const bw = x.bandwidth();
+                const r = Math.min(4, bw / 2);
+                const barPath = (d) => {
+                    const x0 = x(d.year);
+                    const v = Math.max(d.change, FLOOR);
+                    const y0 = y(0), y1 = y(v);
+                    if (d.change >= 0) {
+                        const top = Math.min(y1, y0 - r);
+                        return `M${x0},${y0}V${top + r}Q${x0},${top} ${x0 + r},${top}H${x0 + bw - r}Q${x0 + bw},${top} ${x0 + bw},${top + r}V${y0}Z`;
+                    }
+                    // Negative bars: rounded at the bottom unless clipped by the axis floor
+                    if (d.change < FLOOR) return `M${x0},${y0}V${y1}H${x0 + bw}V${y0}Z`;
+                    const bot = Math.max(y1, y0 + r);
+                    return `M${x0},${y0}V${bot - r}Q${x0},${bot} ${x0 + r},${bot}H${x0 + bw - r}Q${x0 + bw},${bot} ${x0 + bw},${bot - r}V${y0}Z`;
+                };
+
+                g.selectAll(".bar").data(data).join("path")
+                    .attr("class", "bar")
+                    .attr("d", barPath)
+                    .attr("fill", (d) => d.year >= firstGrowth ? GREEN : MUTED)
+                    .attr("fill-opacity", (d) => d.partial ? 0.55 : 1);
+
+                g.append("line").attr("x1", 0).attr("x2", iw).attr("y1", y(0)).attr("y2", y(0))
+                    .attr("stroke", "#9ca3af").attr("stroke-width", 1);
+
+                // Small zigzag where a bar leaves the chart (the 2004 strike and 2020)
+                data.filter((d) => d.change < FLOOR).forEach((off) => {
+                    const x0 = x(off.year), yb = ih;
+                    g.append("path")
+                        .attr("d", `M${x0 - 2},${yb - 3}l${(bw + 4) / 4},-4l${(bw + 4) / 4},4l${(bw + 4) / 4},-4l${(bw + 4) / 4},4`)
+                        .attr("fill", "none").attr("stroke", "white").attr("stroke-width", 3);
+                });
+
+                const g22 = data.find((d) => d.year === firstGrowth);
+                g.append("text").attr("class", "note-strong")
+                    .attr("x", x(firstGrowth) + bw / 2).attr("y", y(g22.change) - 10)
+                    .attr("text-anchor", "middle").text(fmtPct(g22.change));
+
+                const streak = data.filter((d) => d.year >= firstGrowth);
+                g.append("text").attr("class", "note")
+                    .attr("x", iw).attr("y", y(0.24))
+                    .attr("text-anchor", "end")
+                    .text(`${streak.length} years of growth`);
+
+                // Per-bar hover with targets taller than the bars
+                g.selectAll(".hit").data(data).join("rect")
+                    .attr("class", "hit")
+                    .attr("x", (d) => x(d.year) - (x.step() - bw) / 2).attr("width", x.step())
+                    .attr("y", 0).attr("height", ih).attr("fill", "transparent")
+                    .on("pointermove", (event, d) => showTip(event,
+                        `<strong>${d.year}${d.partial ? ", Jan to " + monthNames(new Date(d.year, lastN - 1)) : ""}</strong><br>` +
+                        `${fmtPct(d.change)} from ${d.partial ? "the same months of " : ""}${d.year - 1}<br>` +
+                        `${d3.format(",")(d.partial ? ytd(d.year) : d.trips)} trips` +
+                        eventHtml(Object.entries(EVENTS).filter(([k]) => +k.slice(0, 4) === d.year).map(([, e]) => e))))
+                    .on("pointerleave", hideTip);
+            }
+
+            function drawC() {
+                const el = d3.select("#chart-c");
+                el.selectAll("*").remove();
+                const W = el.node().clientWidth;
+                const MC = { top: 16, right: W < 480 ? 64 : 130, bottom: 30, left: 40 };
+                const iw = W - MC.left - MC.right, ih = H - MC.top - MC.bottom;
+                const svg = el.append("svg").attr("width", W).attr("height", H);
+                const g = svg.append("g").attr("transform", `translate(${MC.left},${MC.top})`);
+
+                // Trailing twelve-month totals, indexed to calendar 2019 = 100
+                const t19 = byYear.get(2019).trips;
+                const h19 = d3.sum(months.filter((d) => d.date.getFullYear() === 2019), (d) => d.hours);
+                const roll = months.slice(11).map((d, i) => {
+                    const win = months.slice(i, i + 12);
+                    return {
+                        date: d.date,
+                        trips: (100 * d3.sum(win, (w) => w.trips)) / t19,
+                        hours: (100 * d3.sum(win, (w) => w.hours)) / h19,
+                    };
+                });
+                const SERIES = [
+                    { key: "trips", label: "Trips", color: "#2a78d6" },
+                    { key: "hours", label: "Service hours", color: "#9c2f9e" },
+                ];
+
+                const x = d3.scaleTime().domain(d3.extent(roll, (d) => d.date)).range([0, iw]);
+                const y = d3.scaleLinear().domain([0, 120]).range([ih, 0]);
+                g.append("g").attr("class", "grid").call(d3.axisLeft(y).tickValues([0, 25, 50, 75, 100]).tickSize(-iw).tickFormat(""));
+                g.append("g").attr("class", "axis").attr("transform", `translate(0,${ih})`)
+                    .call(d3.axisBottom(x).ticks(W < 480 ? 4 : 8).tickSizeOuter(0));
+                g.append("g").attr("class", "axis")
+                    .call(d3.axisLeft(y).tickValues([0, 25, 50, 75, 100]).tickSize(0).tickPadding(8))
+                    .call((s) => s.select(".domain").remove());
+                g.append("line").attr("x1", 0).attr("x2", iw).attr("y1", y(100)).attr("y2", y(100))
+                    .attr("stroke", "#9ca3af").attr("stroke-width", 1).attr("stroke-dasharray", "4 4");
+                g.append("text").attr("class", "note").attr("x", 4).attr("y", y(100) - 6).text("2019");
+
+                const last = roll[roll.length - 1];
+                SERIES.forEach((s) => {
+                    g.append("path").datum(roll)
+                        .attr("fill", "none").attr("stroke", s.color).attr("stroke-width", 2).attr("stroke-linejoin", "round")
+                        .attr("d", d3.line().x((d) => x(d.date)).y((d) => y(d[s.key])));
+                    g.append("circle").attr("cx", iw).attr("cy", y(last[s.key])).attr("r", 4)
+                        .attr("fill", s.color).attr("stroke", "white").attr("stroke-width", 2);
+                    g.append("text").attr("class", "note").attr("x", iw + 10).attr("y", y(last[s.key]) + 4)
+                        .text(W < 480 ? `${Math.round(last[s.key])}` : `${s.label} ${Math.round(last[s.key])}`);
+                });
+
+                const focus = g.append("g").style("display", "none");
+                focus.append("line").attr("y1", 0).attr("y2", ih).attr("stroke", "#9ca3af").attr("stroke-width", 1);
+                SERIES.forEach((s) => focus.append("circle").attr("class", "f-" + s.key).attr("r", 4)
+                    .attr("fill", s.color).attr("stroke", "white").attr("stroke-width", 2));
+                const bisect = d3.bisector((d) => d.date).center;
+                const fmtShort = d3.timeFormat("%b %Y");
+                g.append("rect").attr("width", iw).attr("height", ih).attr("fill", "transparent")
+                    .on("pointermove", (event) => {
+                        const [mx] = d3.pointer(event);
+                        const d = roll[bisect(roll, x.invert(mx))];
+                        focus.style("display", null).attr("transform", `translate(${x(d.date)},0)`);
+                        SERIES.forEach((s) => focus.select(".f-" + s.key).attr("cy", y(d[s.key])));
+                        const start = new Date(d.date.getFullYear(), d.date.getMonth() - 11, 1);
+                        const evs = Object.entries(EVENTS)
+                            .filter(([k]) => { const dt = d3.timeParse("%Y-%m")(k); return dt >= start && dt <= d.date; })
+                            .map(([, e]) => e);
+                        showTip(event, `<strong>12 months to ${fmtMonth(d.date)}</strong><br>` +
+                            `<span style="color:#2a78d6">&#9644;</span> Trips: ${Math.round(d.trips)}% of 2019<br>` +
+                            `<span style="color:#9c2f9e">&#9644;</span> Service hours: ${Math.round(d.hours)}% of 2019` +
+                            eventHtml(evs));
+                    })
+                    .on("pointerleave", () => { focus.style("display", "none"); hideTip(); });
+            }
+
+            function draw() { drawA(); drawB(); drawC(); }
+            draw();
+            let t;
+            window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(draw, 150); });
+        })();
+    </script>
+</BaseLayout>

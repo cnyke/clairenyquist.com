@@ -14,6 +14,7 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 
 ## Data visualization projects
 
+- [Opposing Data Stories: Metro Transit](https://clairenyquist.com/transit/): Twin Cities Metro Transit ridership from the National Transit Database, 2002 to 2026, charted as two opposite spins (crisis and comeback) from the same data, with the design choices behind each named and an honest version comparing trips with service hours.
 - [Minnesota Wastewater](https://clairenyquist.com/wastewater/): A weekly map of COVID-19, influenza and RSV in wastewater at 30 Minnesota treatment plants, from Minnesota Department of Health monitoring data, with each plant shaded against its own history.
 - [Nonhuman Neighbors](https://clairenyquist.com/nonhuman-neighbors/): Every species recorded in GBIF for the Audubon Park neighborhood of Northeast Minneapolis, each drawn as line art of the organism and tinted its own dominant color on a minimalist basemap.
 - [Minnesota Mosses](https://clairenyquist.com/minnesota-bryophytes/): A century of bryophyte observations from GBIF as a rotatable 3D map of Minnesota; bar height is observation density and stacked colors are taxonomic orders.
