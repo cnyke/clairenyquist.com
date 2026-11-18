@@ -36,6 +36,43 @@ const explainerSteps = [
             </p>
         </div>
 
+        <section id="deep-pareto" class="max-w-3xl mx-auto mb-20">
+            <header class="mb-6 text-center">
+                <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">Balancing Competing Goals</h2>
+                <p class="text-sm uppercase tracking-widest text-blue-600">Research explainer, draft</p>
+                <p class="text-gray-500 italic mt-3">
+                    How a recommender that learns each viewer's balance of goals raised three of them at once.
+                </p>
+            </header>
+            <video
+                src="/videos/animation/deep-pareto.mp4"
+                poster="/images/animation/deep-pareto-poster.webp"
+                controls
+                playsinline
+                preload="metadata"
+                width="1280"
+                height="720"
+                aria-label="Animated draft explainer of a research paper on multi-objective recommender systems, with captions."
+                class="w-full h-auto rounded-lg shadow-lg"
+            ></video>
+            <p class="text-sm text-gray-500 mt-4">
+                An independent explainer of Li and Tuzhilin (2026),
+                <i>Deep Pareto Reinforcement Learning for Multi-Objective Recommender Systems</i>,
+                MIS Quarterly 50(3), 1087–1116,
+                <a href="https://doi.org/10.25300/MISQ/2025/19488" class="text-blue-600 hover:text-blue-800">doi.org/10.25300/MISQ/2025/19488</a>.
+                Draft rough cut with captions; narration to come. Scripted from the authors' full preprint and not yet
+                reviewed by them. Not affiliated with MIS Quarterly. Visuals generated with Gemini Omni Flash.
+            </p>
+            <div id="deep-pareto-process" class="mt-12">
+                <h3 class="font-space-grotesk text-2xl text-gray-900 mb-6 text-center">How It Was Made</h3>
+                <ol class="list-decimal pl-6 space-y-3 text-gray-800">
+                    {explainerSteps.map(([title, text]) => (
+                        <li><b>{title}</b> {text}</li>
+                    ))}
+                </ol>
+            </div>
+        </section>
+
         <section id="little-taung-orca" class="max-w-3xl mx-auto mb-20">
             <header class="mb-6 text-center">
                 <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">Little Taung Orca</h2>
@@ -137,43 +174,6 @@ const explainerSteps = [
                 <h3 class="font-space-grotesk text-2xl text-gray-900 mb-6 text-center">How It Was Made</h3>
                 <ol class="list-decimal pl-6 space-y-3 text-gray-800">
                     {poemSteps.map(([title, text]) => (
-                        <li><b>{title}</b> {text}</li>
-                    ))}
-                </ol>
-            </div>
-        </section>
-
-        <section id="deep-pareto" class="max-w-3xl mx-auto mb-20">
-            <header class="mb-6 text-center">
-                <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">Balancing Competing Goals</h2>
-                <p class="text-sm uppercase tracking-widest text-blue-600">Research explainer, draft</p>
-                <p class="text-gray-500 italic mt-3">
-                    How a recommender that learns each viewer's balance of goals raised three of them at once.
-                </p>
-            </header>
-            <video
-                src="/videos/animation/deep-pareto.mp4"
-                poster="/images/animation/deep-pareto-poster.webp"
-                controls
-                playsinline
-                preload="metadata"
-                width="1280"
-                height="720"
-                aria-label="Animated draft explainer of a research paper on multi-objective recommender systems, with captions."
-                class="w-full h-auto rounded-lg shadow-lg"
-            ></video>
-            <p class="text-sm text-gray-500 mt-4">
-                An independent explainer of Li and Tuzhilin (2026),
-                <i>Deep Pareto Reinforcement Learning for Multi-Objective Recommender Systems</i>,
-                MIS Quarterly 50(3), 1087–1116,
-                <a href="https://doi.org/10.25300/MISQ/2025/19488" class="text-blue-600 hover:text-blue-800">doi.org/10.25300/MISQ/2025/19488</a>.
-                Draft rough cut with captions; narration to come. Scripted from the authors' full preprint and not yet
-                reviewed by them. Not affiliated with MIS Quarterly. Visuals generated with Gemini Omni Flash.
-            </p>
-            <div id="deep-pareto-process" class="mt-12">
-                <h3 class="font-space-grotesk text-2xl text-gray-900 mb-6 text-center">How It Was Made</h3>
-                <ol class="list-decimal pl-6 space-y-3 text-gray-800">
-                    {explainerSteps.map(([title, text]) => (
                         <li><b>{title}</b> {text}</li>
                     ))}
                 </ol>
