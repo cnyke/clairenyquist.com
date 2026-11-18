@@ -3,22 +3,28 @@
 // marked noindex. Shared by direct link only.
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const steps = [
-    ["Start from my own words.", "The narration is taken from the story itself, passage by passage. Where a line needs to be shorter, I cut or join my own sentences; nothing is paraphrased or invented."],
-    ["Plan every shot in one file.", "Each 8 to 10 second shot is written down once: its narration, what is on screen, the action second by second, what it must show and must not show, continuity and sound. The script, captions and video prompts are all generated from that one file, so a change in one place carries everywhere."],
-    ["Draft with AI, direct myself.", "I work with Claude, Anthropic's AI, to draft the shot list and prompts. I choose the passages, make the edits and decide what stays."],
-    ["Hold a house style.", "A style document I keep goes into every prompt, along with each film's own look. For Starkite, that is cyanotype star charts for space and warm lamplight for home."],
-    ["Check the plan before generating.", "A separate AI reviewer reads the shots against the source. Pictures make claims too, so it checks what each image would imply, not just the words."],
-    ["Make reference images first.", "Characters, key objects and a style plate are generated before any video and attached to the shots, so faces and the look hold from shot to shot."],
-    ["Generate the shots.", "Clips are made with Google's Gemini Omni Flash, mostly in batches through its API. When a prompt is refused or keeps missing, I rework it and make that shot by hand; Starkite's opening and title were made this way."],
-    ["Check every shot against its plan.", "Each clip is compared frame by frame with what it must show. Misses, such as photographs that should age and don't, or an alien planet that looks like Jupiter, are rewritten and retaken. Every take is kept."],
-    ["Assemble.", "The chosen takes are joined with the title and captions into a rough cut. Narration is recorded last, over the finished picture."],
+const poemSteps = [
+    ["Read the whole poem, in order.", "Every line is narrated, start to finish, in my own words. Nothing is cut, paraphrased or added."],
+    ["Plan every shot in one file.", "Each shot is written down once: the lines it carries, what is on screen, the action second by second, what it must show and must not show, and its sound. Captions and video prompts are generated from that one file."],
+    ["Let animals carry the grief.", "The images are symbolic, not literal: an orca, a dolphin, an elephant, swans, a robin on her eggs. No one is shown crying, and the embryo is never shown as a baby or given a sex."],
+    ["Make reference images first.", "The embryo, the animals and a style plate are generated before any video and attached to the shots, so the look holds from shot to shot."],
+    ["Generate, then check every shot.", "Clips are made with Google's Gemini Omni Flash and Google Flow. Each one is compared with its plan; takes that drift into people, crying or the wrong mood are rewritten and retaken. Every take is kept."],
+    ["Narrate last.", "I recorded the narration over the finished picture. The cut is timed to my voice, the captions follow it line by line, and the generated sound (water, birdsong, wings) stays underneath. There is no music bed."],
+];
+
+const explainerSteps = [
+    ["Start from the full paper.", "The script is drawn from the authors' full preprint, not the abstract. Every claim the narration makes is tied to a page number."],
+    ["Plan every shot in one file.", "Each 8 to 10 second shot is written down once: its narration, what is on screen, the action second by second, what it must show and must not show, continuity and sound. The script, captions and video prompts are all generated from that one file."],
+    ["Draft with AI, direct myself.", "I work with Claude, Anthropic's AI, to draft the shot list and prompts. I choose what the film says, make the edits and decide what stays."],
+    ["Check the plan before generating.", "A separate AI reviewer reads the shots against the paper. Pictures make claims too, so it checks what each image would imply, not just the words: a change in clicks is shown in percentage points, and nothing on screen suggests a cause the paper doesn't claim."],
+    ["Make reference images first.", "Key objects and a style plate are generated before any video and attached to the shots, so the look holds from shot to shot."],
+    ["Generate, check, assemble.", "Clips are made with Google's Gemini Omni Flash, then compared frame by frame with what each must show. Misses are rewritten and retaken, every take is kept, and the chosen takes are joined with captions into a rough cut."],
 ];
 ---
 
 <BaseLayout
     title="Animation - Claire Nyquist"
-    description="Short animated films by Claire Nyquist: a poem, a story and a research explainer."
+    description="Short animated films by Claire Nyquist: a poem and a research explainer."
     noindex={true}
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -126,32 +132,15 @@ const steps = [
                 </p>
                 </div>
             </div>
-        </section>
 
-        <section id="starkite" class="max-w-3xl mx-auto mb-20">
-            <header class="mb-6 text-center">
-                <h2 class="font-space-grotesk text-3xl md:text-4xl text-gray-900 mb-3">Starkite</h2>
-                <p class="text-sm uppercase tracking-widest text-blue-600">A story by Claire Nyquist</p>
-                <p class="text-gray-500 italic mt-3">
-                    A wafer-sized probe is flung at the nearest star, and one founder lives long enough to see the data come home.
-                </p>
-            </header>
-            <video
-                src="/videos/animation/starkite.mp4"
-                poster="/images/animation/starkite-poster.webp"
-                controls
-                playsinline
-                preload="metadata"
-                width="1280"
-                height="720"
-                aria-label="Animated short film of the story Starkite, with captions."
-                class="w-full h-auto rounded-lg shadow-lg"
-            ></video>
-            <p class="text-sm text-gray-500 mt-4">
-                Rough cut with captions; narration to come. The words are from my story
-                <a href="/fiction#starkite" class="text-blue-600 hover:text-blue-800">Starkite</a>.
-                Visuals generated with Gemini Omni Flash.
-            </p>
+            <div id="little-taung-orca-process" class="mt-12">
+                <h3 class="font-space-grotesk text-2xl text-gray-900 mb-6 text-center">How It Was Made</h3>
+                <ol class="list-decimal pl-6 space-y-3 text-gray-800">
+                    {poemSteps.map(([title, text]) => (
+                        <li><b>{title}</b> {text}</li>
+                    ))}
+                </ol>
+            </div>
         </section>
 
         <section id="deep-pareto" class="max-w-3xl mx-auto mb-20">
@@ -181,15 +170,15 @@ const steps = [
                 Draft rough cut with captions; narration to come. Scripted from the authors' full preprint and not yet
                 reviewed by them. Not affiliated with MIS Quarterly. Visuals generated with Gemini Omni Flash.
             </p>
+            <div id="deep-pareto-process" class="mt-12">
+                <h3 class="font-space-grotesk text-2xl text-gray-900 mb-6 text-center">How It Was Made</h3>
+                <ol class="list-decimal pl-6 space-y-3 text-gray-800">
+                    {explainerSteps.map(([title, text]) => (
+                        <li><b>{title}</b> {text}</li>
+                    ))}
+                </ol>
+            </div>
         </section>
 
-        <section id="process" class="max-w-3xl mx-auto mb-12">
-            <h2 class="font-space-grotesk text-2xl md:text-3xl text-gray-900 mb-6 text-center">How It Was Made</h2>
-            <ol class="list-decimal pl-6 space-y-3 text-gray-800">
-                {steps.map(([title, text]) => (
-                    <li><b>{title}</b> {text}</li>
-                ))}
-            </ol>
-        </section>
     </div>
 </BaseLayout>
