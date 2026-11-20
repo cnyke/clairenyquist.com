@@ -8,7 +8,8 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.includes('/animation') })
   ],
   redirects: {
-    '/audubon': '/nonhuman-neighbors'
+    '/audubon': '/nonhuman-neighbors',
+    '/tcplot': 'https://tcplot.com'
   },
   output: 'static',
   site: 'https://clairenyquist.com'
