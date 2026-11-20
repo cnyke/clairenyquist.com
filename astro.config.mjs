@@ -9,7 +9,8 @@ export default defineConfig({
   ],
   redirects: {
     '/audubon': '/nonhuman-neighbors',
-    '/tcplot': 'https://tcplot.com'
+    '/tcplot': 'https://tcplot.com',
+    '/sci-art-club': 'https://sciart.club'
   },
   output: 'static',
   site: 'https://clairenyquist.com'
