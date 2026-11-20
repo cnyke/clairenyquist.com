@@ -146,7 +146,7 @@ const topLevelPages = [
   { href: "/", label: "Data Visualization" },
   { href: "/graphic-design", label: "Design" },
   { href: "/tcplot", label: "tcplot" },
-  { href: "/sci-art-club", label: "sci ARt club" },
+  { href: "https://sciart.club", label: "sci ARt club" },
   { href: "/poetry", label: "Poems" },
   { href: "/lady-slipper-bulletin", label: "Zines" },
   { href: "/fiction", label: "Fiction" },
@@ -289,7 +289,7 @@ const topLevelPages = [
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex space-x-8">
             {topLevelPages.map((p) => (
-              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors ${p.href === "/tcplot" ? "font-silkscreen font-normal" : p.href === "/sci-art-club" ? "font-majormono font-normal" : "font-medium"}`}>
+              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors ${p.href === "/tcplot" ? "font-silkscreen font-normal" : p.href === "https://sciart.club" ? "font-majormono font-normal" : "font-medium"}`}>
                 {p.label}
               </a>
             ))}
@@ -309,7 +309,7 @@ const topLevelPages = [
         <div id="mobile-menu" class="hidden md:hidden pb-4">
           <div class="flex flex-col space-y-2">
             {topLevelPages.map((p) => (
-              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors py-2 ${p.href === "/tcplot" ? "font-silkscreen font-normal" : p.href === "/sci-art-club" ? "font-majormono font-normal" : "font-medium"}`}>
+              <a href={p.href} class={`text-gray-700 hover:text-blue-600 transition-colors py-2 ${p.href === "/tcplot" ? "font-silkscreen font-normal" : p.href === "https://sciart.club" ? "font-majormono font-normal" : "font-medium"}`}>
                 {p.label}
               </a>
             ))}
