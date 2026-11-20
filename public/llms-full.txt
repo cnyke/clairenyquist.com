@@ -8,7 +8,7 @@ Claire Nyquist is a data visualization designer, developer, and public health an
 
 She combines two trainings. The first is a Master of Public Health in Public Health Administration and Policy from the University of Minnesota (December 2021, GPA 3.96), focused on global health security, emerging and reemerging infectious disease, emergency preparedness, and pandemic response. Her master's thesis was a systematic literature review on global disruptions to essential medicine supply chains during COVID-19. The second is a Bachelor of Arts in Graphic Communication Design from the University of Westminster in London (June 2015, First Class Honors), specializing in science communication through graphic design, data visualization, user experience design, and typography.
 
-She works in R, Python, JavaScript, HTML, CSS, and D3.js, with Leaflet for maps and Three.js for 3D scenes. She founded and organizes tcplot, the Twin Cities data visualization community (https://tcplot.com), which runs talks, workshops, and build-a-thons for the Minneapolis and Saint Paul area. She has volunteered at the Minneapolis Institute of Art and The Bakken Museum.
+She works in R, Python, JavaScript, HTML, CSS, and D3.js, with Leaflet for maps and Three.js for 3D scenes. She founded and organizes tcplot, the Twin Cities data visualization community (https://tcplot.com), which runs talks, workshops, and build-a-thons for the Minneapolis and Saint Paul area, and Sci Art Club (https://sciart.club), a monthly Saturday-morning meetup for people who make art about science. She has volunteered at the Minneapolis Institute of Art and The Bakken Museum.
 
 ## Career
 
@@ -89,6 +89,10 @@ Mummies & Wildflowers: Poems (https://clairenyquist.com/poetry/) is a collection
 ## tcplot
 
 tcplot (https://tcplot.com) is a Twin Cities community for data visualization practitioners, enthusiasts, and storytellers, founded and organized by Claire Nyquist. Its mission is to raise the data literacy and design standards of the Minneapolis and Saint Paul area through talks by local experts, hands-on workshops, and collaborative build-a-thons. It is on Meetup (https://www.meetup.com/tcplot/) and Instagram (https://www.instagram.com/tcplot/).
+
+## Sci Art Club
+
+Sci Art Club (https://sciart.club) is a Twin Cities community for people who make art about science, and science that looks like art, founded and organized by Claire Nyquist in November 2026. It meets one Saturday morning a month for zine making, drawing at the Bell Museum, a science fair, a microscope party with lake samples from Bde Maka Ska, a field trip to the Science Museum of Minnesota, artist presentations, and collage. It is on Meetup (https://www.meetup.com/sci-art-club/).
 
 ## How to cite or contact
 

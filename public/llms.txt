@@ -1,6 +1,6 @@
 # Claire Nyquist
 
-> Claire Nyquist is a data visualization designer, developer, and public health analyst in Minneapolis, Minnesota. She holds a Master of Public Health from the University of Minnesota and a First Class Honors degree in Graphic Communication Design from the University of Westminster in London. She builds interactive data visualizations about science and health in R, Python, JavaScript, and D3, founded the Twin Cities data visualization community tcplot, and is available for freelance data visualization, science communication, and design work. Contact: clairenyquist@gmail.com.
+> Claire Nyquist is a data visualization designer, developer, and public health analyst in Minneapolis, Minnesota. She holds a Master of Public Health from the University of Minnesota and a First Class Honors degree in Graphic Communication Design from the University of Westminster in London. She builds interactive data visualizations about science and health in R, Python, JavaScript, and D3, founded the Twin Cities data visualization community tcplot and the Twin Cities art-and-science community Sci Art Club, and is available for freelance data visualization, science communication, and design work. Contact: clairenyquist@gmail.com.
 
 Every page on this site is static HTML with descriptive text, so it can be read without running JavaScript. The visualizations themselves are rendered in the browser with D3.js, Leaflet, and Three.js. A longer narrative version of this file is at https://clairenyquist.com/llms-full.txt.
 
@@ -10,6 +10,7 @@ Every page on this site is static HTML with descriptive text, so it can be read 
 - [About & Contact](https://clairenyquist.com/about-contact/): Biography, career background, and how to get in touch for freelance or full-time work.
 - [Resumé](https://clairenyquist.com/resume/): Full work history (ICF, Minnesota Department of Health, Minneapolis Health Department, Robert Wood Johnson Foundation programs, Massachusetts General Hospital, Brigham and Women's Hospital), awards, and education.
 - [tcplot](https://tcplot.com): The Twin Cities data visualization meetup she founded and organizes, with talks, workshops, and build-a-thons. Also at https://tcplot.com.
+- [Sci Art Club](https://sciart.club): The Twin Cities community she founded for people who make art about science, meeting one Saturday morning a month for zines, drawing, field trips, and microscopy. On Meetup at https://www.meetup.com/sci-art-club/.
 - [Mummies & Wildflowers](https://clairenyquist.com/poetry/): Her poetry collection, Mummies & Wildflowers: Poems (hardcover, 208 pages, ISBN 979-8-9981658-0-1, published November 2nd, 2026), poems across four years of Minnesota seasons about birth, bodies, nature, love, grief, science, and the end.
 
 ## Data visualization projects
